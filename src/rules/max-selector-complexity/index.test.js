@@ -40,6 +40,25 @@ test('should not error on a very simple selector', async () => {
 	assert.equal(warnings, [])
 });
 
+test.only('should not error on a very simple selector list', async () => {
+	const config = {
+		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		rules: {
+			'project-wallace/max-selector-complexity': 2,
+		},
+	};
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a, b {}`,
+		config,
+	});
+
+	assert.is(errored, false)
+	assert.equal(warnings, [])
+});
+
 test('should error on a very complex selector', async () => {
 	const config = {
 		plugins: ['./src/rules/max-selector-complexity/index.js'],
