@@ -4,7 +4,7 @@ import * as assert from 'uvu/assert'
 
 test('should not run when config is set to a value lower than 1', async () => {
 	const config = {
-		plugins: ['./plugins/max-selector-complexity/index.js'],
+		plugins: ['./src/rules/max-selector-complexity/index.js'],
 		rules: {
 			'project-wallace/max-selector-complexity': 0,
 		},
@@ -23,7 +23,7 @@ test('should not run when config is set to a value lower than 1', async () => {
 
 test('should not error on a very simple selector', async () => {
 	const config = {
-		plugins: ['./plugins/max-selector-complexity/index.js'],
+		plugins: ['./src/rules/max-selector-complexity/index.js'],
 		rules: {
 			'project-wallace/max-selector-complexity': 2,
 		},
@@ -42,7 +42,7 @@ test('should not error on a very simple selector', async () => {
 
 test('should error on a very complex selector', async () => {
 	const config = {
-		plugins: ['./plugins/max-selector-complexity/index.js'],
+		plugins: ['./src/rules/max-selector-complexity/index.js'],
 		rules: {
 			'project-wallace/max-selector-complexity': 2,
 		},
@@ -71,7 +71,7 @@ test('should error on a very complex selector', async () => {
 
 test('should error on multiple complex selectors', async () => {
 	const config = {
-		plugins: ['./plugins/max-selector-complexity/index.js'],
+		plugins: ['./src/rules/max-selector-complexity/index.js'],
 		rules: {
 			'project-wallace/max-selector-complexity': 2,
 		},
@@ -113,7 +113,7 @@ test('should error on multiple complex selectors', async () => {
 
 test('should error on a low-specificity/high-complexity selector', async () => {
 	const config = {
-		plugins: ['./plugins/max-selector-complexity/index.js'],
+		plugins: ['./src/rules/max-selector-complexity/index.js'],
 		rules: {
 			'project-wallace/max-selector-complexity': 2,
 		},
