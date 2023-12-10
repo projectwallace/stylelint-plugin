@@ -40,7 +40,7 @@ test('should not error on a very simple selector', async () => {
 	assert.equal(warnings, [])
 });
 
-test.only('should not error on a very simple selector list', async () => {
+test('should not error on a very simple selector list', async () => {
 	const config = {
 		plugins: ['./src/rules/max-selector-complexity/index.js'],
 		rules: {
@@ -155,6 +155,35 @@ test('should error on a low-specificity/high-complexity selector', async () => {
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
 			"text": "Selector complexity of \":-moz-any(#a #b #c, #d #e #f)\" is 12 which is greater than the allowed 2"
+		}
+	])
+});
+
+test('should only report the one selector in a list thats problematic', async () => {
+	const config = {
+		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		rules: {
+			'project-wallace/max-selector-complexity': 2,
+		},
+	};
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a a a a, b {}`,
+		config,
+	});
+
+	assert.is(errored, true)
+	assert.equal(warnings, [
+		{
+			"line": 1,
+			"column": 1,
+			"endLine": 1,
+			"endColumn": 14,
+			"rule": "project-wallace/max-selector-complexity",
+			"severity": "error",
+			"text": "Selector complexity of \"a a a a\" is 7 which is greater than the allowed 2"
 		}
 	])
 });

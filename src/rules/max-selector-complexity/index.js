@@ -31,21 +31,21 @@ const ruleFunction = (primaryOption) => {
 
 		root.walkRules((rule) => {
 			const selector = rule.selector;
-			let parsed = parse(selector, { context: 'selectorList' })
+			let parsed = parse(selector, { context: 'selectorList', positions: true })
 
 			for (let sel of parsed.children) {
 				const selectorComplexity = getComplexity(sel)
+				let stringified = selector.substring(sel.loc.start.offset, sel.loc.end.offset).replace(/\n/g, '')
 
 				if (selectorComplexity > primaryOption) {
 					utils.report({
-						message: `Selector complexity of "${selector}" is ${selectorComplexity} which is greater than the allowed ${primaryOption}`,
+						message: `Selector complexity of "${stringified}" is ${selectorComplexity} which is greater than the allowed ${primaryOption}`,
 						node: rule,
 						result,
 						ruleName: rule_name,
 					});
 				}
 			}
-
 		});
 	};
 };
