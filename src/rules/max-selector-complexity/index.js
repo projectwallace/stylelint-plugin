@@ -1,6 +1,6 @@
 import stylelint from "stylelint";
 import { parse } from 'css-tree'
-import { getComplexity } from "./complexity.js";
+import { selectorComplexity } from '../../analyzer.modern.js'
 
 const { createPlugin, utils } = stylelint;
 
@@ -34,13 +34,13 @@ const ruleFunction = (primaryOption) => {
 			let parsed = parse(selector, { context: 'selectorList', positions: true })
 
 			for (let sel of parsed.children) {
-				const selectorComplexity = getComplexity(sel)
+				const complexity = selectorComplexity(sel)
 				let stringified = selector.substring(sel.loc.start.offset, sel.loc.end.offset).replace(/\n/g, '')
 
-				if (selectorComplexity > primaryOption) {
+				if (complexity > primaryOption) {
 					utils.report({
-						message: `Selector complexity of "${stringified}" is ${selectorComplexity} which is greater than the allowed ${primaryOption}`,
-						node: rule,
+						message: `Selector complexity of "${stringified}" is ${complexity} which is greater than the allowed ${primaryOption}`,
+						node: rule, // TODO: only report the selector
 						result,
 						ruleName: rule_name,
 					});

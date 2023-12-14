@@ -6,5 +6,6 @@ test('exports an array of stylelint rules', () => {
 	assert.equal(rules.map(rule => rule.ruleName), [
 		'project-wallace/max-selector-complexity',
 		'project-wallace/no-unused-custom-properties',
+		'project-wallace/no-property-browserhacks'
 	])
 })
