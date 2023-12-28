@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "microbundle": "^0.15.1",
+    "oxlint": "^0.0.22",
     "stylelint": "^16.0.0",
     "uvu": "^0.5.6"
   },

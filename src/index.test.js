@@ -9,3 +9,5 @@ test('exports an array of stylelint rules', () => {
 		'project-wallace/no-property-browserhacks'
 	])
 })
+
+test.run()

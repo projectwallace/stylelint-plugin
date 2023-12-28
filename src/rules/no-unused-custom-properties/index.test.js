@@ -153,4 +153,20 @@ test('ignores options when options.ignoreProperties types are incorrect', async 
 	assert.is(column, 5)
 });
 
+test('should run reasonably fast', async () => {
+	const config = {
+		plugins: ['./src/rules/no-unused-custom-properties/index.js'],
+		rules: {
+			'project-wallace/no-unused-custom-properties': true,
+		},
+	};
+
+	const code = await (await import('node:fs/promises')).readFile('./test/fixtures/indiatimes.css', 'utf8')
+	const start = Date.now()
+	await stylelint.lint({ code, config })
+	const end = Date.now()
+
+	assert.ok(end - start <= process.env.CI ? 50 : 10, `should run in less than 1 second, took ${end - start}ms`)
+})
+
 test.run()
