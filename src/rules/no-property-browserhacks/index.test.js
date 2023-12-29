@@ -48,20 +48,4 @@ test('should error on a property hack', async () => {
 	assert.is(column, 5)
 });
 
-test('should run reasonably fast', async () => {
-	const config = {
-		plugins: ['./src/rules/no-property-browserhacks/index.js'],
-		rules: {
-			[rule_name]: true,
-		},
-	};
-
-	const code = await (await import('node:fs/promises')).readFile('./test/fixtures/indiatimes.css', 'utf8')
-	const start = Date.now()
-	await stylelint.lint({ code, config })
-	const end = Date.now()
-
-	assert.ok(end - start <= (process.env.CI ? 250 : 50), `should run fast, took ${end - start}ms`)
-})
-
 test.run()

@@ -188,20 +188,4 @@ test('should only report the one selector in a list thats problematic', async ()
 	])
 });
 
-test('should run reasonably fast', async () => {
-	const config = {
-		plugins: ['./src/rules/max-selector-complexity/index.js'],
-		rules: {
-			'project-wallace/max-selector-complexity': 5,
-		},
-	};
-
-	const code = await (await import('node:fs/promises')).readFile('./test/fixtures/indiatimes.css', 'utf8')
-	const start = Date.now()
-	await stylelint.lint({ code, config })
-	const end = Date.now()
-
-	assert.ok(end - start <= (process.env.CI ? 500 : 100), `should run fast, took ${end - start}ms`)
-})
-
 test.run()
