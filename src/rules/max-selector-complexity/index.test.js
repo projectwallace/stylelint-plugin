@@ -86,7 +86,7 @@ test('should error on a very complex selector', async () => {
 			endColumn: 17,
 			rule: 'project-wallace/max-selector-complexity',
 			severity: 'error',
-			text: 'Selector complexity of "a b c d e f g" is 13 which is greater than the allowed 2',
+			text: 'Selector complexity of "a b c d e f g" is 13 which is greater than the allowed 2 (project-wallace/max-selector-complexity)',
 		}
 	])
 });
@@ -119,7 +119,7 @@ test('should error on multiple complex selectors', async () => {
 			"endColumn": 20,
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
-			"text": "Selector complexity of \"a b c d e f g\" is 13 which is greater than the allowed 2"
+			"text": "Selector complexity of \"a b c d e f g\" is 13 which is greater than the allowed 2 (project-wallace/max-selector-complexity)"
 		},
 		{
 			"line": 4,
@@ -128,7 +128,7 @@ test('should error on multiple complex selectors', async () => {
 			"endColumn": 27,
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
-			"text": "Selector complexity of \".a .b .c .d #e #f #g\" is 13 which is greater than the allowed 2"
+			"text": "Selector complexity of \".a .b .c .d #e #f #g\" is 13 which is greater than the allowed 2 (project-wallace/max-selector-complexity)"
 		}
 	])
 });
@@ -157,7 +157,7 @@ test('should error on a low-specificity/high-complexity selector', async () => {
 			"endColumn": 33,
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
-			"text": "Selector complexity of \":-moz-any(#a #b #c, #d #e #f)\" is 12 which is greater than the allowed 2"
+			"text": "Selector complexity of \":-moz-any(#a #b #c, #d #e #f)\" is 12 which is greater than the allowed 2 (project-wallace/max-selector-complexity)"
 		}
 	])
 });
@@ -186,7 +186,7 @@ test('should only report the one selector in a list thats problematic', async ()
 			"endColumn": 14,
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
-			"text": "Selector complexity of \"a a a a\" is 7 which is greater than the allowed 2"
+			"text": "Selector complexity of \"a a a a\" is 7 which is greater than the allowed 2 (project-wallace/max-selector-complexity)"
 		}
 	])
 });
