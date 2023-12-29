@@ -3,12 +3,13 @@ import { test } from 'uvu'
 import * as assert from 'uvu/assert'
 
 const rule_name = 'project-wallace/no-unused-custom-properties'
+const rule_path = './src/rules/no-unused-custom-properties/index.js'
 
 test('should not error on a single used custom property', async () => {
 	const config = {
-		plugins: ['./src/rules/no-unused-custom-properties/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/no-unused-custom-properties': true,
+			[rule_name]: true,
 		},
 	};
 
@@ -29,9 +30,9 @@ test('should not error on a single used custom property', async () => {
 
 test('should not error on when a custom property is used in a fallback var()', async () => {
 	const config = {
-		plugins: ['./src/rules/no-unused-custom-properties/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/no-unused-custom-properties': true,
+			[rule_name]: true,
 		},
 	};
 
@@ -52,9 +53,9 @@ test('should not error on when a custom property is used in a fallback var()', a
 
 test('should error on a single unused custom property', async () => {
 	const config = {
-		plugins: ['./src/rules/no-unused-custom-properties/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/no-unused-custom-properties': true,
+			[rule_name]: true,
 		},
 	};
 
@@ -77,9 +78,9 @@ test('should error on a single unused custom property', async () => {
 
 test('should not error on when an unused custom property is allowed in options.ignoreProperties (string)', async () => {
 	const config = {
-		plugins: ['./src/rules/no-unused-custom-properties/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/no-unused-custom-properties': [
+			[rule_name]: [
 				true,
 				{
 					ignoreProperties: ['--ignored'],
@@ -101,9 +102,9 @@ test('should not error on when an unused custom property is allowed in options.i
 
 test('should not error on when an unused custom property is allowed in options.ignoreProperties (RegExp)', async () => {
 	const config = {
-		plugins: ['./src/rules/no-unused-custom-properties/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/no-unused-custom-properties': [
+			[rule_name]: [
 				true,
 				{
 					ignoreProperties: [/regex/],
@@ -125,9 +126,9 @@ test('should not error on when an unused custom property is allowed in options.i
 
 test('ignores options when options.ignoreProperties types are incorrect', async () => {
 	const config = {
-		plugins: ['./src/rules/no-unused-custom-properties/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/no-unused-custom-properties': [
+			[rule_name]: [
 				true,
 				{
 					ignoreProperties: [false],

@@ -2,11 +2,14 @@ import stylelint from 'stylelint';
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
 
+const rule_name = 'project-wallace/max-selector-complexity'
+const rule_path = './src/rules/max-selector-complexity/index.js'
+
 test('should not run when config is set to a value lower than 1', async () => {
 	const config = {
-		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/max-selector-complexity': 0,
+			[rule_name]: 0,
 		},
 	};
 
@@ -23,9 +26,9 @@ test('should not run when config is set to a value lower than 1', async () => {
 
 test('should not error on a very simple selector', async () => {
 	const config = {
-		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/max-selector-complexity': 2,
+			[rule_name]: 2,
 		},
 	};
 
@@ -42,9 +45,9 @@ test('should not error on a very simple selector', async () => {
 
 test('should not error on a very simple selector list', async () => {
 	const config = {
-		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/max-selector-complexity': 2,
+			[rule_name]: 2,
 		},
 	};
 
@@ -61,9 +64,9 @@ test('should not error on a very simple selector list', async () => {
 
 test('should error on a very complex selector', async () => {
 	const config = {
-		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/max-selector-complexity': 2,
+			[rule_name]: 2,
 		},
 	};
 
@@ -90,9 +93,9 @@ test('should error on a very complex selector', async () => {
 
 test('should error on multiple complex selectors', async () => {
 	const config = {
-		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/max-selector-complexity': 2,
+			[rule_name]: 2,
 		},
 	};
 
@@ -132,9 +135,9 @@ test('should error on multiple complex selectors', async () => {
 
 test('should error on a low-specificity/high-complexity selector', async () => {
 	const config = {
-		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/max-selector-complexity': 2,
+			[rule_name]: 2,
 		},
 	};
 
@@ -161,9 +164,9 @@ test('should error on a low-specificity/high-complexity selector', async () => {
 
 test('should only report the one selector in a list thats problematic', async () => {
 	const config = {
-		plugins: ['./src/rules/max-selector-complexity/index.js'],
+		plugins: [rule_path],
 		rules: {
-			'project-wallace/max-selector-complexity': 2,
+			[rule_name]: 2,
 		},
 	};
 

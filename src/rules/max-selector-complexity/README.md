@@ -6,7 +6,7 @@ Prevent selector complexity from going over a predefined maximum.
 ```css
 a b c d e f g h {}
 /*  ↑
-*   a bit much after this */
+*   complexity gets a bit much after this */
 ```
 
 This rule calculates the **complexity** of all selectors. This is different from specificity since `:where(a b c d e f g h)` has specificity `[0, 0, 0]` but is pretty complex.

@@ -1,5 +1,4 @@
 import stylelint from "stylelint";
-import { parse } from 'css-tree'
 import { isPropertyHack } from '../../analyzer.modern.js'
 
 const { createPlugin, utils } = stylelint;
