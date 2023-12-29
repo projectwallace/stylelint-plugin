@@ -1,21 +1,34 @@
 {
   "name": "@projectwallace/stylelint-plugin",
   "version": "0.0.0",
-  "description": "",
+  "description": "A stylelint plugin that checks the complexity of your CSS.",
+  "homepage": "https://github.com/projectwallace/stylelint-plugin",
+  "issues": "https://github.com/projectwallace/stylelint-plugin/issues",
+  "license": "MIT",
   "type": "module",
-  "main": "./src/index.js",
+  "files": [
+    "dist"
+  ],
+  "source": "./src/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.module.mjs",
+  "exports": {
+    "default": "./dist/index.modern.mjs",
+    "require": "./dist/index.cjs"
+  },
   "scripts": {
-    "test": "uvu"
+    "test": "uvu",
+    "lint": "oxlint -D perf -D style",
+    "build": "microbundle --format esm,modern,cjs --target node --compress"
   },
   "keywords": [
+    "stylelint-plugin",
+    "stylelint",
     "css",
     "complexity",
     "wallace",
-    "lint",
-    "stylelint",
-    "stylelint-plugin"
+    "lint"
   ],
-  "license": "MIT",
   "dependencies": {
     "@bramus/specificity": "^2.3.0",
     "css-tree": "^2.3.1"

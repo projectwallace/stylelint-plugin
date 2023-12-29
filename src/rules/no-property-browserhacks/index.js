@@ -23,7 +23,7 @@ const ruleFunction = (primaryOption) => {
 		});
 
 		if (!validOptions) {
-			return null;
+			return;
 		}
 
 		root.walkDecls((declaration) => {
