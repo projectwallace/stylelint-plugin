@@ -7,8 +7,8 @@ const { createPlugin, utils } = stylelint;
 const rule_name = "project-wallace/max-selector-complexity";
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property) =>
-		`"${property}" was declared but never used in a var()`,
+	rejected: ({ selector, actual, expected }) =>
+		`Selector complexity of "${selector}" is ${actual} which is greater than the allowed ${expected}`,
 });
 
 const meta = {
@@ -39,7 +39,7 @@ const ruleFunction = (primaryOption) => {
 
 				if (complexity > primaryOption) {
 					utils.report({
-						message: `Selector complexity of "${stringified}" is ${complexity} which is greater than the allowed ${primaryOption}`,
+						message: messages.rejected({ selector: stringified, expected: primaryOption, actual: complexity }),
 						node: rule, // TODO: only report the selector
 						result,
 						ruleName: rule_name,
