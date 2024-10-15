@@ -38,7 +38,7 @@ a {
 ```css
 a {
   --my-fallback: green;
-  color: var(--unkown-property, --my-fallback);
+  color: var(--unkown-property, var(--my-fallback));
   /*                            ↑ used as fallback property in var() */
 }
 ```
