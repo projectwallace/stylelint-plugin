@@ -10,7 +10,7 @@
   "main": "./src/index.js",
   "module": "./src/index.js",
   "exports": {
-    "default": "./src/index.js",
+    "default": "./src/index.js"
   },
   "scripts": {
     "test": "uvu",
