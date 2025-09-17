@@ -6,15 +6,11 @@
   "issues": "https://github.com/projectwallace/stylelint-plugin/issues",
   "license": "MIT",
   "type": "module",
-  "files": [
-    "dist"
-  ],
   "source": "./src/index.js",
-  "main": "dist/index.cjs",
-  "module": "dist/index.module.mjs",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
   "exports": {
-    "default": "./dist/index.modern.mjs",
-    "require": "./dist/index.cjs"
+    "default": "./src/index.js",
   },
   "scripts": {
     "test": "uvu",
