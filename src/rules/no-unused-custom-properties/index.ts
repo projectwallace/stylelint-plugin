@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root, AtRule } from 'postcss'
+import type { Root } from 'postcss'
 import { collect_declared_properties, collect_var_usages } from '../../utils/custom-properties.js'
 
 const { createPlugin, utils } = stylelint

@@ -53,6 +53,7 @@ Allow specific undeclared custom properties by exact string or RegExp pattern. U
 
 Given:
 
+<!-- prettier-ignore -->
 ```js
 ['--brand-color', /^--ds-/]
 ```
