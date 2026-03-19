@@ -6,7 +6,9 @@
   "issues": "https://github.com/projectwallace/stylelint-plugin/issues",
   "license": "MIT",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "exports": {
     "default": "./dist/index.js"
@@ -26,6 +28,7 @@
   ],
   "dependencies": {
     "@projectwallace/css-analyzer": "^9.4.0",
+    "@projectwallace/css-parser": "^0.13.9",
     "css-tree": "^2.3.1"
   },
   "devDependencies": {

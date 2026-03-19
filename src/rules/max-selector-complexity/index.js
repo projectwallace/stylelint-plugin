@@ -1,22 +1,6 @@
 import stylelint from "stylelint";
-import * as csstree from 'css-tree'
-
-function selectorComplexity(selectorNode) {
-	let complexity = 0
-	csstree.walk(selectorNode, (node) => {
-		const t = node.type
-		if (t === 'TypeSelector' || t === 'ClassSelector' || t === 'IdSelector' || t === 'Combinator') {
-			complexity++
-		} else if (t === 'PseudoClassSelector' || t === 'PseudoElementSelector') {
-			complexity++
-			if (node.name && node.name.startsWith('-')) complexity++
-		} else if (t === 'AttributeSelector') {
-			complexity++
-			if (node.value) complexity++
-		}
-	})
-	return complexity
-}
+import { parse_selector } from '@projectwallace/css-parser'
+import { selectorComplexity } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint;
 
@@ -47,11 +31,11 @@ const ruleFunction = (primaryOption) => {
 
 		root.walkRules((rule) => {
 			const selector = rule.selector;
-			let parsed = csstree.parse(selector, { context: 'selectorList', positions: true })
+			let parsed = parse_selector(selector)
 
 			for (let sel of parsed.children) {
 				const complexity = selectorComplexity(sel)
-				let stringified = selector.substring(sel.loc.start.offset, sel.loc.end.offset).replace(/\n/g, '')
+				let stringified = sel.text.replace(/\n/g, '')
 
 				if (complexity > primaryOption) {
 					utils.report({
