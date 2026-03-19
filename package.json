@@ -23,7 +23,7 @@
 	"scripts": {
 		"test": "vitest",
 		"check": "tsc --noEmit",
-		"lint": "oxlint -D perf",
+		"lint": "oxlint -D perf; oxfmt --check",
 		"build": "tsdown"
 	},
 	"dependencies": {
