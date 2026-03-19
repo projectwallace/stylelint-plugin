@@ -1,4 +1,4 @@
-import stylelint from 'stylelint';
+import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
@@ -10,7 +10,7 @@ test('should not error on a single used custom property', async () => {
 		rules: {
 			[rule_name]: true,
 		},
-	};
+	}
 
 	const {
 		results: [{ warnings, errored }],
@@ -21,11 +21,11 @@ test('should not error on a single used custom property', async () => {
 				color: var(--used);
 			}`,
 		config,
-	});
+	})
 
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
-});
+})
 
 test('should not error on when a custom property is used in a fallback var()', async () => {
 	const config = {
@@ -33,7 +33,7 @@ test('should not error on when a custom property is used in a fallback var()', a
 		rules: {
 			[rule_name]: true,
 		},
-	};
+	}
 
 	const {
 		results: [{ warnings, errored }],
@@ -44,11 +44,11 @@ test('should not error on when a custom property is used in a fallback var()', a
 				color: var(--not-defined, var(--used-in-fallback));
 			}`,
 		config,
-	});
+	})
 
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
-});
+})
 
 test('should error on a single unused custom property', async () => {
 	const config = {
@@ -56,24 +56,24 @@ test('should error on a single unused custom property', async () => {
 		rules: {
 			[rule_name]: true,
 		},
-	};
+	}
 
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
 		code: 'a { --unused: 1 }',
 		config,
-	});
+	})
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 
-	const [{ line, column, text }] = warnings;
+	const [{ line, column, text }] = warnings
 
 	expect(text).toBe(`"--unused" was declared but never used in a var() (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(5)
-});
+})
 
 test('should not error on when an unused custom property is allowed in options.ignoreProperties (string)', async () => {
 	const config = {
@@ -86,18 +86,18 @@ test('should not error on when an unused custom property is allowed in options.i
 				},
 			],
 		},
-	};
+	}
 
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
 		code: `a { --ignored: 1 }`,
 		config,
-	});
+	})
 
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
-});
+})
 
 test('should not error on when an unused custom property is allowed in options.ignoreProperties (RegExp)', async () => {
 	const config = {
@@ -110,18 +110,18 @@ test('should not error on when an unused custom property is allowed in options.i
 				},
 			],
 		},
-	};
+	}
 
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
 		code: `a { --regexp-ingored: 1 }`,
 		config,
-	});
+	})
 
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
-});
+})
 
 test('ignores options when options.ignoreProperties types are incorrect', async () => {
 	const config = {
@@ -134,21 +134,21 @@ test('ignores options when options.ignoreProperties types are incorrect', async 
 				},
 			],
 		},
-	};
+	}
 
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
 		code: `a { --unused: 1 }`,
 		config,
-	});
+	})
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 
-	const [{ line, column, text }] = warnings;
+	const [{ line, column, text }] = warnings
 
 	expect(text).toBe(`"--unused" was declared but never used in a var() (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(5)
-});
+})

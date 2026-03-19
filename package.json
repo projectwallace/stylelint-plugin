@@ -1,44 +1,45 @@
 {
-  "name": "@projectwallace/stylelint-plugin",
-  "version": "0.0.0",
-  "description": "A stylelint plugin that checks the complexity of your CSS.",
-  "homepage": "https://github.com/projectwallace/stylelint-plugin",
-  "issues": "https://github.com/projectwallace/stylelint-plugin/issues",
-  "license": "MIT",
-  "type": "module",
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/index.js",
-  "exports": {
-    "default": "./dist/index.js"
-  },
-  "scripts": {
-    "test": "vitest",
-    "check": "tsc --noEmit",
-    "lint": "oxlint -D perf",
-    "build": "tsdown"
-  },
-  "keywords": [
-    "stylelint-plugin",
-    "stylelint",
-    "css",
-    "complexity",
-    "wallace",
-    "lint"
-  ],
-  "dependencies": {
-    "@projectwallace/css-analyzer": "^9.4.0",
-    "@projectwallace/css-parser": "^0.13.9"
-  },
-  "devDependencies": {
-    "oxlint": "^1.56.0",
-    "stylelint": "^17.0.0",
-    "tsdown": "^0.21.4",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.0"
-  },
-  "peerDependencies": {
-    "stylelint": "^17.0.0"
-  }
+	"name": "@projectwallace/stylelint-plugin",
+	"version": "0.0.0",
+	"description": "A stylelint plugin that checks the complexity of your CSS.",
+	"keywords": [
+		"complexity",
+		"css",
+		"lint",
+		"stylelint",
+		"stylelint-plugin",
+		"wallace"
+	],
+	"homepage": "https://github.com/projectwallace/stylelint-plugin",
+	"license": "MIT",
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"main": "./dist/index.js",
+	"exports": {
+		"default": "./dist/index.js"
+	},
+	"scripts": {
+		"test": "vitest",
+		"check": "tsc --noEmit",
+		"lint": "oxlint -D perf",
+		"build": "tsdown"
+	},
+	"dependencies": {
+		"@projectwallace/css-analyzer": "^9.4.0",
+		"@projectwallace/css-parser": "^0.13.9"
+	},
+	"devDependencies": {
+		"oxfmt": "^0.41.0",
+		"oxlint": "^1.56.0",
+		"stylelint": "^17.0.0",
+		"tsdown": "^0.21.4",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.0"
+	},
+	"peerDependencies": {
+		"stylelint": "^17.0.0"
+	},
+	"issues": "https://github.com/projectwallace/stylelint-plugin/issues"
 }

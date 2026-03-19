@@ -1,20 +1,19 @@
-import stylelint from "stylelint";
+import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_declaration, walk, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser'
 import type { CSSNode } from '@projectwallace/css-parser'
 
-const { createPlugin, utils } = stylelint;
+const { createPlugin, utils } = stylelint
 
-const rule_name = "project-wallace/no-unused-custom-properties";
+const rule_name = 'project-wallace/no-unused-custom-properties'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) =>
-		`"${property}" was declared but never used in a var()`,
-});
+	rejected: (property: string) => `"${property}" was declared but never used in a var()`,
+})
 
 const meta = {
-	url: "https://github.com/projectwallace/stylelint-plugins",
-};
+	url: 'https://github.com/projectwallace/stylelint-plugins',
+}
 
 interface SecondaryOptions {
 	ignoreProperties?: Array<string | RegExp>
@@ -25,23 +24,23 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOptions,
 			possible: [true],
-		});
+		})
 
 		if (!validOptions) {
-			return;
+			return
 		}
 
-		const declared_properties = new Set<Declaration>();
-		const used_properties = new Set<string>();
+		const declared_properties = new Set<Declaration>()
+		const used_properties = new Set<string>()
 
 		root.walkDecls(function (declaration) {
 			if (declaration.prop.startsWith('--')) {
-				declared_properties.add(declaration);
+				declared_properties.add(declaration)
 			}
 
 			const decl_source = root.source!.input.css.substring(
 				declaration.source!.start!.offset,
-				declaration.source!.end!.offset
+				declaration.source!.end!.offset,
 			)
 			const parsed = parse_declaration(decl_source)
 
@@ -54,22 +53,22 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 						}
 					}
 				}
-			});
-		});
+			})
+		})
 
 		outer_declared: for (const declaration of declared_properties) {
 			for (const used of used_properties) {
 				if (used === declaration.prop) {
-					continue outer_declared;
+					continue outer_declared
 				}
 			}
 
 			if (secondaryOptions?.ignoreProperties) {
 				for (const ignored of secondaryOptions.ignoreProperties) {
-					if (typeof ignored === "string" && ignored === declaration.prop) {
-						continue outer_declared;
+					if (typeof ignored === 'string' && ignored === declaration.prop) {
+						continue outer_declared
 					} else if (ignored instanceof RegExp && ignored.test(declaration.prop)) {
-						continue outer_declared;
+						continue outer_declared
 					}
 				}
 			}
@@ -80,13 +79,13 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				message: messages.rejected(declaration.prop),
 				node: declaration,
 				word: declaration.prop,
-			});
+			})
 		}
-	};
-};
+	}
+}
 
-ruleFunction.ruleName = rule_name;
-ruleFunction.messages = messages;
-ruleFunction.meta = meta;
+ruleFunction.ruleName = rule_name
+ruleFunction.messages = messages
+ruleFunction.meta = meta
 
-export default createPlugin(rule_name, ruleFunction);
+export default createPlugin(rule_name, ruleFunction)
