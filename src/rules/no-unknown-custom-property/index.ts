@@ -21,22 +21,10 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
-			result,
-			rule_name,
-			{
-				actual: primaryOptions,
-				possible: [true],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					allowFallback: [true, false],
-					allowList: [String, RegExp],
-				},
-				optional: true,
-			},
-		)
+		const validOptions = utils.validateOptions(result, rule_name, {
+			actual: primaryOptions,
+			possible: [true],
+		})
 
 		if (!validOptions) {
 			return
