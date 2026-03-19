@@ -16,14 +16,27 @@ const meta = {
 
 interface SecondaryOptions {
 	allowFallback?: boolean
+	allowList?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(result, rule_name, {
-			actual: primaryOptions,
-			possible: [true],
-		})
+		const validOptions = utils.validateOptions(
+			result,
+			rule_name,
+			{
+				actual: primaryOptions,
+				possible: [true],
+			},
+			{
+				actual: secondaryOptions,
+				possible: {
+					allowFallback: [true, false],
+					allowList: [String, RegExp],
+				},
+				optional: true,
+			},
+		)
 
 		if (!validOptions) {
 			return
@@ -35,6 +48,14 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		for (const usage of usages) {
 			if (declared_properties.has(usage.name)) continue
 			if (secondaryOptions?.allowFallback && usage.has_fallback) continue
+			if (secondaryOptions?.allowList) {
+				const allowed = secondaryOptions.allowList.some(
+					(pattern) =>
+						(typeof pattern === 'string' && pattern === usage.name) ||
+						(pattern instanceof RegExp && pattern.test(usage.name)),
+				)
+				if (allowed) continue
+			}
 
 			utils.report({
 				result,

@@ -186,3 +186,82 @@ test('should not error on undeclared var() with empty fallback when allowFallbac
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test('should not error on undeclared property matched by allowList string', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [true, { allowList: ['--external-color'] }],
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: 'a { color: var(--external-color); }',
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should not error on undeclared property matched by allowList RegExp', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [true, { allowList: [/^--external-/] }],
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: 'a { color: var(--external-color); background: var(--external-bg); }',
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should still error on undeclared property not matched by allowList', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [true, { allowList: ['--external-color'] }],
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: 'a { color: var(--external-color); background: var(--undeclared); }',
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+	expect(warnings[0].text).toBe(
+		`"--undeclared" is used in a var() but was never declared (${rule_name})`,
+	)
+})
+
+test('ignores allowList when entries have incorrect types', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [true, { allowList: [false] }],
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: 'a { color: var(--undeclared); }',
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBeGreaterThanOrEqual(1)
+})
