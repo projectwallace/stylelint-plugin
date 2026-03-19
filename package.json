@@ -7,11 +7,9 @@
   "license": "MIT",
   "type": "module",
   "files": ["dist"],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/index.js",
   "exports": {
-    "import": "./dist/index.js",
-    "require": "./dist/index.cjs"
+    "default": "./dist/index.js"
   },
   "scripts": {
     "test": "vitest run",
