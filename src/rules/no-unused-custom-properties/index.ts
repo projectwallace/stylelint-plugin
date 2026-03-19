@@ -35,7 +35,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const used_properties = new Set<string>();
 
 		root.walkDecls(function (declaration) {
-			if (/^--/.test(declaration.prop)) {
+			if (declaration.prop.startsWith('--')) {
 				declared_properties.add(declaration);
 			}
 

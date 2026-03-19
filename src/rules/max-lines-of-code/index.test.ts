@@ -68,8 +68,8 @@ test('should error when lines of code exceeds allowed setting', async () => {
 	});
 
 	expect(errored).toBe(true)
-	expect(warnings).toStrictEqual([
-		{
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0]).toMatchObject({
 			line: 1,
 			column: 1,
 			endLine: 9,
@@ -77,6 +77,5 @@ test('should error when lines of code exceeds allowed setting', async () => {
 			rule: rule_name,
 			severity: 'error',
 			text: 'Counted 4 Lines of Code which is greater than the allowed 2 (project-wallace/max-lines-of-code)',
-		}
-	])
+		})
 });

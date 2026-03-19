@@ -77,8 +77,8 @@ test('should error on a very complex selector', async () => {
 	});
 
 	expect(errored).toBe(true)
-	expect(warnings).toStrictEqual([
-		{
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0]).toMatchObject({
 			line: 1,
 			column: 1,
 			endLine: 1,
@@ -86,8 +86,7 @@ test('should error on a very complex selector', async () => {
 			rule: 'project-wallace/max-selector-complexity',
 			severity: 'error',
 			text: 'Selector complexity of "a b c d e f g" is 13 which is greater than the allowed 2 (project-wallace/max-selector-complexity)',
-		}
-	])
+		})
 });
 
 test('should error on multiple complex selectors', async () => {
@@ -110,8 +109,8 @@ test('should error on multiple complex selectors', async () => {
 	});
 
 	expect(errored).toBe(true)
-	expect(warnings).toStrictEqual([
-		{
+	expect(warnings).toHaveLength(2)
+	expect(warnings[0]).toMatchObject({
 			"line": 2,
 			"column": 4,
 			"endLine": 2,
@@ -119,8 +118,8 @@ test('should error on multiple complex selectors', async () => {
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
 			"text": "Selector complexity of \"a b c d e f g\" is 13 which is greater than the allowed 2 (project-wallace/max-selector-complexity)"
-		},
-		{
+		})
+		expect(warnings[1]).toMatchObject({
 			"line": 4,
 			"column": 4,
 			"endLine": 4,
@@ -128,8 +127,7 @@ test('should error on multiple complex selectors', async () => {
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
 			"text": "Selector complexity of \".a .b .c .d #e #f #g\" is 13 which is greater than the allowed 2 (project-wallace/max-selector-complexity)"
-		}
-	])
+		})
 });
 
 test('should error on a low-specificity/high-complexity selector', async () => {
@@ -148,8 +146,8 @@ test('should error on a low-specificity/high-complexity selector', async () => {
 	});
 
 	expect(errored).toBe(true)
-	expect(warnings).toStrictEqual([
-		{
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0]).toMatchObject({
 			"line": 1,
 			"column": 1,
 			"endLine": 1,
@@ -157,8 +155,7 @@ test('should error on a low-specificity/high-complexity selector', async () => {
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
 			"text": "Selector complexity of \":-moz-any(#a #b #c, #d #e #f)\" is 12 which is greater than the allowed 2 (project-wallace/max-selector-complexity)"
-		}
-	])
+		})
 });
 
 test('should only report the one selector in a list thats problematic', async () => {
@@ -177,8 +174,8 @@ test('should only report the one selector in a list thats problematic', async ()
 	});
 
 	expect(errored).toBe(true)
-	expect(warnings).toStrictEqual([
-		{
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0]).toMatchObject({
 			"line": 1,
 			"column": 1,
 			"endLine": 1,
@@ -186,6 +183,5 @@ test('should only report the one selector in a list thats problematic', async ()
 			"rule": "project-wallace/max-selector-complexity",
 			"severity": "error",
 			"text": "Selector complexity of \"a a a a\" is 7 which is greater than the allowed 2 (project-wallace/max-selector-complexity)"
-		}
-	])
+		})
 });

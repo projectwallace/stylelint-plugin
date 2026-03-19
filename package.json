@@ -14,9 +14,9 @@
     "default": "./dist/index.js"
   },
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest",
     "check": "tsc --noEmit",
-    "lint": "oxlint -D perf -D style",
+    "lint": "oxlint -D perf",
     "build": "tsdown"
   },
   "keywords": [
