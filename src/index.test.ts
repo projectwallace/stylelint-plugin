@@ -1,14 +1,16 @@
-import { test } from "uvu";
-import * as assert from "uvu/assert";
+import { test, expect } from 'vitest'
+import type stylelint from 'stylelint'
 import rules from "./index.js";
 
 test('exports an array of stylelint rules', () => {
-	assert.equal(rules.map(rule => rule.ruleName), [
+	const names = rules.map((rule) => {
+		const plugin = rule as Extract<stylelint.Plugin, { ruleName: string }>
+		return plugin.ruleName
+	})
+	expect(names).toStrictEqual([
 		'project-wallace/max-selector-complexity',
 		'project-wallace/max-lines-of-code',
 		'project-wallace/no-unused-custom-properties',
 		'project-wallace/no-property-browserhacks'
 	])
 })
-
-test.run()

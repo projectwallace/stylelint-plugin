@@ -1,12 +1,13 @@
 import stylelint from "stylelint";
-import { isPropertyHack } from '../../analyzer.modern.js'
+import type { Root } from 'postcss'
+import { parse_declaration } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint;
 
 const rule_name = "project-wallace/no-property-browserhacks";
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property) =>
+	rejected: (property: string) =>
 		`Property "${property}" is a browserhack and is not allowed`,
 });
 
@@ -14,9 +15,8 @@ const meta = {
 	url: "https://github.com/projectwallace/stylelint-plugins",
 };
 
-/** @type {import('stylelint').Rule<string>} */
-const ruleFunction = (primaryOption) => {
-	return (root, result) => {
+const ruleFunction = (primaryOption: true) => {
+	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
 			possible: [true],
@@ -27,13 +27,15 @@ const ruleFunction = (primaryOption) => {
 		}
 
 		root.walkDecls((declaration) => {
-			// PostCSS strips *_ etc. from the property name, so we need to get the original property from the source
-			let full_declaration = root.source.input.css.substring(declaration.source.start.offset, declaration.source.end.offset)
-			let property = full_declaration.substring(0, full_declaration.indexOf(':')).trim()
+			const full_declaration = root.source!.input.css.substring(
+				declaration.source!.start!.offset,
+				declaration.source!.end!.offset
+			)
+			const parsed = parse_declaration(full_declaration)
 
-			if (isPropertyHack(property)) {
+			if (parsed.is_browserhack) {
 				utils.report({
-					message: `Property "${property}" is a browserhack and is not allowed`,
+					message: messages.rejected(parsed.property!),
 					node: declaration,
 					result,
 					ruleName: rule_name,

@@ -6,17 +6,18 @@
   "issues": "https://github.com/projectwallace/stylelint-plugin/issues",
   "license": "MIT",
   "type": "module",
-  "files": ["src"],
-  "source": "./src/index.js",
-  "main": "./src/index.js",
-  "module": "./src/index.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
   "exports": {
-    "default": "./src/index.js"
+    "default": "./dist/index.js"
   },
   "scripts": {
-    "test": "uvu",
-    "lint": "oxlint -D perf -D style",
-    "build": "microbundle --format esm,modern,cjs --target node --compress"
+    "test": "vitest",
+    "check": "tsc --noEmit",
+    "lint": "oxlint -D perf",
+    "build": "tsdown"
   },
   "keywords": [
     "stylelint-plugin",
@@ -27,16 +28,17 @@
     "lint"
   ],
   "dependencies": {
-    "@bramus/specificity": "^2.3.0",
-    "css-tree": "^2.3.1"
+    "@projectwallace/css-analyzer": "^9.4.0",
+    "@projectwallace/css-parser": "^0.13.9"
   },
   "devDependencies": {
-    "microbundle": "^0.15.1",
-    "oxlint": "^0.0.22",
-    "stylelint": "^16.0.0",
-    "uvu": "^0.5.6"
+    "oxlint": "^1.56.0",
+    "stylelint": "^17.0.0",
+    "tsdown": "^0.21.4",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.0"
   },
   "peerDependencies": {
-    "stylelint": "^16.0.0"
+    "stylelint": "^17.0.0"
   }
 }
