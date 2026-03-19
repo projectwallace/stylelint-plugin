@@ -10,7 +10,7 @@ b { color: blue; }
 *   each line with actual CSS counts towards the total */
 ```
 
-This rule counts **source lines of code** (SLOC) — blank lines and comment-only lines are excluded from the count.
+This rule counts **source lines of code** (SLOC) — blank lines and comment-only lines are excluded from the count. Read more about [how lines of code are counted](https://www.projectwallace.com/docs/metrics/stylesheets-linesofcode-sourcelinesofcode-total).
 
 ## Options
 
