@@ -1,5 +1,5 @@
 import stylelint from "stylelint";
-import { isPropertyHack } from '@projectwallace/css-analyzer'
+import { parse_declaration } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint;
 
@@ -27,13 +27,12 @@ const ruleFunction = (primaryOption) => {
 		}
 
 		root.walkDecls((declaration) => {
-			// PostCSS strips *_ etc. from the property name, so we need to get the original property from the source
 			let full_declaration = root.source.input.css.substring(declaration.source.start.offset, declaration.source.end.offset)
-			let property = full_declaration.substring(0, full_declaration.indexOf(':')).trim()
+			let parsed = parse_declaration(full_declaration)
 
-			if (isPropertyHack(property)) {
+			if (parsed.is_browserhack) {
 				utils.report({
-					message: `Property "${property}" is a browserhack and is not allowed`,
+					message: messages.rejected(parsed.property),
 					node: declaration,
 					result,
 					ruleName: rule_name,

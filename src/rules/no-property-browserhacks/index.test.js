@@ -43,7 +43,7 @@ test('should error on a property hack', async () => {
 
 	const [{ line, column, text }] = warnings;
 
-	expect(text).toBe(`Property "*zoom" is a browserhack and is not allowed`)
+	expect(text).toBe(`Property "*zoom" is a browserhack and is not allowed (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(5)
 });
