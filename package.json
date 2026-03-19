@@ -15,6 +15,7 @@
   },
   "scripts": {
     "test": "vitest run",
+    "check": "tsc --noEmit",
     "lint": "oxlint -D perf -D style",
     "build": "tsdown"
   },
@@ -28,13 +29,13 @@
   ],
   "dependencies": {
     "@projectwallace/css-analyzer": "^9.4.0",
-    "@projectwallace/css-parser": "^0.13.9",
-    "css-tree": "^2.3.1"
+    "@projectwallace/css-parser": "^0.13.9"
   },
   "devDependencies": {
     "oxlint": "^0.0.22",
     "stylelint": "^16.0.0",
     "tsdown": "^0.12.0",
+    "typescript": "^5.9.3",
     "vitest": "^2.0.5"
   },
   "peerDependencies": {

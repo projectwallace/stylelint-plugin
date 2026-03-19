@@ -1,4 +1,5 @@
 import stylelint from "stylelint";
+import type { Root } from 'postcss'
 import { analyze } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint;
@@ -6,37 +7,31 @@ const { createPlugin, utils } = stylelint;
 const rule_name = "project-wallace/max-lines-of-code";
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: ({ actual, expected }) => `Counted ${actual} Lines of Code which is greater than the allowed ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Counted ${actual} Lines of Code which is greater than the allowed ${expected}`,
 });
 
 const meta = {
 	url: "https://github.com/projectwallace/stylelint-plugins",
 };
 
-/** @type {import('stylelint').Rule<string>} */
-const ruleFunction = (primaryOption) => {
-	return (root, result) => {
+const ruleFunction = (primaryOption: number) => {
+	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
-			allowEmpty: false,
-			possible: [Number],
-			check: (value) => Number.isInteger(value) && value > 0,
+			possible: [Number as unknown as (v: unknown) => boolean],
 		});
 
-		if (!validOptions) {
+		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
 			return;
 		}
 
-		if (primaryOption <= 0) {
-			return
-		}
-
-		let analysis = analyze(root.source.input.css)
-		let actual = analysis.stylesheet.sourceLinesOfCode
+		const analysis = analyze(root.source!.input.css)
+		const actual = analysis.stylesheet.sourceLinesOfCode
 
 		if (actual > primaryOption) {
 			utils.report({
-				message: messages.rejected({ expected: primaryOption, actual }),
+				message: messages.rejected(actual, primaryOption),
 				node: root,
 				result,
 				ruleName: rule_name,

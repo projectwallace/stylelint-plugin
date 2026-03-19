@@ -50,7 +50,7 @@ test('should error when lines of code exceeds allowed setting', async () => {
 		},
 	};
 
-	let code = `
+	const code = `
 		a {
 			color: green;
 		}
