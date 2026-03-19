@@ -1,34 +1,34 @@
-import stylelint from "stylelint";
+import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_selector } from '@projectwallace/css-parser'
 import { selectorComplexity } from '@projectwallace/css-analyzer'
 
-const { createPlugin, utils } = stylelint;
+const { createPlugin, utils } = stylelint
 
-const rule_name = "project-wallace/max-selector-complexity";
+const rule_name = 'project-wallace/max-selector-complexity'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (selector: string, actual: number, expected: number) =>
 		`Selector complexity of "${selector}" is ${actual} which is greater than the allowed ${expected}`,
-});
+})
 
 const meta = {
-	url: "https://github.com/projectwallace/stylelint-plugins",
-};
+	url: 'https://github.com/projectwallace/stylelint-plugins',
+}
 
 const ruleFunction = (primaryOption: number) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
 			possible: [Number as unknown as (v: unknown) => boolean],
-		});
+		})
 
 		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 1) {
-			return;
+			return
 		}
 
 		root.walkRules((rule) => {
-			const selector = rule.selector;
+			const selector = rule.selector
 			const parsed = parse_selector(selector)
 
 			for (const sel of parsed.children) {
@@ -41,15 +41,15 @@ const ruleFunction = (primaryOption: number) => {
 						node: rule,
 						result,
 						ruleName: rule_name,
-					});
+					})
 				}
 			}
-		});
-	};
-};
+		})
+	}
+}
 
-ruleFunction.ruleName = rule_name;
-ruleFunction.messages = messages;
-ruleFunction.meta = meta;
+ruleFunction.ruleName = rule_name
+ruleFunction.messages = messages
+ruleFunction.meta = meta
 
-export default createPlugin(rule_name, ruleFunction);
+export default createPlugin(rule_name, ruleFunction)

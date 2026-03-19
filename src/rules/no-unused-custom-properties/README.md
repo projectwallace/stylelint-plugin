@@ -37,9 +37,9 @@ a {
 
 ```css
 a {
-  --my-fallback: green;
-  color: var(--unkown-property, var(--my-fallback));
-  /*                            ↑ used as fallback property in var() */
+	--my-fallback: green;
+	color: var(--unkown-property, var(--my-fallback));
+	/*                            ↑ used as fallback property in var() */
 }
 ```
 
@@ -52,7 +52,7 @@ Ignore specific unused custom properties.
 Given:
 
 ```js
-["--ignored"];
+;['--ignored']
 ```
 
 The following are considered problems:

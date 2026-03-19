@@ -1,35 +1,34 @@
-import stylelint from "stylelint";
+import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_declaration } from '@projectwallace/css-parser'
 
-const { createPlugin, utils } = stylelint;
+const { createPlugin, utils } = stylelint
 
-const rule_name = "project-wallace/no-property-browserhacks";
+const rule_name = 'project-wallace/no-property-browserhacks'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) =>
-		`Property "${property}" is a browserhack and is not allowed`,
-});
+	rejected: (property: string) => `Property "${property}" is a browserhack and is not allowed`,
+})
 
 const meta = {
-	url: "https://github.com/projectwallace/stylelint-plugins",
-};
+	url: 'https://github.com/projectwallace/stylelint-plugins',
+}
 
 const ruleFunction = (primaryOption: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
 			possible: [true],
-		});
+		})
 
 		if (!validOptions) {
-			return;
+			return
 		}
 
 		root.walkDecls((declaration) => {
 			const full_declaration = root.source!.input.css.substring(
 				declaration.source!.start!.offset,
-				declaration.source!.end!.offset
+				declaration.source!.end!.offset,
 			)
 			const parsed = parse_declaration(full_declaration)
 
@@ -39,14 +38,14 @@ const ruleFunction = (primaryOption: true) => {
 					node: declaration,
 					result,
 					ruleName: rule_name,
-				});
+				})
 			}
-		});
-	};
-};
+		})
+	}
+}
 
-ruleFunction.ruleName = rule_name;
-ruleFunction.messages = messages;
-ruleFunction.meta = meta;
+ruleFunction.ruleName = rule_name
+ruleFunction.messages = messages
+ruleFunction.meta = meta
 
-export default createPlugin(rule_name, ruleFunction);
+export default createPlugin(rule_name, ruleFunction)

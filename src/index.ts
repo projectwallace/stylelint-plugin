@@ -8,7 +8,7 @@ const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
 	max_lines_of_code,
 	no_unused_custom_properties,
-	no_property_browserhacks
+	no_property_browserhacks,
 ]
 
 export default plugins

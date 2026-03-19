@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest'
 import type stylelint from 'stylelint'
-import rules from "./index.js";
+import rules from './index.js'
 
 test('exports an array of stylelint rules', () => {
 	const names = rules.map((rule) => {
@@ -11,6 +11,6 @@ test('exports an array of stylelint rules', () => {
 		'project-wallace/max-selector-complexity',
 		'project-wallace/max-lines-of-code',
 		'project-wallace/no-unused-custom-properties',
-		'project-wallace/no-property-browserhacks'
+		'project-wallace/no-property-browserhacks',
 	])
 })
