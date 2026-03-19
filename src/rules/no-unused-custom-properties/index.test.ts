@@ -170,7 +170,9 @@ test('should error when a custom property declared via @property is never used',
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(`"--unused-color" was declared but never used in a var() (${rule_name})`)
+	expect(warnings[0].text).toBe(
+		`"--unused-color" was declared but never used in a var() (${rule_name})`,
+	)
 })
 
 test('ignores options when options.ignoreProperties types are incorrect', async () => {
