@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root, Declaration } from 'postcss'
+import type { Root, Declaration, AtRule } from 'postcss'
 import { parse_declaration, walk, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser'
 import type { CSSNode } from '@projectwallace/css-parser'
 
@@ -30,12 +30,19 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const declared_properties = new Set<Declaration>()
+		const declared_properties = new Map<string, Declaration | AtRule>()
 		const used_properties = new Set<string>()
+
+		root.walkAtRules('property', function (atRule) {
+			const property_name = atRule.params.trim()
+			if (property_name.startsWith('--')) {
+				declared_properties.set(property_name, atRule)
+			}
+		})
 
 		root.walkDecls(function (declaration) {
 			if (declaration.prop.startsWith('--')) {
-				declared_properties.add(declaration)
+				declared_properties.set(declaration.prop, declaration)
 			}
 
 			const decl_source = root.source!.input.css.substring(
@@ -56,29 +63,24 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			})
 		})
 
-		outer_declared: for (const declaration of declared_properties) {
-			for (const used of used_properties) {
-				if (used === declaration.prop) {
-					continue outer_declared
-				}
-			}
+		for (const [prop, node] of declared_properties) {
+			if (used_properties.has(prop)) continue
 
 			if (secondaryOptions?.ignoreProperties) {
-				for (const ignored of secondaryOptions.ignoreProperties) {
-					if (typeof ignored === 'string' && ignored === declaration.prop) {
-						continue outer_declared
-					} else if (ignored instanceof RegExp && ignored.test(declaration.prop)) {
-						continue outer_declared
-					}
-				}
+				const ignored = secondaryOptions.ignoreProperties.some(
+					(pattern) =>
+						(typeof pattern === 'string' && pattern === prop) ||
+						(pattern instanceof RegExp && pattern.test(prop)),
+				)
+				if (ignored) continue
 			}
 
 			utils.report({
 				result,
 				ruleName: rule_name,
-				message: messages.rejected(declaration.prop),
-				node: declaration,
-				word: declaration.prop,
+				message: messages.rejected(prop),
+				node,
+				word: prop,
 			})
 		}
 	}

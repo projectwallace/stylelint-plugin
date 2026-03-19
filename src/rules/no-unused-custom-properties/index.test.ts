@@ -123,6 +123,58 @@ test('should not error on when an unused custom property is allowed in options.i
 	expect(warnings).toStrictEqual([])
 })
 
+test('should not error when a custom property declared via @property is used in a var()', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			@property --my-color {
+				syntax: '<color>';
+				initial-value: red;
+				inherits: false;
+			}
+			a { color: var(--my-color); }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should error when a custom property declared via @property is never used', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			@property --unused-color {
+				syntax: '<color>';
+				initial-value: red;
+				inherits: false;
+			}`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+	expect(warnings[0].text).toBe(
+		`"--unused-color" was declared but never used in a var() (${rule_name})`,
+	)
+})
+
 test('ignores options when options.ignoreProperties types are incorrect', async () => {
 	const config = {
 		plugins: [plugin],
