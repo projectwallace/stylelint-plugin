@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --prefer-offline --no-audit --no-fund
+      - run: npm ci --prefer-offline --no-audit --no-fund --ignore-scripts
       - run: npm test
 
   typecheck:
@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --prefer-offline --no-audit --no-fund
+      - run: npm ci --prefer-offline --no-audit --no-fund --ignore-scripts
       - run: npm run check
 
   build:
@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --prefer-offline --no-audit --no-fund
+      - run: npm ci --prefer-offline --no-audit --no-fund --ignore-scripts
       - run: npm run build
 
   lint:
@@ -52,7 +52,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --prefer-offline --no-audit --no-fund
+      - run: npm ci --prefer-offline --no-audit --no-fund --ignore-scripts
       - run: npm run lint
 
   audit:
