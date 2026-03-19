@@ -4,10 +4,10 @@ import { collect_declared_properties, collect_var_usages } from '../../utils/cus
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-unused-custom-properties'
+const rule_name = 'project-wallace/no-unknown-custom-property'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) => `"${property}" was declared but never used in a var()`,
+	rejected: (property: string) => `"${property}" is used in a var() but was never declared`,
 })
 
 const meta = {
@@ -15,7 +15,8 @@ const meta = {
 }
 
 interface SecondaryOptions {
-	ignoreProperties?: Array<string | RegExp>
+	allowFallback?: boolean
+	allowList?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
@@ -30,26 +31,26 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		}
 
 		const declared_properties = collect_declared_properties(root)
-		const used_names = new Set(collect_var_usages(root).map((u) => u.name))
+		const usages = collect_var_usages(root)
 
-		for (const [prop, node] of declared_properties) {
-			if (used_names.has(prop)) continue
-
-			if (secondaryOptions?.ignoreProperties) {
-				const ignored = secondaryOptions.ignoreProperties.some(
+		for (const usage of usages) {
+			if (declared_properties.has(usage.name)) continue
+			if (secondaryOptions?.allowFallback && usage.has_fallback) continue
+			if (secondaryOptions?.allowList) {
+				const allowed = secondaryOptions.allowList.some(
 					(pattern) =>
-						(typeof pattern === 'string' && pattern === prop) ||
-						(pattern instanceof RegExp && pattern.test(prop)),
+						(typeof pattern === 'string' && pattern === usage.name) ||
+						(pattern instanceof RegExp && pattern.test(usage.name)),
 				)
-				if (ignored) continue
+				if (allowed) continue
 			}
 
 			utils.report({
 				result,
 				ruleName: rule_name,
-				message: messages.rejected(prop),
-				node,
-				word: prop,
+				message: messages.rejected(usage.name),
+				node: usage.node,
+				word: usage.name,
 			})
 		}
 	}
