@@ -32,13 +32,13 @@
     "@projectwallace/css-parser": "^0.13.9"
   },
   "devDependencies": {
-    "oxlint": "^0.0.22",
-    "stylelint": "^16.0.0",
-    "tsdown": "^0.12.0",
+    "oxlint": "^1.56.0",
+    "stylelint": "^17.0.0",
+    "tsdown": "^0.21.4",
     "typescript": "^5.9.3",
-    "vitest": "^2.0.5"
+    "vitest": "^4.0.0"
   },
   "peerDependencies": {
-    "stylelint": "^16.0.0"
+    "stylelint": "^17.0.0"
   }
 }
