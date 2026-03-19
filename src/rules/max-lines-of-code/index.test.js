@@ -1,13 +1,12 @@
 import stylelint from 'stylelint';
-import { test } from 'uvu'
-import * as assert from 'uvu/assert'
+import { test, expect } from 'vitest'
+import plugin from './index.js'
 
 const rule_name = 'project-wallace/max-lines-of-code'
-const rule_path = './src/rules/max-lines-of-code/index.js'
 
 test('should not run when config is set to a value lower than 0', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: -1,
 		},
@@ -20,13 +19,13 @@ test('should not run when config is set to a value lower than 0', async () => {
 		config,
 	});
 
-	assert.is(errored, false)
-	assert.equal(warnings, [])
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 });
 
 test('should not error on a very simple stylesheet with max-lines=2', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: 2,
 		},
@@ -39,13 +38,13 @@ test('should not error on a very simple stylesheet with max-lines=2', async () =
 		config,
 	});
 
-	assert.is(errored, false)
-	assert.equal(warnings, [])
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 });
 
 test('should error when lines of code exceeds allowed setting', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: 2,
 		},
@@ -68,8 +67,8 @@ test('should error when lines of code exceeds allowed setting', async () => {
 		config,
 	});
 
-	assert.is(errored, true)
-	assert.equal(warnings, [
+	expect(errored).toBe(true)
+	expect(warnings).toStrictEqual([
 		{
 			line: 1,
 			column: 1,
@@ -81,5 +80,3 @@ test('should error when lines of code exceeds allowed setting', async () => {
 		}
 	])
 });
-
-test.run()

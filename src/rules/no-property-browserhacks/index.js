@@ -1,5 +1,5 @@
 import stylelint from "stylelint";
-import { isPropertyHack } from '../../analyzer.modern.js'
+import { isPropertyHack } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint;
 

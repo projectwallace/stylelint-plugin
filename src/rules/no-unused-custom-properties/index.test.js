@@ -1,13 +1,12 @@
 import stylelint from 'stylelint';
-import { test } from 'uvu'
-import * as assert from 'uvu/assert'
+import { test, expect } from 'vitest'
+import plugin from './index.js'
 
 const rule_name = 'project-wallace/no-unused-custom-properties'
-const rule_path = './src/rules/no-unused-custom-properties/index.js'
 
 test('should not error on a single used custom property', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: true,
 		},
@@ -24,13 +23,13 @@ test('should not error on a single used custom property', async () => {
 		config,
 	});
 
-	assert.is(errored, false, 'Expected to pass, but errored')
-	assert.equal(warnings, [])
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 });
 
 test('should not error on when a custom property is used in a fallback var()', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: true,
 		},
@@ -47,13 +46,13 @@ test('should not error on when a custom property is used in a fallback var()', a
 		config,
 	});
 
-	assert.is(errored, false, 'Expected to pass, but errored')
-	assert.equal(warnings, [])
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 });
 
 test('should error on a single unused custom property', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: true,
 		},
@@ -66,19 +65,19 @@ test('should error on a single unused custom property', async () => {
 		config,
 	});
 
-	assert.is(errored, true, 'Expected to error, but passed')
-	assert.is(warnings.length, 1)
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
 
 	const [{ line, column, text }] = warnings;
 
-	assert.is(text, `"--unused" was declared but never used in a var() (${rule_name})`)
-	assert.is(line, 1)
-	assert.is(column, 5)
+	expect(text).toBe(`"--unused" was declared but never used in a var() (${rule_name})`)
+	expect(line).toBe(1)
+	expect(column).toBe(5)
 });
 
 test('should not error on when an unused custom property is allowed in options.ignoreProperties (string)', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
@@ -96,13 +95,13 @@ test('should not error on when an unused custom property is allowed in options.i
 		config,
 	});
 
-	assert.is(errored, false, 'Expected to error, but passed')
-	assert.equal(warnings, [])
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 });
 
 test('should not error on when an unused custom property is allowed in options.ignoreProperties (RegExp)', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
@@ -120,13 +119,13 @@ test('should not error on when an unused custom property is allowed in options.i
 		config,
 	});
 
-	assert.is(errored, false, 'Expected to error, but passed')
-	assert.equal(warnings, [])
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 });
 
 test('ignores options when options.ignoreProperties types are incorrect', async () => {
 	const config = {
-		plugins: [rule_path],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
@@ -144,14 +143,12 @@ test('ignores options when options.ignoreProperties types are incorrect', async 
 		config,
 	});
 
-	assert.is(errored, true)
-	assert.is(warnings.length, 1)
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
 
 	const [{ line, column, text }] = warnings;
 
-	assert.is(text, `"--unused" was declared but never used in a var() (${rule_name})`)
-	assert.is(line, 1)
-	assert.is(column, 5)
+	expect(text).toBe(`"--unused" was declared but never used in a var() (${rule_name})`)
+	expect(line).toBe(1)
+	expect(column).toBe(5)
 });
-
-test.run()

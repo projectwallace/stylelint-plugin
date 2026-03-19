@@ -1,5 +1,5 @@
 import stylelint from "stylelint";
-import { analyze } from '../../analyzer.modern.js'
+import { analyze } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint;
 

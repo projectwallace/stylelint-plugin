@@ -1,6 +1,22 @@
 import stylelint from "stylelint";
-import { parse } from 'css-tree'
-import { selectorComplexity } from '../../analyzer.modern.js'
+import * as csstree from 'css-tree'
+
+function selectorComplexity(selectorNode) {
+	let complexity = 0
+	csstree.walk(selectorNode, (node) => {
+		const t = node.type
+		if (t === 'TypeSelector' || t === 'ClassSelector' || t === 'IdSelector' || t === 'Combinator') {
+			complexity++
+		} else if (t === 'PseudoClassSelector' || t === 'PseudoElementSelector') {
+			complexity++
+			if (node.name && node.name.startsWith('-')) complexity++
+		} else if (t === 'AttributeSelector') {
+			complexity++
+			if (node.value) complexity++
+		}
+	})
+	return complexity
+}
 
 const { createPlugin, utils } = stylelint;
 
@@ -31,7 +47,7 @@ const ruleFunction = (primaryOption) => {
 
 		root.walkRules((rule) => {
 			const selector = rule.selector;
-			let parsed = parse(selector, { context: 'selectorList', positions: true })
+			let parsed = csstree.parse(selector, { context: 'selectorList', positions: true })
 
 			for (let sel of parsed.children) {
 				const complexity = selectorComplexity(sel)

@@ -1,12 +1,12 @@
 import stylelint from 'stylelint';
-import { test } from 'uvu'
-import * as assert from 'uvu/assert'
+import { test, expect } from 'vitest'
+import plugin from './index.js'
 
 const rule_name = 'project-wallace/no-property-browserhacks'
 
 test('should not error on a regular property', async () => {
 	const config = {
-		plugins: ['./src/rules/no-property-browserhacks/index.js'],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: true,
 		},
@@ -19,13 +19,13 @@ test('should not error on a regular property', async () => {
 		config,
 	});
 
-	assert.is(errored, false, 'Expected to pass, but errored')
-	assert.equal(warnings, [])
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 });
 
 test('should error on a property hack', async () => {
 	const config = {
-		plugins: ['./src/rules/no-property-browserhacks/index.js'],
+		plugins: [plugin],
 		rules: {
 			[rule_name]: true,
 		},
@@ -38,14 +38,12 @@ test('should error on a property hack', async () => {
 		config,
 	});
 
-	assert.is(errored, true, 'Expected to error, but passed')
-	assert.is(warnings.length, 1)
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
 
 	const [{ line, column, text }] = warnings;
 
-	assert.is(text, `Property "*zoom" is a browserhack and is not allowed`)
-	assert.is(line, 1)
-	assert.is(column, 5)
+	expect(text).toBe(`Property "*zoom" is a browserhack and is not allowed`)
+	expect(line).toBe(1)
+	expect(column).toBe(5)
 });
-
-test.run()
