@@ -21,7 +21,8 @@ Add the plugin and configure rules in your stylelint config:
 		"projectwallace/max-lines-of-code": 200,
 		"projectwallace/max-selector-complexity": 5,
 		"projectwallace/no-property-browserhacks": true,
-		"projectwallace/no-unused-custom-properties": true
+		"projectwallace/no-unused-custom-properties": true,
+		"projectwallace/no-unused-layers": true
 	}
 }
 ```
@@ -34,6 +35,7 @@ Add the plugin and configure rules in your stylelint config:
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)         | Prevent selector complexity from going over a predefined maximum         |
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)       | Prevent the use of known browserhacks for properties                     |
 | [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md) | Disallow custom properties that are never used in a `var()`              |
+| [no-unused-layers](src/rules/no-unused-layers/README.md)                       | Disallow `@layer` names that are declared but never defined              |
 
 ## License
 

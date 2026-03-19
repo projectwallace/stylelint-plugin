@@ -12,5 +12,6 @@ test('exports an array of stylelint rules', () => {
 		'project-wallace/max-lines-of-code',
 		'project-wallace/no-unused-custom-properties',
 		'project-wallace/no-property-browserhacks',
+		'project-wallace/no-unused-layers',
 	])
 })
