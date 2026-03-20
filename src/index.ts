@@ -8,6 +8,7 @@ import no_unused_layers from './rules/no-unused-layers/index.js'
 import no_unused_container_names from './rules/no-unused-container-names/index.js'
 import no_undeclared_container_names from './rules/no-undeclared-container-names/index.js'
 import no_anonymous_layers from './rules/no-anonymous-layers/index.js'
+import no_useless_custom_property_assignment from './rules/no-useless-custom-property-assignment/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -19,6 +20,7 @@ const plugins: stylelint.Plugin[] = [
 	no_unused_container_names,
 	no_undeclared_container_names,
 	no_anonymous_layers,
+	no_useless_custom_property_assignment,
 ]
 
 export default plugins
