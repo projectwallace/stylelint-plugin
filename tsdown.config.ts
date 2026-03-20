@@ -5,4 +5,5 @@ export default defineConfig({
 	format: ['esm'],
 	platform: 'node',
 	dts: true,
+	publint: true,
 })
