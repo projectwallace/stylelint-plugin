@@ -127,6 +127,85 @@ test('should only error for anonymous layers, not named ones', async () => {
 	expect(warnings.length).toBe(1)
 })
 
+test('should not error when @import uses a named layer', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@import url(test.css) layer(mobile) supports(display: grid);`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should error when @import uses an anonymous layer with a media query', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@import url(test.css) layer (min-width: 1000px);`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+
+	const [{ text }] = warnings
+	expect(text).toBe(`Anonymous @layer is not allowed (${rule_name})`)
+})
+
+test('should error when @import uses a bare anonymous layer', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@import url(test.css) layer;`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+})
+
+test('should error when @import uses an anonymous layer with empty parens', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@import url(test.css) layer();`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+})
+
 test('should not run when primary option is invalid', async () => {
 	const config = {
 		plugins: [plugin],

@@ -36,6 +36,23 @@ const ruleFunction = (primaryOptions: true) => {
 				})
 			}
 		})
+
+		root.walkAtRules('import', (atRule: AtRule) => {
+			const params = atRule.params
+			// Check for 'layer' keyword in @import params
+			if (!/\blayer\b/.test(params)) return
+			// Named layer uses function notation with no space: layer(name)
+			// If params contain layer(non-empty), it's a named layer — not anonymous
+			if (/\blayer\([^)]+\)/.test(params)) return
+			// Otherwise: bare 'layer', 'layer()', or 'layer ' before a media query — anonymous
+			utils.report({
+				result,
+				ruleName: rule_name,
+				message: messages.rejected(),
+				node: atRule,
+				word: 'layer',
+			})
+		})
 	}
 }
 

@@ -27,6 +27,16 @@ The following are considered problems:
 @layer { * { margin: 0; } }
 ```
 
+<!-- prettier-ignore -->
+```css
+@import url(test.css) layer;
+```
+
+<!-- prettier-ignore -->
+```css
+@import url(test.css) layer (min-width: 1000px);
+```
+
 The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
@@ -39,4 +49,9 @@ The following patterns are _not_ considered problems:
 @layer reset, utilities;
 @layer reset { * { margin: 0; } }
 @layer utilities { .u-flex { display: flex; } }
+```
+
+<!-- prettier-ignore -->
+```css
+@import url(test.css) layer(mobile) supports(display: grid);
 ```
