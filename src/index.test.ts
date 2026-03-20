@@ -14,5 +14,7 @@ test('exports an array of stylelint rules', () => {
 		'project-wallace/no-unknown-custom-property',
 		'project-wallace/no-property-browserhacks',
 		'project-wallace/no-unused-layers',
+		'project-wallace/no-unused-container-names',
+		'project-wallace/no-undeclared-container-names',
 	])
 })
