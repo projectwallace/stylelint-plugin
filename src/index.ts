@@ -7,6 +7,7 @@ import max_lines_of_code from './rules/max-lines-of-code/index.js'
 import no_unused_layers from './rules/no-unused-layers/index.js'
 import no_unused_container_names from './rules/no-unused-container-names/index.js'
 import no_undeclared_container_names from './rules/no-undeclared-container-names/index.js'
+import no_anonymous_layers from './rules/no-anonymous-layers/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -17,6 +18,7 @@ const plugins: stylelint.Plugin[] = [
 	no_unused_layers,
 	no_unused_container_names,
 	no_undeclared_container_names,
+	no_anonymous_layers,
 ]
 
 export default plugins
