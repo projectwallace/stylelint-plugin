@@ -18,6 +18,13 @@ Add the plugin and configure rules in your stylelint config:
 {
 	"plugins": ["@projectwallace/stylelint-plugin"],
 	"rules": {
+		"projectwallace/max-average-declarations-per-rule": 5,
+		"projectwallace/max-average-selector-complexity": 2,
+		"projectwallace/max-average-selectors-per-rule": 2,
+		"projectwallace/max-comment-size": 2500,
+		"projectwallace/max-embedded-content-size": 10000,
+		"projectwallace/max-file-size": 200000,
+		"projectwallace/max-important-ratio": 1,
 		"projectwallace/max-lines-of-code": 200,
 		"projectwallace/max-selector-complexity": 5,
 		"projectwallace/no-anonymous-layers": true,
@@ -39,9 +46,16 @@ Add the plugin and configure rules in your stylelint config:
 
 | Rule                                                                                               | Description                                                                |
 | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [max-average-declarations-per-rule](src/rules/max-average-declarations-per-rule/README.md)         | Limit the average number of declarations per rule across the stylesheet    |
+| [max-average-selector-complexity](src/rules/max-average-selector-complexity/README.md)             | Limit the average selector complexity across the stylesheet                |
+| [max-average-selectors-per-rule](src/rules/max-average-selectors-per-rule/README.md)               | Limit the average number of selectors per rule across the stylesheet       |
+| [max-comment-size](src/rules/max-comment-size/README.md)                                           | Limit the total byte size of comments in a stylesheet                      |
+| [max-embedded-content-size](src/rules/max-embedded-content-size/README.md)                         | Limit the total byte size of embedded content (data URIs) in a stylesheet  |
+| [max-file-size](src/rules/max-file-size/README.md)                                                 | Limit the total byte size of a stylesheet                                  |
+| [max-important-ratio](src/rules/max-important-ratio/README.md)                                     | Limit the ratio of `!important` declarations relative to all declarations  |
 | [max-lines-of-code](src/rules/max-lines-of-code/README.md)                                         | Prevent a stylesheet from exceeding a predefined number of lines of code   |
-| [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                                     | Disallow anonymous (unnamed) `@layer` blocks                               |
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                             | Prevent selector complexity from going over a predefined maximum           |
+| [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                                     | Disallow anonymous (unnamed) `@layer` blocks                               |
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                           | Prevent the use of known browserhacks for properties                       |
 | [no-undeclared-container-names](src/rules/no-undeclared-container-names/README.md)                 | Disallow container names in `@container` that were never declared          |
 | [no-unknown-custom-property](src/rules/no-unknown-custom-property/README.md)                       | Disallow the use of undeclared custom properties in a `var()`              |
