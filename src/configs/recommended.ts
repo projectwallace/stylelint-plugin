@@ -1,7 +1,7 @@
 export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
-		'projectwallace/max-lines-of-code': 15,
+		'projectwallace/max-lines-of-code': 10000,
 		'projectwallace/max-selector-complexity': 15,
 		'projectwallace/no-anonymous-layers': true,
 		'projectwallace/no-property-browserhacks': true,
