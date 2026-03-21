@@ -26,7 +26,7 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const analysis = analyze(root.source!.input.css)
+		const analysis = analyze(root.toString())
 		const actual = analysis.stylesheet.sourceLinesOfCode
 
 		if (actual > primaryOption) {
