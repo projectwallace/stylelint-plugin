@@ -9,7 +9,7 @@ Disallow media queries that contain logically contradictory conditions — combi
 *                 These conditions can never both be true */
 ```
 
-This catches dead code introduced by copy-paste errors or misconfigured breakpoints. Both the legacy `min-width`/`max-width` syntax and the modern range syntax (`width > X`) are supported.
+This catches dead code introduced by copy-paste errors or misconfigured breakpoints. Both the legacy `min-width`/`max-width` syntax and the modern range syntax (`width > X`) are supported, for any numeric media feature including logical properties, pixel ratios, and dimensions. `@import` rules with media conditions are also checked.
 
 ## Options
 
@@ -47,6 +47,30 @@ The following patterns are considered violations:
 @media (500px <= width <= 800px) and (min-width: 1000px) {}
 ```
 
+<!-- prettier-ignore -->
+```css
+/* logical property: inline-size */
+@media (min-inline-size: 1000px) and (max-inline-size: 400px) {}
+```
+
+<!-- prettier-ignore -->
+```css
+/* device-pixel-ratio */
+@media (min-resolution: 3dppx) and (max-resolution: 1dppx) {}
+```
+
+<!-- prettier-ignore -->
+```css
+/* height */
+@media (min-height: 800px) and (max-height: 400px) {}
+```
+
+<!-- prettier-ignore -->
+```css
+/* @import with contradictory media condition */
+@import url(narrow.css) (400px <= width <= 200px);
+```
+
 The following patterns are _not_ considered violations:
 
 <!-- prettier-ignore -->
@@ -71,4 +95,10 @@ The following patterns are _not_ considered violations:
 ```css
 /* queries with `not` are skipped to avoid false positives */
 @media not screen {}
+```
+
+<!-- prettier-ignore -->
+```css
+/* valid @import media condition */
+@import url(wide.css) (min-width: 600px) and (max-width: 1200px);
 ```
