@@ -21,7 +21,7 @@
 		"default": "./dist/index.mjs"
 	},
 	"scripts": {
-		"test": "vitest",
+		"test": "vitest --coverage",
 		"check": "tsc --noEmit",
 		"lint": "oxlint -D perf; oxfmt --check",
 		"build": "tsdown"
@@ -31,6 +31,9 @@
 		"@projectwallace/css-parser": "^0.13.9"
 	},
 	"devDependencies": {
+		"@codecov/rollup-plugin": "^1.9.1",
+		"@types/node": "^25.5.0",
+		"@vitest/coverage-v8": "^4.0.0",
 		"oxfmt": "^0.41.0",
 		"oxlint": "^1.56.0",
 		"publint": "^0.3.18",
