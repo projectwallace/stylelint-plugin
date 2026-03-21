@@ -4,14 +4,14 @@ import { collect_declared_properties, collect_var_usages } from '../../utils/cus
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-unknown-custom-property'
+const rule_name = 'projectwallace/no-unknown-custom-property'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (property: string) => `"${property}" is used in a var() but was never declared`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugins',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unknown-custom-property/README.md',
 }
 
 interface SecondaryOptions {

@@ -5,7 +5,7 @@ import type { CSSNode } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-useless-custom-property-assignment'
+const rule_name = 'projectwallace/no-useless-custom-property-assignment'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (property: string) =>
@@ -13,7 +13,7 @@ const messages = utils.ruleMessages(rule_name, {
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugins',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-useless-custom-property-assignment/README.md',
 }
 
 interface SecondaryOptions {

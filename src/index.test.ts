@@ -8,18 +8,18 @@ test('exports an array of stylelint rules', () => {
 		return plugin.ruleName
 	})
 	expect(names).toStrictEqual([
-		'project-wallace/max-selector-complexity',
-		'project-wallace/max-lines-of-code',
-		'project-wallace/no-unused-custom-properties',
-		'project-wallace/no-unknown-custom-property',
-		'project-wallace/no-property-browserhacks',
-		'project-wallace/no-unused-layers',
-		'project-wallace/no-unused-container-names',
-		'project-wallace/no-undeclared-container-names',
-		'project-wallace/no-anonymous-layers',
-		'project-wallace/no-useless-custom-property-assignment',
-		'project-wallace/no-unreachable-media-conditions',
-		'project-wallace/no-static-media-query',
-		'project-wallace/no-static-container-query',
+		'projectwallace/max-selector-complexity',
+		'projectwallace/max-lines-of-code',
+		'projectwallace/no-unused-custom-properties',
+		'projectwallace/no-unknown-custom-property',
+		'projectwallace/no-property-browserhacks',
+		'projectwallace/no-unused-layers',
+		'projectwallace/no-unused-container-names',
+		'projectwallace/no-undeclared-container-names',
+		'projectwallace/no-anonymous-layers',
+		'projectwallace/no-useless-custom-property-assignment',
+		'projectwallace/no-unreachable-media-conditions',
+		'projectwallace/no-static-media-query',
+		'projectwallace/no-static-container-query',
 	])
 })

@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'project-wallace/max-lines-of-code'
+const rule_name = 'projectwallace/max-lines-of-code'
 
 test('should not run when config is set to a value lower than 0', async () => {
 	const config = {
@@ -76,6 +76,6 @@ test('should error when lines of code exceeds allowed setting', async () => {
 		endColumn: 3,
 		rule: rule_name,
 		severity: 'error',
-		text: 'Counted 4 Lines of Code which is greater than the allowed 2 (project-wallace/max-lines-of-code)',
+		text: 'Counted 4 Lines of Code which is greater than the allowed 2 (projectwallace/max-lines-of-code)',
 	})
 })

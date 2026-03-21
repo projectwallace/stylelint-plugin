@@ -3,14 +3,14 @@ import type { Root, AtRule } from 'postcss'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-unused-layers'
+const rule_name = 'projectwallace/no-unused-layers'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (layer: string) => `Layer "${layer}" was declared but never defined`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unused-layers/README.md',
 }
 
 interface SecondaryOptions {

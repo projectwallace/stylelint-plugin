@@ -7,7 +7,7 @@ import {
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-unused-container-names'
+const rule_name = 'projectwallace/no-unused-container-names'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (name: string) =>
@@ -15,7 +15,7 @@ const messages = utils.ruleMessages(rule_name, {
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unused-container-names/README.md',
 }
 
 interface SecondaryOptions {

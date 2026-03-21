@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'project-wallace/no-unknown-custom-property'
+const rule_name = 'projectwallace/no-unknown-custom-property'
 
 test('should not error when a custom property is declared and used', async () => {
 	const config = {

@@ -4,14 +4,14 @@ import { parse_declaration } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-property-browserhacks'
+const rule_name = 'projectwallace/no-property-browserhacks'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (property: string) => `Property "${property}" is a browserhack and is not allowed`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugins',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-property-browserhacks/README.md',
 }
 
 const ruleFunction = (primaryOption: true) => {

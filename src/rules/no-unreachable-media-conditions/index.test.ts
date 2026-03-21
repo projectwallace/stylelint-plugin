@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'project-wallace/no-unreachable-media-conditions'
+const rule_name = 'projectwallace/no-unreachable-media-conditions'
 
 const config = {
 	plugins: [plugin],

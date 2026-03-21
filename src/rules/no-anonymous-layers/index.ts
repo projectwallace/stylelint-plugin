@@ -3,14 +3,14 @@ import type { Root, AtRule } from 'postcss'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-anonymous-layers'
+const rule_name = 'projectwallace/no-anonymous-layers'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: () => `Anonymous @layer is not allowed`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-anonymous-layers/README.md',
 }
 
 const ruleFunction = (primaryOptions: true) => {

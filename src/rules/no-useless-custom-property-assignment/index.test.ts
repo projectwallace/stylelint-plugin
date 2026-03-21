@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'project-wallace/no-useless-custom-property-assignment'
+const rule_name = 'projectwallace/no-useless-custom-property-assignment'
 
 const config = {
 	plugins: [plugin],

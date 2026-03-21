@@ -5,7 +5,7 @@ import { selectorComplexity } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/max-selector-complexity'
+const rule_name = 'projectwallace/max-selector-complexity'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (selector: string, actual: number, expected: number) =>
@@ -13,7 +13,7 @@ const messages = utils.ruleMessages(rule_name, {
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugins',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-selector-complexity/README.md',
 }
 
 const ruleFunction = (primaryOption: number) => {

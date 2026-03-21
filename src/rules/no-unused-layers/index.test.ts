@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'project-wallace/no-unused-layers'
+const rule_name = 'projectwallace/no-unused-layers'
 
 test('should not error when a declared layer is defined in a block', async () => {
 	const config = {
