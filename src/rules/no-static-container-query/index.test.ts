@@ -77,9 +77,7 @@ test('named container with range feature — no error', async () => {
 })
 
 test('comma-separated queries are independent — no error when neither uses equality', async () => {
-	const { errored, warnings } = await lint(
-		'@container (min-width: 1000px), (max-width: 500px) {}',
-	)
+	const { errored, warnings } = await lint('@container (min-width: 1000px), (max-width: 500px) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -107,9 +105,7 @@ test('named container with equality width — error', async () => {
 })
 
 test('equality width with conflicting min-width — error', async () => {
-	const { errored, warnings } = await lint(
-		'@container (width: 300px) and (min-width: 400px) {}',
-	)
+	const { errored, warnings } = await lint('@container (width: 300px) and (min-width: 400px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
@@ -118,9 +114,7 @@ test('equality width with conflicting min-width — error', async () => {
 })
 
 test('equality width with conflicting max-width — error', async () => {
-	const { errored, warnings } = await lint(
-		'@container (width: 300px) and (max-width: 200px) {}',
-	)
+	const { errored, warnings } = await lint('@container (width: 300px) and (max-width: 200px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
