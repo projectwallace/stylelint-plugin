@@ -1,4 +1,4 @@
-import { MEDIA_FEATURE, FEATURE_RANGE, PRELUDE_OPERATOR, DIMENSION } from '@projectwallace/css-parser'
+import { MEDIA_FEATURE, FEATURE_RANGE, PRELUDE_OPERATOR, DIMENSION, NUMBER } from '@projectwallace/css-parser'
 import type { CSSNode } from '@projectwallace/css-parser'
 
 export type Bound = {
@@ -32,9 +32,9 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound | null {
 		return null
 	}
 
-	// Find first DIMENSION child
+	// Find first DIMENSION or NUMBER child
 	for (const child of node.children) {
-		if (child.type === DIMENSION) {
+		if (child.type === DIMENSION || child.type === NUMBER) {
 			const value = child.value_as_number
 			const unit = child.unit ?? ''
 			if (value == null || Number.isNaN(value)) return null
@@ -60,11 +60,13 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 
 	const bounds: Bound[] = []
 
-	// Case A: [OP, DIM] → feature OP value (e.g. width >= 400px)
+	const is_value_node = (n: CSSNode) => n.type === DIMENSION || n.type === NUMBER
+
+	// Case A: [OP, DIM/NUM] → feature OP value (e.g. width >= 400px, device-pixel-ratio > 2)
 	if (
 		children.length >= 2 &&
 		children[0].type === PRELUDE_OPERATOR &&
-		children[1].type === DIMENSION
+		is_value_node(children[1])
 	) {
 		const op = children[0].text.trim()
 		const dim = children[1]
@@ -75,13 +77,13 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 			if (bound) bounds.push({ ...bound, feature })
 		}
 	}
-	// Case B: [DIM, OP, OP, DIM] → value1 OP1 feature OP2 value2 (e.g. 50px <= width <= 100px)
+	// Case B: [DIM/NUM, OP, OP, DIM/NUM] → value1 OP1 feature OP2 value2
 	else if (
 		children.length >= 4 &&
-		children[0].type === DIMENSION &&
+		is_value_node(children[0]) &&
 		children[1].type === PRELUDE_OPERATOR &&
 		children[2].type === PRELUDE_OPERATOR &&
-		children[3].type === DIMENSION
+		is_value_node(children[3])
 	) {
 		const dim1 = children[0]
 		const op1 = children[1].text.trim()

@@ -203,6 +203,47 @@ test('double-sided range where lower bound exceeds upper bound', async () => {
 	)
 })
 
+test('height: min > max should error', async () => {
+	const { errored, warnings } = await lint(
+		'@media (min-height: 1000px) and (max-height: 500px) {}',
+	)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "height" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('inline-size (logical property): min > max should error', async () => {
+	const { errored, warnings } = await lint(
+		'@media (min-inline-size: 1000px) and (max-inline-size: 500px) {}',
+	)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "inline-size" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('device-pixel-ratio (unitless): min > max should error', async () => {
+	const { errored, warnings } = await lint(
+		'@media (min-device-pixel-ratio: 3) and (max-device-pixel-ratio: 1) {}',
+	)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "device-pixel-ratio" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('device-pixel-ratio range syntax: conflicting should error', async () => {
+	const { errored, warnings } = await lint(
+		'@media (device-pixel-ratio > 3) and (device-pixel-ratio < 1) {}',
+	)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})
+
 test('multiple @media rules each with an error', async () => {
 	const { errored, warnings } = await lint(`
 		@media (min-width: 1000px) and (max-width: 500px) {}
