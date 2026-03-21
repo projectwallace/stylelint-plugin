@@ -21,5 +21,12 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-unreachable-media-conditions',
 		'projectwallace/no-static-media-query',
 		'projectwallace/no-static-container-query',
+		'projectwallace/max-file-size',
+		'projectwallace/max-embedded-content-size',
+		'projectwallace/max-comment-size',
+		'projectwallace/max-average-selectors-per-rule',
+		'projectwallace/max-average-declarations-per-rule',
+		'projectwallace/max-average-selector-complexity',
+		'projectwallace/max-important-ratio',
 	])
 })
