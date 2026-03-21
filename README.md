@@ -22,6 +22,7 @@ Add the plugin and configure rules in your stylelint config:
 		"projectwallace/max-selector-complexity": 5,
 		"projectwallace/no-property-browserhacks": true,
 		"projectwallace/no-undeclared-container-names": true,
+		"projectwallace/no-static-media-query": true,
 		"projectwallace/no-unreachable-media-conditions": true,
 		"projectwallace/no-unused-container-names": true,
 		"projectwallace/no-unused-custom-properties": true,
@@ -44,6 +45,7 @@ Add the plugin and configure rules in your stylelint config:
 | [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md) | Disallow custom property assignments that reference themselves via `var()` |
 | [no-unused-container-names](src/rules/no-unused-container-names/README.md)                         | Disallow container names that are declared but never queried               |
 | [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)                     | Disallow custom properties that are never used in a `var()`                |
+| [no-static-media-query](src/rules/no-static-media-query/README.md)                                 | Disallow static (exact-match) numeric media feature conditions             |
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match  |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never defined                |
 
