@@ -27,49 +27,37 @@ test('media type only', async () => {
 })
 
 test('non-conflicting min/max width', async () => {
-	const { errored, warnings } = await lint(
-		'@media (min-width: 100px) and (max-width: 1000px) {}',
-	)
+	const { errored, warnings } = await lint('@media (min-width: 100px) and (max-width: 1000px) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('exact match bounds (min == max) — valid', async () => {
-	const { errored, warnings } = await lint(
-		'@media (min-width: 500px) and (max-width: 500px) {}',
-	)
+	const { errored, warnings } = await lint('@media (min-width: 500px) and (max-width: 500px) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('different features (width and height) — not contradictory', async () => {
-	const { errored, warnings } = await lint(
-		'@media (min-width: 1000px) and (max-height: 500px) {}',
-	)
+	const { errored, warnings } = await lint('@media (min-width: 1000px) and (max-height: 500px) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('mixed units — skip comparison, no error', async () => {
-	const { errored, warnings } = await lint(
-		'@media (min-width: 1000px) and (max-width: 500em) {}',
-	)
+	const { errored, warnings } = await lint('@media (min-width: 1000px) and (max-width: 500em) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('valid range syntax', async () => {
-	const { errored, warnings } = await lint(
-		'@media (width >= 100px) and (width <= 1000px) {}',
-	)
+	const { errored, warnings } = await lint('@media (width >= 100px) and (width <= 1000px) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('comma-separated queries are independent — no error', async () => {
-	const { errored, warnings } = await lint(
-		'@media (min-width: 1000px), (max-width: 500px) {}',
-	)
+	const { errored, warnings } = await lint('@media (min-width: 1000px), (max-width: 500px) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -109,9 +97,7 @@ test('screen and valid min-width', async () => {
 // === Invalid cases (should error) ===
 
 test('min-width greater than max-width', async () => {
-	const { errored, warnings } = await lint(
-		'@media (min-width: 1000px) and (max-width: 500px) {}',
-	)
+	const { errored, warnings } = await lint('@media (min-width: 1000px) and (max-width: 500px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
@@ -133,9 +119,7 @@ test('issue example: screen and conflicting min/max', async () => {
 })
 
 test('range syntax: width > X and width < X (exclusive equal bounds)', async () => {
-	const { errored, warnings } = await lint(
-		'@media (width > 1000px) and (width < 1000px) {}',
-	)
+	const { errored, warnings } = await lint('@media (width > 1000px) and (width < 1000px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
@@ -144,25 +128,19 @@ test('range syntax: width > X and width < X (exclusive equal bounds)', async () 
 })
 
 test('range syntax: width > X and width < Y where Y < X', async () => {
-	const { errored, warnings } = await lint(
-		'@media (width > 1000px) and (width < 500px) {}',
-	)
+	const { errored, warnings } = await lint('@media (width > 1000px) and (width < 500px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 })
 
 test('range syntax: width >= X and width <= Y where Y < X', async () => {
-	const { errored, warnings } = await lint(
-		'@media (width >= 1000px) and (width <= 500px) {}',
-	)
+	const { errored, warnings } = await lint('@media (width >= 1000px) and (width <= 500px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 })
 
 test('range syntax: width >= X and width < X (exclusive upper at same bound)', async () => {
-	const { errored, warnings } = await lint(
-		'@media (width >= 1000px) and (width < 1000px) {}',
-	)
+	const { errored, warnings } = await lint('@media (width >= 1000px) and (width < 1000px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 })
@@ -204,9 +182,7 @@ test('double-sided range where lower bound exceeds upper bound', async () => {
 })
 
 test('height: min > max should error', async () => {
-	const { errored, warnings } = await lint(
-		'@media (min-height: 1000px) and (max-height: 500px) {}',
-	)
+	const { errored, warnings } = await lint('@media (min-height: 1000px) and (max-height: 500px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(

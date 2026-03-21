@@ -1,4 +1,10 @@
-import { MEDIA_FEATURE, FEATURE_RANGE, PRELUDE_OPERATOR, DIMENSION, NUMBER } from '@projectwallace/css-parser'
+import {
+	MEDIA_FEATURE,
+	FEATURE_RANGE,
+	PRELUDE_OPERATOR,
+	DIMENSION,
+	NUMBER,
+} from '@projectwallace/css-parser'
 import type { CSSNode } from '@projectwallace/css-parser'
 
 export type Bound = {
@@ -63,11 +69,7 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 	const is_value_node = (n: CSSNode) => n.type === DIMENSION || n.type === NUMBER
 
 	// Case A: [OP, DIM/NUM] → feature OP value (e.g. width >= 400px, device-pixel-ratio > 2)
-	if (
-		children.length >= 2 &&
-		children[0].type === PRELUDE_OPERATOR &&
-		is_value_node(children[1])
-	) {
+	if (children.length >= 2 && children[0].type === PRELUDE_OPERATOR && is_value_node(children[1])) {
 		const op = children[0].text.trim()
 		const dim = children[1]
 		const value = dim.value_as_number
@@ -193,10 +195,7 @@ export function find_contradictory_feature(bounds: Bound[]): string | null {
 			})
 
 			if (max_lower.value > min_upper.value) return feature
-			if (
-				max_lower.value === min_upper.value &&
-				(!max_lower.inclusive || !min_upper.inclusive)
-			)
+			if (max_lower.value === min_upper.value && (!max_lower.inclusive || !min_upper.inclusive))
 				return feature
 		}
 	}

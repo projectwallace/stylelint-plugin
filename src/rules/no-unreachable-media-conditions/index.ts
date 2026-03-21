@@ -20,8 +20,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'project-wallace/no-unreachable-media-conditions'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (feature: string) =>
-		`Media feature "${feature}" creates an unreachable condition`,
+	rejected: (feature: string) => `Media feature "${feature}" creates an unreachable condition`,
 })
 
 const meta = {
