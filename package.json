@@ -31,6 +31,7 @@
 		"@projectwallace/css-parser": "^0.13.9"
 	},
 	"devDependencies": {
+		"@codecov/rollup-plugin": "^1.9.1",
 		"@vitest/coverage-v8": "^4.0.0",
 		"oxfmt": "^0.41.0",
 		"oxlint": "^1.56.0",

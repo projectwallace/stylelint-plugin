@@ -45,6 +45,8 @@ jobs:
           cache: npm
       - run: npm ci --prefer-offline --no-audit --no-fund --ignore-scripts
       - run: npm run build
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   lint:
     name: Lint
