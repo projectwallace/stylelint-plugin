@@ -28,12 +28,12 @@ const ruleFunction = (primaryOption: number) => {
 		}
 
 		root.walkRules((rule) => {
-			const selector = rule.selector
-			const parsed = parse_selector(selector)
+			const selector_list = rule.selector
+			const parsed = parse_selector(selector_list)
 
-			for (const sel of parsed.children) {
-				const complexity = selectorComplexity(sel)
-				const stringified = sel.text.replace(/\n/g, '')
+			for (const selector of parsed.children) {
+				const complexity = selectorComplexity(selector)
+				const stringified = selector.text.replace(/\n/g, '')
 
 				if (complexity > primaryOption) {
 					utils.report({
