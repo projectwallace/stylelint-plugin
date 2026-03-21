@@ -204,3 +204,38 @@ test('multiple @media rules each with equality syntax — two errors', async () 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(2)
 })
+
+// === Other units ===
+
+test('equality width in em — error', async () => {
+	const { errored, warnings } = await lint('@media (width: 30em) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('equality width in rem — error', async () => {
+	const { errored, warnings } = await lint('@media (width: 30rem) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('min-width in em — no error', async () => {
+	const { errored, warnings } = await lint('@media (min-width: 30em) {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('equality width in em with conflicting min-width in em — error', async () => {
+	const { errored, warnings } = await lint('@media (width: 30em) and (min-width: 40em) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})

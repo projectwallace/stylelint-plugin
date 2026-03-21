@@ -314,3 +314,33 @@ test('equality inline-size with conflicting min-inline-size — error', async ()
 		`Media feature "inline-size" creates an unreachable condition (${rule_name})`,
 	)
 })
+
+test('equality width in em with conflicting min-width in em — error', async () => {
+	const { errored, warnings } = await lint('@media (width: 30em) and (min-width: 40em) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('equality width in em with conflicting max-width in em — error', async () => {
+	const { errored, warnings } = await lint('@media (width: 30em) and (max-width: 20em) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('equality width in em with inclusive min-width at same value — no error', async () => {
+	const { errored, warnings } = await lint('@media (width: 30em) and (min-width: 30em) {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('equality width in em, conflicting bound in px — no error (mixed units)', async () => {
+	const { errored, warnings } = await lint('@media (width: 30em) and (min-width: 400px) {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

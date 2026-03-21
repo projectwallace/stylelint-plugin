@@ -63,6 +63,12 @@ The following patterns are considered violations:
 @import url(narrow.css) (width: 300px);
 ```
 
+<!-- prettier-ignore -->
+```css
+/* works for any numeric unit, not just px */
+@media (width: 30em) {}
+```
+
 The following patterns are _not_ considered violations:
 
 <!-- prettier-ignore -->
