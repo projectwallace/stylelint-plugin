@@ -194,6 +194,15 @@ test('only one report per @media rule even with multiple conflicting features', 
 	expect(warnings).toHaveLength(1)
 })
 
+test('double-sided range where lower bound exceeds upper bound', async () => {
+	const { errored, warnings } = await lint('@media (500px <= width <= 400px) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
 test('multiple @media rules each with an error', async () => {
 	const { errored, warnings } = await lint(`
 		@media (min-width: 1000px) and (max-width: 500px) {}
