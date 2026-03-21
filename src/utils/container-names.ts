@@ -1,4 +1,6 @@
 import type { Root, Declaration, AtRule } from 'postcss'
+import { parse_value, OPERATOR, IDENTIFIER } from '@projectwallace/css-parser'
+import { cssKeywords } from '@projectwallace/css-analyzer'
 
 export function collect_declared_container_names(root: Root): Map<string, Declaration> {
 	const names = new Map<string, Declaration>()
@@ -6,22 +8,22 @@ export function collect_declared_container_names(root: Root): Map<string, Declar
 	root.walkDecls(/^container(-name)?$/i, (decl) => {
 		let value = decl.value.trim()
 
-		// For `container` shorthand, only use the part before the `/`
-		if (decl.prop.toLowerCase() === 'container') {
-			const slash_index = value.indexOf('/')
-			if (slash_index !== -1) {
-				value = value.substring(0, slash_index).trim()
-			}
-		}
-
 		// Skip `none` - not a real container name
-		if (value.toLowerCase() === 'none') return
+		if (cssKeywords.has(value)) return
 
 		// Multiple names can be space-separated
-		const name_list = value.split(/\s+/).filter(Boolean)
-		for (const name of name_list) {
-			if (!names.has(name)) {
-				names.set(name, decl)
+
+		const ast = parse_value(value)
+		for (const node of ast) {
+			// Case: `container` shorthand
+			if (node.type === OPERATOR) {
+				break
+			}
+			if (node.type === IDENTIFIER) {
+				const name = node.text
+				if (!names.has(name)) {
+					names.set(name, decl)
+				}
 			}
 		}
 	})

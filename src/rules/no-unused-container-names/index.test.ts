@@ -26,6 +26,29 @@ test('should not error when a container name is declared and used', async () => 
 	expect(warnings).toStrictEqual([])
 })
 
+test('should not error when multiple container names are declared and used', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			.sidebar { container-name: sidebar test; }
+			@container sidebar (min-width: 700px) { .card { font-size: 1rem; } }
+			@container test (min-width: 700px) { .card { font-size: 1rem; } }
+		`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should error when a container name is declared but never used', async () => {
 	const config = {
 		plugins: [plugin],
@@ -45,6 +68,31 @@ test('should error when a container name is declared but never used', async () =
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
 		`Container name "sidebar" was declared but never used in a @container query (${rule_name})`,
+	)
+})
+
+test('should error when a container name is declared in shorthand with multiple names but never used', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			.sidebar { container-name: sidebar test; }
+			@container sidebar (min-width: 30rem) { .thing { color: red; } }
+		`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+	expect(warnings[0].text).toBe(
+		`Container name "test" was declared but never used in a @container query (${rule_name})`,
 	)
 })
 
