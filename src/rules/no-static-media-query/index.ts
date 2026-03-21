@@ -6,19 +6,14 @@ import {
 	walk,
 	MEDIA_QUERY,
 	MEDIA_FEATURE,
-	FEATURE_RANGE,
+	DIMENSION,
+	NUMBER,
 	PRELUDE_OPERATOR,
 } from '@projectwallace/css-parser'
-import {
-	collect_bound_from_media_feature,
-	collect_bounds_from_feature_range,
-	find_contradictory_feature,
-} from '../../utils/media-conditions.js'
-import type { Bound } from '../../utils/media-conditions.js'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-unreachable-media-conditions'
+const rule_name = 'project-wallace/no-static-media-query'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (feature: string) => `Media feature "${feature}" creates an unreachable condition`,
@@ -29,10 +24,14 @@ const meta = {
 }
 
 /**
- * Parse an at-rule prelude and return the first contradictory feature name,
- * or null if all media conditions are satisfiable.
+ * Parse an at-rule prelude and return the first static (equality-bound) feature name,
+ * or null if no static media features are found.
+ *
+ * A static media feature uses the equality syntax like `(width: 300px)` — without
+ * a `min-` or `max-` prefix. This fixes the feature to a single exact value, which
+ * almost never matches in practice.
  */
-function find_contradiction_in_prelude(at_rule_name: string, prelude: string): string | null {
+function find_static_feature_in_prelude(at_rule_name: string, prelude: string): string | null {
 	const parsed = parse_atrule_prelude(at_rule_name, prelude)
 
 	for (const query_node of parsed) {
@@ -50,19 +49,31 @@ function find_contradiction_in_prelude(at_rule_name: string, prelude: string): s
 		})
 		if (skip) continue
 
-		// Collect all bounds from this media query
-		const bounds: Bound[] = []
+		let static_feature: string | null = null
 
 		walk(query_node, (node) => {
-			if (node.type === MEDIA_FEATURE) {
-				bounds.push(...collect_bound_from_media_feature(node))
-			} else if (node.type === FEATURE_RANGE) {
-				bounds.push(...collect_bounds_from_feature_range(node))
+			if (static_feature !== null) return
+			if (node.type !== MEDIA_FEATURE) return
+
+			const property = node.property
+			if (!property) return
+
+			// Only check unprefixed features — min-/max- are range features
+			if (property.startsWith('min-') || property.startsWith('max-')) return
+
+			// A numeric value makes this an equality (static) condition
+			for (const child of node.children) {
+				if (child.type === DIMENSION || child.type === NUMBER) {
+					const value = child.value_as_number
+					if (value != null && !Number.isNaN(value)) {
+						static_feature = property
+						return
+					}
+				}
 			}
 		})
 
-		const contradictory_feature = find_contradictory_feature(bounds)
-		if (contradictory_feature !== null) return contradictory_feature
+		if (static_feature !== null) return static_feature
 	}
 
 	return null
@@ -76,11 +87,11 @@ function check_at_rule(
 	const prelude = atRule.params
 	if (!prelude) return
 
-	const contradictory_feature = find_contradiction_in_prelude(at_rule_name, prelude)
+	const static_feature = find_static_feature_in_prelude(at_rule_name, prelude)
 
-	if (contradictory_feature !== null) {
+	if (static_feature !== null) {
 		utils.report({
-			message: messages.rejected(contradictory_feature),
+			message: messages.rejected(static_feature),
 			node: atRule,
 			result,
 			ruleName: rule_name,

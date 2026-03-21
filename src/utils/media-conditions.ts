@@ -16,16 +16,20 @@ export type Bound = {
 }
 
 /**
- * Extract a bound from an old-style MEDIA_FEATURE node like (min-width: 1000px).
- * Returns null if the feature is not a range-style min-/max- feature.
+ * Extract bounds from an old-style MEDIA_FEATURE node like (min-width: 1000px) or (width: 300px).
+ * For min-/max- prefixed features, returns a single bound.
+ * For unprefixed features with a numeric value (equality syntax like `width: 300px`),
+ * returns two bounds — one lower and one upper at the same value, both inclusive —
+ * making them compatible with find_contradictory_feature.
+ * Returns an empty array if the feature is not a numeric range-style feature.
  */
-export function collect_bound_from_media_feature(node: CSSNode): Bound | null {
-	if (node.type !== MEDIA_FEATURE) return null
+export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
+	if (node.type !== MEDIA_FEATURE) return []
 
 	const property = node.property
-	if (!property) return null
+	if (!property) return []
 
-	let direction: 'lower' | 'upper'
+	let direction: 'lower' | 'upper' | 'both'
 	let feature: string
 
 	if (property.startsWith('min-')) {
@@ -35,7 +39,8 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound | null {
 		direction = 'upper'
 		feature = property.slice(4)
 	} else {
-		return null
+		direction = 'both'
+		feature = property
 	}
 
 	// Find first DIMENSION or NUMBER child
@@ -43,12 +48,18 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound | null {
 		if (child.type === DIMENSION || child.type === NUMBER) {
 			const value = child.value_as_number
 			const unit = child.unit ?? ''
-			if (value == null || Number.isNaN(value)) return null
-			return { feature, value, unit, inclusive: true, direction }
+			if (value == null || Number.isNaN(value)) return []
+			if (direction === 'both') {
+				return [
+					{ feature, value, unit, inclusive: true, direction: 'lower' },
+					{ feature, value, unit, inclusive: true, direction: 'upper' },
+				]
+			}
+			return [{ feature, value, unit, inclusive: true, direction }]
 		}
 	}
 
-	return null
+	return []
 }
 
 /**

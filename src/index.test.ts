@@ -19,5 +19,6 @@ test('exports an array of stylelint rules', () => {
 		'project-wallace/no-anonymous-layers',
 		'project-wallace/no-useless-custom-property-assignment',
 		'project-wallace/no-unreachable-media-conditions',
+		'project-wallace/no-static-media-query',
 	])
 })

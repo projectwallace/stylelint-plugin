@@ -253,3 +253,64 @@ test('multiple @media rules each with an error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(2)
 })
+
+// === Equality-syntax (width: Xpx) combined with conflicting bounds ===
+
+test('equality width with conflicting min-width — error', async () => {
+	const { errored, warnings } = await lint('@media (width: 300px) and (min-width: 400px) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('equality width with conflicting max-width — error', async () => {
+	const { errored, warnings } = await lint('@media (width: 300px) and (max-width: 200px) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('equality width with exclusive range bound at same value — error', async () => {
+	const { errored, warnings } = await lint('@media (width: 300px) and (width > 300px) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('equality width alone — no error (not a contradiction)', async () => {
+	const { errored, warnings } = await lint('@media (width: 300px) {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('equality width with inclusive min-width at same value — no error', async () => {
+	const { errored, warnings } = await lint('@media (width: 300px) and (min-width: 300px) {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('equality height with conflicting min-height — error', async () => {
+	const { errored, warnings } = await lint('@media (height: 300px) and (min-height: 400px) {}')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "height" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('equality inline-size with conflicting min-inline-size — error', async () => {
+	const { errored, warnings } = await lint(
+		'@media (inline-size: 300px) and (min-inline-size: 400px) {}',
+	)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "inline-size" creates an unreachable condition (${rule_name})`,
+	)
+})
