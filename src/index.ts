@@ -11,6 +11,7 @@ import no_anonymous_layers from './rules/no-anonymous-layers/index.js'
 import no_useless_custom_property_assignment from './rules/no-useless-custom-property-assignment/index.js'
 import no_unreachable_media_conditions from './rules/no-unreachable-media-conditions/index.js'
 import no_static_media_query from './rules/no-static-media-query/index.js'
+import no_static_container_query from './rules/no-static-container-query/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -25,6 +26,7 @@ const plugins: stylelint.Plugin[] = [
 	no_useless_custom_property_assignment,
 	no_unreachable_media_conditions,
 	no_static_media_query,
+	no_static_container_query,
 ]
 
 export default plugins
