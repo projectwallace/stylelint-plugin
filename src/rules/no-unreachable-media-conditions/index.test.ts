@@ -220,6 +220,31 @@ test('device-pixel-ratio range syntax: conflicting should error', async () => {
 	expect(warnings).toHaveLength(1)
 })
 
+// === @import media conditions ===
+
+test('@import with valid media condition — no error', async () => {
+	const { errored, warnings } = await lint('@import url(test.css) (100px <= width <= 1000px);')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('@import with contradictory double-sided range should error', async () => {
+	const { errored, warnings } = await lint('@import url(test.css) (400px <= width <= 200px);')
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition (${rule_name})`,
+	)
+})
+
+test('@import with contradictory min/max should error', async () => {
+	const { errored, warnings } = await lint(
+		'@import url(test.css) (min-width: 1000px) and (max-width: 500px);',
+	)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})
+
 test('multiple @media rules each with an error', async () => {
 	const { errored, warnings } = await lint(`
 		@media (min-width: 1000px) and (max-width: 500px) {}
