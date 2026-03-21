@@ -32,6 +32,7 @@
 	},
 	"devDependencies": {
 		"@codecov/rollup-plugin": "^1.9.1",
+		"@types/node": "^25.5.0",
 		"@vitest/coverage-v8": "^4.0.0",
 		"oxfmt": "^0.41.0",
 		"oxlint": "^1.56.0",
