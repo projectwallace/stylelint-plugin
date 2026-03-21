@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'project-wallace/no-unused-container-names'
+const rule_name = 'projectwallace/no-unused-container-names'
 
 test('should not error when a container name is declared and used', async () => {
 	const config = {

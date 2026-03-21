@@ -13,14 +13,14 @@ import {
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-static-container-query'
+const rule_name = 'projectwallace/no-static-container-query'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (feature: string) => `Container feature "${feature}" creates an unreachable condition`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-static-container-query/README.md',
 }
 
 /**

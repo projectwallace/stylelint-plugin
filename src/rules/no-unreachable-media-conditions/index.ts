@@ -18,14 +18,14 @@ import type { Bound } from '../../utils/media-conditions.js'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-unreachable-media-conditions'
+const rule_name = 'projectwallace/no-unreachable-media-conditions'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (feature: string) => `Media feature "${feature}" creates an unreachable condition`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unreachable-media-conditions/README.md',
 }
 
 /**

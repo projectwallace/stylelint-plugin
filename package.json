@@ -11,7 +11,12 @@
 		"wallace"
 	],
 	"homepage": "https://github.com/projectwallace/stylelint-plugin",
+	"bugs": "https://github.com/projectwallace/stylelint-plugin/issues",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/projectwallace/stylelint-plugin.git"
+	},
 	"files": [
 		"dist"
 	],
@@ -45,6 +50,5 @@
 	},
 	"peerDependencies": {
 		"stylelint": "^17.0.0"
-	},
-	"issues": "https://github.com/projectwallace/stylelint-plugin/issues"
+	}
 }

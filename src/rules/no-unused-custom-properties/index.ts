@@ -4,14 +4,14 @@ import { collect_declared_properties, collect_var_usages } from '../../utils/cus
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/no-unused-custom-properties'
+const rule_name = 'projectwallace/no-unused-custom-properties'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (property: string) => `"${property}" was declared but never used in a var()`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugins',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unused-custom-properties/README.md',
 }
 
 interface SecondaryOptions {

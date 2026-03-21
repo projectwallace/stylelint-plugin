@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'project-wallace/no-anonymous-layers'
+const rule_name = 'projectwallace/no-anonymous-layers'
 
 test('should not error when a named layer block is used', async () => {
 	const config = {

@@ -4,7 +4,7 @@ import { analyze } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'project-wallace/max-lines-of-code'
+const rule_name = 'projectwallace/max-lines-of-code'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
@@ -12,7 +12,7 @@ const messages = utils.ruleMessages(rule_name, {
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugins',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-lines-of-code/README.md',
 }
 
 const ruleFunction = (primaryOption: number) => {
