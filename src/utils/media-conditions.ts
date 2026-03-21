@@ -68,18 +68,18 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 
 	const is_value_node = (n: CSSNode) => n.type === DIMENSION || n.type === NUMBER
 
-	// Case A: [OP, DIM/NUM] → feature OP value (e.g. width >= 400px, device-pixel-ratio > 2)
+	// Case A: [OPERATOR, VALUE] → feature OPERATOR value (e.g. width >= 400px, device-pixel-ratio > 2)
 	if (children.length >= 2 && children[0].type === PRELUDE_OPERATOR && is_value_node(children[1])) {
-		const op = children[0].text.trim()
-		const dim = children[1]
-		const value = dim.value_as_number
-		const unit = dim.unit ?? ''
+		const operator = children[0].text.trim()
+		const dimension = children[1]
+		const value = dimension.value_as_number
+		const unit = dimension.unit ?? ''
 		if (value != null && !Number.isNaN(value)) {
-			const bound = operator_to_bound(op, value, unit, 'feature_left')
+			const bound = operator_to_bound(operator, value, unit, 'feature_left')
 			if (bound) bounds.push({ ...bound, feature })
 		}
 	}
-	// Case B: [DIM/NUM, OP, OP, DIM/NUM] → value1 OP1 feature OP2 value2
+	// Case B: [VALUE, OPERATOR, OPERATOR, VALUE] → value1 OP1 feature OP2 value2
 	else if (
 		children.length >= 4 &&
 		is_value_node(children[0]) &&
@@ -87,24 +87,24 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 		children[2].type === PRELUDE_OPERATOR &&
 		is_value_node(children[3])
 	) {
-		const dim1 = children[0]
-		const op1 = children[1].text.trim()
-		const op2 = children[2].text.trim()
-		const dim2 = children[3]
+		const dimension1 = children[0]
+		const operator1 = children[1].text.trim()
+		const operator2 = children[2].text.trim()
+		const dimension2 = children[3]
 
-		const val1 = dim1.value_as_number
-		const unit1 = dim1.unit ?? ''
-		const val2 = dim2.value_as_number
-		const unit2 = dim2.unit ?? ''
+		const value1 = dimension1.value_as_number
+		const unit1 = dimension1.unit ?? ''
+		const value2 = dimension2.value_as_number
+		const unit2 = dimension2.unit ?? ''
 
-		// dim1 OP1 feature → feature is on the right side of OP1
-		if (val1 != null && !Number.isNaN(val1)) {
-			const bound = operator_to_bound(op1, val1, unit1, 'feature_right')
+		// dimension1 OP1 feature → feature is on the right side of OP1
+		if (value1 != null && !Number.isNaN(value1)) {
+			const bound = operator_to_bound(operator1, value1, unit1, 'feature_right')
 			if (bound) bounds.push({ ...bound, feature })
 		}
-		// feature OP2 dim2 → feature is on the left side of OP2
-		if (val2 != null && !Number.isNaN(val2)) {
-			const bound = operator_to_bound(op2, val2, unit2, 'feature_left')
+		// feature OP2 dimension2 → feature is on the left side of OP2
+		if (value2 != null && !Number.isNaN(value2)) {
+			const bound = operator_to_bound(operator2, value2, unit2, 'feature_left')
 			if (bound) bounds.push({ ...bound, feature })
 		}
 	}
@@ -122,7 +122,7 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
  * Returns null for operators that don't express a range bound (e.g. =).
  */
 function operator_to_bound(
-	op: string,
+	operator: string,
 	value: number,
 	unit: string,
 	side: 'feature_left' | 'feature_right',
@@ -132,19 +132,19 @@ function operator_to_bound(
 		// feature >= value → lower inclusive
 		// feature < value → upper exclusive  (feature must be below value)
 		// feature <= value → upper inclusive
-		if (op === '>') return { value, unit, inclusive: false, direction: 'lower' }
-		if (op === '>=') return { value, unit, inclusive: true, direction: 'lower' }
-		if (op === '<') return { value, unit, inclusive: false, direction: 'upper' }
-		if (op === '<=') return { value, unit, inclusive: true, direction: 'upper' }
+		if (operator === '>') return { value, unit, inclusive: false, direction: 'lower' }
+		if (operator === '>=') return { value, unit, inclusive: true, direction: 'lower' }
+		if (operator === '<') return { value, unit, inclusive: false, direction: 'upper' }
+		if (operator === '<=') return { value, unit, inclusive: true, direction: 'upper' }
 	} else {
 		// value < feature → lower exclusive  (feature must be above value)
 		// value <= feature → lower inclusive
 		// value > feature → upper exclusive  (feature must be below value)
 		// value >= feature → upper inclusive
-		if (op === '<') return { value, unit, inclusive: false, direction: 'lower' }
-		if (op === '<=') return { value, unit, inclusive: true, direction: 'lower' }
-		if (op === '>') return { value, unit, inclusive: false, direction: 'upper' }
-		if (op === '>=') return { value, unit, inclusive: true, direction: 'upper' }
+		if (operator === '<') return { value, unit, inclusive: false, direction: 'lower' }
+		if (operator === '<=') return { value, unit, inclusive: true, direction: 'lower' }
+		if (operator === '>') return { value, unit, inclusive: false, direction: 'upper' }
+		if (operator === '>=') return { value, unit, inclusive: true, direction: 'upper' }
 	}
 	return null
 }
