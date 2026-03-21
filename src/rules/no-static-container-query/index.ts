@@ -2,14 +2,15 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import type { AtRule } from 'postcss'
 import {
-	parse_atrule_prelude,
 	walk,
 	CONTAINER_QUERY,
 	MEDIA_FEATURE,
 	DIMENSION,
 	NUMBER,
 	PRELUDE_OPERATOR,
+	SKIP,
 } from '@projectwallace/css-parser'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 
 const { createPlugin, utils } = stylelint
 
@@ -44,6 +45,7 @@ function find_static_feature_in_prelude(prelude: string): string | null {
 				const operator = node.text.trim().toLowerCase()
 				if (operator === 'not' || operator === 'or') {
 					skip = true
+					return SKIP
 				}
 			}
 		})

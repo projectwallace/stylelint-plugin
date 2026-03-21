@@ -1,6 +1,6 @@
 import type { Root, Declaration, AtRule } from 'postcss'
-import { parse_declaration, walk, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser'
-import type { CSSNode } from '@projectwallace/css-parser'
+import { walk, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser'
+import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
 
 export function collect_declared_properties(root: Root): Map<string, Declaration | AtRule> {
 	const properties = new Map<string, Declaration | AtRule>()
@@ -37,7 +37,7 @@ export function collect_var_usages(root: Root): VarUsage[] {
 		)
 		const parsed = parse_declaration(decl_source)
 
-		walk(parsed, (node: CSSNode) => {
+		walk(parsed, (node) => {
 			if (node.type === FUNCTION && node.name === 'var') {
 				let found_name: string | null = null
 				let has_fallback = false

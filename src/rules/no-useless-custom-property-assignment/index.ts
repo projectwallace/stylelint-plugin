@@ -32,9 +32,9 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		}
 
 		root.walkDecls(function (declaration) {
-			const prop = declaration.prop
+			if (!declaration.variable) return
 
-			if (!prop.startsWith('--')) return
+			const prop = declaration.prop
 
 			if (secondaryOptions?.allowList) {
 				const allowed = secondaryOptions.allowList.some(

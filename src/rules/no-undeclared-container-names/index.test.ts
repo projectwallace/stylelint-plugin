@@ -89,6 +89,29 @@ test('should not error when container shorthand name is declared and used', asyn
 	expect(warnings).toStrictEqual([])
 })
 
+test('should not error when container shorthand with multiple names is declared and used', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			.sidebar { container: sidebar test / inline-size; }
+			@container sidebar (min-width: 700px) { .card { font-size: 1rem; } }
+			@container test (min-width: 700px) { .card { font-size: 1rem; } }
+		`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should not error on anonymous @container queries', async () => {
 	const config = {
 		plugins: [plugin],

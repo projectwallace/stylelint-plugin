@@ -1,5 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
+import { LAYER_NAME } from '@projectwallace/css-parser'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 
 const { createPlugin, utils } = stylelint
 
@@ -39,19 +41,19 @@ const ruleFunction = (primaryOptions: true) => {
 
 		root.walkAtRules('import', (atRule: AtRule) => {
 			const params = atRule.params
-			// Check for 'layer' keyword in @import params
-			if (!/\blayer\b/.test(params)) return
-			// Named layer uses function notation with no space: layer(name)
-			// If params contain layer(non-empty), it's a named layer — not anonymous
-			if (/\blayer\([^)]+\)/.test(params)) return
-			// Otherwise: bare 'layer', 'layer()', or 'layer ' before a media query — anonymous
-			utils.report({
-				result,
-				ruleName: rule_name,
-				message: messages.rejected(),
-				node: atRule,
-				word: 'layer',
-			})
+			const ast = parse_atrule_prelude('import', params)
+
+			for (const node of ast) {
+				if (node.type === LAYER_NAME && !node.name) {
+					utils.report({
+						result,
+						ruleName: rule_name,
+						message: messages.rejected(),
+						node: atRule,
+						word: 'layer',
+					})
+				}
+			}
 		})
 	}
 }

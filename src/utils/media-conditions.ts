@@ -4,8 +4,8 @@ import {
 	PRELUDE_OPERATOR,
 	DIMENSION,
 	NUMBER,
+	type CSSNode,
 } from '@projectwallace/css-parser'
-import type { CSSNode } from '@projectwallace/css-parser'
 
 export type Bound = {
 	feature: string
