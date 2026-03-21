@@ -1,14 +1,13 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import {
-	walk,
 	MEDIA_QUERY,
 	MEDIA_FEATURE,
 	FEATURE_RANGE,
 	PRELUDE_OPERATOR,
-	SKIP,
-} from '@projectwallace/css-parser'
+} from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import { BREAK, walk } from '@projectwallace/css-parser/walker'
 import {
 	collect_bound_from_media_feature,
 	collect_bounds_from_feature_range,
@@ -45,7 +44,7 @@ function find_contradiction_in_prelude(at_rule_name: string, prelude: string): s
 				const operator = node.text.trim().toLowerCase()
 				if (operator === 'not' || operator === 'or') {
 					skip = true
-					return SKIP
+					return BREAK
 				}
 			}
 		})

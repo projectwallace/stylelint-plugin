@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_selector } from '@projectwallace/css-parser'
+import { parse_selector } from '@projectwallace/css-parser/parse-selector'
 import { selectorComplexity } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint

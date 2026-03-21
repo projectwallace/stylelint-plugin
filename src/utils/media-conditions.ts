@@ -1,11 +1,11 @@
+import { type CSSNode } from '@projectwallace/css-parser'
 import {
 	MEDIA_FEATURE,
 	FEATURE_RANGE,
 	PRELUDE_OPERATOR,
 	DIMENSION,
 	NUMBER,
-	type CSSNode,
-} from '@projectwallace/css-parser'
+} from '@projectwallace/css-parser/nodes'
 
 export type Bound = {
 	feature: string

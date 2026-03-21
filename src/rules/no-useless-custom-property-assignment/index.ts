@@ -1,6 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_declaration, walk, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser'
+import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { walk } from '@projectwallace/css-parser/walker'
+import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
 import type { CSSNode } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
