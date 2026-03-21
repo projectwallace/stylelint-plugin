@@ -1,5 +1,6 @@
 import type { Root, Declaration, AtRule } from 'postcss'
-import { parse_value, OPERATOR, IDENTIFIER } from '@projectwallace/css-parser'
+import { OPERATOR, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { cssKeywords } from '@projectwallace/css-analyzer'
 
 export function collect_declared_container_names(root: Root): Map<string, Declaration> {

@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import { LAYER_NAME } from '@projectwallace/css-parser'
+import { LAYER_NAME } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 
 const { createPlugin, utils } = stylelint
