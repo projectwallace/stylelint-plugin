@@ -3,6 +3,7 @@ import { test, expect, afterEach } from 'vitest'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import { parse } from 'postcss'
 import plugin from './index.js'
 
 let tmp_dir: string
@@ -333,5 +334,38 @@ test('should still error when a declared property is not used in the current fil
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
 		`"--never-used" was declared but never used in a var() (${rule_name})`,
+	)
+})
+
+test('should still detect unused custom property when input.css offsets do not match (Svelte embedded CSS)', async () => {
+	const css = ':root { --unused: red; }'
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+	const svelteCustomSyntax = {
+		parse(code: string, opts: object) {
+			const root = parse(code, opts)
+			;(root.source!.input as unknown as { css: string }).css =
+				'<script>const x = 1</script><style>' + code + '</style>'
+			return root
+		},
+		stringify: (await import('postcss')).stringify,
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: css,
+		config,
+		customSyntax: svelteCustomSyntax as never,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+	expect(warnings[0].text).toBe(
+		`"--unused" was declared but never used in a var() (${rule_name})`,
 	)
 })
