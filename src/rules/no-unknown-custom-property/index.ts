@@ -1,6 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { collect_declared_properties, collect_var_usages } from '../../utils/custom-properties.js'
+import { collect_declarations_from_files } from '../../utils/import-from.js'
+import type { ImportFrom } from '../../utils/import-from.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -17,6 +19,7 @@ const meta = {
 interface SecondaryOptions {
 	allowFallback?: boolean
 	allowList?: Array<string | RegExp>
+	importFrom?: ImportFrom[]
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
@@ -31,10 +34,16 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		}
 
 		const declared_properties = collect_declared_properties(root)
+
+		const imported_properties = secondaryOptions?.importFrom?.length
+			? collect_declarations_from_files(secondaryOptions.importFrom)
+			: null
+
 		const usages = collect_var_usages(root)
 
 		for (const usage of usages) {
 			if (declared_properties.has(usage.name)) continue
+			if (imported_properties?.has(usage.name)) continue
 			if (secondaryOptions?.allowFallback && usage.has_fallback) continue
 			if (secondaryOptions?.allowList) {
 				const allowed = secondaryOptions.allowList.some(

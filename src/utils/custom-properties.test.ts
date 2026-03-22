@@ -93,3 +93,30 @@ test('collect_var_usages: finds multiple var() usages', () => {
 	expect(a?.has_fallback).toBe(false)
 	expect(b?.has_fallback).toBe(true)
 })
+
+test('collect_var_usages: finds var() usages across different selectors', () => {
+	const root = parse(
+		'nav { --py: 0.35rem; --px: var(--space-3); } .compact { padding: var(--py) var(--px); }',
+	)
+	const usages = collect_var_usages(root)
+	const names = usages.map((u) => u.name)
+	expect(names).toContain('--py')
+	expect(names).toContain('--px')
+	expect(names).toContain('--space-3')
+})
+
+test('collect_var_usages: finds var() usages even when input.css offsets do not match (Svelte embedded CSS)', () => {
+	// Simulate what happens with Svelte: stylelint extracts CSS from <style>...</style>
+	// but root.source.input.css may contain the full Svelte file while
+	// declaration.source offsets are relative to the extracted CSS only.
+	// The bug: substring(start_offset, end_offset) on the full file extracts wrong text.
+	const css = '.compact { padding: var(--py) var(--px); }'
+	const root = parse(css)
+	// Override input.css to simulate the Svelte mismatch (prepend non-CSS content)
+	;(root.source!.input as unknown as { css: string }).css =
+		'<script>const x = 1</script><style>' + css + '</style>'
+	const usages = collect_var_usages(root)
+	const names = usages.map((u) => u.name)
+	expect(names).toContain('--py')
+	expect(names).toContain('--px')
+})
