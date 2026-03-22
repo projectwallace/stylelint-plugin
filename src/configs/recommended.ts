@@ -20,6 +20,6 @@ export default {
 		'projectwallace/max-average-selectors-per-rule': 3,
 		'projectwallace/max-average-declarations-per-rule': 6,
 		'projectwallace/max-average-selector-complexity': 3,
-		'projectwallace/max-important-ratio': 0.1,
+		'projectwallace/max-important-ratio': 10, // percentage
 	},
 }
