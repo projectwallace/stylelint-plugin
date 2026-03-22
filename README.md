@@ -53,6 +53,10 @@ Add the plugin and configure rules in your stylelint config:
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match  |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never defined                |
 
+## Credits
+
+The `importFrom` option on [no-unknown-custom-property](src/rules/no-unknown-custom-property/README.md) and [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md) was inspired by the `importFrom` option in [csstools/postcss-custom-properties](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-properties).
+
 ## License
 
 MIT
