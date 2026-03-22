@@ -17,9 +17,9 @@ export default {
 		'projectwallace/max-file-size': 200000,
 		'projectwallace/max-embedded-content-size': 10000,
 		'projectwallace/max-comment-size': 2500,
-		'projectwallace/max-average-selectors-per-rule': 2,
-		'projectwallace/max-average-declarations-per-rule': 5,
-		'projectwallace/max-average-selector-complexity': 2,
+		'projectwallace/max-average-selectors-per-rule': 3,
+		'projectwallace/max-average-declarations-per-rule': 6,
+		'projectwallace/max-average-selector-complexity': 3,
 		'projectwallace/max-important-ratio': 0.1,
 	},
 }
