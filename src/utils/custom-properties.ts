@@ -31,10 +31,7 @@ export function collect_var_usages(root: Root): VarUsage[] {
 	const usages: VarUsage[] = []
 
 	root.walkDecls(function (declaration) {
-		const decl_source = root.source!.input.css.substring(
-			declaration.source!.start!.offset,
-			declaration.source!.end!.offset,
-		)
+		const decl_source = `${declaration.prop}: ${declaration.value}`
 		const parsed = parse_declaration(decl_source)
 
 		walk(parsed, (node) => {

@@ -25,6 +25,32 @@ afterEach(() => {
 
 const rule_name = 'projectwallace/no-unused-custom-properties'
 
+test('should not error when vars are declared in one selector and used in another', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			nav {
+				--py: 0.35rem;
+				--px: var(--space-3);
+			}
+			.compact {
+				padding: var(--py) var(--px);
+			}`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should not error on a single used custom property', async () => {
 	const config = {
 		plugins: [plugin],
