@@ -1,7 +1,8 @@
 import stylelint from 'stylelint'
-import type { Root, AtRule } from 'postcss'
-import { LAYER_NAME } from '@projectwallace/css-parser/nodes'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import type { Root } from 'postcss'
+import { AT_RULE, LAYER_NAME } from '@projectwallace/css-parser/nodes'
+import { walk } from '@projectwallace/css-parser/walker'
+import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,33 +27,48 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		root.walkAtRules('layer', (atRule: AtRule) => {
-			// Anonymous layer: has a block (nodes defined) but no name (empty params)
-			if (atRule.nodes !== undefined && atRule.params.trim() === '') {
-				utils.report({
-					result,
-					ruleName: rule_name,
-					message: messages.rejected(),
-					node: atRule,
-					word: '@layer',
-				})
-			}
-		})
+		const css = root.toString()
+		const parsed = parse(css)
+		const line_offset = (root.source?.start?.line ?? 1) - 1
 
-		root.walkAtRules('import', (atRule: AtRule) => {
-			const params = atRule.params
-			const ast = parse_atrule_prelude('import', params)
+		walk(parsed, (node) => {
+			if (node.type !== AT_RULE) return
 
-			for (const node of ast) {
-				if (node.type === LAYER_NAME && !node.name) {
+			if (node.name === 'layer') {
+				// Anonymous layer: has a block but no name (empty/missing prelude)
+				if (node.has_block && !node.prelude?.text.trim()) {
 					utils.report({
 						result,
 						ruleName: rule_name,
 						message: messages.rejected(),
-						node: atRule,
-						word: 'layer',
+						node: root,
+						start: { line: node.line + line_offset, column: node.column },
+						end: {
+							line: node.line + line_offset,
+							column: node.column + '@layer'.length,
+						},
 					})
 				}
+			} else if (node.name === 'import') {
+				// Check @import for anonymous layer syntax
+				const prelude = node.prelude
+				if (!prelude) return
+
+				walk(prelude, (child) => {
+					if (child.type === LAYER_NAME && !child.name) {
+						utils.report({
+							result,
+							ruleName: rule_name,
+							message: messages.rejected(),
+							node: root,
+							start: { line: node.line + line_offset, column: node.column },
+							end: {
+								line: node.line + line_offset,
+								column: node.column + '@import'.length,
+							},
+						})
+					}
+				})
 			}
 		})
 	}

@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
-import type { Root, AtRule } from 'postcss'
+import type { Root } from 'postcss'
 import {
+	AT_RULE,
 	MEDIA_QUERY,
 	MEDIA_FEATURE,
 	FEATURE_RANGE,
@@ -8,6 +9,7 @@ import {
 } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
+import { parse } from '@projectwallace/css-parser/parse'
 import {
 	collect_bound_from_media_feature,
 	collect_bounds_from_feature_range,
@@ -68,26 +70,6 @@ function find_contradiction_in_prelude(at_rule_name: string, prelude: string): s
 	return null
 }
 
-function check_at_rule(
-	at_rule_name: string,
-	atRule: AtRule,
-	result: stylelint.PostcssResult,
-): void {
-	const prelude = atRule.params
-	if (!prelude) return
-
-	const contradictory_feature = find_contradiction_in_prelude(at_rule_name, prelude)
-
-	if (contradictory_feature !== null) {
-		utils.report({
-			message: messages.rejected(contradictory_feature),
-			node: atRule,
-			result,
-			ruleName: rule_name,
-		})
-	}
-}
-
 const ruleFunction = (primaryOption: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
@@ -97,12 +79,32 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
-		root.walkAtRules('media', (atRule) => {
-			check_at_rule('media', atRule, result)
-		})
+		const css = root.toString()
+		const parsed = parse(css)
+		const line_offset = (root.source?.start?.line ?? 1) - 1
 
-		root.walkAtRules('import', (atRule) => {
-			check_at_rule('import', atRule, result)
+		walk(parsed, (node) => {
+			if (node.type !== AT_RULE) return
+			if (node.name !== 'media' && node.name !== 'import') return
+
+			const prelude = node.prelude?.text
+			if (!prelude) return
+
+			const contradictory_feature = find_contradiction_in_prelude(node.name, prelude)
+
+			if (contradictory_feature !== null) {
+				utils.report({
+					message: messages.rejected(contradictory_feature),
+					node: root,
+					start: { line: node.line + line_offset, column: node.column },
+					end: {
+						line: node.line + line_offset,
+						column: node.column + `@${node.name}`.length,
+					},
+					result,
+					ruleName: rule_name,
+				})
+			}
 		})
 	}
 }

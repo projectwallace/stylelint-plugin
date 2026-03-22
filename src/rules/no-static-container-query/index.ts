@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import type { AtRule } from 'postcss'
 import {
+	AT_RULE,
 	CONTAINER_QUERY,
 	MEDIA_FEATURE,
 	DIMENSION,
@@ -10,6 +10,7 @@ import {
 } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { walk, BREAK } from '@projectwallace/css-parser/walker'
+import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -89,8 +90,15 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
-		root.walkAtRules('container', (atRule: AtRule) => {
-			const prelude = atRule.params
+		const css = root.toString()
+		const parsed = parse(css)
+		const line_offset = (root.source?.start?.line ?? 1) - 1
+
+		walk(parsed, (node) => {
+			if (node.type !== AT_RULE) return
+			if (node.name !== 'container') return
+
+			const prelude = node.prelude?.text
 			if (!prelude) return
 
 			const static_feature = find_static_feature_in_prelude(prelude)
@@ -98,7 +106,12 @@ const ruleFunction = (primaryOption: true) => {
 			if (static_feature !== null) {
 				utils.report({
 					message: messages.rejected(static_feature),
-					node: atRule,
+					node: root,
+					start: { line: node.line + line_offset, column: node.column },
+					end: {
+						line: node.line + line_offset,
+						column: node.column + '@container'.length,
+					},
 					result,
 					ruleName: rule_name,
 				})

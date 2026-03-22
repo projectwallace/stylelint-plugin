@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
-import type { AtRule, Root } from 'postcss'
+import type { Root } from 'postcss'
 import {
+	AT_RULE,
 	MEDIA_QUERY,
 	MEDIA_FEATURE,
 	DIMENSION,
@@ -9,6 +10,7 @@ import {
 } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { walk, BREAK } from '@projectwallace/css-parser/walker'
+import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -79,26 +81,6 @@ function find_static_feature_in_prelude(at_rule_name: string, prelude: string): 
 	return null
 }
 
-function check_at_rule(
-	at_rule_name: string,
-	atRule: AtRule,
-	result: stylelint.PostcssResult,
-): void {
-	const prelude = atRule.params
-	if (!prelude) return
-
-	const static_feature = find_static_feature_in_prelude(at_rule_name, prelude)
-
-	if (static_feature !== null) {
-		utils.report({
-			message: messages.rejected(static_feature),
-			node: atRule,
-			result,
-			ruleName: rule_name,
-		})
-	}
-}
-
 const ruleFunction = (primaryOption: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
@@ -108,12 +90,32 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
-		root.walkAtRules('media', (atRule) => {
-			check_at_rule('media', atRule, result)
-		})
+		const css = root.toString()
+		const parsed = parse(css)
+		const line_offset = (root.source?.start?.line ?? 1) - 1
 
-		root.walkAtRules('import', (atRule) => {
-			check_at_rule('import', atRule, result)
+		walk(parsed, (node) => {
+			if (node.type !== AT_RULE) return
+			if (node.name !== 'media' && node.name !== 'import') return
+
+			const prelude = node.prelude?.text
+			if (!prelude) return
+
+			const static_feature = find_static_feature_in_prelude(node.name, prelude)
+
+			if (static_feature !== null) {
+				utils.report({
+					message: messages.rejected(static_feature),
+					node: root,
+					start: { line: node.line + line_offset, column: node.column },
+					end: {
+						line: node.line + line_offset,
+						column: node.column + `@${node.name}`.length,
+					},
+					result,
+					ruleName: rule_name,
+				})
+			}
 		})
 	}
 }

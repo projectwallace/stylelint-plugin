@@ -1,5 +1,8 @@
 import stylelint from 'stylelint'
-import type { Root, AtRule } from 'postcss'
+import type { Root } from 'postcss'
+import { AT_RULE } from '@projectwallace/css-parser/nodes'
+import { walk } from '@projectwallace/css-parser/walker'
+import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -28,31 +31,39 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const declared_layers = new Map<string, AtRule>()
+		const css = root.toString()
+		const parsed = parse(css)
+		const line_offset = (root.source?.start?.line ?? 1) - 1
+
+		const declared_layers = new Map<string, { line: number; column: number }>()
 		const defined_layers = new Set<string>()
 
-		root.walkAtRules('layer', (atRule) => {
-			if (atRule.nodes !== undefined) {
+		walk(parsed, (node) => {
+			if (node.type !== AT_RULE) return
+			if (node.name !== 'layer') return
+
+			if (node.has_block) {
 				// Block rule: @layer name { ... }
-				const name = atRule.params.trim()
+				const name = node.prelude?.text.trim()
 				if (name) {
 					defined_layers.add(name)
 				}
 			} else {
 				// Statement: @layer name; or @layer a, b, c;
-				const names = atRule.params
+				const prelude_text = node.prelude?.text ?? ''
+				const names = prelude_text
 					.split(',')
 					.map((n) => n.trim())
 					.filter(Boolean)
 				for (const name of names) {
 					if (!declared_layers.has(name)) {
-						declared_layers.set(name, atRule)
+						declared_layers.set(name, { line: node.line, column: node.column })
 					}
 				}
 			}
 		})
 
-		for (const [layer, node] of declared_layers) {
+		for (const [layer, pos] of declared_layers) {
 			if (defined_layers.has(layer)) continue
 
 			if (secondaryOptions?.allowlist) {
@@ -68,7 +79,12 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				result,
 				ruleName: rule_name,
 				message: messages.rejected(layer),
-				node,
+				node: root,
+				start: { line: pos.line + line_offset, column: pos.column },
+				end: {
+					line: pos.line + line_offset,
+					column: pos.column + '@layer'.length,
+				},
 				word: layer,
 			})
 		}
