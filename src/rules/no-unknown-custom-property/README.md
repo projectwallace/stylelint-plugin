@@ -123,7 +123,7 @@ Given `tokens.css`:
 And the config:
 
 ```js
-['--brand-color', { importFrom: ['tokens.css'] }]
+;['--brand-color', { importFrom: ['tokens.css'] }]
 ```
 
 The following are considered problems:

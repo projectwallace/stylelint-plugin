@@ -88,7 +88,7 @@ test('collect_declarations_from_files: ignores regular (non-custom) properties',
 })
 
 test('collect_declarations_from_files: returns empty map for a file with no custom properties', () => {
-	const file = write_fixture('empty.css', 'a { color: red; }')
+	write_fixture('empty.css', 'a { color: red; }')
 	const result = collect_declarations_from_files([])
 	expect(result.size).toBe(0)
 })

@@ -90,7 +90,7 @@ a {
 And the config:
 
 ```js
-[true, { importFrom: ['component.css'] }]
+;[true, { importFrom: ['component.css'] }]
 ```
 
 The following are considered problems:
