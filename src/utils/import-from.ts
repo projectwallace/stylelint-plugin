@@ -7,7 +7,7 @@ import {
 	FUNCTION,
 	IDENTIFIER,
 	OPERATOR,
-	type CSSNode,
+	SKIP,
 } from '@projectwallace/css-parser'
 
 export type ImportFrom = string | { filePath: string }
@@ -26,17 +26,21 @@ export function collect_declarations_from_files(importFrom: ImportFrom[]): Set<s
 	for (const entry of importFrom) {
 		const file_path = get_file_path(entry)
 		const css = fs.readFileSync(file_path, 'utf8')
-		const ast = parse(css)
-		walk(ast, (node: CSSNode) => {
+		const ast = parse(css, {
+			parse_selectors: false,
+		})
+		walk(ast, (node) => {
 			if (node.type === DECLARATION) {
 				const prop = node.property
 				if (typeof prop === 'string' && prop.startsWith('--')) {
 					result.add(prop)
+					return SKIP
 				}
 			} else if (node.type === AT_RULE && node.name === 'property' && node.prelude) {
-				walk(node.prelude, (child: CSSNode) => {
+				walk(node.prelude, (child) => {
 					if (child.type === IDENTIFIER && child.text.startsWith('--')) {
 						result.add(child.text)
+						return SKIP
 					}
 				})
 			}
@@ -55,8 +59,11 @@ export function collect_usages_from_files(importFrom: ImportFrom[]): Set<string>
 	for (const entry of importFrom) {
 		const file_path = get_file_path(entry)
 		const css = fs.readFileSync(file_path, 'utf8')
-		const ast = parse(css)
-		walk(ast, (node: CSSNode) => {
+		const ast = parse(css, {
+			parse_atrule_preludes: false,
+			parse_selectors: false,
+		})
+		walk(ast, (node) => {
 			if (node.type === FUNCTION && node.name === 'var') {
 				for (const child of node.children) {
 					if (child.type === IDENTIFIER && child.text.startsWith('--')) {

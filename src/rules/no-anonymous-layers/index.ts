@@ -28,7 +28,10 @@ const ruleFunction = (primaryOptions: true) => {
 		}
 
 		const css = root.toString()
-		const parsed = parse(css)
+		const parsed = parse(css, {
+			parse_selectors: false,
+			parse_values: false,
+		})
 		const line_offset = (root.source?.start?.line ?? 1) - 1
 
 		walk(parsed, (node) => {
