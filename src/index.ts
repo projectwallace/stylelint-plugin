@@ -12,6 +12,13 @@ import no_useless_custom_property_assignment from './rules/no-useless-custom-pro
 import no_unreachable_media_conditions from './rules/no-unreachable-media-conditions/index.js'
 import no_static_media_query from './rules/no-static-media-query/index.js'
 import no_static_container_query from './rules/no-static-container-query/index.js'
+import max_file_size from './rules/max-file-size/index.js'
+import max_embedded_content_size from './rules/max-embedded-content-size/index.js'
+import max_comment_size from './rules/max-comment-size/index.js'
+import max_average_selectors_per_rule from './rules/max-average-selectors-per-rule/index.js'
+import max_average_declarations_per_rule from './rules/max-average-declarations-per-rule/index.js'
+import max_average_selector_complexity from './rules/max-average-selector-complexity/index.js'
+import max_important_ratio from './rules/max-important-ratio/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -27,6 +34,13 @@ const plugins: stylelint.Plugin[] = [
 	no_unreachable_media_conditions,
 	no_static_media_query,
 	no_static_container_query,
+	max_file_size,
+	max_embedded_content_size,
+	max_comment_size,
+	max_average_selectors_per_rule,
+	max_average_declarations_per_rule,
+	max_average_selector_complexity,
+	max_important_ratio,
 ]
 
 export default plugins
