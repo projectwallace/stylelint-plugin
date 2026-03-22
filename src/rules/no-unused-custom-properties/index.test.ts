@@ -365,7 +365,5 @@ test('should still detect unused custom property when input.css offsets do not m
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`"--unused" was declared but never used in a var() (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`"--unused" was declared but never used in a var() (${rule_name})`)
 })
