@@ -26,10 +26,14 @@ const ruleFunction = (primaryOption: true) => {
 		}
 
 		root.walkDecls((declaration) => {
-			const full_declaration = root.source!.input.css.substring(
-				declaration.source!.start!.offset,
-				declaration.source!.end!.offset,
-			)
+			// PostCSS strips hack prefixes (e.g. `*`, `_`) from `prop` and puts them
+			// at the end of `raws.before`. Reconstruct the full hacked declaration so
+			// that parse_declaration can detect it as a browserhack. This also avoids
+			// using source-offset substring extraction, which breaks in Svelte files
+			// where input.css contains the full file but offsets are CSS-relative.
+			const before = declaration.raws.before ?? ''
+			const hack_prefix = before.match(/[*_$]$/)?.[0] ?? ''
+			const full_declaration = `${hack_prefix}${declaration.prop}: ${declaration.value}`
 			const parsed = parse_declaration(full_declaration)
 
 			if (parsed.is_browserhack) {

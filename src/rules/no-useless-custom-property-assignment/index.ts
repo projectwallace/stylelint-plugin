@@ -47,10 +47,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				if (allowed) return
 			}
 
-			const decl_source = root.source!.input.css.substring(
-				declaration.source!.start!.offset,
-				declaration.source!.end!.offset,
-			)
+			const decl_source = `${declaration.prop}: ${declaration.value}`
 			const parsed = parse_declaration(decl_source)
 			let reported = false
 

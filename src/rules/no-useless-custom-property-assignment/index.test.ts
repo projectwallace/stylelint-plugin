@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
+import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/no-useless-custom-property-assignment'
@@ -156,4 +157,34 @@ test('should not error on regular var() usage in non-custom properties', async (
 
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
+})
+
+test('should still detect self-assignment when input.css offsets do not match (Svelte embedded CSS)', async () => {
+	// Simulate what happens in Svelte: stylelint extracts CSS from <style>...</style>
+	// but root.source.input.css may contain the full Svelte file while
+	// declaration.source offsets are relative to the extracted CSS only.
+	const css = ':root { --color: var(--color); }'
+	const svelteCustomSyntax = {
+		parse(code: string, opts: object) {
+			const root = parse(code, opts)
+			;(root.source!.input as unknown as { css: string }).css =
+				'<script>const x = 1</script><style>' + code + '</style>'
+			return root
+		},
+		stringify: (await import('postcss')).stringify,
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: css,
+		config,
+		customSyntax: svelteCustomSyntax as never,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+	expect(warnings[0].text).toBe(
+		`"--color" is assigned to itself via var(), which has no effect (${rule_name})`,
+	)
 })
