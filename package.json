@@ -50,5 +50,8 @@
 	},
 	"peerDependencies": {
 		"stylelint": "^17.0.0"
+	},
+	"overrides": {
+		"@projectwallace/css-parser": "$@projectwallace/css-parser"
 	}
 }
