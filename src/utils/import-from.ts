@@ -1,14 +1,13 @@
 import fs from 'node:fs'
 import {
-	parse,
-	walk,
 	DECLARATION,
 	AT_RULE,
 	FUNCTION,
 	IDENTIFIER,
 	OPERATOR,
-	SKIP,
-} from '@projectwallace/css-parser'
+} from '@projectwallace/css-parser/nodes'
+import { parse } from '@projectwallace/css-parser/parse'
+import { SKIP, walk } from '@projectwallace/css-parser/walker'
 
 export type ImportFrom = string | { filePath: string }
 
