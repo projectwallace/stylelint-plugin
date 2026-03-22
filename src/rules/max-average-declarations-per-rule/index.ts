@@ -1,5 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { STYLE_RULE, AT_RULE, DECLARATION } from '@projectwallace/css-parser/nodes'
+import { walk, SKIP } from '@projectwallace/css-parser/walker'
+import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -25,16 +28,24 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
+		const css = root.toString()
+		const ast = parse(css, { parse_selectors: false, parse_values: false })
 		let total_declarations = 0
 		let rule_count = 0
 
-		root.walkRules((rule) => {
-			let decl_count = 0
-			rule.walkDecls(() => {
-				decl_count++
-			})
-			total_declarations += decl_count
+		walk(ast, (node) => {
+			if (node.type !== STYLE_RULE) return
+
 			rule_count++
+			let decl_count = 0
+
+			walk(node, (child, child_depth) => {
+				if (child_depth === 0) return
+				if (child.type === DECLARATION) decl_count++
+				if (child.type === STYLE_RULE || child.type === AT_RULE) return SKIP
+			})
+
+			total_declarations += decl_count
 		})
 
 		if (rule_count === 0) return

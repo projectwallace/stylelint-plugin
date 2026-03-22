@@ -67,3 +67,45 @@ test('should error when average declarations per rule exceeds the limit', async 
 	})
 	expect(warnings[0].text).toContain('greater than the allowed 1')
 })
+
+test('should not count declarations from nested rules', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 2,
+		},
+	}
+
+	// outer rule: 1 direct decl, inner rule: 2 direct decls → average = (1 + 2) / 2 = 1.5
+	// old buggy code would count: outer = 3, inner = 2 → average = 2.5
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red; & .foo { font-size: 1em; margin: 0; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should not count declarations from nested atrules', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// outer rule has 1 direct decl; declarations inside @supports are not counted towards it
+	// old buggy code would count color + font-size + margin = 3 for the outer rule
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red; @supports (display: grid) { font-size: 1em; margin: 0; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
