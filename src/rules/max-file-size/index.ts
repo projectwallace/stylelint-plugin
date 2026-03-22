@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { analyze } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,8 +25,7 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const analysis = analyze(root.source!.input.css)
-		const actual = analysis.stylesheet.size
+		const actual = root.source!.input.css.length
 
 		if (actual > primaryOption) {
 			utils.report({

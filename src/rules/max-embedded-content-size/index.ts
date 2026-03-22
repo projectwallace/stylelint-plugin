@@ -1,6 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { analyze } from '@projectwallace/css-analyzer'
+import { URL as CSS_URL } from '@projectwallace/css-parser/nodes'
+import { walk } from '@projectwallace/css-parser/walker'
+import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,12 +28,27 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const analysis = analyze(root.source!.input.css)
-		const actual = analysis.stylesheet.embeddedContent.size.total
+		const css = root.source!.input.css
+		let total_size = 0
 
-		if (actual > primaryOption) {
+		root.walkDecls((declaration) => {
+			const decl_source = css.substring(
+				declaration.source!.start!.offset,
+				declaration.source!.end!.offset,
+			)
+			const parsed = parse_declaration(decl_source)
+
+			walk(parsed, (node) => {
+				if (node.type !== CSS_URL) return
+				if (node.text.includes('data:')) {
+					total_size += node.text.length
+				}
+			})
+		})
+
+		if (total_size > primaryOption) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption),
+				message: messages.rejected(total_size, primaryOption),
 				node: root,
 				result,
 				ruleName: rule_name,

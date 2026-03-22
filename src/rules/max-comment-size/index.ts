@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { analyze } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,12 +25,20 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const analysis = analyze(root.source!.input.css)
-		const actual = analysis.stylesheet.comments.size
+		const css = root.source!.input.css
+		let total_size = 0
 
-		if (actual > primaryOption) {
+		root.walkComments((comment) => {
+			const comment_source = css.substring(
+				comment.source!.start!.offset,
+				comment.source!.end!.offset,
+			)
+			total_size += comment_source.length
+		})
+
+		if (total_size > primaryOption) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption),
+				message: messages.rejected(total_size, primaryOption),
 				node: root,
 				result,
 				ruleName: rule_name,

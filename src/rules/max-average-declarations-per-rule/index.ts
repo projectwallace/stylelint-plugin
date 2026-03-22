@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { analyze } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,8 +25,21 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const analysis = analyze(root.source!.input.css)
-		const actual = analysis.rules.declarations.mean
+		let total_declarations = 0
+		let rule_count = 0
+
+		root.walkRules((rule) => {
+			let decl_count = 0
+			rule.walkDecls(() => {
+				decl_count++
+			})
+			total_declarations += decl_count
+			rule_count++
+		})
+
+		if (rule_count === 0) return
+
+		const actual = total_declarations / rule_count
 
 		if (actual > primaryOption) {
 			utils.report({
