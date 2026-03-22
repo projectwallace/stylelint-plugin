@@ -1,9 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { DECLARATION, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { walk } from '@projectwallace/css-parser/walker'
-import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
-import type { CSSNode } from '@projectwallace/css-parser'
+import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -33,10 +32,15 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		root.walkDecls(function (declaration) {
-			if (!declaration.variable) return
+		const css = root.toString()
+		const parsed = parse(css, { parse_values: true })
+		const line_offset = (root.source?.start?.line ?? 1) - 1
 
-			const prop = declaration.prop
+		walk(parsed, (node) => {
+			if (node.type !== DECLARATION) return
+
+			const prop = node.property
+			if (!prop?.startsWith('--')) return
 
 			if (secondaryOptions?.allowList) {
 				const allowed = secondaryOptions.allowList.some(
@@ -47,27 +51,27 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				if (allowed) return
 			}
 
-			const decl_source = `${declaration.prop}: ${declaration.value}`
-			const parsed = parse_declaration(decl_source)
 			let reported = false
 
-			walk(parsed, (node: CSSNode) => {
+			walk(node, (child) => {
 				if (reported) return
-				if (node.type !== FUNCTION || node.name !== 'var') return
+				if (child.type !== FUNCTION || child.name !== 'var') return
 
-				for (const child of node.children) {
-					if (child.type === IDENTIFIER && child.text === prop) {
+				for (const grandchild of child.children) {
+					if (grandchild.type === IDENTIFIER && grandchild.text === prop) {
 						utils.report({
 							result,
 							ruleName: rule_name,
 							message: messages.rejected(prop),
-							node: declaration,
+							node: root,
+							start: { line: node.line + line_offset, column: node.column },
+							end: { line: node.line + line_offset, column: node.column + prop.length },
 							word: prop,
 						})
 						reported = true
 						return
 					}
-					if (child.type === IDENTIFIER && child.text.startsWith('--')) {
+					if (grandchild.type === IDENTIFIER && grandchild.text.startsWith('--')) {
 						break
 					}
 				}
