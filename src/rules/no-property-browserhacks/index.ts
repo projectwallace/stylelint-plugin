@@ -1,6 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
+import { DECLARATION } from '@projectwallace/css-parser/nodes'
+import { walk } from '@projectwallace/css-parser/walker'
+import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -25,21 +27,23 @@ const ruleFunction = (primaryOption: true) => {
 			return
 		}
 
-		root.walkDecls((declaration) => {
-			const full_declaration = root.source!.input.css.substring(
-				declaration.source!.start!.offset,
-				declaration.source!.end!.offset,
-			)
-			const parsed = parse_declaration(full_declaration)
+		const css = root.toString()
+		const parsed = parse(css)
+		const line_offset = (root.source?.start?.line ?? 1) - 1
 
-			if (parsed.is_browserhack) {
-				utils.report({
-					message: messages.rejected(parsed.property!),
-					node: declaration,
-					result,
-					ruleName: rule_name,
-				})
-			}
+		walk(parsed, (node) => {
+			if (node.type !== DECLARATION) return
+			if (!node.is_browserhack) return
+
+			const property = node.property!
+			utils.report({
+				message: messages.rejected(property),
+				node: root,
+				start: { line: node.line + line_offset, column: node.column },
+				end: { line: node.line + line_offset, column: node.column + property.length },
+				result,
+				ruleName: rule_name,
+			})
 		})
 	}
 }
