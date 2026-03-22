@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
+import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/no-unused-container-names'
@@ -296,6 +297,39 @@ test('should still error when allowList does not match the unused container name
 	} = await stylelint.lint({
 		code: '.sidebar { container-name: sidebar; }',
 		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+	expect(warnings[0].text).toBe(
+		`Container name "sidebar" was declared but never used in a @container query (${rule_name})`,
+	)
+})
+
+test('should still detect unused container name when input.css offsets do not match (Svelte embedded CSS)', async () => {
+	const css = '.sidebar { container-name: sidebar; }'
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+	const svelteCustomSyntax = {
+		parse(code: string, opts: object) {
+			const root = parse(code, opts)
+			;(root.source!.input as unknown as { css: string }).css =
+				'<script>const x = 1</script><style>' + code + '</style>'
+			return root
+		},
+		stringify: (await import('postcss')).stringify,
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: css,
+		config,
+		customSyntax: svelteCustomSyntax as never,
 	})
 
 	expect(errored).toBe(true)
