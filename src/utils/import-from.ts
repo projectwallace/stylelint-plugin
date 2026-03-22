@@ -50,9 +50,7 @@ export function collect_declarations_from_files(importFrom: ImportFrom[]): Set<s
  * in them. Used by rules that need to know about usages in other files (e.g.
  * component files) when linting a file that declares those properties.
  */
-export function collect_usages_from_files(
-	importFrom: ImportFrom[],
-): Set<string> {
+export function collect_usages_from_files(importFrom: ImportFrom[]): Set<string> {
 	const result = new Set<string>()
 	for (const entry of importFrom) {
 		const file_path = get_file_path(entry)
