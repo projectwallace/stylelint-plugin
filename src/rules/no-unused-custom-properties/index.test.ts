@@ -337,6 +337,32 @@ test('should still error when a declared property is not used in the current fil
 	)
 })
 
+test('should not error when a declared property is used inside light-dark()', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			:root {
+				--blue-800: blue;
+				--blue-700: navy;
+			}
+			a {
+				color: light-dark(var(--blue-800), var(--blue-700));
+			}`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should still detect unused custom property when input.css offsets do not match (Svelte embedded CSS)', async () => {
 	const css = ':root { --unused: red; }'
 	const config = {
