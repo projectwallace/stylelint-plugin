@@ -1,5 +1,6 @@
 import type { Root, Declaration, AtRule } from 'postcss'
-import { walk, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser'
+import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { walk } from '@projectwallace/css-parser/walker'
 import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
 
 export function collect_declared_properties(root: Root): Map<string, Declaration | AtRule> {
