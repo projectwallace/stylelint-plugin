@@ -399,6 +399,32 @@ test('should still error when var() uses a property not present in any importFro
 	)
 })
 
+test('should not error when declared properties are used inside light-dark()', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			:root {
+				--blue-800: blue;
+				--blue-700: navy;
+			}
+			a {
+				color: light-dark(var(--blue-800), var(--blue-700));
+			}`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should still detect unknown custom property when input.css offsets do not match (Svelte embedded CSS)', async () => {
 	const css = 'a { color: var(--undefined); }'
 	const config = {
