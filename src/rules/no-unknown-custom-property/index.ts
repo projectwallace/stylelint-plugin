@@ -35,16 +35,15 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const declared_properties = collect_declared_properties(root)
 
-		if (secondaryOptions?.importFrom?.length) {
-			for (const [name, node] of collect_declarations_from_files(secondaryOptions.importFrom)) {
-				declared_properties.set(name, node)
-			}
-		}
+		const imported_properties = secondaryOptions?.importFrom?.length
+			? collect_declarations_from_files(secondaryOptions.importFrom)
+			: null
 
 		const usages = collect_var_usages(root)
 
 		for (const usage of usages) {
 			if (declared_properties.has(usage.name)) continue
+			if (imported_properties?.has(usage.name)) continue
 			if (secondaryOptions?.allowFallback && usage.has_fallback) continue
 			if (secondaryOptions?.allowList) {
 				const allowed = secondaryOptions.allowList.some(
