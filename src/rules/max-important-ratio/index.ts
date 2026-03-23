@@ -22,7 +22,12 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [Number as unknown as (v: unknown) => boolean],
 		})
 
-		if (!validOptions || !Number.isFinite(primaryOption) || primaryOption < 0 || primaryOption > 1) {
+		if (
+			!validOptions ||
+			!Number.isFinite(primaryOption) ||
+			primaryOption < 0 ||
+			primaryOption > 1
+		) {
 			return
 		}
 
