@@ -1,6 +1,6 @@
 # Max important ratio
 
-Prevent the ratio of `!important` declarations from exceeding a predefined percentage.
+Prevent the ratio of `!important` declarations from exceeding a predefined maximum.
 
 <!-- prettier-ignore -->
 ```css
@@ -9,15 +9,17 @@ a { color: red !important; }
 *   !important declarations count towards the ratio */
 ```
 
-This rule calculates the **percentage of declarations** that use `!important` out of all declarations in the stylesheet. Overusing `!important` makes CSS harder to maintain and debug.
+This rule calculates the **ratio of declarations** that use `!important` out of all declarations in the stylesheet. Overusing `!important` makes CSS harder to maintain and debug.
 
 ## Options
 
 `Number`
 
+The option must be between `0` and `1`, where `0` means no `!important` declarations are allowed and `1` means all declarations may use `!important`.
+
 Given:
 
-`50`
+`0.5`
 
 the following are considered violations:
 
