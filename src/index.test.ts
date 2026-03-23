@@ -28,5 +28,6 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-average-declarations-per-rule',
 		'projectwallace/max-average-selector-complexity',
 		'projectwallace/max-important-ratio',
+		'projectwallace/no-duplicate-data-urls',
 	])
 })
