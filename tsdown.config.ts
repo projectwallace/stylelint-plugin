@@ -5,6 +5,7 @@ export default defineConfig({
 	entry: {
 		index: './src/index.ts',
 		'configs/recommended': './src/configs/recommended.ts',
+		'configs/performance': './src/configs/performance.ts',
 	},
 	format: ['esm'],
 	platform: 'node',
