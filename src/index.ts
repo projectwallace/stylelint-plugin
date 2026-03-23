@@ -19,6 +19,7 @@ import max_average_selectors_per_rule from './rules/max-average-selectors-per-ru
 import max_average_declarations_per_rule from './rules/max-average-declarations-per-rule/index.js'
 import max_average_selector_complexity from './rules/max-average-selector-complexity/index.js'
 import max_important_ratio from './rules/max-important-ratio/index.js'
+import no_duplicate_data_urls from './rules/no-duplicate-data-urls/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -41,6 +42,7 @@ const plugins: stylelint.Plugin[] = [
 	max_average_declarations_per_rule,
 	max_average_selector_complexity,
 	max_important_ratio,
+	no_duplicate_data_urls,
 ]
 
 export default plugins
