@@ -22,5 +22,6 @@ export default {
 		'projectwallace/max-average-declarations-per-rule': 6,
 		'projectwallace/max-average-selector-complexity': 3,
 		'projectwallace/max-important-ratio': 0.1,
+		'projectwallace/max-unique-units': 10,
 	},
 }
