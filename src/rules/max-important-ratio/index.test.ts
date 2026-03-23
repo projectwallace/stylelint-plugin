@@ -23,6 +23,25 @@ test('should not run when config is set to a negative value', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
+test('should not run when config is set to a value greater than 1', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1.5,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red !important; }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should not error when there are no !important declarations', async () => {
 	const config = {
 		plugins: [plugin],
@@ -46,11 +65,11 @@ test('should not error when !important ratio is within limit', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: 50,
+			[rule_name]: 0.5,
 		},
 	}
 
-	// 1 !important out of 2 declarations = 50%
+	// 1 !important out of 2 declarations = 0.5
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -66,11 +85,11 @@ test('should error when !important ratio exceeds the limit', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: 1,
+			[rule_name]: 0.1,
 		},
 	}
 
-	// 1 !important out of 2 declarations = 50%
+	// 1 !important out of 2 declarations = 0.5
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -84,5 +103,5 @@ test('should error when !important ratio exceeds the limit', async () => {
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('greater than the allowed 1%')
+	expect(warnings[0].text).toContain('greater than the allowed 0.1')
 })
