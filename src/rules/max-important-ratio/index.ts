@@ -8,7 +8,7 @@ const rule_name = 'projectwallace/max-important-ratio'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`!important ratio is ${actual}% which is greater than the allowed ${expected}%`,
+		`!important ratio is ${actual} which is greater than the allowed ${expected}`,
 })
 
 const meta = {
@@ -22,7 +22,12 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [Number as unknown as (v: unknown) => boolean],
 		})
 
-		if (!validOptions || !Number.isFinite(primaryOption) || primaryOption < 0) {
+		if (
+			!validOptions ||
+			!Number.isFinite(primaryOption) ||
+			primaryOption < 0 ||
+			primaryOption > 1
+		) {
 			return
 		}
 
@@ -45,7 +50,7 @@ const ruleFunction = (primaryOption: number) => {
 
 		if (total_declarations === 0) return
 
-		const actual = Math.round((important_declarations / total_declarations) * 10000) / 100
+		const actual = important_declarations / total_declarations
 
 		if (actual > primaryOption) {
 			utils.report({
