@@ -30,5 +30,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-important-ratio',
 		'projectwallace/no-duplicate-data-urls',
 		'projectwallace/max-unique-units',
+		'projectwallace/min-selector-uniqueness-ratio',
+		'projectwallace/min-declaration-uniqueness-ratio',
 	])
 })
