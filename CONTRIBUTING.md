@@ -30,13 +30,7 @@ Rules that disallow certain behaviour (e.g. `no-unused-x`, `no-undefined-x`) sho
 ## Adding a new config
 
 1. Create a new file under `src/configs/<config-name>.ts`
-2. Add the config entry to `tsdown.config.ts` so it gets built:
-   ```ts
-   entry: {
-     'configs/<config-name>': './src/configs/<config-name>.ts',
-   }
-   ```
-3. Add the config to the `exports` field in `package.json`:
+2. Add the config to the `exports` field in `package.json`:
    ```json
    "./configs/<config-name>": "./dist/configs/<config-name>.mjs"
    ```
