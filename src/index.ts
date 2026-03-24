@@ -23,6 +23,7 @@ import no_duplicate_data_urls from './rules/no-duplicate-data-urls/index.js'
 import max_unique_units from './rules/max-unique-units/index.js'
 import min_selector_uniqueness_ratio from './rules/min-selector-uniqueness-ratio/index.js'
 import min_declaration_uniqueness_ratio from './rules/min-declaration-uniqueness-ratio/index.js'
+import max_average_specificity from './rules/max-average-specificity/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -49,6 +50,7 @@ const plugins: stylelint.Plugin[] = [
 	max_unique_units,
 	min_selector_uniqueness_ratio,
 	min_declaration_uniqueness_ratio,
+	max_average_specificity,
 ]
 
 export default plugins
