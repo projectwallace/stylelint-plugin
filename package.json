@@ -30,7 +30,7 @@
 	"scripts": {
 		"test": "vitest --coverage",
 		"check": "tsc --noEmit",
-		"lint": "oxlint -D perf; oxfmt --check",
+		"lint": "oxlint --config .oxlintrc.json; oxfmt --check",
 		"build": "tsdown"
 	},
 	"dependencies": {

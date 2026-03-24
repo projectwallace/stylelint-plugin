@@ -1,0 +1,10 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"categories": {
+		"perf": "deny"
+	},
+	"jsPlugins": ["./oxlint.plugin.js"],
+	"rules": {
+		"naming-conventions/naming-conventions": "warn"
+	}
+}
