@@ -13,9 +13,7 @@ This rule calculates the **average specificity** of all selectors in the stylesh
 
 ## Options
 
-`[number, number, number]`
-
-An array of three non-negative numbers (floats allowed), representing the maximum allowed average specificity as `[a, b, c]` where:
+`string` in the format `"a,b,c"` where each component is a non-negative number (floats allowed):
 
 - `a` — ID selectors
 - `b` — class, attribute, and pseudo-class selectors
@@ -23,7 +21,7 @@ An array of three non-negative numbers (floats allowed), representing the maximu
 
 Given:
 
-`[0, 2.5, 1]`
+`"0,2.5,1"`
 
 the following are considered violations:
 
