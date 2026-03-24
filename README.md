@@ -12,7 +12,29 @@ npm install --save-dev @projectwallace/stylelint-plugin
 
 ## Usage
 
-Add the plugin and configure rules in your stylelint config:
+### Using a preset config (recommended)
+
+The easiest way to get started is by extending one of the preset configs:
+
+**`recommended`** — enables all rules with sensible defaults:
+
+```json
+{
+	"extends": ["@projectwallace/stylelint-plugin/configs/recommended"]
+}
+```
+
+**`performance`** — enables only the rules that affect file size and loading performance:
+
+```json
+{
+	"extends": ["@projectwallace/stylelint-plugin/configs/performance"]
+}
+```
+
+### Manual configuration
+
+Alternatively, add the plugin and configure rules individually in your stylelint config:
 
 ```json
 {
@@ -27,7 +49,9 @@ Add the plugin and configure rules in your stylelint config:
 		"projectwallace/max-important-ratio": 1,
 		"projectwallace/max-lines-of-code": 200,
 		"projectwallace/max-selector-complexity": 5,
+		"projectwallace/max-unique-units": 5,
 		"projectwallace/no-anonymous-layers": true,
+		"projectwallace/no-duplicate-data-urls": true,
 		"projectwallace/no-property-browserhacks": true,
 		"projectwallace/no-static-container-query": true,
 		"projectwallace/no-static-media-query": true,
@@ -55,7 +79,9 @@ Add the plugin and configure rules in your stylelint config:
 | [max-important-ratio](src/rules/max-important-ratio/README.md)                                     | Limit the ratio of `!important` declarations relative to all declarations  |
 | [max-lines-of-code](src/rules/max-lines-of-code/README.md)                                         | Prevent a stylesheet from exceeding a predefined number of lines of code   |
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                             | Prevent selector complexity from going over a predefined maximum           |
+| [max-unique-units](src/rules/max-unique-units/README.md)                                           | Limit the number of unique CSS units used across the stylesheet            |
 | [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                                     | Disallow anonymous (unnamed) `@layer` blocks                               |
+| [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)                               | Disallow the same data URL from being used more than once                  |
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                           | Prevent the use of known browserhacks for properties                       |
 | [no-undeclared-container-names](src/rules/no-undeclared-container-names/README.md)                 | Disallow container names in `@container` that were never declared          |
 | [no-unknown-custom-property](src/rules/no-unknown-custom-property/README.md)                       | Disallow the use of undeclared custom properties in a `var()`              |
@@ -65,7 +91,7 @@ Add the plugin and configure rules in your stylelint config:
 | [no-static-container-query](src/rules/no-static-container-query/README.md)                         | Disallow static (exact-match) numeric container feature conditions         |
 | [no-static-media-query](src/rules/no-static-media-query/README.md)                                 | Disallow static (exact-match) numeric media feature conditions             |
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match  |
-| [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never implemented                |
+| [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never implemented            |
 
 ## Credits
 
