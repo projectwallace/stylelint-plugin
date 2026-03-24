@@ -4,7 +4,7 @@ import plugin from './index.js'
 
 const rule_name = 'projectwallace/max-average-specificity'
 
-test('should not run with invalid option (not a string)', async () => {
+test('should not run with invalid option (not an array)', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -23,11 +23,11 @@ test('should not run with invalid option (not a string)', async () => {
 	expect(invalidOptionWarnings).toHaveLength(1)
 })
 
-test('should not run with invalid option (wrong format)', async () => {
+test('should not run with invalid option (wrong length)', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: '0,1',
+			[rule_name]: [0, 1],
 		},
 	}
 
@@ -46,7 +46,7 @@ test('should not run with invalid option (negative number)', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: '0,-1,0',
+			[rule_name]: [0, -1, 0],
 		},
 	}
 
@@ -65,7 +65,7 @@ test('should not error when there are no selectors', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: '0,0,1',
+			[rule_name]: [0, 0, 1],
 		},
 	}
 
@@ -84,7 +84,7 @@ test('should not error when average specificity is within limit', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: '0,2.5,1',
+			[rule_name]: [0, 2.5, 1],
 		},
 	}
 
@@ -104,7 +104,7 @@ test('should not error when average specificity equals the limit', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: '0,0,1',
+			[rule_name]: [0, 0, 1],
 		},
 	}
 
@@ -124,7 +124,7 @@ test('should error when average specificity exceeds the limit', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: '0,0,0',
+			[rule_name]: [0, 0, 0],
 		},
 	}
 
@@ -149,7 +149,7 @@ test('should error when average specificity with ids exceeds the limit', async (
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: '0,2.5,1',
+			[rule_name]: [0, 2.5, 1],
 		},
 	}
 
@@ -173,7 +173,7 @@ test('should allow float values in the primary option', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: '0,0.5,1.5',
+			[rule_name]: [0, 0.5, 1.5],
 		},
 	}
 

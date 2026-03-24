@@ -9,34 +9,30 @@ const rule_name = 'projectwallace/max-average-specificity'
 type Specificity = [number, number, number]
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: string, expected: string) =>
-		`Average specificity is ${actual} which is greater than the allowed ${expected}`,
+	rejected: (actual: Specificity, expected: Specificity) =>
+		`Average specificity is [${actual.join(', ')}] which is greater than the allowed [${expected.join(', ')}]`,
 })
 
 const meta = {
 	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-average-specificity/README.md',
 }
 
-function parse_option(option: string): Specificity | null {
-	if (!/^\d+(\.\d+)?,\d+(\.\d+)?,\d+(\.\d+)?$/.test(option)) return null
-	const parts = option.split(',').map(Number)
-	return [parts[0], parts[1], parts[2]]
+function is_valid_specificity(v: unknown): boolean {
+	return (
+		Array.isArray(v) &&
+		v.length === 3 &&
+		v.every((n: unknown) => typeof n === 'number' && Number.isFinite(n) && n >= 0)
+	)
 }
 
-function format_specificity(s: Specificity): string {
-	return `${s[0]},${s[1]},${s[2]}`
-}
-
-const ruleFunction = (primaryOption: string) => {
+const ruleFunction = (primaryOption: Specificity) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
-			possible: [(v: unknown) => typeof v === 'string' && parse_option(v) !== null],
+			possible: is_valid_specificity,
 		})
 
-		if (!validOptions) return
-
-		const max = parse_option(primaryOption)!
+		if (!validOptions || !is_valid_specificity(primaryOption)) return
 
 		const sum: Specificity = [0, 0, 0]
 		let selector_count = 0
@@ -60,9 +56,9 @@ const ruleFunction = (primaryOption: string) => {
 		]
 
 		// compareSpecificity returns < 0 when first arg has higher specificity than second
-		if (compareSpecificity(average, max) < 0) {
+		if (compareSpecificity(average, primaryOption) < 0) {
 			utils.report({
-				message: messages.rejected(format_specificity(average), primaryOption),
+				message: messages.rejected(average, primaryOption),
 				node: root,
 				result,
 				ruleName: rule_name,
@@ -74,5 +70,6 @@ const ruleFunction = (primaryOption: string) => {
 ruleFunction.ruleName = rule_name
 ruleFunction.messages = messages
 ruleFunction.meta = meta
+ruleFunction.primaryOptionArray = true
 
 export default createPlugin(rule_name, ruleFunction)

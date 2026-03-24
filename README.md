@@ -43,7 +43,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 		"projectwallace/max-average-declarations-per-rule": 5,
 		"projectwallace/max-average-selector-complexity": 2,
 		"projectwallace/max-average-selectors-per-rule": 2,
-		"projectwallace/max-average-specificity": "0,2.5,1",
+		"projectwallace/max-average-specificity": [0, 2.5, 1],
 		"projectwallace/max-comment-size": 2500,
 		"projectwallace/max-embedded-content-size": 10000,
 		"projectwallace/max-file-size": 200000,
