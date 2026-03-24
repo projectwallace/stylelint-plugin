@@ -165,3 +165,63 @@ test('should not error when config is 0', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test('should count selectors inside nested atrules', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// `a` appears outside and inside @media → 1 unique out of 2 total = 0.5 < 1
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red; } @media (min-width: 600px) { a { color: blue; } }`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should count selectors from nested rules', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// outer `a`, `b` each have nested `& .foo` → `& .foo` duplicated: 3 unique out of 4 total = 0.75 < 1
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { & .foo { color: red; } } b { & .foo { color: blue; } }`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should not error when selectors inside nested atrules are all unique', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// `a` outside, `b` inside @media → 2 unique out of 2 total = 1.0
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red; } @media (min-width: 600px) { b { color: blue; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

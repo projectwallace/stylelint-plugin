@@ -184,3 +184,63 @@ test('should error when config is 1 and any declaration is duplicated', async ()
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 })
+
+test('should count declarations from nested rules', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// outer: color:red, inner: color:red → 1 unique out of 2 total = 0.5 < 1
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red; & .foo { color: red; } }`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should count declarations from nested atrules', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// color:red appears in both the outer rule and inside @media → 1 unique out of 2 total = 0.5 < 1
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red; } @media (min-width: 600px) { a { color: red; } }`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should not error when declarations in nested rules are all unique', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// outer: color:red, inner: font-size:1em → 2 unique out of 2 total = 1.0
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red; & .foo { font-size: 1em; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
