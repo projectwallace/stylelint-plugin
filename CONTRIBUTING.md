@@ -25,7 +25,7 @@ Every rule's `README.md` must:
 - Show at least one example of a **violation** and one **passing** pattern
 - Document all available options
 
-Rules that disallow certain behaviour (e.g. `no-unused-x`, `no-undefined-x`) should implement a secondary `allowList` option. This option accepts an array of `string | RegExp` values and must be consistent across all rules that implement it.
+Rules that disallow certain behaviour (e.g. `no-unused-x`, `no-undefined-x`) should implement a secondary `allowList` option. This option accepts an array of `string | RegExp` values and must be consistent across all rules that implement it. Use the shared `isAllowed(value, allowList)` utility from `src/utils/allow-list.ts` to evaluate it.
 
 ## Adding a new config
 
