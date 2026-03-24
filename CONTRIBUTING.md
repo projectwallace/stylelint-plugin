@@ -34,4 +34,4 @@ Rules that disallow certain behaviour (e.g. `no-unused-x`, `no-undefined-x`) sho
    ```json
    "./configs/<config-name>": "./dist/configs/<config-name>.mjs"
    ```
-4. Document the config in the **Usage** section of `README.md`
+3. Document the config in the **Usage** section of `README.md`
