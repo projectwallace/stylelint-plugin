@@ -50,6 +50,8 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 		"projectwallace/max-lines-of-code": 200,
 		"projectwallace/max-selector-complexity": 5,
 		"projectwallace/max-unique-units": 5,
+		"projectwallace/min-declaration-uniqueness-ratio": 0.5,
+		"projectwallace/min-selector-uniqueness-ratio": 0.66,
 		"projectwallace/no-anonymous-layers": true,
 		"projectwallace/no-duplicate-data-urls": true,
 		"projectwallace/no-property-browserhacks": true,
@@ -80,6 +82,8 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 | [max-lines-of-code](src/rules/max-lines-of-code/README.md)                                         | Prevent a stylesheet from exceeding a predefined number of lines of code   |
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                             | Prevent selector complexity from going over a predefined maximum           |
 | [max-unique-units](src/rules/max-unique-units/README.md)                                           | Limit the number of unique CSS units used across the stylesheet            |
+| [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)           | Enforce a minimum ratio of unique declarations across the stylesheet       |
+| [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)                 | Enforce a minimum ratio of unique selectors across the stylesheet          |
 | [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                                     | Disallow anonymous (unnamed) `@layer` blocks                               |
 | [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)                               | Disallow the same data URL from being used more than once                  |
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                           | Prevent the use of known browserhacks for properties                       |
