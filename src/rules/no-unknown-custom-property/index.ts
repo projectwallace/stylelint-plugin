@@ -3,6 +3,7 @@ import type { Root } from 'postcss'
 import { collect_declared_properties, collect_var_usages } from '../../utils/custom-properties.js'
 import { collect_declarations_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
+import { isAllowed } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -45,14 +46,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			if (declared_properties.has(usage.name)) continue
 			if (imported_properties?.has(usage.name)) continue
 			if (secondaryOptions?.allowFallback && usage.has_fallback) continue
-			if (secondaryOptions?.allowList) {
-				const allowed = secondaryOptions.allowList.some(
-					(pattern) =>
-						(typeof pattern === 'string' && pattern === usage.name) ||
-						(pattern instanceof RegExp && pattern.test(usage.name)),
-				)
-				if (allowed) continue
-			}
+			if (secondaryOptions?.allowList && isAllowed(usage.name, secondaryOptions.allowList)) continue
 
 			utils.report({
 				result,
