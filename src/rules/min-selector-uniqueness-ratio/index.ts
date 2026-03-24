@@ -30,18 +30,19 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const selectors: string[] = []
+		const unique_selectors = new Set<string>()
+		let total_count = 0
 
 		root.walkRules((rule) => {
 			for (const selector of rule.selectors) {
-				selectors.push(selector.trim())
+				unique_selectors.add(selector.trim())
+				total_count++
 			}
 		})
 
-		if (selectors.length === 0) return
+		if (total_count === 0) return
 
-		const unique_count = new Set(selectors).size
-		const actual = unique_count / selectors.length
+		const actual = unique_selectors.size / total_count
 
 		if (actual < primaryOption) {
 			utils.report({

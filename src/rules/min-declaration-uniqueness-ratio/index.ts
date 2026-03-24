@@ -30,16 +30,17 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const declarations: string[] = []
+		const unique_declarations = new Set<string>()
+		let total_count = 0
 
 		root.walkDecls((decl) => {
-			declarations.push(`${decl.prop}:${decl.value.trim()}`)
+			unique_declarations.add(`${decl.prop}:${decl.value.trim()}`)
+			total_count++
 		})
 
-		if (declarations.length === 0) return
+		if (total_count === 0) return
 
-		const unique_count = new Set(declarations).size
-		const actual = unique_count / declarations.length
+		const actual = unique_declarations.size / total_count
 
 		if (actual < primaryOption) {
 			utils.report({
