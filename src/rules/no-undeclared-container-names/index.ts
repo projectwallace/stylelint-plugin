@@ -4,6 +4,7 @@ import {
 	collect_declared_container_names,
 	collect_container_name_usages,
 } from '../../utils/container-names.js'
+import { isAllowed } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -39,14 +40,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		for (const usage of usages) {
 			if (declared_names.has(usage.name)) continue
 
-			if (secondaryOptions?.allowList) {
-				const allowed = secondaryOptions.allowList.some(
-					(pattern) =>
-						(typeof pattern === 'string' && pattern === usage.name) ||
-						(pattern instanceof RegExp && pattern.test(usage.name)),
-				)
-				if (allowed) continue
-			}
+			if (secondaryOptions?.allowList && isAllowed(usage.name, secondaryOptions.allowList)) continue
 
 			utils.report({
 				result,
