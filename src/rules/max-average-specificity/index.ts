@@ -9,8 +9,8 @@ const rule_name = 'projectwallace/max-average-specificity'
 type Specificity = [number, number, number]
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: Specificity, expected: Specificity) =>
-		`Average specificity is [${actual.join(', ')}] which is greater than the allowed [${expected.join(', ')}]`,
+	rejected: (actual: string, expected: string) =>
+		`Average specificity is [${actual}] which is greater than the allowed [${expected}]`,
 })
 
 const meta = {
@@ -58,7 +58,7 @@ const ruleFunction = (primaryOption: Specificity) => {
 		// compareSpecificity returns < 0 when first arg has higher specificity than second
 		if (compareSpecificity(average, primaryOption) < 0) {
 			utils.report({
-				message: messages.rejected(average, primaryOption),
+				message: messages.rejected(average.join(', '), primaryOption.join(', ')),
 				node: root,
 				result,
 				ruleName: rule_name,
