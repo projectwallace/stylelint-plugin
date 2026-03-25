@@ -72,15 +72,16 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 	const feature = node.name
 	if (!feature) return []
 
-	const children = node.children
-	if (children.length === 0) return []
+	const count = node.child_count
+	if (count === 0) return []
 
 	const bounds: Bound[] = []
 
 	const is_value_node = (n: CSSNode) => n.type === DIMENSION || n.type === NUMBER
+	const children = node.children
 
 	// Case A: [OPERATOR, VALUE] → feature OPERATOR value (e.g. width >= 400px, device-pixel-ratio > 2)
-	if (children.length >= 2 && children[0].type === PRELUDE_OPERATOR && is_value_node(children[1])) {
+	if (count >= 2 && children[0].type === PRELUDE_OPERATOR && is_value_node(children[1])) {
 		const operator = children[0].text.trim()
 		const dimension = children[1]
 		const value = dimension.value_as_number
@@ -92,7 +93,7 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 	}
 	// Case B: [VALUE, OPERATOR, OPERATOR, VALUE] → value1 OP1 feature OP2 value2
 	else if (
-		children.length >= 4 &&
+		count >= 4 &&
 		is_value_node(children[0]) &&
 		children[1].type === PRELUDE_OPERATOR &&
 		children[2].type === PRELUDE_OPERATOR &&

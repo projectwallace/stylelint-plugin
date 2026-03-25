@@ -34,7 +34,7 @@
 	},
 	"dependencies": {
 		"@projectwallace/css-analyzer": "^9.4.0",
-		"@projectwallace/css-parser": "^0.13.10"
+		"@projectwallace/css-parser": "^0.13.11"
 	},
 	"devDependencies": {
 		"@codecov/rollup-plugin": "^1.9.1",
