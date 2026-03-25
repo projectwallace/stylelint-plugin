@@ -27,5 +27,6 @@ export default {
 		'projectwallace/min-declaration-uniqueness-ratio': 0.5,
 		'projectwallace/max-average-specificity': [0, 2.5, 1],
 		'projectwallace/max-selectors-per-rule': 10,
+		'projectwallace/max-declarations-per-rule': 15,
 	},
 }
