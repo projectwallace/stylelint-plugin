@@ -17,6 +17,7 @@ npm run lint
 2. Register the rule in `src/index.ts`
 3. Add the rule to the **Manual configuration** example and the **Rules** table in `README.md`
 4. Consider adding the rule to one or more of the configuration presets in `src/configs/`
+5. Use PostCSS API's as much as possible. Only if goals cannot be achieved reach for `@projectwallace/css-parser`
 
 ## Rule README guidelines
 
@@ -30,8 +31,4 @@ Rules that disallow certain behaviour (e.g. `no-unused-x`, `no-undefined-x`) sho
 ## Adding a new config
 
 1. Create a new file under `src/configs/<config-name>.ts`
-2. Add the config to the `exports` field in `package.json`:
-   ```json
-   "./configs/<config-name>": "./dist/configs/<config-name>.mjs"
-   ```
-3. Document the config in the **Usage** section of `README.md`
+2. Document the config in the **Usage** section of `README.md`
