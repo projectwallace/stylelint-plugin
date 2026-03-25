@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
 
 const { createPlugin, utils } = stylelint
 
@@ -31,19 +30,12 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const css = root.source!.input.css
 		let total_declarations = 0
 		let important_declarations = 0
 
 		root.walkDecls((declaration) => {
-			const decl_source = css.substring(
-				declaration.source!.start!.offset,
-				declaration.source!.end!.offset,
-			)
-			const parsed = parse_declaration(decl_source)
-
 			total_declarations++
-			if (parsed.is_important) {
+			if (declaration.important) {
 				important_declarations++
 			}
 		})

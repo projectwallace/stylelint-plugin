@@ -1,9 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_selector } from '@projectwallace/css-parser/parse-selector'
-import { STYLE_RULE } from '@projectwallace/css-parser/nodes'
-import { walk } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
 import { selectorComplexity } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint
@@ -30,17 +27,8 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_atrule_preludes: false,
-			parse_values: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
-
-		walk(parsed, (node) => {
-			if (node.type !== STYLE_RULE) return
-
-			const selector_text = node.prelude?.text ?? ''
+		root.walkRules((rule) => {
+			const selector_text = rule.selector
 			if (!selector_text.trim()) return
 
 			const selector_list = parse_selector(selector_text)
@@ -52,9 +40,7 @@ const ruleFunction = (primaryOption: number) => {
 				if (complexity > primaryOption) {
 					utils.report({
 						message: messages.rejected(stringified, complexity, primaryOption),
-						node: root,
-						start: { line: node.line + line_offset, column: node.column },
-						end: { line: node.line + line_offset, column: node.column + node.length },
+						node: rule,
 						result,
 						ruleName: rule_name,
 					})
