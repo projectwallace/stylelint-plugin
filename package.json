@@ -24,8 +24,7 @@
 	"main": "./dist/index.mjs",
 	"exports": {
 		".": "./dist/index.mjs",
-		"./configs/recommended": "./dist/configs/recommended.mjs",
-		"./configs/performance": "./dist/configs/performance.mjs"
+		"./configs/*": "./dist/configs/*.mjs"
 	},
 	"scripts": {
 		"test": "vitest --coverage",
