@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { isAllowed } from '../../utils/allow-list.js'
 import { DECLARATION, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { walk } from '@projectwallace/css-parser/walker'
 import { parse } from '@projectwallace/css-parser/parse'
@@ -45,14 +46,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			const prop = node.property
 			if (!prop?.startsWith('--')) return
 
-			if (secondaryOptions?.allowList) {
-				const allowed = secondaryOptions.allowList.some(
-					(pattern) =>
-						(typeof pattern === 'string' && pattern === prop) ||
-						(pattern instanceof RegExp && pattern.test(prop)),
-				)
-				if (allowed) return
-			}
+			if (secondaryOptions?.allowList && isAllowed(prop, secondaryOptions.allowList)) return
 
 			let reported = false
 

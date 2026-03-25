@@ -14,6 +14,7 @@ export default {
 		'projectwallace/no-unused-custom-properties': true,
 		'projectwallace/no-unused-layers': true,
 		'projectwallace/no-useless-custom-property-assignment': true,
+		'projectwallace/no-duplicate-data-urls': true,
 		'projectwallace/max-file-size': 200000,
 		'projectwallace/max-embedded-content-size': 10000,
 		'projectwallace/max-comment-size': 2500,
@@ -21,5 +22,10 @@ export default {
 		'projectwallace/max-average-declarations-per-rule': 6,
 		'projectwallace/max-average-selector-complexity': 3,
 		'projectwallace/max-important-ratio': 0.1,
+		'projectwallace/max-unique-units': 10,
+		'projectwallace/min-selector-uniqueness-ratio': 0.66,
+		'projectwallace/min-declaration-uniqueness-ratio': 0.5,
+		'projectwallace/max-average-specificity': [0, 2.5, 1],
+		'projectwallace/max-selectors-per-rule': 10,
 	},
 }

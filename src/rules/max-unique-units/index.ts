@@ -1,18 +1,19 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
+import { walk, DIMENSION } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'projectwallace/max-important-ratio'
+const rule_name = 'projectwallace/max-unique-units'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`!important ratio is ${actual} which is greater than the allowed ${expected}`,
+		`Found ${actual} unique CSS units which is greater than the allowed ${expected}`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-important-ratio/README.md',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-units/README.md',
 }
 
 const ruleFunction = (primaryOption: number) => {
@@ -22,18 +23,12 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [Number as unknown as (v: unknown) => boolean],
 		})
 
-		if (
-			!validOptions ||
-			!Number.isFinite(primaryOption) ||
-			primaryOption < 0 ||
-			primaryOption > 1
-		) {
+		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
 			return
 		}
 
 		const css = root.source!.input.css
-		let total_declarations = 0
-		let important_declarations = 0
+		const unique_units = new Set<string>()
 
 		root.walkDecls((declaration) => {
 			const decl_source = css.substring(
@@ -42,15 +37,17 @@ const ruleFunction = (primaryOption: number) => {
 			)
 			const parsed = parse_declaration(decl_source)
 
-			total_declarations++
-			if (parsed.is_important) {
-				important_declarations++
-			}
+			walk(parsed, (node) => {
+				if (node.type === DIMENSION) {
+					const unit = node.unit
+					if (unit !== undefined) {
+						unique_units.add(unit.toLowerCase())
+					}
+				}
+			})
 		})
 
-		if (total_declarations === 0) return
-
-		const actual = important_declarations / total_declarations
+		const actual = unique_units.size
 
 		if (actual > primaryOption) {
 			utils.report({

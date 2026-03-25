@@ -1,5 +1,6 @@
 import type { Root, Declaration, AtRule } from 'postcss'
-import { walk, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser'
+import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { walk } from '@projectwallace/css-parser/walker'
 import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
 
 export function collect_declared_properties(root: Root): Map<string, Declaration | AtRule> {
@@ -35,23 +36,16 @@ export function collect_var_usages(root: Root): VarUsage[] {
 		const parsed = parse_declaration(decl_source)
 
 		walk(parsed, (node) => {
-			if (node.type === FUNCTION && node.name === 'var') {
-				let found_name: string | null = null
-				let has_fallback = false
+			if (node.type !== FUNCTION || node.name !== 'var') return
 
-				for (const child of node.children) {
-					if (found_name === null && child.type === IDENTIFIER && child.text.startsWith('--')) {
-						found_name = child.text
-					} else if (found_name !== null) {
-						has_fallback = true
-						break
-					}
-				}
+			const first = node.first_child
+			if (first === null || first.type !== IDENTIFIER || !first.text.startsWith('--')) return
 
-				if (found_name !== null) {
-					usages.push({ name: found_name, has_fallback, node: declaration })
-				}
-			}
+			usages.push({
+				name: first.text,
+				has_fallback: first.next_sibling !== null,
+				node: declaration,
+			})
 		})
 	})
 

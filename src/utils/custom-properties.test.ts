@@ -105,6 +105,16 @@ test('collect_var_usages: finds var() usages across different selectors', () => 
 	expect(names).toContain('--space-3')
 })
 
+test('collect_var_usages: finds var() usages inside light-dark()', () => {
+	const root = parse('a { color: light-dark(var(--blue-800), var(--blue-700)); }')
+	const usages = collect_var_usages(root)
+	expect(usages.length).toBe(2)
+	const blue_800 = usages.find((u) => u.name === '--blue-800')
+	const blue_700 = usages.find((u) => u.name === '--blue-700')
+	expect(blue_800?.has_fallback).toBe(false)
+	expect(blue_700?.has_fallback).toBe(false)
+})
+
 test('collect_var_usages: finds var() usages even when input.css offsets do not match (Svelte embedded CSS)', () => {
 	// Simulate what happens with Svelte: stylelint extracts CSS from <style>...</style>
 	// but root.source.input.css may contain the full Svelte file while
