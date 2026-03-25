@@ -31,7 +31,7 @@ const ruleFunction = (primaryOption: number) => {
 
 		root.walkRules((rule) => {
 			const parsed = parse_selector(rule.selector)
-			total_selectors += parsed.children.length
+			total_selectors += parsed.child_count
 			rule_count++
 		})
 
