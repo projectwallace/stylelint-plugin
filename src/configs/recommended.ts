@@ -15,6 +15,7 @@ export default {
 		'projectwallace/no-unused-layers': true,
 		'projectwallace/no-useless-custom-property-assignment': true,
 		'projectwallace/no-duplicate-data-urls': true,
+		'projectwallace/no-invalid-z-index': true,
 		'projectwallace/max-file-size': 200000,
 		'projectwallace/max-embedded-content-size': 10000,
 		'projectwallace/max-comment-size': 2500,
