@@ -1,8 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { DECLARATION, NUMBER } from '@projectwallace/css-parser/nodes'
-import { walk } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
+import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
+import { walk, NUMBER } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
@@ -30,36 +29,28 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_atrule_preludes: false,
-			parse_selectors: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
+		const css = root.source!.input.css
 
-		walk(parsed, (node) => {
-			if (node.type !== DECLARATION) return
-			if (node.property?.toLowerCase() !== 'z-index') return
+		root.walkDecls(/^z-index$/i, (declaration) => {
+			const decl_source = css.substring(
+				declaration.source!.start!.offset,
+				declaration.source!.end!.offset,
+			)
+			const parsed = parse_declaration(decl_source)
 
-			walk(node, (child) => {
-				if (child.type !== NUMBER) return
+			walk(parsed, (node) => {
+				if (node.type !== NUMBER) return
 
-				const num = child.value_as_number
+				const num = node.value_as_number
 				if (num === null) return
 
 				if (!Number.isInteger(num) || num < INT32_MIN || num > INT32_MAX) {
-					const word = child.text
 					utils.report({
 						result,
 						ruleName: rule_name,
 						message: messages.rejected(num),
-						node: root,
-						start: { line: child.line + line_offset, column: child.column },
-						end: {
-							line: child.line + line_offset,
-							column: child.column + word.length,
-						},
-						word,
+						node: declaration,
+						word: node.text,
 					})
 				}
 			})
