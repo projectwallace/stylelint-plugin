@@ -1,8 +1,6 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
-import { AT_RULE } from '@projectwallace/css-parser/nodes'
-import { walk } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
+import type { Root, AtRule } from 'postcss'
+import { isAllowed } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -31,63 +29,39 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_selectors: false,
-			parse_values: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
-
-		const declared_layers = new Map<string, { line: number; column: number }>()
+		const declared_layers = new Map<string, AtRule>()
 		const defined_layers = new Set<string>()
 
-		walk(parsed, (node) => {
-			if (node.type !== AT_RULE) return
-			if (node.name !== 'layer') return
-
-			if (node.has_block) {
+		root.walkAtRules('layer', (atRule) => {
+			if (atRule.nodes !== undefined) {
 				// Block rule: @layer name { ... }
-				const name = node.prelude?.text.trim()
+				const name = atRule.params.trim()
 				if (name) {
 					defined_layers.add(name)
 				}
 			} else {
 				// Statement: @layer name; or @layer a, b, c;
-				const prelude_text = node.prelude?.text ?? ''
-				const names = prelude_text
+				const names = atRule.params
 					.split(',')
 					.map((n) => n.trim())
 					.filter(Boolean)
 				for (const name of names) {
 					if (!declared_layers.has(name)) {
-						declared_layers.set(name, { line: node.line, column: node.column })
+						declared_layers.set(name, atRule)
 					}
 				}
 			}
 		})
 
-		for (const [layer, pos] of declared_layers) {
+		for (const [layer, node] of declared_layers) {
 			if (defined_layers.has(layer)) continue
-
-			if (secondaryOptions?.allowlist) {
-				const allowed = secondaryOptions.allowlist.some(
-					(pattern) =>
-						(typeof pattern === 'string' && pattern === layer) ||
-						(pattern instanceof RegExp && pattern.test(layer)),
-				)
-				if (allowed) continue
-			}
+			if (secondaryOptions?.allowlist && isAllowed(layer, secondaryOptions.allowlist)) continue
 
 			utils.report({
 				result,
 				ruleName: rule_name,
 				message: messages.rejected(layer),
-				node: root,
-				start: { line: pos.line + line_offset, column: pos.column },
-				end: {
-					line: pos.line + line_offset,
-					column: pos.column + '@layer'.length,
-				},
+				node,
 				word: layer,
 			})
 		}
