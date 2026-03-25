@@ -31,8 +31,4 @@ Rules that disallow certain behaviour (e.g. `no-unused-x`, `no-undefined-x`) sho
 ## Adding a new config
 
 1. Create a new file under `src/configs/<config-name>.ts`
-2. Add the config to the `exports` field in `package.json`:
-   ```json
-   "./configs/<config-name>": "./dist/configs/<config-name>.mjs"
-   ```
-3. Document the config in the **Usage** section of `README.md`
+2. Document the config in the **Usage** section of `README.md`
