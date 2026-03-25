@@ -48,6 +48,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 		"projectwallace/max-embedded-content-size": 10000,
 		"projectwallace/max-file-size": 200000,
 		"projectwallace/max-important-ratio": 1,
+		"projectwallace/max-declarations-per-rule": 15,
 		"projectwallace/max-lines-of-code": 200,
 		"projectwallace/max-selector-complexity": 5,
 		"projectwallace/max-selectors-per-rule": 10,
@@ -78,6 +79,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 | [max-average-selector-complexity](src/rules/max-average-selector-complexity/README.md)             | Limit the average selector complexity across the stylesheet                |
 | [max-average-selectors-per-rule](src/rules/max-average-selectors-per-rule/README.md)               | Limit the average number of selectors per rule across the stylesheet       |
 | [max-average-specificity](src/rules/max-average-specificity/README.md)                             | Limit the average specificity across the stylesheet                        |
+| [max-declarations-per-rule](src/rules/max-declarations-per-rule/README.md)                         | Limit the number of declarations in a single rule                          |
 | [max-comment-size](src/rules/max-comment-size/README.md)                                           | Limit the total byte size of comments in a stylesheet                      |
 | [max-embedded-content-size](src/rules/max-embedded-content-size/README.md)                         | Limit the total byte size of embedded content (data URIs) in a stylesheet  |
 | [max-file-size](src/rules/max-file-size/README.md)                                                 | Limit the total byte size of a stylesheet                                  |
