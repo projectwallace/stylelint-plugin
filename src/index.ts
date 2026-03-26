@@ -10,7 +10,6 @@ import no_undeclared_container_names from './rules/no-undeclared-container-names
 import no_anonymous_layers from './rules/no-anonymous-layers/index.js'
 import no_useless_custom_property_assignment from './rules/no-useless-custom-property-assignment/index.js'
 import no_unreachable_media_conditions from './rules/no-unreachable-media-conditions/index.js'
-import no_unreachable_nested_atrule from './rules/no-unreachable-nested-atrule/index.js'
 import no_static_media_query from './rules/no-static-media-query/index.js'
 import no_static_container_query from './rules/no-static-container-query/index.js'
 import max_file_size from './rules/max-file-size/index.js'
@@ -41,7 +40,6 @@ const plugins: stylelint.Plugin[] = [
 	no_anonymous_layers,
 	no_useless_custom_property_assignment,
 	no_unreachable_media_conditions,
-	no_unreachable_nested_atrule,
 	no_static_media_query,
 	no_static_container_query,
 	max_file_size,

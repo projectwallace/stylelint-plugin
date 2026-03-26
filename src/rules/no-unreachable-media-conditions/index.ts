@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
+import type { Root, AtRule } from 'postcss'
 import {
 	AT_RULE,
 	MEDIA_QUERY,
@@ -13,6 +13,7 @@ import { parse } from '@projectwallace/css-parser/parse'
 import {
 	collect_bound_from_media_feature,
 	collect_bounds_from_feature_range,
+	collect_bounds_from_prelude,
 	find_contradictory_feature,
 } from '../../utils/media-conditions.js'
 import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
@@ -24,6 +25,8 @@ const rule_name = 'projectwallace/no-unreachable-media-conditions'
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (feature: string, lower: string, upper: string) =>
 		`Media feature "${feature}" creates an unreachable condition: lower bound (${lower}) exceeds upper bound (${upper})`,
+	rejected_nested: (feature: string, lower: string, upper: string) =>
+		`Media feature "${feature}" creates an unreachable condition across nested @media rules: lower bound (${lower}) exceeds upper bound (${upper})`,
 })
 
 const meta = {
@@ -83,6 +86,8 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
+		// === Detect contradictions within a single @media / @import rule ===
+
 		const css = root.toString()
 		const parsed = parse(css, {
 			parse_selectors: false,
@@ -114,6 +119,53 @@ const ruleFunction = (primaryOption: true) => {
 					ruleName: rule_name,
 				})
 			}
+		})
+
+		// === Detect contradictions introduced by nested @media rules ===
+		// Nested @media rules implicitly AND their conditions with all ancestor
+		// @media rules, so (min-width: 1000px) { @media (max-width: 500px) }
+		// is equivalent to @media (min-width: 1000px) and (max-width: 500px).
+
+		root.walkAtRules(/^media$/i, (atRule) => {
+			const current_bounds = collect_bounds_from_prelude('media', atRule.params)
+			if (current_bounds === null) return
+
+			// If the current rule is already self-contradictory it was reported above
+			if (find_contradictory_feature(current_bounds) !== null) return
+
+			// Collect bounds from all ancestor @media rules
+			const ancestor_bounds: Bound[] = []
+			let node = atRule.parent
+
+			while (node) {
+				if (node.type === 'atrule' && (node as AtRule).name.toLowerCase() === 'media') {
+					const ancestor = node as AtRule
+					const bounds = collect_bounds_from_prelude('media', ancestor.params)
+					// Ancestor is too complex to analyse — abort to avoid false positives
+					if (bounds === null) return
+					ancestor_bounds.push(...bounds)
+				}
+				node = node.parent
+			}
+
+			if (ancestor_bounds.length === 0) return
+
+			// If the ancestors already contradict each other, skip — the offending
+			// ancestor will be (or was) reported when it was processed itself.
+			if (find_contradictory_feature(ancestor_bounds) !== null) return
+
+			const contradiction = find_contradictory_feature([...ancestor_bounds, ...current_bounds])
+			if (contradiction === null) return
+
+			const lower = `${contradiction.lower.value}${contradiction.lower.unit}`
+			const upper = `${contradiction.upper.value}${contradiction.upper.unit}`
+			utils.report({
+				message: messages.rejected_nested(contradiction.feature, lower, upper),
+				node: atRule,
+				word: '@media',
+				result,
+				ruleName: rule_name,
+			})
 		})
 	}
 }

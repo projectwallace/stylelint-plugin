@@ -19,7 +19,6 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-anonymous-layers',
 		'projectwallace/no-useless-custom-property-assignment',
 		'projectwallace/no-unreachable-media-conditions',
-		'projectwallace/no-unreachable-nested-atrule',
 		'projectwallace/no-static-media-query',
 		'projectwallace/no-static-container-query',
 		'projectwallace/max-file-size',

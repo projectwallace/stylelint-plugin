@@ -372,3 +372,109 @@ test('should still detect unreachable media condition when input.css offsets do 
 		`Media feature "width" creates an unreachable condition: lower bound (600px) exceeds upper bound (400px) (${rule_name})`,
 	)
 })
+
+// === Nested @media rules ===
+
+test('nested @media: valid nesting — no error', async () => {
+	const { errored, warnings } = await lint(`
+		@media (min-width: 300px) {
+			@media (max-width: 1000px) {}
+		}
+	`)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('nested @media: not nested — no error', async () => {
+	const { errored, warnings } = await lint('@media (min-width: 100px) {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('nested @media: ancestor has comma-separated queries — too complex, skip', async () => {
+	const { errored, warnings } = await lint(`
+		@media screen, (min-width: 1000px) {
+			@media (max-width: 500px) {}
+		}
+	`)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('nested @media: ancestor has not operator — skip', async () => {
+	const { errored, warnings } = await lint(`
+		@media not screen {
+			@media (max-width: 500px) {}
+		}
+	`)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('nested @media: outer min-width > inner max-width', async () => {
+	const { errored, warnings } = await lint(`
+		@media (min-width: 1000px) {
+			@media (max-width: 500px) {}
+		}
+	`)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+	)
+})
+
+test('nested @media: outer max-width < inner min-width', async () => {
+	const { errored, warnings } = await lint(`
+		@media (max-width: 500px) {
+			@media (min-width: 1000px) {}
+		}
+	`)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+	)
+})
+
+test('nested @media: range syntax conflict', async () => {
+	const { errored, warnings } = await lint(`
+		@media (width >= 1000px) {
+			@media (width <= 500px) {}
+		}
+	`)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+	)
+})
+
+test('nested @media: three levels deep conflict', async () => {
+	const { errored, warnings } = await lint(`
+		@media (min-width: 1000px) {
+			@media (min-width: 800px) {
+				@media (max-width: 500px) {}
+			}
+		}
+	`)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+	)
+})
+
+test('nested @media: inner already self-contradictory — no double-report', async () => {
+	const { warnings } = await lint(`
+		@media (min-width: 1000px) {
+			@media (min-width: 2000px) and (max-width: 100px) {}
+		}
+	`)
+	// The inner rule's own contradiction is reported by the flat check; the nested
+	// check should not add a second warning for the same node.
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition: lower bound (2000px) exceeds upper bound (100px) (${rule_name})`,
+	)
+})
