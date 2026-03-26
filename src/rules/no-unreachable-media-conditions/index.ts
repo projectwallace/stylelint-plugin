@@ -18,6 +18,14 @@ import {
 } from '../../utils/media-conditions.js'
 import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
 
+/** Cartesian product of an array of arrays. */
+function cartesian<T>(arrays: T[][]): T[][] {
+	if (arrays.length === 0) return [[]]
+	const [first, ...rest] = arrays
+	const rest_product = cartesian(rest)
+	return first.flatMap((item) => rest_product.map((combo) => [item, ...combo]))
+}
+
 const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unreachable-media-conditions'
@@ -125,42 +133,69 @@ const ruleFunction = (primaryOption: true) => {
 		// Nested @media rules implicitly AND their conditions with all ancestor
 		// @media rules, so (min-width: 1000px) { @media (max-width: 500px) }
 		// is equivalent to @media (min-width: 1000px) and (max-width: 500px).
+		//
+		// Comma-separated ancestor queries are handled as alternatives: we take the
+		// cartesian product across all nesting levels and flag only when every
+		// possible combination is contradictory.
 
 		root.walkAtRules(/^media$/i, (atRule) => {
-			const current_bounds = collect_bounds_from_prelude('media', atRule.params)
-			if (current_bounds === null) return
+			// Collect alternative bound-sets from the current rule and each ancestor
+			const current_alternatives = collect_bounds_from_prelude('media', atRule.params)
+			if (current_alternatives.length === 0) return
 
-			// If the current rule is already self-contradictory it was reported above
-			if (find_contradictory_feature(current_bounds) !== null) return
-
-			// Collect bounds from all ancestor @media rules
-			const ancestor_bounds: Bound[] = []
+			const ancestor_alternative_sets: (Bound[] | null)[][] = []
 			let node = atRule.parent
 
 			while (node) {
 				if (node.type === 'atrule' && (node as AtRule).name.toLowerCase() === 'media') {
 					const ancestor = node as AtRule
-					const bounds = collect_bounds_from_prelude('media', ancestor.params)
-					// Ancestor is too complex to analyse — abort to avoid false positives
-					if (bounds === null) return
-					ancestor_bounds.push(...bounds)
+					const alternatives = collect_bounds_from_prelude('media', ancestor.params)
+					if (alternatives.length === 0) return // empty prelude — bail out
+					ancestor_alternative_sets.push(alternatives)
 				}
 				node = node.parent
 			}
 
-			if (ancestor_bounds.length === 0) return
+			if (ancestor_alternative_sets.length === 0) return // not nested
 
-			// If the ancestors already contradict each other, skip — the offending
-			// ancestor will be (or was) reported when it was processed itself.
-			if (find_contradictory_feature(ancestor_bounds) !== null) return
+			// Cartesian product of [current, ancestor1, ancestor2, ...]
+			const all_sets: (Bound[] | null)[][] = [current_alternatives, ...ancestor_alternative_sets]
+			const combinations = cartesian(all_sets)
 
-			const contradiction = find_contradictory_feature([...ancestor_bounds, ...current_bounds])
-			if (contradiction === null) return
+			let first_nested_contradiction: ContradictionInfo | null = null
+			let all_contradictory = true
 
-			const lower = `${contradiction.lower.value}${contradiction.lower.unit}`
-			const upper = `${contradiction.upper.value}${contradiction.upper.unit}`
+			for (const combo of combinations) {
+				// Any unanalyzable branch → conservatively treat as satisfiable
+				if (combo.some((b) => b === null)) {
+					all_contradictory = false
+					break
+				}
+
+				const bound_sets = combo as Bound[][]
+
+				// If current branch alone is contradictory, the flat check above handles
+				// it — skip this combination to avoid double-reporting
+				if (find_contradictory_feature(bound_sets[0]) !== null) continue
+
+				// If any ancestor branch alone is contradictory, the flat check handles
+				// that ancestor — skip to avoid attributing it to the nesting
+				if (bound_sets.slice(1).some((b) => find_contradictory_feature(b) !== null)) continue
+
+				const contradiction = find_contradictory_feature(bound_sets.flat())
+				if (contradiction === null) {
+					all_contradictory = false
+					break
+				}
+				if (first_nested_contradiction === null) first_nested_contradiction = contradiction
+			}
+
+			if (!all_contradictory || first_nested_contradiction === null) return
+
+			const lower = `${first_nested_contradiction.lower.value}${first_nested_contradiction.lower.unit}`
+			const upper = `${first_nested_contradiction.upper.value}${first_nested_contradiction.upper.unit}`
 			utils.report({
-				message: messages.rejected_nested(contradiction.feature, lower, upper),
+				message: messages.rejected_nested(first_nested_contradiction.feature, lower, upper),
 				node: atRule,
 				word: '@media',
 				result,

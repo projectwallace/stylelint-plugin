@@ -172,59 +172,54 @@ export type ContradictionInfo = {
 }
 
 /**
- * Parse an at-rule prelude and collect all numeric bounds from its features.
+ * Parse an at-rule prelude and return one Bound[] per comma-separated query branch.
  *
- * Returns null when the prelude is too complex to safely AND with other bounds:
- *   - Multiple comma-separated queries (OR semantics)
- *   - Any `not` or `or` operator
+ * Each element corresponds to one branch (comma-separated query):
+ *   - Bound[]  — the numeric range bounds extracted from that branch
+ *   - null     — that branch contains `not` or `or`, too complex to analyse
  *
- * Returns an empty array when the prelude has no numeric range features.
- * Returns a non-empty array of bounds otherwise.
+ * An empty array is returned when the prelude contains no recognisable query nodes.
  *
  * Handles both @media (MEDIA_QUERY) and @container (CONTAINER_QUERY) preludes.
  */
 export function collect_bounds_from_prelude(
 	at_rule_name: string,
 	prelude: string,
-): Bound[] | null {
+): (Bound[] | null)[] {
 	const parsed = parse_atrule_prelude(at_rule_name, prelude)
 
-	const query_nodes: CSSNode[] = []
+	const result: (Bound[] | null)[] = []
 	for (const node of parsed) {
-		if (node.type === MEDIA_QUERY || node.type === CONTAINER_QUERY) {
-			query_nodes.push(node)
+		if (node.type !== MEDIA_QUERY && node.type !== CONTAINER_QUERY) continue
+
+		// Skip branches that contain `not` or `or` — too complex to analyse
+		let skip = false
+		walk(node, (child) => {
+			if (child.type === PRELUDE_OPERATOR) {
+				const operator = child.text.trim().toLowerCase()
+				if (operator === 'not' || operator === 'or') {
+					skip = true
+					return BREAK
+				}
+			}
+		})
+		if (skip) {
+			result.push(null)
+			continue
 		}
+
+		const bounds: Bound[] = []
+		walk(node, (child) => {
+			if (child.type === MEDIA_FEATURE) {
+				bounds.push(...collect_bound_from_media_feature(child))
+			} else if (child.type === FEATURE_RANGE) {
+				bounds.push(...collect_bounds_from_feature_range(child))
+			}
+		})
+		result.push(bounds)
 	}
 
-	// Multiple queries means comma-separated OR — too complex to AND with
-	if (query_nodes.length > 1) return null
-	if (query_nodes.length === 0) return []
-
-	const query = query_nodes[0]
-
-	// Skip queries that contain `not` or `or` — too complex to analyse safely
-	let skip = false
-	walk(query, (node) => {
-		if (node.type === PRELUDE_OPERATOR) {
-			const operator = node.text.trim().toLowerCase()
-			if (operator === 'not' || operator === 'or') {
-				skip = true
-				return BREAK
-			}
-		}
-	})
-	if (skip) return null
-
-	const bounds: Bound[] = []
-	walk(query, (node) => {
-		if (node.type === MEDIA_FEATURE) {
-			bounds.push(...collect_bound_from_media_feature(node))
-		} else if (node.type === FEATURE_RANGE) {
-			bounds.push(...collect_bounds_from_feature_range(node))
-		}
-	})
-
-	return bounds
+	return result
 }
 
 /**

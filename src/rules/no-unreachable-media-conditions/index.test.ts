@@ -391,7 +391,8 @@ test('nested @media: not nested — no error', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
-test('nested @media: ancestor has comma-separated queries — too complex, skip', async () => {
+test('nested @media: ancestor has comma-separated queries with one satisfiable branch — no error', async () => {
+	// "screen" has no numeric bounds, so the combination [screen ∧ max-width:500px] is satisfiable
 	const { errored, warnings } = await lint(`
 		@media screen, (min-width: 1000px) {
 			@media (max-width: 500px) {}
@@ -399,6 +400,19 @@ test('nested @media: ancestor has comma-separated queries — too complex, skip'
 	`)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
+})
+
+test('nested @media: all comma-separated ancestor branches are contradictory — error', async () => {
+	const { errored, warnings } = await lint(`
+		@media (min-width: 1000px), (min-width: 900px) {
+			@media (max-width: 500px) {}
+		}
+	`)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+	)
 })
 
 test('nested @media: ancestor has not operator — skip', async () => {
