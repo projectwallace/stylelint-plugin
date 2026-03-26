@@ -134,9 +134,9 @@ const ruleFunction = (primaryOption: true) => {
 		// @media rules, so (min-width: 1000px) { @media (max-width: 500px) }
 		// is equivalent to @media (min-width: 1000px) and (max-width: 500px).
 		//
-		// Comma-separated ancestor queries are handled as alternatives: we take the
-		// cartesian product across all nesting levels and flag only when every
-		// possible combination is contradictory.
+		// Comma-separated ancestor queries are treated as alternatives. We take the
+		// cartesian product across all nesting levels and report the first combination
+		// that is contradictory.
 
 		root.walkAtRules(/^media$/i, (atRule) => {
 			// Collect alternative bound-sets from the current rule and each ancestor
@@ -160,17 +160,12 @@ const ruleFunction = (primaryOption: true) => {
 
 			// Cartesian product of [current, ancestor1, ancestor2, ...]
 			const all_sets: (Bound[] | null)[][] = [current_alternatives, ...ancestor_alternative_sets]
-			const combinations = cartesian(all_sets)
 
-			let first_nested_contradiction: ContradictionInfo | null = null
-			let all_contradictory = true
+			let nested_contradiction: ContradictionInfo | null = null
 
-			for (const combo of combinations) {
-				// Any unanalyzable branch → conservatively treat as satisfiable
-				if (combo.some((b) => b === null)) {
-					all_contradictory = false
-					break
-				}
+			for (const combo of cartesian(all_sets)) {
+				// Any unanalyzable branch → conservatively skip this combination
+				if (combo.some((b) => b === null)) continue
 
 				const bound_sets = combo as Bound[][]
 
@@ -178,24 +173,24 @@ const ruleFunction = (primaryOption: true) => {
 				// it — skip this combination to avoid double-reporting
 				if (find_contradictory_feature(bound_sets[0]) !== null) continue
 
-				// If any ancestor branch alone is contradictory, the flat check handles
-				// that ancestor — skip to avoid attributing it to the nesting
-				if (bound_sets.slice(1).some((b) => find_contradictory_feature(b) !== null)) continue
+				// If the ancestor bounds for this specific combination are already
+				// contradictory amongst themselves, the contradiction belongs to the
+				// ancestor level and will be (or was) reported there — skip to avoid noise
+				if (find_contradictory_feature(bound_sets.slice(1).flat()) !== null) continue
 
 				const contradiction = find_contradictory_feature(bound_sets.flat())
-				if (contradiction === null) {
-					all_contradictory = false
+				if (contradiction !== null) {
+					nested_contradiction = contradiction
 					break
 				}
-				if (first_nested_contradiction === null) first_nested_contradiction = contradiction
 			}
 
-			if (!all_contradictory || first_nested_contradiction === null) return
+			if (nested_contradiction === null) return
 
-			const lower = `${first_nested_contradiction.lower.value}${first_nested_contradiction.lower.unit}`
-			const upper = `${first_nested_contradiction.upper.value}${first_nested_contradiction.upper.unit}`
+			const lower = `${nested_contradiction.lower.value}${nested_contradiction.lower.unit}`
+			const upper = `${nested_contradiction.upper.value}${nested_contradiction.upper.unit}`
 			utils.report({
-				message: messages.rejected_nested(first_nested_contradiction.feature, lower, upper),
+				message: messages.rejected_nested(nested_contradiction.feature, lower, upper),
 				node: atRule,
 				word: '@media',
 				result,
