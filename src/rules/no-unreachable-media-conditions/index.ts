@@ -23,7 +23,13 @@ function cartesian<T>(arrays: T[][]): T[][] {
 	if (arrays.length === 0) return [[]]
 	const [first, ...rest] = arrays
 	const rest_product = cartesian(rest)
-	return first.flatMap((item) => rest_product.map((combo) => [item, ...combo]))
+	const result: T[][] = []
+	for (const item of first) {
+		for (const combo of rest_product) {
+			result.push([item].concat(combo))
+		}
+	}
+	return result
 }
 
 const { createPlugin, utils } = stylelint
@@ -153,7 +159,9 @@ const ruleFunction = (primaryOption: true) => {
 					if (alternatives.length === 0) return // empty prelude — bail out
 					ancestor_alternative_sets.push(alternatives)
 				}
-				node = node.parent
+				// `.parent` is typed as `Document | Container | undefined`; in regular CSS
+				// (not HTML-embedded) the Document case never occurs, so cast it away.
+				node = node.parent as typeof atRule.parent
 			}
 
 			if (ancestor_alternative_sets.length === 0) return // not nested
