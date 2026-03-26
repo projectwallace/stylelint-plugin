@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
+import type { Root, AtRule } from 'postcss'
 import {
 	AT_RULE,
 	MEDIA_QUERY,
@@ -13,9 +13,24 @@ import { parse } from '@projectwallace/css-parser/parse'
 import {
 	collect_bound_from_media_feature,
 	collect_bounds_from_feature_range,
+	collect_bounds_from_prelude,
 	find_contradictory_feature,
 } from '../../utils/media-conditions.js'
 import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
+
+/** Cartesian product of an array of arrays. */
+function cartesian<T>(arrays: T[][]): T[][] {
+	if (arrays.length === 0) return [[]]
+	const [first, ...rest] = arrays
+	const rest_product = cartesian(rest)
+	const result: T[][] = []
+	for (const item of first) {
+		for (const combo of rest_product) {
+			result.push([item].concat(combo))
+		}
+	}
+	return result
+}
 
 const { createPlugin, utils } = stylelint
 
@@ -24,6 +39,8 @@ const rule_name = 'projectwallace/no-unreachable-media-conditions'
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (feature: string, lower: string, upper: string) =>
 		`Media feature "${feature}" creates an unreachable condition: lower bound (${lower}) exceeds upper bound (${upper})`,
+	rejected_nested: (feature: string, lower: string, upper: string) =>
+		`Media feature "${feature}" creates an unreachable condition across nested @media rules: lower bound (${lower}) exceeds upper bound (${upper})`,
 })
 
 const meta = {
@@ -83,6 +100,8 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
+		// === Detect contradictions within a single @media / @import rule ===
+
 		const css = root.toString()
 		const parsed = parse(css, {
 			parse_selectors: false,
@@ -114,6 +133,77 @@ const ruleFunction = (primaryOption: true) => {
 					ruleName: rule_name,
 				})
 			}
+		})
+
+		// === Detect contradictions introduced by nested @media rules ===
+		// Nested @media rules implicitly AND their conditions with all ancestor
+		// @media rules, so (min-width: 1000px) { @media (max-width: 500px) }
+		// is equivalent to @media (min-width: 1000px) and (max-width: 500px).
+		//
+		// Comma-separated ancestor queries are treated as alternatives. We take the
+		// cartesian product across all nesting levels and report the first combination
+		// that is contradictory.
+
+		root.walkAtRules(/^media$/i, (atRule) => {
+			// Collect alternative bound-sets from the current rule and each ancestor
+			const current_alternatives = collect_bounds_from_prelude('media', atRule.params)
+			if (current_alternatives.length === 0) return
+
+			const ancestor_alternative_sets: (Bound[] | null)[][] = []
+			let node = atRule.parent
+
+			while (node) {
+				if (node.type === 'atrule' && (node as AtRule).name.toLowerCase() === 'media') {
+					const ancestor = node as AtRule
+					const alternatives = collect_bounds_from_prelude('media', ancestor.params)
+					if (alternatives.length === 0) return // empty prelude — bail out
+					ancestor_alternative_sets.push(alternatives)
+				}
+				// `.parent` is typed as `Document | Container | undefined`; in regular CSS
+				// (not HTML-embedded) the Document case never occurs, so cast it away.
+				node = node.parent as typeof atRule.parent
+			}
+
+			if (ancestor_alternative_sets.length === 0) return // not nested
+
+			// Cartesian product of [current, ancestor1, ancestor2, ...]
+			const all_sets: (Bound[] | null)[][] = [current_alternatives, ...ancestor_alternative_sets]
+
+			let nested_contradiction: ContradictionInfo | null = null
+
+			for (const combo of cartesian(all_sets)) {
+				// Any unanalyzable branch → conservatively skip this combination
+				if (combo.some((b) => b === null)) continue
+
+				const bound_sets = combo as Bound[][]
+
+				// If current branch alone is contradictory, the flat check above handles
+				// it — skip this combination to avoid double-reporting
+				if (find_contradictory_feature(bound_sets[0]) !== null) continue
+
+				// If the ancestor bounds for this specific combination are already
+				// contradictory amongst themselves, the contradiction belongs to the
+				// ancestor level and will be (or was) reported there — skip to avoid noise
+				if (find_contradictory_feature(bound_sets.slice(1).flat()) !== null) continue
+
+				const contradiction = find_contradictory_feature(bound_sets.flat())
+				if (contradiction !== null) {
+					nested_contradiction = contradiction
+					break
+				}
+			}
+
+			if (nested_contradiction === null) return
+
+			const lower = `${nested_contradiction.lower.value}${nested_contradiction.lower.unit}`
+			const upper = `${nested_contradiction.upper.value}${nested_contradiction.upper.unit}`
+			utils.report({
+				message: messages.rejected_nested(nested_contradiction.feature, lower, upper),
+				node: atRule,
+				word: '@media',
+				result,
+				ruleName: rule_name,
+			})
 		})
 	}
 }

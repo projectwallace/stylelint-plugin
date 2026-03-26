@@ -1,11 +1,15 @@
 import { type CSSNode } from '@projectwallace/css-parser'
 import {
+	MEDIA_QUERY,
+	CONTAINER_QUERY,
 	MEDIA_FEATURE,
 	FEATURE_RANGE,
 	PRELUDE_OPERATOR,
 	DIMENSION,
 	NUMBER,
 } from '@projectwallace/css-parser/nodes'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import { BREAK, walk } from '@projectwallace/css-parser/walker'
 
 export type Bound = {
 	feature: string
@@ -165,6 +169,57 @@ export type ContradictionInfo = {
 	feature: string
 	lower: Bound
 	upper: Bound
+}
+
+/**
+ * Parse an at-rule prelude and return one Bound[] per comma-separated query branch.
+ *
+ * Each element corresponds to one branch (comma-separated query):
+ *   - Bound[]  — the numeric range bounds extracted from that branch
+ *   - null     — that branch contains `not` or `or`, too complex to analyse
+ *
+ * An empty array is returned when the prelude contains no recognisable query nodes.
+ *
+ * Handles both @media (MEDIA_QUERY) and @container (CONTAINER_QUERY) preludes.
+ */
+export function collect_bounds_from_prelude(
+	at_rule_name: string,
+	prelude: string,
+): (Bound[] | null)[] {
+	const parsed = parse_atrule_prelude(at_rule_name, prelude)
+
+	const result: (Bound[] | null)[] = []
+	for (const node of parsed) {
+		if (node.type !== MEDIA_QUERY && node.type !== CONTAINER_QUERY) continue
+
+		// Skip branches that contain `not` or `or` — too complex to analyse
+		let skip = false
+		walk(node, (child) => {
+			if (child.type === PRELUDE_OPERATOR) {
+				const operator = child.text.trim().toLowerCase()
+				if (operator === 'not' || operator === 'or') {
+					skip = true
+					return BREAK
+				}
+			}
+		})
+		if (skip) {
+			result.push(null)
+			continue
+		}
+
+		const bounds: Bound[] = []
+		walk(node, (child) => {
+			if (child.type === MEDIA_FEATURE) {
+				bounds.push(...collect_bound_from_media_feature(child))
+			} else if (child.type === FEATURE_RANGE) {
+				bounds.push(...collect_bounds_from_feature_range(child))
+			}
+		})
+		result.push(bounds)
+	}
+
+	return result
 }
 
 /**
