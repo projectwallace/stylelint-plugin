@@ -102,7 +102,7 @@ test('equality width alone — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 	expect(warnings[0].line).toBe(1)
 	expect(warnings[0].column).toBe(1)
@@ -113,7 +113,7 @@ test('equality width with conflicting min-width — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -122,7 +122,7 @@ test('equality width with conflicting max-width — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -131,7 +131,7 @@ test('equality width with exclusive range bound at same value — error', async 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -140,7 +140,7 @@ test('equality width with inclusive min-width at same value — still a static c
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -149,7 +149,7 @@ test('equality height alone — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "height" creates an unreachable condition (${rule_name})`,
+		`Media feature "height: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -158,7 +158,7 @@ test('equality height with conflicting min-height — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "height" creates an unreachable condition (${rule_name})`,
+		`Media feature "height: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -167,7 +167,7 @@ test('equality inline-size alone — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "inline-size" creates an unreachable condition (${rule_name})`,
+		`Media feature "inline-size: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -178,7 +178,7 @@ test('equality inline-size with conflicting min-inline-size — error', async ()
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "inline-size" creates an unreachable condition (${rule_name})`,
+		`Media feature "inline-size: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -187,7 +187,7 @@ test('@import with equality syntax — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -213,7 +213,7 @@ test('equality width in em — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 30em" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -222,7 +222,7 @@ test('equality width in rem — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 30rem" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -237,7 +237,7 @@ test('equality width in em with conflicting min-width in em — error', async ()
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 30em" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
 
@@ -264,6 +264,6 @@ test('should still detect static media query when input.css offsets do not match
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition (${rule_name})`,
+		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })

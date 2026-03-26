@@ -161,14 +161,20 @@ function operator_to_bound(
 	return null
 }
 
+export type ContradictionInfo = {
+	feature: string
+	lower: Bound
+	upper: Bound
+}
+
 /**
  * Given a list of bounds for potentially multiple features, check whether any
  * feature's combined constraints are contradictory (impossible to satisfy).
  *
  * Bounds with different units are only compared within the same unit.
- * Returns the name of the first contradictory feature, or null if no contradiction found.
+ * Returns info about the first contradictory feature, or null if no contradiction found.
  */
-export function find_contradictory_feature(bounds: Bound[]): string | null {
+export function find_contradictory_feature(bounds: Bound[]): ContradictionInfo | null {
 	// Group bounds by feature name
 	const by_feature = new Map<string, Bound[]>()
 	for (const bound of bounds) {
@@ -206,9 +212,9 @@ export function find_contradictory_feature(bounds: Bound[]): string | null {
 				return a
 			})
 
-			if (max_lower.value > min_upper.value) return feature
+			if (max_lower.value > min_upper.value) return { feature, lower: max_lower, upper: min_upper }
 			if (max_lower.value === min_upper.value && (!max_lower.inclusive || !min_upper.inclusive))
-				return feature
+				return { feature, lower: max_lower, upper: min_upper }
 		}
 	}
 

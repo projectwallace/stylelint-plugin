@@ -15,14 +15,15 @@ import {
 	collect_bounds_from_feature_range,
 	find_contradictory_feature,
 } from '../../utils/media-conditions.js'
-import type { Bound } from '../../utils/media-conditions.js'
+import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
 
 const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unreachable-media-conditions'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (feature: string) => `Media feature "${feature}" creates an unreachable condition`,
+	rejected: (feature: string, lower: string, upper: string) =>
+		`Media feature "${feature}" creates an unreachable condition: lower bound (${lower}) exceeds upper bound (${upper})`,
 })
 
 const meta = {
@@ -30,10 +31,13 @@ const meta = {
 }
 
 /**
- * Parse an at-rule prelude and return the first contradictory feature name,
+ * Parse an at-rule prelude and return info about the first contradictory feature,
  * or null if all media conditions are satisfiable.
  */
-function find_contradiction_in_prelude(at_rule_name: string, prelude: string): string | null {
+function find_contradiction_in_prelude(
+	at_rule_name: string,
+	prelude: string,
+): ContradictionInfo | null {
 	const parsed = parse_atrule_prelude(at_rule_name, prelude)
 
 	for (const query_node of parsed) {
@@ -96,8 +100,10 @@ const ruleFunction = (primaryOption: true) => {
 			const contradictory_feature = find_contradiction_in_prelude(node.name, prelude)
 
 			if (contradictory_feature !== null) {
+				const lower = `${contradictory_feature.lower.value}${contradictory_feature.lower.unit}`
+				const upper = `${contradictory_feature.upper.value}${contradictory_feature.upper.unit}`
 				utils.report({
-					message: messages.rejected(contradictory_feature),
+					message: messages.rejected(contradictory_feature.feature, lower, upper),
 					node: root,
 					start: { line: node.line + line_offset, column: node.column },
 					end: {

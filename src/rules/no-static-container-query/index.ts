@@ -17,22 +17,28 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-static-container-query'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (feature: string) => `Container feature "${feature}" creates an unreachable condition`,
+	rejected: (feature: string, value: string) =>
+		`Container feature "${feature}: ${value}" is a static equality condition that will almost never match any container`,
 })
 
 const meta = {
 	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-static-container-query/README.md',
 }
 
+type StaticFeatureInfo = {
+	feature: string
+	value: string
+}
+
 /**
- * Parse an at-rule prelude and return the first static (equality-bound) feature name,
- * or null if no static container features are found.
+ * Parse an at-rule prelude and return the first static (equality-bound) feature name
+ * and its value, or null if no static container features are found.
  *
  * A static container feature uses the equality syntax like `(width: 300px)` — without
  * a `min-` or `max-` prefix. This fixes the feature to a single exact value, which
  * almost never matches in practice.
  */
-function find_static_feature_in_prelude(prelude: string): string | null {
+function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | null {
 	const parsed = parse_atrule_prelude('container', prelude)
 
 	for (const query_node of parsed) {
@@ -51,7 +57,7 @@ function find_static_feature_in_prelude(prelude: string): string | null {
 		})
 		if (skip) continue
 
-		let static_feature: string | null = null
+		let static_feature: StaticFeatureInfo | null = null
 
 		walk(query_node, (node) => {
 			if (static_feature !== null) return
@@ -68,7 +74,7 @@ function find_static_feature_in_prelude(prelude: string): string | null {
 				if (child.type === DIMENSION || child.type === NUMBER) {
 					const value = child.value_as_number
 					if (value != null && !Number.isNaN(value)) {
-						static_feature = property
+						static_feature = { feature: property, value: child.text }
 						return
 					}
 				}
@@ -108,7 +114,7 @@ const ruleFunction = (primaryOption: true) => {
 
 			if (static_feature !== null) {
 				utils.report({
-					message: messages.rejected(static_feature),
+					message: messages.rejected(static_feature.feature, static_feature.value),
 					node: root,
 					start: { line: node.line + line_offset, column: node.column },
 					end: {
