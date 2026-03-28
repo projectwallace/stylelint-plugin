@@ -14,5 +14,6 @@ export default {
 		'projectwallace/min-selector-uniqueness-ratio': 0.66,
 		'projectwallace/no-anonymous-layers': true,
 		'projectwallace/no-property-browserhacks': true,
+		'projectwallace/no-property-shorthand': true,
 	},
 }

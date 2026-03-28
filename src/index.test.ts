@@ -36,5 +36,6 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-selectors-per-rule',
 		'projectwallace/max-declarations-per-rule',
 		'projectwallace/no-invalid-z-index',
+		'projectwallace/no-property-shorthand',
 	])
 })
