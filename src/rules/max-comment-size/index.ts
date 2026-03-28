@@ -25,15 +25,10 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const css = root.source!.input.css
 		let total_size = 0
 
 		root.walkComments((comment) => {
-			const comment_source = css.substring(
-				comment.source!.start!.offset,
-				comment.source!.end!.offset,
-			)
-			total_size += comment_source.length
+			total_size += comment.text.length
 		})
 
 		if (total_size > primaryOption) {
