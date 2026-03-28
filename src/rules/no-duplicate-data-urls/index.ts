@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { URL as CSS_URL } from '@projectwallace/css-parser/nodes'
 import { walk } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
 
 const { createPlugin, utils } = stylelint
 
@@ -28,34 +28,28 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_selectors: false,
-			parse_atrule_preludes: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
-
 		const seen = new Set<string>()
 
-		walk(parsed, (node) => {
-			if (node.type !== CSS_URL) return
-			if (!node.text.includes('data:')) return
+		root.walkDecls((declaration) => {
+			const parsed = parse_value(declaration.value)
 
-			const url = node.text
+			walk(parsed, (node) => {
+				if (node.type !== CSS_URL) return
+				const { text: url } = node
+				if (!url.includes('data:')) return
 
-			if (seen.has(url)) {
-				utils.report({
-					result,
-					ruleName: rule_name,
-					message: messages.rejected(),
-					node: root,
-					start: { line: node.line + line_offset, column: node.column },
-					end: { line: node.line + line_offset, column: node.column + url.length },
-					word: url,
-				})
-			} else {
-				seen.add(url)
-			}
+				if (seen.has(url)) {
+					utils.report({
+						result,
+						ruleName: rule_name,
+						message: messages.rejected(),
+						node: declaration,
+						word: url,
+					})
+				} else {
+					seen.add(url)
+				}
+			})
 		})
 	}
 }

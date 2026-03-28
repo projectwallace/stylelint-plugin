@@ -1,8 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { AT_RULE, LAYER_NAME } from '@projectwallace/css-parser/nodes'
-import { walk } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
+import { LAYER_NAME } from '@projectwallace/css-parser/nodes'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 
 const { createPlugin, utils } = stylelint
 
@@ -27,51 +26,30 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_selectors: false,
-			parse_values: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
-
-		walk(parsed, (node) => {
-			if (node.type !== AT_RULE) return
-
-			if (node.name === 'layer') {
-				// Anonymous layer: has a block but no name (empty/missing prelude)
-				if (node.has_block && !node.prelude?.text.trim()) {
+		root.walkAtRules(/^(layer|import)$/i, (at_rule) => {
+			if (at_rule.name === 'layer') {
+				// Anonymous layer: has a block but no name (empty/missing params)
+				if (at_rule.nodes !== undefined && !at_rule.params.trim()) {
 					utils.report({
 						result,
 						ruleName: rule_name,
 						message: messages.rejected(),
-						node: root,
-						start: { line: node.line + line_offset, column: node.column },
-						end: {
-							line: node.line + line_offset,
-							column: node.column + '@layer'.length,
-						},
+						node: at_rule,
 					})
 				}
-			} else if (node.name === 'import') {
+			} else {
 				// Check @import for anonymous layer syntax
-				const prelude = node.prelude
-				if (!prelude) return
-
-				walk(prelude, (child) => {
+				const parsed = parse_atrule_prelude('import', at_rule.params)
+				for (const child of parsed) {
 					if (child.type === LAYER_NAME && !child.name) {
 						utils.report({
 							result,
 							ruleName: rule_name,
 							message: messages.rejected(),
-							node: root,
-							start: { line: node.line + line_offset, column: node.column },
-							end: {
-								line: node.line + line_offset,
-								column: node.column + '@import'.length,
-							},
+							node: at_rule,
 						})
 					}
-				})
+				}
 			}
 		})
 	}

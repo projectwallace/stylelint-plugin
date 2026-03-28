@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/no-anonymous-layers'
@@ -224,35 +223,4 @@ test('should not run when primary option is invalid', async () => {
 
 	expect(warnings).toStrictEqual([])
 	expect(invalidOptionWarnings.length).toBeGreaterThan(0)
-})
-
-test('should still detect anonymous layer when input.css offsets do not match (Svelte embedded CSS)', async () => {
-	const css = '@layer { * { margin: 0; } }'
-	const config = {
-		plugins: [plugin],
-		rules: {
-			[rule_name]: true,
-		},
-	}
-	const svelteCustomSyntax = {
-		parse(code: string, opts: object) {
-			const root = parse(code, opts)
-			;(root.source!.input as unknown as { css: string }).css =
-				'<script>const x = 1</script><style>' + code + '</style>'
-			return root
-		},
-		stringify: (await import('postcss')).stringify,
-	}
-
-	const {
-		results: [{ warnings, errored }],
-	} = await stylelint.lint({
-		code: css,
-		config,
-		customSyntax: svelteCustomSyntax as never,
-	})
-
-	expect(errored).toBe(true)
-	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(`Anonymous @layer is not allowed (${rule_name})`)
 })

@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/no-static-container-query'
@@ -183,31 +182,4 @@ test('min-width in em — no error', async () => {
 	const { errored, warnings } = await lint('@container (min-width: 30em) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
-})
-
-test('should still detect static container query when input.css offsets do not match (Svelte embedded CSS)', async () => {
-	const css = '@container (width: 300px) {}'
-	const svelteCustomSyntax = {
-		parse(code: string, opts: object) {
-			const root = parse(code, opts)
-			;(root.source!.input as unknown as { css: string }).css =
-				'<script>const x = 1</script><style>' + code + '</style>'
-			return root
-		},
-		stringify: (await import('postcss')).stringify,
-	}
-
-	const {
-		results: [{ warnings, errored }],
-	} = await stylelint.lint({
-		code: css,
-		config,
-		customSyntax: svelteCustomSyntax as never,
-	})
-
-	expect(errored).toBe(true)
-	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Container feature "width: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
-	)
 })

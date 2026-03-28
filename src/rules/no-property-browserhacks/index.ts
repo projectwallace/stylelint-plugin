@@ -1,8 +1,5 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { DECLARATION } from '@projectwallace/css-parser/nodes'
-import { walk } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -27,27 +24,17 @@ const ruleFunction = (primaryOption: true) => {
 			return
 		}
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_atrule_preludes: false,
-			parse_values: false,
-			parse_selectors: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
-
-		walk(parsed, (node) => {
-			if (node.type !== DECLARATION) return
-			if (!node.is_browserhack) return
-
-			const property = node.property!
-			utils.report({
-				message: messages.rejected(property),
-				node: root,
-				start: { line: node.line + line_offset, column: node.column },
-				end: { line: node.line + line_offset, column: node.column + property.length },
-				result,
-				ruleName: rule_name,
-			})
+		root.walkDecls((declaration) => {
+			// Browserhack chars like * end up in raws.before since they're not valid identifier starts
+			if (/\S/.test(declaration.raws.before ?? '')) {
+				const property = (declaration.raws.before + declaration.prop).trim()
+				utils.report({
+					message: messages.rejected(property),
+					node: declaration,
+					result,
+					ruleName: rule_name,
+				})
+			}
 		})
 	}
 }

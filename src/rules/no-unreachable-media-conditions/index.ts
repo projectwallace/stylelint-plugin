@@ -1,7 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import {
-	AT_RULE,
 	MEDIA_QUERY,
 	MEDIA_FEATURE,
 	FEATURE_RANGE,
@@ -9,7 +8,6 @@ import {
 } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
 import {
 	collect_bound_from_media_feature,
 	collect_bounds_from_feature_range,
@@ -102,33 +100,18 @@ const ruleFunction = (primaryOption: true) => {
 
 		// === Detect contradictions within a single @media / @import rule ===
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_selectors: false,
-			parse_values: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
-
-		walk(parsed, (node) => {
-			if (node.type !== AT_RULE) return
-			if (node.name !== 'media' && node.name !== 'import') return
-
-			const prelude = node.prelude?.text
+		root.walkAtRules(/^(media|import)$/i, (at_rule) => {
+			const prelude = at_rule.params
 			if (!prelude) return
 
-			const contradictory_feature = find_contradiction_in_prelude(node.name, prelude)
+			const contradictory_feature = find_contradiction_in_prelude(at_rule.name, prelude)
 
 			if (contradictory_feature !== null) {
 				const lower = `${contradictory_feature.lower.value}${contradictory_feature.lower.unit}`
 				const upper = `${contradictory_feature.upper.value}${contradictory_feature.upper.unit}`
 				utils.report({
 					message: messages.rejected(contradictory_feature.feature, lower, upper),
-					node: root,
-					start: { line: node.line + line_offset, column: node.column },
-					end: {
-						line: node.line + line_offset,
-						column: node.column + `@${node.name}`.length,
-					},
+					node: at_rule,
 					result,
 					ruleName: rule_name,
 				})

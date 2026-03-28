@@ -1,7 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import {
-	AT_RULE,
 	MEDIA_QUERY,
 	MEDIA_FEATURE,
 	DIMENSION,
@@ -10,7 +9,6 @@ import {
 } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { walk, BREAK } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
 
 const { createPlugin, utils } = stylelint
 
@@ -76,9 +74,9 @@ function find_static_feature_in_prelude(
 			for (const child of node.children) {
 				if (child.type === DIMENSION || child.type === NUMBER) {
 					const value = child.value_as_number
-					if (value != null && !Number.isNaN(value)) {
+					if (value !== null && !Number.isNaN(value)) {
 						static_feature = { feature: property, value: child.text }
-						return
+						return BREAK
 					}
 				}
 			}
@@ -99,31 +97,16 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_selectors: false,
-			parse_values: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
-
-		walk(parsed, (node) => {
-			if (node.type !== AT_RULE) return
-			if (node.name !== 'media' && node.name !== 'import') return
-
-			const prelude = node.prelude?.text
+		root.walkAtRules(/^(media|import)$/, (at_rule) => {
+			const prelude = at_rule.params
 			if (!prelude) return
 
-			const static_feature = find_static_feature_in_prelude(node.name, prelude)
+			const static_feature = find_static_feature_in_prelude(at_rule.name, prelude)
 
 			if (static_feature !== null) {
 				utils.report({
 					message: messages.rejected(static_feature.feature, static_feature.value),
-					node: root,
-					start: { line: node.line + line_offset, column: node.column },
-					end: {
-						line: node.line + line_offset,
-						column: node.column + `@${node.name}`.length,
-					},
+					node: at_rule,
 					result,
 					ruleName: rule_name,
 				})

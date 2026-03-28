@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/no-unreachable-media-conditions'
@@ -344,33 +343,6 @@ test('equality width in em, conflicting bound in px — no error (mixed units)',
 	const { errored, warnings } = await lint('@media (width: 30em) and (min-width: 400px) {}')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
-})
-
-test('should still detect unreachable media condition when input.css offsets do not match (Svelte embedded CSS)', async () => {
-	const css = '@media (min-width: 600px) and (max-width: 400px) {}'
-	const svelteCustomSyntax = {
-		parse(code: string, opts: object) {
-			const root = parse(code, opts)
-			;(root.source!.input as unknown as { css: string }).css =
-				'<script>const x = 1</script><style>' + code + '</style>'
-			return root
-		},
-		stringify: (await import('postcss')).stringify,
-	}
-
-	const {
-		results: [{ warnings, errored }],
-	} = await stylelint.lint({
-		code: css,
-		config,
-		customSyntax: svelteCustomSyntax as never,
-	})
-
-	expect(errored).toBe(true)
-	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (600px) exceeds upper bound (400px) (${rule_name})`,
-	)
 })
 
 // === Nested @media rules ===

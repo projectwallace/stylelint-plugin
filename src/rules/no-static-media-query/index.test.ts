@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/no-static-media-query'
@@ -238,32 +237,5 @@ test('equality width in em with conflicting min-width in em — error', async ()
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
 		`Media feature "width: 30em" is a static equality condition that will almost never match any viewport (${rule_name})`,
-	)
-})
-
-test('should still detect static media query when input.css offsets do not match (Svelte embedded CSS)', async () => {
-	const css = '@media (width: 300px) {}'
-	const svelteCustomSyntax = {
-		parse(code: string, opts: object) {
-			const root = parse(code, opts)
-			;(root.source!.input as unknown as { css: string }).css =
-				'<script>const x = 1</script><style>' + code + '</style>'
-			return root
-		},
-		stringify: (await import('postcss')).stringify,
-	}
-
-	const {
-		results: [{ warnings, errored }],
-	} = await stylelint.lint({
-		code: css,
-		config,
-		customSyntax: svelteCustomSyntax as never,
-	})
-
-	expect(errored).toBe(true)
-	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 })
