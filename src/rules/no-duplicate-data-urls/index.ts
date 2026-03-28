@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { URL as CSS_URL } from '@projectwallace/css-parser/nodes'
 import { walk } from '@projectwallace/css-parser/walker'
-import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
 
 const { createPlugin, utils } = stylelint
 
@@ -28,21 +28,15 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		const css = root.source!.input.css
 		const seen = new Set<string>()
 
 		root.walkDecls((declaration) => {
-			const decl_source = css.substring(
-				declaration.source!.start!.offset,
-				declaration.source!.end!.offset,
-			)
-			const parsed = parse_declaration(decl_source)
+			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
 				if (node.type !== CSS_URL) return
-				if (!node.text.includes('data:')) return
-
-				const url = node.text
+				const { text: url } = node
+				if (!url.includes('data:')) return
 
 				if (seen.has(url)) {
 					utils.report({

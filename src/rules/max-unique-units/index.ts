@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_declaration } from '@projectwallace/css-parser/parse-declaration'
 import { walk, DIMENSION } from '@projectwallace/css-parser'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
 
 const { createPlugin, utils } = stylelint
 
@@ -27,15 +27,10 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const css = root.source!.input.css
 		const unique_units = new Set<string>()
 
 		root.walkDecls((declaration) => {
-			const decl_source = css.substring(
-				declaration.source!.start!.offset,
-				declaration.source!.end!.offset,
-			)
-			const parsed = parse_declaration(decl_source)
+			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
 				if (node.type === DIMENSION) {

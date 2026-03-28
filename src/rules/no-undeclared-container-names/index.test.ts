@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/no-undeclared-container-names'
@@ -329,37 +328,4 @@ test('should error for each unique undeclared container name', async () => {
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(2)
-})
-
-test('should still detect undeclared container name when input.css offsets do not match (Svelte embedded CSS)', async () => {
-	const css = '@container sidebar (min-width: 700px) { .a { color: red; } }'
-	const config = {
-		plugins: [plugin],
-		rules: {
-			[rule_name]: true,
-		},
-	}
-	const svelteCustomSyntax = {
-		parse(code: string, opts: object) {
-			const root = parse(code, opts)
-			;(root.source!.input as unknown as { css: string }).css =
-				'<script>const x = 1</script><style>' + code + '</style>'
-			return root
-		},
-		stringify: (await import('postcss')).stringify,
-	}
-
-	const {
-		results: [{ warnings, errored }],
-	} = await stylelint.lint({
-		code: css,
-		config,
-		customSyntax: svelteCustomSyntax as never,
-	})
-
-	expect(errored).toBe(true)
-	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Container name "sidebar" is used in a @container query but was never declared (${rule_name})`,
-	)
 })

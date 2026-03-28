@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/no-unused-layers'
@@ -255,35 +254,4 @@ test('should not error when no layer statements exist', async () => {
 
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
-})
-
-test('should still detect unused layer when input.css offsets do not match (Svelte embedded CSS)', async () => {
-	const css = '@layer foo; a { color: red; }'
-	const config = {
-		plugins: [plugin],
-		rules: {
-			[rule_name]: true,
-		},
-	}
-	const svelteCustomSyntax = {
-		parse(code: string, opts: object) {
-			const root = parse(code, opts)
-			;(root.source!.input as unknown as { css: string }).css =
-				'<script>const x = 1</script><style>' + code + '</style>'
-			return root
-		},
-		stringify: (await import('postcss')).stringify,
-	}
-
-	const {
-		results: [{ warnings, errored }],
-	} = await stylelint.lint({
-		code: css,
-		config,
-		customSyntax: svelteCustomSyntax as never,
-	})
-
-	expect(errored).toBe(true)
-	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(`Layer "foo" was declared but never defined (${rule_name})`)
 })

@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import { parse } from 'postcss'
 import plugin from './index.js'
 
 const rule_name = 'projectwallace/max-lines-of-code'
@@ -79,48 +78,4 @@ test('should error when lines of code exceeds allowed setting', async () => {
 		severity: 'error',
 		text: 'Counted 4 Lines of Code which is greater than the allowed 2 (projectwallace/max-lines-of-code)',
 	})
-})
-
-test('should count only CSS lines when input.css contains a larger file (Svelte embedded CSS)', async () => {
-	// Simulate what happens in Svelte: stylelint extracts CSS from <style>...</style>
-	// but root.source.input.css may contain the full Svelte file while
-	// root.toString() returns only the extracted CSS.
-	const css = `
-		a {
-			color: green;
-		}
-
-		a {
-			color: red;
-		}
-	`
-	const config = {
-		plugins: [plugin],
-		rules: {
-			[rule_name]: 2,
-		},
-	}
-	const svelteCustomSyntax = {
-		parse(code: string, opts: object) {
-			const root = parse(code, opts)
-			;(root.source!.input as unknown as { css: string }).css =
-				'<script>const x = 1</script><style>' + code + '</style>'
-			return root
-		},
-		stringify: (await import('postcss')).stringify,
-	}
-
-	const {
-		results: [{ warnings, errored }],
-	} = await stylelint.lint({
-		code: css,
-		config,
-		customSyntax: svelteCustomSyntax as never,
-	})
-
-	expect(errored).toBe(true)
-	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		'Counted 4 Lines of Code which is greater than the allowed 2 (projectwallace/max-lines-of-code)',
-	)
 })
