@@ -1,11 +1,21 @@
+import recommended from './recommended.js'
+
+const rules = [
+	'projectwallace/max-lines-of-code',
+	'projectwallace/no-unused-layers',
+	'projectwallace/no-duplicate-data-urls',
+	'projectwallace/max-file-size',
+	'projectwallace/max-embedded-content-size',
+] as const
+
 export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
-		'projectwallace/max-lines-of-code': 10000,
-		'projectwallace/no-unused-layers': true,
-		'projectwallace/no-duplicate-data-urls': true,
-		'projectwallace/max-file-size': 200000,
-		'projectwallace/max-embedded-content-size': 10000,
+		...(Object.fromEntries(rules.map((rule) => [rule, recommended.rules[rule]])) as Pick<
+			typeof recommended.rules,
+			(typeof rules)[number]
+		>),
+		// Stricter than recommended: no comments allowed for performance
 		'projectwallace/max-comment-size': 0,
 	},
 }

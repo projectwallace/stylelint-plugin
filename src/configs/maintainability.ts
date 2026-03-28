@@ -1,19 +1,26 @@
+import recommended from './recommended.js'
+
+const rules = [
+	'projectwallace/max-average-declarations-per-rule',
+	'projectwallace/max-average-selector-complexity',
+	'projectwallace/max-average-selectors-per-rule',
+	'projectwallace/max-average-specificity',
+	'projectwallace/max-declarations-per-rule',
+	'projectwallace/max-important-ratio',
+	'projectwallace/max-selector-complexity',
+	'projectwallace/max-selectors-per-rule',
+	'projectwallace/max-unique-units',
+	'projectwallace/min-declaration-uniqueness-ratio',
+	'projectwallace/min-selector-uniqueness-ratio',
+	'projectwallace/no-anonymous-layers',
+	'projectwallace/no-property-browserhacks',
+	'projectwallace/no-property-shorthand',
+] as const
+
 export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
-	rules: {
-		'projectwallace/max-average-declarations-per-rule': 6,
-		'projectwallace/max-average-selector-complexity': 3,
-		'projectwallace/max-average-selectors-per-rule': 3,
-		'projectwallace/max-average-specificity': [0.02, 2.5, 1],
-		'projectwallace/max-declarations-per-rule': 15,
-		'projectwallace/max-important-ratio': 0.1,
-		'projectwallace/max-selector-complexity': 15,
-		'projectwallace/max-selectors-per-rule': 10,
-		'projectwallace/max-unique-units': 10,
-		'projectwallace/min-declaration-uniqueness-ratio': 0.5,
-		'projectwallace/min-selector-uniqueness-ratio': 0.66,
-		'projectwallace/no-anonymous-layers': true,
-		'projectwallace/no-property-browserhacks': true,
-		'projectwallace/no-property-shorthand': true,
-	},
+	rules: Object.fromEntries(rules.map((rule) => [rule, recommended.rules[rule]])) as Pick<
+		typeof recommended.rules,
+		(typeof rules)[number]
+	>,
 }
