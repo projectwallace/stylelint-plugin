@@ -32,6 +32,14 @@ The easiest way to get started is by extending one of the preset configs:
 }
 ```
 
+**`maintainability`** — enables rules that limit complexity and enforce conventions to keep CSS easy to reason about and manage over time:
+
+```json
+{
+	"extends": ["@projectwallace/stylelint-plugin/configs/maintainability"]
+}
+```
+
 ### Manual configuration
 
 Alternatively, add the plugin and configure rules individually in your stylelint config:
