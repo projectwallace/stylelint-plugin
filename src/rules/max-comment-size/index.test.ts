@@ -84,3 +84,60 @@ test('should error when comment size exceeds the limit', async () => {
 	})
 	expect(warnings[0].text).toContain('greater than the allowed 1 bytes')
 })
+
+test('should ignore copyright comments starting with ! when ignoreCopyrightComments is true', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [1, { ignoreCopyrightComments: true }],
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `/*! Copyright 2024 My Company */ a { color: red; }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should still count non-copyright comments when ignoreCopyrightComments is true', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [1, { ignoreCopyrightComments: true }],
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `/* this is a regular comment */ a { color: red; }`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should count copyright comments when ignoreCopyrightComments is false', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [1, { ignoreCopyrightComments: false }],
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `/*! Copyright 2024 */ a { color: red; }`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})

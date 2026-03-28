@@ -39,3 +39,21 @@ a { color: red; }
 /* short */
 a { color: red; }
 ```
+
+## Optional secondary options
+
+### `ignoreCopyrightComments: true`
+
+Ignores copyright comments from the total byte count. A copyright comment is one that starts with `/*!`.
+
+Given:
+
+`[10, { ignoreCopyrightComments: true }]`
+
+The following patterns is _not_ considered a violation:
+
+<!-- prettier-ignore -->
+```css
+/*! Copyright 2024 My Company. All rights reserved. */
+a { color: red; }
+```
