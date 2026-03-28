@@ -8,7 +8,7 @@ import { isAllowed } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'projectwallace/no-undeclared-container-names'
+const rule_name = 'projectwallace/no-unknown-container-names'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (name: string) =>
@@ -16,7 +16,7 @@ const messages = utils.ruleMessages(rule_name, {
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-undeclared-container-names/README.md',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unknown-container-names/README.md',
 }
 
 interface SecondaryOptions {

@@ -102,7 +102,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 | [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                                     | Disallow anonymous (unnamed) `@layer` blocks                               |
 | [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)                               | Disallow the same data URL from being used more than once                  |
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                           | Prevent the use of known browserhacks for properties                       |
-| [no-undeclared-container-names](src/rules/no-undeclared-container-names/README.md)                 | Disallow container names in `@container` that were never declared          |
+| [no-unknown-container-names](src/rules/no-unknown-container-names/README.md)                       | Disallow container names in `@container` that were never declared          |
 | [no-unknown-custom-property](src/rules/no-unknown-custom-property/README.md)                       | Disallow the use of undeclared custom properties in a `var()`              |
 | [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md) | Disallow custom property assignments that reference themselves via `var()` |
 | [no-unused-container-names](src/rules/no-unused-container-names/README.md)                         | Disallow container names that are declared but never queried               |

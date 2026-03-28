@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'projectwallace/no-undeclared-container-names'
+const rule_name = 'projectwallace/no-unknown-container-names'
 
 test('should not error when a container name is declared and used', async () => {
 	const config = {
@@ -226,7 +226,7 @@ test('should not error on @container with scroll-state query', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error on undeclared name matched by allowList string', async () => {
+test('should not error on unknown name matched by allowList string', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -245,7 +245,7 @@ test('should not error on undeclared name matched by allowList string', async ()
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error on undeclared name matched by allowList RegExp', async () => {
+test('should not error on unknown name matched by allowList RegExp', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -264,7 +264,7 @@ test('should not error on undeclared name matched by allowList RegExp', async ()
 	expect(warnings).toStrictEqual([])
 })
 
-test('should still error when allowList does not match the undeclared container name', async () => {
+test('should still error when allowList does not match the unknown container name', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -286,7 +286,7 @@ test('should still error when allowList does not match the undeclared container 
 	)
 })
 
-test('should handle multiple @container queries referencing the same undeclared name once', async () => {
+test('should handle multiple @container queries referencing the same unknown name once', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -308,7 +308,7 @@ test('should handle multiple @container queries referencing the same undeclared 
 	expect(warnings.length).toBe(2)
 })
 
-test('should error for each unique undeclared container name', async () => {
+test('should error for each unique unknown container name', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {

@@ -2,7 +2,7 @@ export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
 		'projectwallace/no-invalid-z-index': true,
-		'projectwallace/no-undeclared-container-names': true,
+		'projectwallace/no-unknown-container-names': true,
 		'projectwallace/no-unknown-custom-property': true,
 		'projectwallace/no-unreachable-media-conditions': true,
 		'projectwallace/no-useless-custom-property-assignment': true,
