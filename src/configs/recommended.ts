@@ -5,6 +5,7 @@ export default {
 		'projectwallace/max-selector-complexity': 15,
 		'projectwallace/no-anonymous-layers': true,
 		'projectwallace/no-property-browserhacks': true,
+		'projectwallace/no-property-shorthand': true,
 		'projectwallace/no-static-container-query': true,
 		'projectwallace/no-static-media-query': true,
 		'projectwallace/no-unknown-container-names': true,

@@ -75,6 +75,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 		"projectwallace/no-unused-custom-properties": true,
 		"projectwallace/no-unused-layers": true,
 		"projectwallace/no-invalid-z-index": true,
+		"projectwallace/no-property-shorthand": true,
 		"projectwallace/no-useless-custom-property-assignment": true
 	}
 }
@@ -111,6 +112,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 | [no-static-media-query](src/rules/no-static-media-query/README.md)                                 | Disallow static (exact-match) numeric media feature conditions             |
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match  |
 | [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                       | Disallow `z-index` values that are not valid 32-bit integers               |
+| [no-property-shorthand](src/rules/no-property-shorthand/README.md)                                 | Disallow the use of shorthand properties                                   |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never implemented            |
 
 ## Credits
