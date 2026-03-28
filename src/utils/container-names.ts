@@ -49,12 +49,10 @@ export function collect_container_name_usages(root: Root): ContainerUsage[] {
 		const first_child = prelude.at(0)?.first_child
 		// => Identifier or Function, usually
 
-		if (!first_child) return
-
-		if (first_child.type === IDENTIFIER) {
-			const { text } = first_child
-			if (text === 'not' || text === 'none') return
-			usages.push({ name: text, node: atRule })
+		// FUNCTION nodes (e.g. style(), scroll-state()) are never container names
+		// 'not', 'and', 'or' are query operators, not identifiers
+		if (first_child?.type === IDENTIFIER) {
+			usages.push({ name: first_child.text, node: atRule })
 		}
 	})
 
