@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { calculateSpecificity, compareSpecificity } from '@projectwallace/css-analyzer'
+import { getSpecificity, compareSpecificity } from '@projectwallace/css-analyzer/selectors'
 
 const { createPlugin, utils } = stylelint
 
@@ -38,7 +38,7 @@ const ruleFunction = (primaryOption: Specificity) => {
 		let selector_count = 0
 
 		root.walkRules((rule) => {
-			const specificities = calculateSpecificity(rule.selector)
+			const specificities = getSpecificity(rule.selector)
 			for (const specificity of specificities) {
 				sum[0] += specificity[0]
 				sum[1] += specificity[1]
@@ -56,7 +56,7 @@ const ruleFunction = (primaryOption: Specificity) => {
 		]
 
 		// compareSpecificity returns < 0 when first arg has higher specificity than second
-		if (compareSpecificity(average, primaryOption) < 0) {
+		if (compareSpecificity(average, primaryOption) > 0) {
 			utils.report({
 				message: messages.rejected(average.join(', '), primaryOption.join(', ')),
 				node: root,

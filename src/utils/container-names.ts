@@ -1,7 +1,7 @@
 import type { Root, Declaration, AtRule } from 'postcss'
 import { OPERATOR, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { cssKeywords } from '@projectwallace/css-analyzer'
+import { keywords } from '@projectwallace/css-analyzer/values'
 
 export function collect_declared_container_names(root: Root): Map<string, Declaration> {
 	const names = new Map<string, Declaration>()
@@ -10,7 +10,7 @@ export function collect_declared_container_names(root: Root): Map<string, Declar
 		let value = decl.value.trim()
 
 		// Skip `none` - not a real container name
-		if (cssKeywords.has(value)) return
+		if (keywords.has(value)) return
 
 		// Multiple names can be space-separated
 

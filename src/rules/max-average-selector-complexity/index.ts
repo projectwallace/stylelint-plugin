@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_selector } from '@projectwallace/css-parser/parse-selector'
-import { selectorComplexity } from '@projectwallace/css-analyzer'
+import { getComplexity } from '@projectwallace/css-analyzer/selectors'
 
 const { createPlugin, utils } = stylelint
 
@@ -34,7 +34,7 @@ const ruleFunction = (primaryOption: number) => {
 			const parsed = parse_selector(rule.selector)
 
 			for (const selector of parsed.children) {
-				total_complexity += selectorComplexity(selector)
+				total_complexity += getComplexity(selector)
 				selector_count++
 			}
 		})
