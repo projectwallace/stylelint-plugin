@@ -1,4 +1,4 @@
-# No undeclared container names
+# No unknown container names
 
 Disallow container names in `@container` queries that were never declared with `container-name` or the `container` shorthand.
 

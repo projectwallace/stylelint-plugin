@@ -7,7 +7,7 @@ export default {
 		'projectwallace/no-property-browserhacks': true,
 		'projectwallace/no-static-container-query': true,
 		'projectwallace/no-static-media-query': true,
-		'projectwallace/no-undeclared-container-names': true,
+		'projectwallace/no-unknown-container-names': true,
 		'projectwallace/no-unknown-custom-property': true,
 		'projectwallace/no-unreachable-media-conditions': true,
 		'projectwallace/no-unused-container-names': true,
