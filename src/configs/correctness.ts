@@ -15,5 +15,8 @@ const rules = [
 
 export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
-	rules: Object.fromEntries(rules.map((rule) => [rule, recommended.rules[rule]])) as Pick<typeof recommended.rules, (typeof rules)[number]>,
+	rules: Object.fromEntries(rules.map((rule) => [rule, recommended.rules[rule]])) as Pick<
+		typeof recommended.rules,
+		(typeof rules)[number]
+	>,
 }
