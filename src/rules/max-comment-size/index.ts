@@ -14,12 +14,27 @@ const meta = {
 	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-comment-size/README.md',
 }
 
-const ruleFunction = (primaryOption: number) => {
+interface SecondaryOptions {
+	ignoreCopyrightComments?: boolean
+}
+
+const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(result, rule_name, {
-			actual: primaryOption,
-			possible: [Number as unknown as (v: unknown) => boolean],
-		})
+		const validOptions = utils.validateOptions(
+			result,
+			rule_name,
+			{
+				actual: primaryOption,
+				possible: [Number as unknown as (v: unknown) => boolean],
+			},
+			{
+				actual: secondaryOptions,
+				possible: {
+					ignoreCopyrightComments: [true, false],
+				},
+				optional: true,
+			},
+		)
 
 		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
 			return
@@ -28,6 +43,7 @@ const ruleFunction = (primaryOption: number) => {
 		let total_size = 0
 
 		root.walkComments((comment) => {
+			if (secondaryOptions?.ignoreCopyrightComments && comment.text.startsWith('!')) return
 			total_size += comment.source!.end!.offset - comment.source!.start!.offset
 		})
 
