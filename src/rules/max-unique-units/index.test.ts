@@ -101,7 +101,9 @@ test('should error when unique units exceed the limit', async () => {
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('Found 3 unique CSS units which is greater than the allowed 2')
+	expect(warnings[0].text).toContain(
+		'Found 3 unique CSS units (px, vw, rem) which is greater than the allowed 2',
+	)
 })
 
 test('should treat units case-insensitively', async () => {
