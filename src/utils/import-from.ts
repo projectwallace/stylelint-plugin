@@ -27,12 +27,13 @@ export function collect_declarations_from_files(importFrom: ImportFrom[]): Set<s
 		const css = fs.readFileSync(file_path, 'utf8')
 		const ast = parse(css, {
 			parse_selectors: false,
+			parse_values: false,
 		})
 		walk(ast, (node) => {
 			if (node.type === DECLARATION) {
-				const prop = node.property
-				if (typeof prop === 'string' && prop.startsWith('--')) {
-					result.add(prop)
+				const property = node.property
+				if (typeof property === 'string' && property.startsWith('--')) {
+					result.add(property)
 					return SKIP
 				}
 			} else if (node.type === AT_RULE && node.name === 'property' && node.prelude) {

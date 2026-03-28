@@ -24,7 +24,7 @@ test('should not error on a regular property', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
-test('should error on a property hack', async () => {
+test('should error on a *property hack', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -45,6 +45,31 @@ test('should error on a property hack', async () => {
 	const [{ line, column, text }] = warnings
 
 	expect(text).toBe(`Property "*zoom" is a browserhack and is not allowed (${rule_name})`)
+	expect(line).toBe(1)
+	expect(column).toBe(5)
+})
+
+test('should error on a _property hack', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: 'a { _zoom: 1 }',
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+
+	const [{ line, column, text }] = warnings
+
+	expect(text).toBe(`Property "_zoom" is a browserhack and is not allowed (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(5)
 })

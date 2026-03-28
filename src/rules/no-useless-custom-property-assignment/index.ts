@@ -1,9 +1,9 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { isAllowed } from '../../utils/allow-list.js'
-import { DECLARATION, FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
-import { walk } from '@projectwallace/css-parser/walker'
-import { parse } from '@projectwallace/css-parser/parse'
+import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { BREAK, walk } from '@projectwallace/css-parser/walker'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
 
 const { createPlugin, utils } = stylelint
 
@@ -33,40 +33,30 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const css = root.toString()
-		const parsed = parse(css, {
-			parse_atrule_preludes: false,
-			parse_selectors: false,
-		})
-		const line_offset = (root.source?.start?.line ?? 1) - 1
+		root.walkDecls(/^--/, (decl) => {
+			const property = decl.prop
 
-		walk(parsed, (node) => {
-			if (node.type !== DECLARATION) return
+			if (secondaryOptions?.allowList && isAllowed(property, secondaryOptions.allowList)) return
 
-			const prop = node.property
-			if (!prop?.startsWith('--')) return
-
-			if (secondaryOptions?.allowList && isAllowed(prop, secondaryOptions.allowList)) return
+			const parsed = parse_value(decl.value)
 
 			let reported = false
 
-			walk(node, (child) => {
-				if (reported) return
+			walk(parsed, (child) => {
+				if (reported) return BREAK
 				if (child.type !== FUNCTION || child.name !== 'var') return
 
 				for (const grandchild of child.children) {
-					if (grandchild.type === IDENTIFIER && grandchild.text === prop) {
+					if (grandchild.type === IDENTIFIER && grandchild.text === property) {
 						utils.report({
 							result,
 							ruleName: rule_name,
-							message: messages.rejected(prop),
-							node: root,
-							start: { line: node.line + line_offset, column: node.column },
-							end: { line: node.line + line_offset, column: node.column + prop.length },
-							word: prop,
+							message: messages.rejected(property),
+							node: decl,
+							word: property,
 						})
 						reported = true
-						return
+						return BREAK
 					}
 					if (grandchild.type === IDENTIFIER && grandchild.text.startsWith('--')) {
 						break
