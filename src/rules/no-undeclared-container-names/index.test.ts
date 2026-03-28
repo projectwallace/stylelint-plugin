@@ -170,6 +170,25 @@ test('should not error on @container with style query', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
+test('should not error on @container with scroll-state query', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: '@container scroll-state(scrollable: right) { .card { font-size: 1rem; } }',
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should not error on undeclared name matched by allowList string', async () => {
 	const config = {
 		plugins: [plugin],

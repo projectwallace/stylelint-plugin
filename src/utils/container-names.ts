@@ -1,6 +1,7 @@
 import type { Root, Declaration, AtRule } from 'postcss'
 import { OPERATOR, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { keywords } from '@projectwallace/css-analyzer/values'
 
 export function collect_declared_container_names(root: Root): Map<string, Declaration> {
@@ -43,13 +44,17 @@ export function collect_container_name_usages(root: Root): ContainerUsage[] {
 	root.walkAtRules('container', (atRule) => {
 		const params = atRule.params.trim()
 
-		// If it starts with `(`, `not`, `style(`, it's an anonymous container query
-		if (/^\(|^not[\s(]|^style\s*\(|^and[\s(]|^or[\s(]/.test(params)) return
+		const prelude = parse_atrule_prelude('container', params)
+		// => [ContainerQuery]
+		const first_child = prelude.at(0)?.first_child
+		// => Identifier or Function, usually
 
-		// Extract the container name (first identifier before whitespace or `(`)
-		const match = params.match(/^([\w-]+)/)
-		if (match && match[1].toLowerCase() !== 'none') {
-			usages.push({ name: match[1], node: atRule })
+		if (!first_child) return
+
+		if (first_child.type === IDENTIFIER) {
+			const { text } = first_child
+			if (text === 'not' || text === 'none') return
+			usages.push({ name: text, node: atRule })
 		}
 	})
 
