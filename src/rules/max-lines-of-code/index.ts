@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { analyze } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,8 +25,14 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const analysis = analyze(root.toString())
-		const actual = analysis.stylesheet.sourceLinesOfCode
+		let actual = 0
+		root.walk((node) => {
+			if (node.type === 'rule') {
+				actual += node.selectors.length
+			} else if (node.type === 'atrule' || node.type === 'decl') {
+				actual++
+			}
+		})
 
 		if (actual > primaryOption) {
 			utils.report({
