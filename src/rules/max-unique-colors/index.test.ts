@@ -358,6 +358,63 @@ test('should count named color from nested var() fallback', async () => {
 // var() — with @property { syntax: '<color>' }
 // ---------------------------------------------------------------------------
 
+test('should count the @property initial-value as a unique color', async () => {
+	const code = `
+		@property --brand-color {
+			syntax: '<color>';
+			inherits: false;
+			initial-value: red;
+		}
+	`
+	// initial-value "red" counts even without any var() usage
+	const { warnings, errored } = await lint(code, 1)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should count initial-value AND usages together', async () => {
+	const code = `
+		@property --brand-color {
+			syntax: '<color>';
+			inherits: false;
+			initial-value: red;
+		}
+		a { color: blue; }
+	`
+	// "red" (initial-value) + "blue" (declaration) = 2 unique colors
+	const { warnings, errored } = await lint(code, 1)
+	expect(errored).toBe(true)
+	expect(warnings[0].text).toContain('Found 2 unique colors')
+})
+
+test('should not count initial-value for non-color @property', async () => {
+	const code = `
+		@property --size {
+			syntax: '<length>';
+			inherits: false;
+			initial-value: 0px;
+		}
+	`
+	const { warnings, errored } = await lint(code, 1)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should count initial-value with hex color', async () => {
+	const code = `
+		@property --brand-color {
+			syntax: '<color>';
+			inherits: false;
+			initial-value: #ff0000;
+		}
+		a { color: blue; }
+	`
+	// "#ff0000" + "blue" = 2 unique colors
+	const { warnings, errored } = await lint(code, 1)
+	expect(errored).toBe(true)
+	expect(warnings[0].text).toContain('Found 2 unique colors')
+})
+
 test('should count var() referencing a @property <color> custom property', async () => {
 	const code = `
 		@property --brand-color {
@@ -367,7 +424,8 @@ test('should count var() referencing a @property <color> custom property', async
 		}
 		a { color: var(--brand-color); }
 	`
-	const { warnings, errored } = await lint(code, 1)
+	// "red" (initial-value) + "var(--brand-color)" = 2 unique colors
+	const { warnings, errored } = await lint(code, 2)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -387,9 +445,10 @@ test('should count var() as a unique color when it is a @property <color>', asyn
 		a { color: var(--brand-color); }
 		b { color: var(--accent-color); }
 	`
+	// "red" + "blue" (initial-values) + "var(--brand-color)" + "var(--accent-color)" = 4 unique colors
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique colors')
+	expect(warnings[0].text).toContain('Found 4 unique colors')
 })
 
 test('should count the var() expression AND fallback colors separately', async () => {
@@ -402,9 +461,10 @@ test('should count the var() expression AND fallback colors separately', async (
 		}
 		a { color: var(--brand-color, red); }
 	`
+	// "blue" (initial-value) + "var(--brand-color, red)" + "red" (fallback) = 3 unique colors
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique colors')
+	expect(warnings[0].text).toContain('Found 3 unique colors')
 })
 
 test('should not count var() of a @property that does not have syntax <color>', async () => {
@@ -431,8 +491,8 @@ test('should handle @property with single-quoted syntax value', async () => {
 		a { color: var(--brand); }
 		b { color: var(--brand); }
 	`
-	const { warnings, errored } = await lint(code, 1)
-	// Same var() expression used twice → still 1 unique color
+	// "#000" (initial-value) + "var(--brand)" (used twice but same string → 1) = 2 unique colors
+	const { warnings, errored } = await lint(code, 2)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
