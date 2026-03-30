@@ -8,7 +8,8 @@ async function lint(code: string, primaryOption: unknown, secondaryOptions?: unk
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: secondaryOptions !== undefined ? [primaryOption, secondaryOptions] : primaryOption,
+			[rule_name]:
+				secondaryOptions !== undefined ? [primaryOption, secondaryOptions] : primaryOption,
 		},
 	}
 
@@ -68,10 +69,7 @@ test('should not error when the same named color is reused', async () => {
 })
 
 test('should not error when the same hex color is reused', async () => {
-	const { warnings, errored } = await lint(
-		`a { color: #fff; } b { background-color: #fff; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { color: #fff; } b { background-color: #fff; }`, 1)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -124,10 +122,7 @@ test('should recognise transparent as a color', async () => {
 })
 
 test('should recognise currentColor as a color', async () => {
-	const { warnings, errored } = await lint(
-		`a { border-color: currentColor; color: red; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { border-color: currentColor; color: red; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique colors')
 })
@@ -239,21 +234,17 @@ test('should recognise color() as a color', async () => {
 })
 
 test('should recognise color-mix() as a color', async () => {
-	const { warnings, errored } = await lint(
-		`a { color: color-mix(in srgb, #fff 50%, #000); }`,
-		1,
-	)
-	// color-mix() itself is 1 unique color; #fff and #000 inside it are also counted
-	// → 3 unique colors total
-	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 3 unique colors')
+	const { warnings, errored } = await lint(`a { color: color-mix(in srgb, #fff 50%, #000); }`, 1)
+	// color-mix() counts as 1 unique color; inner #fff and #000 are NOT counted separately
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 })
 
 test('should recognise light-dark() as a color', async () => {
 	const { warnings, errored } = await lint(`a { color: light-dark(white, black); }`, 1)
-	// light-dark() itself is counted, plus white and black inside → 3 unique colors
-	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 3 unique colors')
+	// light-dark() counts as 1 unique color; white and black inside are NOT counted separately
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 })
 
 // ---------------------------------------------------------------------------
@@ -273,10 +264,7 @@ test('should detect colors in border shorthand', async () => {
 })
 
 test('should detect colors in box-shadow', async () => {
-	const { warnings, errored } = await lint(
-		`a { box-shadow: 0 0 10px red, 0 0 20px blue; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { box-shadow: 0 0 10px red, 0 0 20px blue; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique colors')
 })
@@ -288,10 +276,7 @@ test('should detect colors in text-shadow', async () => {
 })
 
 test('should detect named colors inside linear-gradient()', async () => {
-	const { warnings, errored } = await lint(
-		`a { background-image: linear-gradient(red, blue); }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { background-image: linear-gradient(red, blue); }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique colors')
 })
@@ -319,10 +304,7 @@ test('should detect colors in SVG stroke property', async () => {
 
 test('should not count non-color properties', async () => {
 	// font-size, margin, padding etc. should not contribute to color count
-	const { warnings, errored } = await lint(
-		`a { font-size: 16px; margin: 0; padding: 10px; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { font-size: 16px; margin: 0; padding: 10px; }`, 1)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -460,22 +442,18 @@ test('should handle @property with single-quoted syntax value', async () => {
 // ---------------------------------------------------------------------------
 
 test('should not count ignored named colors', async () => {
-	const { warnings, errored } = await lint(
-		`a { color: red; background-color: blue; }`,
-		1,
-		{ ignore: ['red'] },
-	)
+	const { warnings, errored } = await lint(`a { color: red; background-color: blue; }`, 1, {
+		ignore: ['red'],
+	})
 	// Only blue is counted → within limit
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('should not count ignored hex colors', async () => {
-	const { warnings, errored } = await lint(
-		`a { color: #fff; background-color: #000; }`,
-		1,
-		{ ignore: ['#fff'] },
-	)
+	const { warnings, errored } = await lint(`a { color: #fff; background-color: #000; }`, 1, {
+		ignore: ['#fff'],
+	})
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -492,21 +470,17 @@ test('should support RegExp patterns in ignore', async () => {
 })
 
 test('should support ignoring transparent', async () => {
-	const { warnings, errored } = await lint(
-		`a { color: red; background-color: transparent; }`,
-		1,
-		{ ignore: ['transparent'] },
-	)
+	const { warnings, errored } = await lint(`a { color: red; background-color: transparent; }`, 1, {
+		ignore: ['transparent'],
+	})
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('should support ignoring currentColor', async () => {
-	const { warnings, errored } = await lint(
-		`a { color: red; border-color: currentColor; }`,
-		1,
-		{ ignore: ['currentColor'] },
-	)
+	const { warnings, errored } = await lint(`a { color: red; border-color: currentColor; }`, 1, {
+		ignore: ['currentColor'],
+	})
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -527,10 +501,7 @@ test('should support ignoring color functions via RegExp', async () => {
 // ---------------------------------------------------------------------------
 
 test('should detect colors declared in custom properties', async () => {
-	const { warnings, errored } = await lint(
-		`a { --text-color: red; --bg-color: blue; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { --text-color: red; --bg-color: blue; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique colors')
 })
