@@ -4,7 +4,7 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk, SKIP } from '@projectwallace/css-parser'
 import { FUNCTION, HASH, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { namedColors, colorFunctions, colorKeywords } from '@projectwallace/css-analyzer/values'
-import { isAllowed } from '../../utils/allow-list.js'
+import { isAllowed as isIgnored } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -70,6 +70,71 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		 * var() references to these are recognised as color values.
 		 */
 		const color_custom_properties = new Set<string>()
+		const unique_colors = new Set<string>()
+
+		/**
+		 * Walk a parsed CSS value and add any detected color tokens to unique_colors.
+		 * When `resolve_var` is true, var() references to known @property <color>
+		 * custom properties are also counted. CSS does not allow var() in
+		 * @property initial-value, so pass false when scanning initial-value.
+		 */
+		function collect_colors(parsed: ReturnType<typeof parse_value>, resolve_var: boolean): void {
+			walk(parsed, (node) => {
+				if (node.type === HASH) {
+					// The parser already guarantees HASH nodes are valid hex colors.
+					if (!isIgnored(node.text, ignore)) {
+						unique_colors.add(node.text)
+					}
+				} else if (node.type === IDENTIFIER) {
+					// namedColors and colorKeywords both perform case-insensitive matching.
+					if (namedColors.has(node.text) || colorKeywords.has(node.text)) {
+						if (!isIgnored(node.text, ignore)) {
+							unique_colors.add(node.text)
+						}
+					}
+				} else if (node.type === FUNCTION) {
+					const fn_name = node.name
+					if (fn_name === undefined) return
+
+					// colorFunctions.has() is case-insensitive.
+					if (colorFunctions.has(fn_name)) {
+						// Numeric-channel color functions (rgb, hsl, oklch, …).
+						// SKIP children — they are numbers, not color tokens.
+						if (!isIgnored(node.text, ignore)) {
+							unique_colors.add(node.text)
+						}
+						return SKIP
+					}
+
+					const fn_name_lower = fn_name.toLowerCase()
+
+					if (COLOR_COMPOSING_FUNCTIONS.has(fn_name_lower)) {
+						// Composing color functions (color-mix, light-dark, device-cmyk) take
+						// color values as arguments. SKIP children so they are not double-counted.
+						if (!isIgnored(node.text, ignore)) {
+							unique_colors.add(node.text)
+						}
+						return SKIP
+					}
+
+					if (resolve_var && fn_name_lower === 'var') {
+						// var() referencing a custom property declared as <color> via @property.
+						// Count the whole var() expression, but do NOT skip children so that
+						// any fallback color values are still evaluated.
+						const first = node.first_child
+						if (
+							first !== null &&
+							first.type === IDENTIFIER &&
+							color_custom_properties.has(first.text)
+						) {
+							if (!isIgnored(node.text, ignore)) {
+								unique_colors.add(node.text)
+							}
+						}
+					}
+				}
+			})
+		}
 
 		root.walkAtRules('property', (atRule) => {
 			const prop_name = atRule.params.trim()
@@ -82,71 +147,16 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					color_custom_properties.add(prop_name)
 				}
 			})
+
+			if (!color_custom_properties.has(prop_name)) return
+
+			atRule.walkDecls('initial-value', (decl) => {
+				collect_colors(parse_value(decl.value), false)
+			})
 		})
 
-		const unique_colors = new Set<string>()
-
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
-			const parsed = parse_value(declaration.value)
-
-			walk(parsed, (node) => {
-				if (node.type === HASH) {
-					// The parser already guarantees HASH nodes are valid hex colors.
-					if (!isAllowed(node.text, ignore)) {
-						unique_colors.add(node.text)
-					}
-				} else if (node.type === IDENTIFIER) {
-					// namedColors and colorKeywords both perform case-insensitive matching.
-					if (namedColors.has(node.text) || colorKeywords.has(node.text)) {
-						if (!isAllowed(node.text, ignore)) {
-							unique_colors.add(node.text)
-						}
-					}
-				} else if (node.type === FUNCTION) {
-					const fn_name = node.name
-					if (fn_name === undefined) return
-
-					// node.name is compared case-insensitively by colorFunctions.has().
-					if (colorFunctions.has(fn_name)) {
-						// Numeric-channel color functions (rgb, hsl, oklch, …).
-						// Return SKIP so we don't descend into their children — while those
-						// children are numbers and wouldn't be mistaken for colors, being
-						// consistent avoids surprises if the function appears in a complex value.
-						if (!isAllowed(node.text, ignore)) {
-							unique_colors.add(node.text)
-						}
-						return SKIP
-					}
-
-					const fn_name_lower = fn_name.toLowerCase()
-
-					if (COLOR_COMPOSING_FUNCTIONS.has(fn_name_lower)) {
-						// Composing color functions (color-mix, light-dark, device-cmyk) take
-						// color values as arguments.  Count the whole expression as one unique
-						// color and skip children so the inner colors are not double-counted.
-						if (!isAllowed(node.text, ignore)) {
-							unique_colors.add(node.text)
-						}
-						return SKIP
-					}
-
-					if (fn_name_lower === 'var') {
-						// var() referencing a custom property declared as <color> via @property.
-						// Count the whole var() expression, but do NOT skip children so that
-						// any fallback color values are still evaluated.
-						const first = node.first_child
-						if (
-							first !== null &&
-							first.type === IDENTIFIER &&
-							color_custom_properties.has(first.text)
-						) {
-							if (!isAllowed(node.text, ignore)) {
-								unique_colors.add(node.text)
-							}
-						}
-					}
-				}
-			})
+			collect_colors(parse_value(declaration.value), true)
 		})
 
 		const actual = unique_colors.size
