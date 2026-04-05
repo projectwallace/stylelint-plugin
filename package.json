@@ -34,8 +34,8 @@
 		"build": "tsdown"
 	},
 	"dependencies": {
-		"@projectwallace/css-analyzer": "^9.6.0",
-		"@projectwallace/css-parser": "^0.13.11"
+		"@projectwallace/css-analyzer": "^9.6.2",
+		"@projectwallace/css-parser": "^0.14.8"
 	},
 	"devDependencies": {
 		"@codecov/rollup-plugin": "^1.9.1",

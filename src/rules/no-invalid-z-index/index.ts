@@ -35,7 +35,7 @@ const ruleFunction = (primaryOptions: true) => {
 			walk(parsed, (node) => {
 				if (node.type !== NUMBER) return
 
-				const num = node.value_as_number
+				const num = node.value
 				if (num === null) return
 
 				if (!Number.isInteger(num) || num < INT32_MIN || num > INT32_MAX) {
