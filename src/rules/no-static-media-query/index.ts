@@ -73,7 +73,7 @@ function find_static_feature_in_prelude(
 			// A numeric value makes this an equality (static) condition
 			for (const child of node.children) {
 				if (child.type === DIMENSION || child.type === NUMBER) {
-					const value = child.value_as_number
+					const value = child.value
 					if (value !== null && !Number.isNaN(value)) {
 						static_feature = { feature: property, value: child.text }
 						return BREAK

@@ -1,14 +1,16 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import {
-	CONTAINER_QUERY,
-	MEDIA_FEATURE,
-	DIMENSION,
-	NUMBER,
-	PRELUDE_OPERATOR,
-} from '@projectwallace/css-parser/nodes'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
-import { walk, BREAK } from '@projectwallace/css-parser/walker'
+	parse_atrule_prelude,
+	walk,
+	BREAK,
+	is_container_query,
+	is_dimension,
+	is_media_feature,
+	is_number,
+	is_prelude_operator,
+	type MediaFeature,
+} from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
@@ -40,12 +42,12 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 	const parsed = parse_atrule_prelude('container', prelude)
 
 	for (const query_node of parsed) {
-		if (query_node.type !== CONTAINER_QUERY) continue
+		if (!is_container_query(query_node)) continue
 
 		// Skip queries that contain `not` or `or` — too complex to analyse safely
 		let skip = false
 		walk(query_node, (node) => {
-			if (node.type === PRELUDE_OPERATOR) {
+			if (is_prelude_operator(node)) {
 				const operator = node.text.trim().toLowerCase()
 				if (operator === 'not' || operator === 'or') {
 					skip = true
@@ -59,18 +61,19 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 
 		walk(query_node, (node) => {
 			if (static_feature !== null) return
-			if (node.type !== MEDIA_FEATURE) return
+			if (!is_media_feature(node)) return
 
-			const property = node.property
+			const media_feature = node as MediaFeature
+			const property = media_feature.property
 			if (!property) return
 
 			// Only check unprefixed features — min-/max- are range features
 			if (property.startsWith('min-') || property.startsWith('max-')) return
 
 			// A numeric value makes this an equality (static) condition
-			for (const child of node.children) {
-				if (child.type === DIMENSION || child.type === NUMBER) {
-					const value = child.value_as_number
+			for (const child of media_feature) {
+				if (is_dimension(child) || is_number(child)) {
+					const { value } = child
 					if (value != null && !Number.isNaN(value)) {
 						static_feature = { feature: property, value: child.text }
 						return

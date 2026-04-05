@@ -1,13 +1,13 @@
-import { type CSSNode } from '@projectwallace/css-parser'
 import {
-	MEDIA_QUERY,
-	CONTAINER_QUERY,
-	MEDIA_FEATURE,
-	FEATURE_RANGE,
-	PRELUDE_OPERATOR,
-	DIMENSION,
-	NUMBER,
-} from '@projectwallace/css-parser/nodes'
+	is_container_query,
+	is_dimension,
+	is_feature_range,
+	is_media_feature,
+	is_media_query,
+	is_number,
+	is_prelude_operator,
+	type CSSNode,
+} from '@projectwallace/css-parser'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
 
@@ -28,7 +28,7 @@ export type Bound = {
  * Returns an empty array if the feature is not a numeric range-style feature.
  */
 export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
-	if (node.type !== MEDIA_FEATURE) return []
+	if (!is_media_feature(node)) return []
 
 	const property = node.property
 	if (!property) return []
@@ -49,9 +49,9 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
 
 	// Find first DIMENSION or NUMBER child
 	for (const child of node.children) {
-		if (child.type === DIMENSION || child.type === NUMBER) {
-			const value = child.value_as_number
-			const unit = child.unit ?? ''
+		if (is_dimension(child) || is_number(child)) {
+			const value = child.value
+			const unit = is_dimension(child) ? child.unit : ''
 			if (value == null || Number.isNaN(value)) return []
 			if (direction === 'both') {
 				return [
@@ -71,7 +71,7 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
  * Returns an array of bounds (0, 1, or 2 items), each tagged with the feature name.
  */
 export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
-	if (node.type !== FEATURE_RANGE) return []
+	if (!is_feature_range(node)) return []
 
 	const feature = node.name
 	if (!feature) return []
@@ -81,15 +81,22 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 
 	const bounds: Bound[] = []
 
-	const is_value_node = (n: CSSNode) => n.type === DIMENSION || n.type === NUMBER
-	const children = node.children
+	const is_value_node = (n: CSSNode) => is_dimension(n) || is_number(n)
+	// FeatureRange children are typed as (Dimension | Operator)[] but actually include
+	// PreludeOperator nodes — cast to CSSNode[] to allow proper narrowing
+	const children = node.children as CSSNode[]
+
+	const child0 = children[0]
+	const child1 = children[1]
+	const child2 = children[2]
+	const child3 = children[3]
 
 	// Case A: [OPERATOR, VALUE] → feature OPERATOR value (e.g. width >= 400px, device-pixel-ratio > 2)
-	if (count >= 2 && children[0].type === PRELUDE_OPERATOR && is_value_node(children[1])) {
-		const operator = children[0].text.trim()
-		const dimension = children[1]
-		const value = dimension.value_as_number
-		const unit = dimension.unit ?? ''
+	if (count >= 2 && is_prelude_operator(child0) && is_value_node(child1)) {
+		const operator = child0.text.trim()
+		const dimension = child1
+		const value = dimension.value
+		const unit = is_dimension(dimension) ? dimension.unit : ''
 		if (value != null && !Number.isNaN(value)) {
 			const bound = operator_to_bound(operator, value, unit, 'feature_left')
 			if (bound) bounds.push({ ...bound, feature })
@@ -98,20 +105,20 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 	// Case B: [VALUE, OPERATOR, OPERATOR, VALUE] → value1 OP1 feature OP2 value2
 	else if (
 		count >= 4 &&
-		is_value_node(children[0]) &&
-		children[1].type === PRELUDE_OPERATOR &&
-		children[2].type === PRELUDE_OPERATOR &&
-		is_value_node(children[3])
+		is_value_node(child0) &&
+		is_prelude_operator(child1) &&
+		is_prelude_operator(child2) &&
+		is_value_node(child3)
 	) {
-		const dimension1 = children[0]
-		const operator1 = children[1].text.trim()
-		const operator2 = children[2].text.trim()
-		const dimension2 = children[3]
+		const dimension1 = child0
+		const operator1 = child1.text.trim()
+		const operator2 = child2.text.trim()
+		const dimension2 = child3
 
-		const value1 = dimension1.value_as_number
-		const unit1 = dimension1.unit ?? ''
-		const value2 = dimension2.value_as_number
-		const unit2 = dimension2.unit ?? ''
+		const value1 = dimension1.value
+		const unit1 = is_dimension(dimension1) ? dimension1.unit : ''
+		const value2 = dimension2.value
+		const unit2 = is_dimension(dimension2) ? dimension2.unit : ''
 
 		// dimension1 OP1 feature → feature is on the right side of OP1
 		if (value1 != null && !Number.isNaN(value1)) {
@@ -190,12 +197,12 @@ export function collect_bounds_from_prelude(
 
 	const result: (Bound[] | null)[] = []
 	for (const node of parsed) {
-		if (node.type !== MEDIA_QUERY && node.type !== CONTAINER_QUERY) continue
+		if (!is_media_query(node) && !is_container_query(node)) continue
 
 		// Skip branches that contain `not` or `or` — too complex to analyse
 		let skip = false
 		walk(node, (child) => {
-			if (child.type === PRELUDE_OPERATOR) {
+			if (is_prelude_operator(child)) {
 				const operator = child.text.trim().toLowerCase()
 				if (operator === 'not' || operator === 'or') {
 					skip = true
@@ -210,9 +217,9 @@ export function collect_bounds_from_prelude(
 
 		const bounds: Bound[] = []
 		walk(node, (child) => {
-			if (child.type === MEDIA_FEATURE) {
+			if (is_media_feature(child)) {
 				bounds.push(...collect_bound_from_media_feature(child))
-			} else if (child.type === FEATURE_RANGE) {
+			} else if (is_feature_range(child)) {
 				bounds.push(...collect_bounds_from_feature_range(child))
 			}
 		})

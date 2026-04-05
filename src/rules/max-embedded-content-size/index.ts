@@ -1,8 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { URL as CSS_URL } from '@projectwallace/css-parser/nodes'
 import { walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { is_url } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
@@ -34,7 +34,7 @@ const ruleFunction = (primaryOption: number) => {
 			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
-				if (node.type !== CSS_URL) return
+				if (!is_url(node)) return
 				const url = node.text
 				if (url.includes('data:')) {
 					total_size += url.length
