@@ -2,6 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
+import { isAllowed } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -16,27 +17,48 @@ const meta = {
 	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-font-families/README.md',
 }
 
-const ruleFunction = (primaryOption: number) => {
+interface SecondaryOptions {
+	allowList?: Array<string | RegExp>
+}
+
+const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(result, rule_name, {
-			actual: primaryOption,
-			possible: [(v: unknown) => typeof v === 'number'],
-		})
+		const validOptions = utils.validateOptions(
+			result,
+			rule_name,
+			{
+				actual: primaryOption,
+				possible: [(v: unknown) => typeof v === 'number'],
+			},
+			{
+				actual: secondaryOptions,
+				possible: {
+					allowList: [
+						String as unknown as (v: unknown) => boolean,
+						(v: unknown) => v instanceof RegExp,
+					],
+				},
+				optional: true,
+			},
+		)
 
 		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption < 0) {
 			return
 		}
 
+		const allowList = secondaryOptions?.allowList ?? []
 		const unique_families = new Set<string>()
 
 		root.walkDecls('font-family', (declaration) => {
-			unique_families.add(declaration.value)
+			if (!isAllowed(declaration.value, allowList)) {
+				unique_families.add(declaration.value)
+			}
 		})
 
 		root.walkDecls('font', (declaration) => {
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})
-			if (destructured?.font_family) {
+			if (destructured?.font_family && !isAllowed(destructured.font_family, allowList)) {
 				unique_families.add(destructured.font_family)
 			}
 		})

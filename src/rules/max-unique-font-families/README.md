@@ -19,7 +19,7 @@ The rule inspects both the `font-family` property and the `font` shorthand prope
 
 ### `Number` (required)
 
-The maximum number of unique font family values allowed. Must be a positive integer.
+The maximum number of unique font family values allowed. Must be a non-negative integer. Setting `0` enforces that no font families are used at all.
 
 Given:
 
@@ -41,4 +41,23 @@ The following patterns are _not_ considered violations:
 a { font-family: Arial, sans-serif; }
 b { font: bold 16px Arial, sans-serif; }
 /* Both declarations share the same font-family value → only 1 unique entry */
+```
+
+### `allowList` (optional)
+
+Type: `Array<string | RegExp>`
+
+A list of font family values to exclude from the count. Each entry can be an exact string or a regular expression matched against the full value string.
+
+Given:
+
+`[2, { "allowList": ["Arial, sans-serif"] }]`
+
+the following are _not_ considered violations:
+
+<!-- prettier-ignore -->
+```css
+a { font-family: Arial, sans-serif; }  /* ignored */
+b { font-family: Georgia, serif; }
+c { font-family: monospace; }
 ```
