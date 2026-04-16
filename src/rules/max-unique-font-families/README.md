@@ -1,17 +1,17 @@
 # Max unique font families
 
-Limit the number of unique font families used across the stylesheet.
+Limit the number of unique font family values used across the stylesheet.
 
 <!-- prettier-ignore -->
 ```css
 a { font-family: Arial, sans-serif; }
-/*               ↑     ↑
-*   Two unique font families are counted here */
+/*               ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+*   The entire value counts as one unique font family */
 ```
 
-Using too many different font families can indicate an inconsistent design system. This rule helps enforce a controlled typographic palette.
+Using too many different font family values can indicate an inconsistent design system. This rule helps enforce a controlled typographic palette.
 
-Each entry in a comma-separated `font-family` list counts as one unique font family. Families are compared by their exact string value — quoted and unquoted variants of the same name (e.g. `"Times New Roman"` vs. `Times New Roman`) are treated as distinct.
+A unique font family is the entire value string of a `font-family` declaration or the font-family portion extracted from a `font` shorthand. The same string used in multiple places counts only once.
 
 The rule inspects both the `font-family` property and the `font` shorthand property.
 
@@ -19,7 +19,7 @@ The rule inspects both the `font-family` property and the `font` shorthand prope
 
 ### `Number` (required)
 
-The maximum number of unique font families allowed. Must be a positive integer.
+The maximum number of unique font family values allowed. Must be a positive integer.
 
 Given:
 
@@ -29,7 +29,9 @@ the following are considered violations:
 
 <!-- prettier-ignore -->
 ```css
-a { font-family: Arial, Helvetica, sans-serif; }
+a { font-family: Arial, sans-serif; }
+b { font-family: Georgia, serif; }
+c { font-family: monospace; }
 ```
 
 The following patterns are _not_ considered violations:
@@ -37,5 +39,6 @@ The following patterns are _not_ considered violations:
 <!-- prettier-ignore -->
 ```css
 a { font-family: Arial, sans-serif; }
-b { font: bold 16px Arial; }
+b { font: bold 16px Arial, sans-serif; }
+/* Both declarations share the same font-family value → only 1 unique entry */
 ```
