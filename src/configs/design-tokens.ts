@@ -6,5 +6,7 @@ export default {
 		'projectwallace/max-unique-colors': recommended.rules['projectwallace/max-unique-colors'],
 		'projectwallace/max-unique-font-families':
 			recommended.rules['projectwallace/max-unique-font-families'],
+		'projectwallace/max-unique-font-sizes':
+			recommended.rules['projectwallace/max-unique-font-sizes'],
 	},
 }
