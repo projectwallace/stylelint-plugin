@@ -1,3 +1,5 @@
+import design_tokens from './design-tokens.js'
+
 export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
@@ -24,7 +26,7 @@ export default {
 		'projectwallace/max-average-declarations-per-rule': 6,
 		'projectwallace/max-average-selector-complexity': 3,
 		'projectwallace/max-important-ratio': 0.1,
-		'projectwallace/max-unique-colors': 10,
+		'projectwallace/max-unique-colors': design_tokens.rules['projectwallace/max-unique-colors'],
 		'projectwallace/max-unique-units': 10,
 		'projectwallace/min-selector-uniqueness-ratio': 0.66,
 		'projectwallace/min-declaration-uniqueness-ratio': 0.5,
