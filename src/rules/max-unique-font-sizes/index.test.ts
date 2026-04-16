@@ -67,19 +67,13 @@ test('should not error when there are no font sizes', async () => {
 })
 
 test('should not error when unique sizes are within the limit', async () => {
-	const { warnings, errored } = await lint(
-		`a { font-size: 16px; } b { font-size: 24px; }`,
-		2,
-	)
+	const { warnings, errored } = await lint(`a { font-size: 16px; } b { font-size: 24px; }`, 2)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('should not error when the same value is reused', async () => {
-	const { warnings, errored } = await lint(
-		`a { font-size: 16px; } b { font-size: 16px; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { font-size: 16px; } b { font-size: 16px; }`, 1)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -108,10 +102,7 @@ test('should error at the stylesheet level (node is root)', async () => {
 
 test('should treat different value strings as different unique entries', async () => {
 	// "1rem" vs "16px" are two different strings even if visually equal
-	const { warnings, errored } = await lint(
-		`a { font-size: 1rem; } b { font-size: 16px; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { font-size: 1rem; } b { font-size: 16px; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique font sizes')
 })
@@ -174,11 +165,9 @@ test('should not count font-family as a size', async () => {
 // ---------------------------------------------------------------------------
 
 test('should not count an exact string match in allowList', async () => {
-	const { warnings, errored } = await lint(
-		`a { font-size: 16px; } b { font-size: 24px; }`,
-		1,
-		{ allowList: ['16px'] },
-	)
+	const { warnings, errored } = await lint(`a { font-size: 16px; } b { font-size: 24px; }`, 1, {
+		allowList: ['16px'],
+	})
 	// 16px is ignored → only 24px counts → within limit
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
@@ -196,11 +185,9 @@ test('should not count values matching a RegExp in allowList', async () => {
 })
 
 test('should not count allowListed values from font shorthand', async () => {
-	const { warnings, errored } = await lint(
-		`a { font: 16px Arial; } b { font-size: 24px; }`,
-		1,
-		{ allowList: ['16px'] },
-	)
+	const { warnings, errored } = await lint(`a { font: 16px Arial; } b { font-size: 24px; }`, 1, {
+		allowList: ['16px'],
+	})
 	// 16px (from font shorthand) is ignored → only 24px counts
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
