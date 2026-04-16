@@ -69,6 +69,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 		"projectwallace/max-selector-complexity": 5,
 		"projectwallace/max-selectors-per-rule": 10,
 		"projectwallace/max-unique-colors": 5,
+		"projectwallace/max-unique-font-families": 4,
 		"projectwallace/max-unique-units": 5,
 		"projectwallace/min-declaration-uniqueness-ratio": 0.5,
 		"projectwallace/min-selector-uniqueness-ratio": 0.66,
@@ -107,6 +108,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                             | Prevent selector complexity from going over a predefined maximum           |
 | [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                               | Limit the number of selectors in a single rule                             |
 | [max-unique-colors](src/rules/max-unique-colors/README.md)                                         | Limit the number of unique color values used across the stylesheet         |
+| [max-unique-font-families](src/rules/max-unique-font-families/README.md)                           | Limit the number of unique font families used across the stylesheet        |
 | [max-unique-units](src/rules/max-unique-units/README.md)                                           | Limit the number of unique CSS units used across the stylesheet            |
 | [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)           | Enforce a minimum ratio of unique declarations across the stylesheet       |
 | [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)                 | Enforce a minimum ratio of unique selectors across the stylesheet          |

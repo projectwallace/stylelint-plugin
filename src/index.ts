@@ -29,6 +29,7 @@ import max_declarations_per_rule from './rules/max-declarations-per-rule/index.j
 import no_invalid_z_index from './rules/no-invalid-z-index/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
 import max_unique_colors from './rules/max-unique-colors/index.js'
+import max_unique_font_families from './rules/max-unique-font-families/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -61,6 +62,7 @@ const plugins: stylelint.Plugin[] = [
 	no_invalid_z_index,
 	no_property_shorthand,
 	max_unique_colors,
+	max_unique_font_families,
 ]
 
 export default plugins
