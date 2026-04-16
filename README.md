@@ -40,6 +40,14 @@ The easiest way to get started is by extending one of the preset configs:
 }
 ```
 
+**`design-tokens`** — enables rules that encourage the use of design tokens in your CSS:
+
+```json
+{
+	"extends": ["@projectwallace/stylelint-plugin/configs/design-tokens"]
+}
+```
+
 ### Manual configuration
 
 Alternatively, add the plugin and configure rules individually in your stylelint config:
