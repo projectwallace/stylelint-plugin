@@ -39,5 +39,6 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-property-shorthand',
 		'projectwallace/max-unique-colors',
 		'projectwallace/max-unique-font-families',
+		'projectwallace/max-unique-font-sizes',
 	])
 })
