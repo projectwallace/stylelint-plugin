@@ -29,6 +29,20 @@ test('should not run when config is negative', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
+test('should error when 0 is configured and any font-family is used', async () => {
+	const { warnings, errored } = await lint(`a { font-family: Arial; }`, 0)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toContain('Found 1 unique font families')
+	expect(warnings[0].text).toContain('exceeds the maximum of 0')
+})
+
+test('should not error when 0 is configured and no font-family is used', async () => {
+	const { warnings, errored } = await lint(`a { color: red; }`, 0)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should not run when config is a float', async () => {
 	const { warnings, errored } = await lint(`a { font-family: Arial; }`, 1.5)
 	expect(errored).toBe(false)

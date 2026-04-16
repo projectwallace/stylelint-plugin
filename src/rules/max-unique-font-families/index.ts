@@ -20,10 +20,10 @@ const ruleFunction = (primaryOption: number) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
-			possible: [Number as unknown as (v: unknown) => boolean],
+			possible: [(v: unknown) => typeof v === 'number'],
 		})
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
+		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption < 0) {
 			return
 		}
 
