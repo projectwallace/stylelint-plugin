@@ -67,7 +67,10 @@ test('should not error when there are no font families', async () => {
 })
 
 test('should not error when unique families are within the limit', async () => {
-	const { warnings, errored } = await lint(`a { font-family: Arial; } b { font-family: Georgia; }`, 2)
+	const { warnings, errored } = await lint(
+		`a { font-family: Arial; } b { font-family: Georgia; }`,
+		2,
+	)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -104,10 +107,7 @@ test('should error when unique values exceed the limit', async () => {
 })
 
 test('should error at the stylesheet level (node is root)', async () => {
-	const { warnings } = await lint(
-		`a { font-family: Arial; } b { font-family: Georgia; }`,
-		1,
-	)
+	const { warnings } = await lint(`a { font-family: Arial; } b { font-family: Georgia; }`, 1)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].line).toBe(1)
 })
@@ -139,19 +139,13 @@ test('should extract font-family list from font shorthand', async () => {
 })
 
 test('should count families from font shorthand and font-family together', async () => {
-	const { warnings, errored } = await lint(
-		`a { font-family: Arial; } b { font: 16px Georgia; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { font-family: Arial; } b { font: 16px Georgia; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique font families')
 })
 
 test('should deduplicate identical font-family values across font and font-family', async () => {
-	const { warnings, errored } = await lint(
-		`a { font-family: Arial; } b { font: 16px Arial; }`,
-		1,
-	)
+	const { warnings, errored } = await lint(`a { font-family: Arial; } b { font: 16px Arial; }`, 1)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
