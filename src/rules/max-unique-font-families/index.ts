@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
+import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
 import { isAllowed } from '../../utils/allow-list.js'
@@ -48,42 +48,39 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const allowList = secondaryOptions?.allowList ?? []
 		const unique_families = new Set<string>()
+		const violating_declarations: Declaration[] = []
 
 		root.walkDecls('font-family', (declaration) => {
+			const before = unique_families.size
 			if (!isAllowed(declaration.value, allowList)) {
 				unique_families.add(declaration.value)
-
-				const actual = unique_families.size
-
-				if (actual > primaryOption) {
-					utils.report({
-						message: messages.rejected(actual, primaryOption, [...unique_families]),
-						node: declaration,
-						result,
-						ruleName: rule_name,
-					})
-				}
+			}
+			if (unique_families.size > before && unique_families.size > primaryOption) {
+				violating_declarations.push(declaration)
 			}
 		})
 
 		root.walkDecls('font', (declaration) => {
+			const before = unique_families.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})
 			if (destructured?.font_family && !isAllowed(destructured.font_family, allowList)) {
 				unique_families.add(destructured.font_family)
-
-				const actual = unique_families.size
-
-				if (actual > primaryOption) {
-					utils.report({
-						message: messages.rejected(actual, primaryOption, [...unique_families]),
-						node: declaration,
-						result,
-						ruleName: rule_name,
-					})
-				}
+			}
+			if (unique_families.size > before && unique_families.size > primaryOption) {
+				violating_declarations.push(declaration)
 			}
 		})
+
+		const actual = unique_families.size
+		for (const declaration of violating_declarations) {
+			utils.report({
+				message: messages.rejected(actual, primaryOption, [...unique_families]),
+				node: declaration,
+				result,
+				ruleName: rule_name,
+			})
+		}
 	}
 }
 

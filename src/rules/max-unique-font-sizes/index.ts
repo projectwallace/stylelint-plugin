@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
+import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
 import { isAllowed } from '../../utils/allow-list.js'
@@ -48,42 +48,39 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const allowList = secondaryOptions?.allowList ?? []
 		const unique_sizes = new Set<string>()
+		const violating_declarations: Declaration[] = []
 
 		root.walkDecls('font-size', (declaration) => {
+			const before = unique_sizes.size
 			if (!isAllowed(declaration.value, allowList)) {
 				unique_sizes.add(declaration.value)
-
-				const actual = unique_sizes.size
-
-				if (actual > primaryOption) {
-					utils.report({
-						message: messages.rejected(actual, primaryOption, [...unique_sizes]),
-						node: declaration,
-						result,
-						ruleName: rule_name,
-					})
-				}
+			}
+			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {
+				violating_declarations.push(declaration)
 			}
 		})
 
 		root.walkDecls('font', (declaration) => {
+			const before = unique_sizes.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})
 			if (destructured?.font_size && !isAllowed(destructured.font_size, allowList)) {
 				unique_sizes.add(destructured.font_size)
-
-				const actual = unique_sizes.size
-
-				if (actual > primaryOption) {
-					utils.report({
-						message: messages.rejected(actual, primaryOption, [...unique_sizes]),
-						node: declaration,
-						result,
-						ruleName: rule_name,
-					})
-				}
+			}
+			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {
+				violating_declarations.push(declaration)
 			}
 		})
+
+		const actual = unique_sizes.size
+		for (const declaration of violating_declarations) {
+			utils.report({
+				message: messages.rejected(actual, primaryOption, [...unique_sizes]),
+				node: declaration,
+				result,
+				ruleName: rule_name,
+			})
+		}
 	}
 }
 

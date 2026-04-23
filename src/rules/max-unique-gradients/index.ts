@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
+import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk } from '@projectwallace/css-parser/walker'
 import { isAllowed as isIgnored } from '../../utils/allow-list.js'
@@ -50,8 +50,10 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const ignore = secondaryOptions?.ignore ?? []
 
 		const unique_gradients = new Set<string>()
+		const violating_declarations: Declaration[] = []
 
 		root.walkDecls(/^(?:background(?:-image))$/, (declaration) => {
+			const before = unique_gradients.size
 			const ast = parse_value(declaration.value)
 			walk(ast, (node) => {
 				if (is_function(node)) {
@@ -61,21 +63,23 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 						if (!isIgnored(gradient, ignore)) {
 							unique_gradients.add(gradient)
 						}
-
-						const actual = unique_gradients.size
-
-						if (actual > primaryOption) {
-							utils.report({
-								message: messages.rejected(actual, primaryOption, [...unique_gradients]),
-								node: declaration,
-								result,
-								ruleName: rule_name,
-							})
-						}
 					}
 				}
 			})
+			if (unique_gradients.size > before && unique_gradients.size > primaryOption) {
+				violating_declarations.push(declaration)
+			}
 		})
+
+		const actual = unique_gradients.size
+		for (const declaration of violating_declarations) {
+			utils.report({
+				message: messages.rejected(actual, primaryOption, [...unique_gradients]),
+				node: declaration,
+				result,
+				ruleName: rule_name,
+			})
+		}
 	}
 }
 

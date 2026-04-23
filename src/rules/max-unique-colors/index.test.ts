@@ -454,7 +454,7 @@ test('should count var() as a unique color when it is a @property <color>', asyn
 	// Each violating declaration gets its own warning; the last one reflects the full count.
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
-	expect(warnings.at(-1)!.text).toContain('Found 4 unique colors')
+	expect(warnings[0].text).toContain('Found 4 unique colors')
 })
 
 test('should count the var() expression AND fallback colors separately', async () => {
