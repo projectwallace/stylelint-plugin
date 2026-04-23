@@ -143,3 +143,26 @@ test('should count % as a unit', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test('should error at the declaration level', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 2,
+		},
+	}
+
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `
+a { font-size: 12px; }
+b { margin: 1rem; }
+c { padding: 10%; }
+		`,
+		config,
+	})
+
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(4)
+})

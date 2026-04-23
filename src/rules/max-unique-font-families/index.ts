@@ -52,6 +52,17 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		root.walkDecls('font-family', (declaration) => {
 			if (!isAllowed(declaration.value, allowList)) {
 				unique_families.add(declaration.value)
+
+				const actual = unique_families.size
+
+				if (actual > primaryOption) {
+					utils.report({
+						message: messages.rejected(actual, primaryOption, [...unique_families]),
+						node: declaration,
+						result,
+						ruleName: rule_name,
+					})
+				}
 			}
 		})
 
@@ -60,19 +71,19 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			const destructured = destructureFontShorthand(parsed, () => {})
 			if (destructured?.font_family && !isAllowed(destructured.font_family, allowList)) {
 				unique_families.add(destructured.font_family)
+
+				const actual = unique_families.size
+
+				if (actual > primaryOption) {
+					utils.report({
+						message: messages.rejected(actual, primaryOption, [...unique_families]),
+						node: declaration,
+						result,
+						ruleName: rule_name,
+					})
+				}
 			}
 		})
-
-		const actual = unique_families.size
-
-		if (actual > primaryOption) {
-			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_families]),
-				node: root,
-				result,
-				ruleName: rule_name,
-			})
-		}
 	}
 }
 

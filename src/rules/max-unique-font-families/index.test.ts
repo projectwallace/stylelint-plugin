@@ -106,10 +106,16 @@ test('should error when unique values exceed the limit', async () => {
 	expect(warnings[0].text).toContain('exceeds the maximum of 2')
 })
 
-test('should error at the stylesheet level (node is root)', async () => {
-	const { warnings } = await lint(`a { font-family: Arial; } b { font-family: Georgia; }`, 1)
+test('should error at the declaration level', async () => {
+	const { warnings } = await lint(
+		`
+		a { font-family: Arial; }
+		b { font-family: Georgia; }
+		`,
+		1,
+	)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].line).toBe(1)
+	expect(warnings[0].line).toBe(3)
 })
 
 test('should treat different value strings as different unique entries', async () => {

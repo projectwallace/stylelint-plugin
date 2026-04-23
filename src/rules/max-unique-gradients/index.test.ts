@@ -100,6 +100,18 @@ test('should error when unique gradients exceed the limit', async () => {
 	expect(warnings[0].line).toBe(4)
 })
 
+test('should error at the declaration level', async () => {
+	const { warnings } = await lint(
+		`
+		a { background-image: linear-gradient(red, blue); }
+		b { background-image: conic-gradient(red, blue); }
+		`,
+		1,
+	)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(3)
+})
+
 // ---------------------------------------------------------------------------
 // Gradient types
 // ---------------------------------------------------------------------------

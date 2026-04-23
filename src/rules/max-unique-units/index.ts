@@ -37,21 +37,21 @@ const ruleFunction = (primaryOption: number) => {
 					const unit = node.unit
 					if (unit !== undefined) {
 						unique_units.add(unit.toLowerCase())
+
+						const actual = unique_units.size
+
+						if (actual > primaryOption) {
+							utils.report({
+								message: messages.rejected(actual, primaryOption, [...unique_units]),
+								node: declaration,
+								result,
+								ruleName: rule_name,
+							})
+						}
 					}
 				}
 			})
 		})
-
-		const actual = unique_units.size
-
-		if (actual > primaryOption) {
-			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_units]),
-				node: root,
-				result,
-				ruleName: rule_name,
-			})
-		}
 	}
 }
 

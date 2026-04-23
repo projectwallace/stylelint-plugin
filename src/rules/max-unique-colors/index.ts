@@ -161,18 +161,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
 			collect_colors(parse_value(declaration.value), true)
+
+			const actual = unique_colors.size
+
+			if (actual > primaryOption) {
+				utils.report({
+					message: messages.rejected(actual, primaryOption, [...unique_colors]),
+					node: declaration,
+					result,
+					ruleName: rule_name,
+				})
+			}
 		})
-
-		const actual = unique_colors.size
-
-		if (actual > primaryOption) {
-			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_colors]),
-				node: root,
-				result,
-				ruleName: rule_name,
-			})
-		}
 	}
 }
 
