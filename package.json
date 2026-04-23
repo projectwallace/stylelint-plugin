@@ -1,6 +1,6 @@
 {
 	"name": "@projectwallace/stylelint-plugin",
-	"version": "0.1.14",
+	"version": "0.2.0",
 	"description": "A stylelint plugin that checks the complexity of your CSS.",
 	"keywords": [
 		"complexity",
