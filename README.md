@@ -69,6 +69,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 		"projectwallace/max-selector-complexity": 5,
 		"projectwallace/max-selectors-per-rule": 10,
 		"projectwallace/max-unique-colors": 5,
+		"projectwallace/max-unique-durations": 8,
 		"projectwallace/max-unique-box-shadows": 3,
 		"projectwallace/max-unique-gradients": 5,
 		"projectwallace/max-unique-font-families": 4,
@@ -112,6 +113,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 | [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                               | Limit the number of selectors in a single rule                             |      ✓      |             |               |             |        ✓        |
 | [max-unique-box-shadows](src/rules/max-unique-box-shadows/README.md)                               | Limit the number of unique box-shadow values used across the stylesheet    |      ✓      |             |       ✓       |             |                 |
 | [max-unique-colors](src/rules/max-unique-colors/README.md)                                         | Limit the number of unique color values used across the stylesheet         |      ✓      |             |       ✓       |             |                 |
+| [max-unique-durations](src/rules/max-unique-durations/README.md)                                   | Limit the number of unique duration values used across the stylesheet      |      ✓      |             |       ✓       |             |                 |
 | [max-unique-gradients](src/rules/max-unique-gradients/README.md)                                   | Limit the number of unique gradient values used across the stylesheet      |      ✓      |             |       ✓       |             |                 |
 | [max-unique-font-families](src/rules/max-unique-font-families/README.md)                           | Limit the number of unique font families used across the stylesheet        |      ✓      |             |       ✓       |             |                 |
 | [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                                 | Limit the number of unique font sizes used across the stylesheet           |      ✓      |             |       ✓       |             |                 |
