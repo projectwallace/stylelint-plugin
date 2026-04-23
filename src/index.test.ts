@@ -43,5 +43,6 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-unique-gradients',
 		'projectwallace/max-unique-box-shadows',
 		'projectwallace/max-unique-durations',
+		'projectwallace/max-unique-animation-functions',
 	])
 })

@@ -3,6 +3,8 @@ import recommended from './recommended.js'
 export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
+		'projectwallace/max-unique-animation-functions':
+			recommended.rules['projectwallace/max-unique-animation-functions'],
 		'projectwallace/max-unique-box-shadows':
 			recommended.rules['projectwallace/max-unique-box-shadows'],
 		'projectwallace/max-unique-colors': recommended.rules['projectwallace/max-unique-colors'],
