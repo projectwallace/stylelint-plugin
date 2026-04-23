@@ -33,6 +33,7 @@ import max_unique_font_families from './rules/max-unique-font-families/index.js'
 import max_unique_font_sizes from './rules/max-unique-font-sizes/index.js'
 import max_unique_gradients from './rules/max-unique-gradients/index.js'
 import max_unique_box_shadows from './rules/max-unique-box-shadows/index.js'
+import max_unique_durations from './rules/max-unique-durations/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -69,6 +70,7 @@ const plugins: stylelint.Plugin[] = [
 	max_unique_font_sizes,
 	max_unique_gradients,
 	max_unique_box_shadows,
+	max_unique_durations,
 ]
 
 export default plugins
