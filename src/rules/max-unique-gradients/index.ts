@@ -1,0 +1,86 @@
+import stylelint from 'stylelint'
+import type { Root } from 'postcss'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { walk } from '@projectwallace/css-parser/walker'
+import { isAllowed as isIgnored } from '../../utils/allow-list.js'
+import { is_function } from '@projectwallace/css-parser'
+
+const { createPlugin, utils } = stylelint
+
+const rule_name = 'projectwallace/max-unique-gradients'
+
+const messages = utils.ruleMessages(rule_name, {
+	rejected: (actual: number, expected: number, gradients: string[]) =>
+		`Found ${actual} unique gradients (${gradients.join(', ')}) which exceeds the maximum of ${expected}`,
+})
+
+const meta = {
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-gradients/README.md',
+}
+
+interface SecondaryOptions {
+	ignore?: Array<string | RegExp>
+}
+
+const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
+	return (root: Root, result: stylelint.PostcssResult) => {
+		const validOptions = utils.validateOptions(
+			result,
+			rule_name,
+			{
+				actual: primaryOption,
+				possible: [Number as unknown as (v: unknown) => boolean],
+			},
+			{
+				actual: secondaryOptions,
+				possible: {
+					ignore: [
+						String as unknown as (v: unknown) => boolean,
+						(v: unknown) => v instanceof RegExp,
+					],
+				},
+				optional: true,
+			},
+		)
+
+		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
+			return
+		}
+
+		const ignore = secondaryOptions?.ignore ?? []
+
+		const unique_gradients = new Set<string>()
+
+		root.walkDecls(/^(?:background(?:-image))$/, (declaration) => {
+			const ast = parse_value(declaration.value)
+			walk(ast, (node) => {
+				if (is_function(node)) {
+					if (/^(repeating-)?(linear|conic|radial)-gradient$/.test(node.name)) {
+						const gradient = node.text
+
+						if (!isIgnored(gradient, ignore)) {
+							unique_gradients.add(gradient)
+						}
+
+						const actual = unique_gradients.size
+
+						if (actual > primaryOption) {
+							utils.report({
+								message: messages.rejected(actual, primaryOption, [...unique_gradients]),
+								node: declaration,
+								result,
+								ruleName: rule_name,
+							})
+						}
+					}
+				}
+			})
+		})
+	}
+}
+
+ruleFunction.ruleName = rule_name
+ruleFunction.messages = messages
+ruleFunction.meta = meta
+
+export default createPlugin(rule_name, ruleFunction)

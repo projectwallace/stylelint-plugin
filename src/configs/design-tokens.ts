@@ -8,5 +8,6 @@ export default {
 			recommended.rules['projectwallace/max-unique-font-families'],
 		'projectwallace/max-unique-font-sizes':
 			recommended.rules['projectwallace/max-unique-font-sizes'],
+		'projectwallace/max-unique-gradients': recommended.rules['projectwallace/max-unique-gradients'],
 	},
 }

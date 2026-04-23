@@ -27,6 +27,7 @@ export default {
 		'projectwallace/max-unique-colors': 128,
 		'projectwallace/max-unique-font-families': 4,
 		'projectwallace/max-unique-font-sizes': 16,
+		'projectwallace/max-unique-gradients': 8,
 		'projectwallace/max-unique-units': 10,
 		'projectwallace/min-selector-uniqueness-ratio': 0.66,
 		'projectwallace/min-declaration-uniqueness-ratio': 0.5,

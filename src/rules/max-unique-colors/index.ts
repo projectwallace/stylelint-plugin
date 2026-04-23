@@ -1,10 +1,15 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk, SKIP } from '@projectwallace/css-parser'
-import { FUNCTION, HASH, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { namedColors, colorFunctions, colorKeywords } from '@projectwallace/css-analyzer/values'
 import { isAllowed as isIgnored } from '../../utils/allow-list.js'
+import {
+	parse_value,
+	walk,
+	SKIP,
+	is_function,
+	is_hash,
+	is_identifier,
+} from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
@@ -80,28 +85,31 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		 */
 		function collect_colors(parsed: ReturnType<typeof parse_value>, resolve_var: boolean): void {
 			walk(parsed, (node) => {
-				if (node.type === HASH) {
+				if (is_hash(node)) {
+					const hash = node.text
 					// The parser already guarantees HASH nodes are valid hex colors.
-					if (!isIgnored(node.text, ignore)) {
-						unique_colors.add(node.text)
+					if (!isIgnored(hash, ignore)) {
+						unique_colors.add(hash)
 					}
-				} else if (node.type === IDENTIFIER) {
+				} else if (is_identifier(node)) {
+					const ident = node.text
 					// namedColors and colorKeywords both perform case-insensitive matching.
-					if (namedColors.has(node.text) || colorKeywords.has(node.text)) {
-						if (!isIgnored(node.text, ignore)) {
-							unique_colors.add(node.text)
+					if (namedColors.has(ident) || colorKeywords.has(ident)) {
+						if (!isIgnored(ident, ignore)) {
+							unique_colors.add(ident)
 						}
 					}
-				} else if (node.type === FUNCTION) {
+				} else if (is_function(node)) {
 					const fn_name = node.name
 					if (fn_name === undefined) return
+					const fn = node.text
 
 					// colorFunctions.has() is case-insensitive.
 					if (colorFunctions.has(fn_name)) {
 						// Numeric-channel color functions (rgb, hsl, oklch, …).
 						// SKIP children — they are numbers, not color tokens.
-						if (!isIgnored(node.text, ignore)) {
-							unique_colors.add(node.text)
+						if (!isIgnored(fn, ignore)) {
+							unique_colors.add(fn)
 						}
 						return SKIP
 					}
@@ -111,7 +119,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (COLOR_COMPOSING_FUNCTIONS.has(fn_name_lower)) {
 						// Composing color functions (color-mix, light-dark, device-cmyk) take
 						// color values as arguments. SKIP children so they are not double-counted.
-						if (!isIgnored(node.text, ignore)) {
+						if (!isIgnored(fn, ignore)) {
 							unique_colors.add(node.text)
 						}
 						return SKIP
@@ -122,13 +130,9 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 						// Count the whole var() expression, but do NOT skip children so that
 						// any fallback color values are still evaluated.
 						const first = node.first_child
-						if (
-							first !== null &&
-							first.type === IDENTIFIER &&
-							color_custom_properties.has(first.text)
-						) {
-							if (!isIgnored(node.text, ignore)) {
-								unique_colors.add(node.text)
+						if (first !== null && is_identifier(first) && color_custom_properties.has(first.text)) {
+							if (!isIgnored(fn, ignore)) {
+								unique_colors.add(fn)
 							}
 						}
 					}
