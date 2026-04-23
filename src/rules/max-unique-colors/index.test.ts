@@ -90,11 +90,16 @@ test('should error when unique colors exceed the limit', async () => {
 	expect(warnings[0].text).toContain('exceeds the maximum of 2')
 })
 
-test('should error at the stylesheet level (node is root)', async () => {
-	const { warnings } = await lint(`a { color: red; } b { color: blue; }`, 1)
+test('should error at the declaration level', async () => {
+	const { warnings } = await lint(
+		`
+		a { color: red; }
+		b { color: blue; }
+		`,
+		1,
+	)
 	expect(warnings).toHaveLength(1)
-	// The warning should be on the root node (line 1, column 1)
-	expect(warnings[0].line).toBe(1)
+	expect(warnings[0].line).toBe(3)
 })
 
 // ---------------------------------------------------------------------------
@@ -446,6 +451,7 @@ test('should count var() as a unique color when it is a @property <color>', asyn
 		b { color: var(--accent-color); }
 	`
 	// "red" + "blue" (initial-values) + "var(--brand-color)" + "var(--accent-color)" = 4 unique colors
+	// Each violating declaration gets its own warning; the last one reflects the full count.
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 4 unique colors')

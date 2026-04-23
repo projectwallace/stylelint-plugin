@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
+import type { Root, Declaration } from 'postcss'
 import { walk, DIMENSION } from '@projectwallace/css-parser'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 
@@ -28,8 +28,10 @@ const ruleFunction = (primaryOption: number) => {
 		}
 
 		const unique_units = new Set<string>()
+		const violating_declarations: Declaration[] = []
 
 		root.walkDecls((declaration) => {
+			const before = unique_units.size
 			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
@@ -40,14 +42,17 @@ const ruleFunction = (primaryOption: number) => {
 					}
 				}
 			})
+
+			if (unique_units.size > before && unique_units.size > primaryOption) {
+				violating_declarations.push(declaration)
+			}
 		})
 
 		const actual = unique_units.size
-
-		if (actual > primaryOption) {
+		for (const declaration of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption, [...unique_units]),
-				node: root,
+				node: declaration,
 				result,
 				ruleName: rule_name,
 			})

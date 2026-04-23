@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
+import type { Root, Declaration } from 'postcss'
 import { namedColors, colorFunctions, colorKeywords } from '@projectwallace/css-analyzer/values'
 import { isAllowed as isIgnored } from '../../utils/allow-list.js'
 import {
@@ -159,16 +159,21 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			})
 		})
 
+		const violating_declarations: Declaration[] = []
+
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
+			const before = unique_colors.size
 			collect_colors(parse_value(declaration.value), true)
+			if (unique_colors.size > before && unique_colors.size > primaryOption) {
+				violating_declarations.push(declaration)
+			}
 		})
 
 		const actual = unique_colors.size
-
-		if (actual > primaryOption) {
+		for (const declaration of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption, [...unique_colors]),
-				node: root,
+				node: declaration,
 				result,
 				ruleName: rule_name,
 			})
