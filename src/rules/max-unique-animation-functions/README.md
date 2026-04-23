@@ -1,32 +1,32 @@
-# Max unique durations
+# Max unique animation functions
 
-Limit the number of unique duration values used across the stylesheet.
+Limit the number of unique animation timing functions used across the stylesheet.
 
 <!-- prettier-ignore -->
 ```css
-a { animation-duration: 1s; }
-/*                      ↑
-*   "1s" counts as a unique duration */
+a { animation-timing-function: ease; }
+/*                              ↑
+*   "ease" counts as a unique animation timing function */
 ```
 
-Using too many different duration values can indicate an inconsistent design system. This rule helps enforce a controlled set of timing values.
+Using too many different timing functions can indicate an inconsistent design system. This rule helps enforce a controlled set of easing values.
 
-Each individual duration value is counted separately. Comma-separated lists (e.g. `animation-duration: 1s, 2s`) are split into individual durations.
+Each individual timing function value is counted separately. Comma-separated lists (e.g. `animation-timing-function: ease, linear`) are split into individual values.
 
 The following CSS properties are checked:
 
-- `animation-duration`
-- `transition-duration`
+- `animation-timing-function`
+- `transition-timing-function`
 - `animation` (shorthand)
 - `transition` (shorthand)
 
-> **Note**: Durations are compared by their exact string value. `1s` and `1000ms` are treated as two distinct durations.
+> **Note**: Timing functions are compared by their exact string value. `ease` and `cubic-bezier(0.25, 0.1, 0.25, 1)` are treated as two distinct values.
 
 ## Options
 
 ### `Number` (required)
 
-The maximum number of unique duration values allowed. Must be a positive integer.
+The maximum number of unique animation timing functions allowed. Must be a positive integer.
 
 Given:
 
@@ -36,35 +36,35 @@ the following are considered violations:
 
 <!-- prettier-ignore -->
 ```css
-a { animation-duration: 1s; }
-b { animation-duration: 2s; }
-c { animation-duration: 3s; }
+a { animation-timing-function: ease; }
+b { animation-timing-function: linear; }
+c { animation-timing-function: ease-in; }
 ```
 
 The following patterns are _not_ considered violations:
 
 <!-- prettier-ignore -->
 ```css
-a { animation-duration: 1s; }
-b { transition-duration: 1s; }
+a { animation-timing-function: ease; }
+b { transition-timing-function: ease; }
 ```
 
 ### `ignore` (optional)
 
 Type: `Array<string | RegExp>`
 
-A list of duration values to exclude from the count. Each entry can be an exact string or a regular expression.
+A list of timing function values to exclude from the count. Each entry can be an exact string or a regular expression.
 
-> **Note**: String patterns are matched against the exact string value of the detected duration.
+> **Note**: String patterns are matched against the exact string value of the detected timing function.
 
 Given:
 
-`[1, { "ignore": ["1s"] }]`
+`[1, { "ignore": ["ease"] }]`
 
 the following is _not_ considered a violation:
 
 <!-- prettier-ignore -->
 ```css
-a { animation-duration: 1s; }
-b { animation-duration: 2s; }
+a { animation-timing-function: ease; }
+b { animation-timing-function: linear; }
 ```
