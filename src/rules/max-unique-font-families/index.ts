@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root, Declaration } from 'postcss'
+import type { Root, Declaration, AtRule } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
 import { isAllowed } from '../../utils/allow-list.js'
@@ -51,6 +51,12 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const violating_declarations: Declaration[] = []
 
 		root.walkDecls('font-family', (declaration) => {
+			if (
+				declaration.parent?.type === 'atrule' &&
+				(declaration.parent as AtRule).name === 'font-face'
+			) {
+				return
+			}
 			const before = unique_families.size
 			if (!isAllowed(declaration.value, allowList)) {
 				unique_families.add(declaration.value)

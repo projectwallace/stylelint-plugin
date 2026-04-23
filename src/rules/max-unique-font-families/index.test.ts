@@ -228,6 +228,32 @@ test('should still count non-allowListed values', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
+// ---------------------------------------------------------------------------
+// @font-face
+// ---------------------------------------------------------------------------
+
+test('should not count font-family inside @font-face', async () => {
+	const { warnings, errored } = await lint(
+		`@font-face { font-family: MyFont; src: url(my-font.woff2); }`,
+		0,
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should not count font-family inside @font-face but still count outside', async () => {
+	const { warnings, errored } = await lint(
+		`@font-face { font-family: MyFont; } a { font-family: Arial; } b { font-family: Georgia; }`,
+		1,
+	)
+	expect(errored).toBe(true)
+	expect(warnings[0].text).toContain('Found 2 unique font families')
+})
+
+// ---------------------------------------------------------------------------
+// allowList secondary option (continued)
+// ---------------------------------------------------------------------------
+
 test('should error when non-allowListed values exceed the limit', async () => {
 	const { warnings, errored } = await lint(
 		`a { font-family: Arial; } b { font-family: Georgia; } c { font-family: monospace; }`,
