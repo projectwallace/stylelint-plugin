@@ -7,15 +7,15 @@ import { OPERATOR } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'projectwallace/max-unique-durations'
+const rule_name = 'projectwallace/max-unique-animation-functions'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number, shadows: string[]) =>
-		`Found ${actual} unique durations (${shadows.join(', ')}) which exceeds the maximum of ${expected}`,
+		`Found ${actual} unique animation-functions (${shadows.join(', ')}) which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-durations/README.md',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-animation-functions/README.md',
 }
 
 interface SecondaryOptions {
@@ -48,43 +48,45 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_durations = new Set<string>()
+		const unique_functions = new Set<string>()
 		const violating_declarations: Declaration[] = []
 
-		root.walkDecls(/^(animation|transition)(-duration)?$/, (declaration) => {
+		root.walkDecls(/^(animation|transition)(-timing-function)?$/, (declaration) => {
 			let parsed = parse_value(declaration.value)
-			const before = unique_durations.size
+			const before = unique_functions.size
 
-			if (declaration.prop === 'animation-duration' || declaration.prop === 'transition-duration') {
+			if (
+				declaration.prop === 'animation-timing-function' ||
+				declaration.prop === 'transition-timing-function'
+			) {
 				for (let child of parsed.children) {
 					if (child.type !== OPERATOR) {
-						let duration = child.text
-
-						if (!isIgnored(duration, ignore)) {
-							unique_durations.add(duration)
+						let fn = child.text
+						if (!isIgnored(fn, ignore)) {
+							unique_functions.add(fn)
 						}
 					}
 				}
 			} else {
 				analyzeAnimation(parsed, function (item) {
-					if (item.type === 'duration') {
-						let duration = item.value.text
-						if (!isIgnored(duration, ignore)) {
-							unique_durations.add(duration)
+					if (item.type === 'fn') {
+						let fn = item.value.text
+						if (!isIgnored(fn, ignore)) {
+							unique_functions.add(item.value.text)
 						}
 					}
 				})
 			}
 
-			if (unique_durations.size > before && unique_durations.size > primaryOption) {
+			if (unique_functions.size > before && unique_functions.size > primaryOption) {
 				violating_declarations.push(declaration)
 			}
 		})
 
-		const actual = unique_durations.size
+		const actual = unique_functions.size
 		for (const declaration of violating_declarations) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_durations]),
+				message: messages.rejected(actual, primaryOption, [...unique_functions]),
 				node: declaration,
 				result,
 				ruleName: rule_name,

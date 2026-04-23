@@ -26,6 +26,7 @@ export default {
 		'projectwallace/max-important-ratio': 0.1,
 		'projectwallace/max-unique-box-shadows': 8,
 		'projectwallace/max-unique-colors': 128,
+		'projectwallace/max-unique-animation-functions': 4,
 		'projectwallace/max-unique-durations': 8,
 		'projectwallace/max-unique-font-families': 4,
 		'projectwallace/max-unique-font-sizes': 16,
