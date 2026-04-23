@@ -41,5 +41,6 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-unique-font-families',
 		'projectwallace/max-unique-font-sizes',
 		'projectwallace/max-unique-gradients',
+		'projectwallace/max-unique-box-shadows',
 	])
 })

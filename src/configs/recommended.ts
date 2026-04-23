@@ -24,6 +24,7 @@ export default {
 		'projectwallace/max-average-declarations-per-rule': 6,
 		'projectwallace/max-average-selector-complexity': 3,
 		'projectwallace/max-important-ratio': 0.1,
+		'projectwallace/max-unique-box-shadows': 8,
 		'projectwallace/max-unique-colors': 128,
 		'projectwallace/max-unique-font-families': 4,
 		'projectwallace/max-unique-font-sizes': 16,
