@@ -45,5 +45,6 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-unique-durations',
 		'projectwallace/max-unique-animation-functions',
 		'projectwallace/max-spacing-resets',
+		'projectwallace/max-unique-line-heights',
 	])
 })

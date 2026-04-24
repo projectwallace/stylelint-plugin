@@ -30,6 +30,7 @@ export default {
 		'projectwallace/max-unique-durations': 8,
 		'projectwallace/max-unique-font-families': 4,
 		'projectwallace/max-unique-font-sizes': 16,
+		'projectwallace/max-unique-line-heights': 12,
 		'projectwallace/max-unique-gradients': 8,
 		'projectwallace/max-unique-units': 10,
 		'projectwallace/min-selector-uniqueness-ratio': 0.66,

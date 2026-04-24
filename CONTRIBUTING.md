@@ -2,11 +2,8 @@
 
 ## Developing
 
-Before committing, run the linter:
-
-```sh
-npm run lint
-```
+- Before committing, run the linter: `npm run lint`
+- This project uses ESM only, do not use CommonJS
 
 ## Adding a new rule
 
