@@ -3,11 +3,15 @@ import { format_filesize } from './format-bytes'
 
 describe('format_filesize', () => {
 	test('zero', () => {
-		expect(format_filesize(0)).toBe('0 byte')
+		expect(format_filesize(0)).toBe('0 bytes')
+	})
+
+	test('1 byte', () => {
+		expect(format_filesize(1)).toBe('1 byte')
 	})
 
 	test('bytes', () => {
-		expect(format_filesize(500)).toBe('500 byte')
+		expect(format_filesize(500)).toBe('500 bytes')
 	})
 
 	test('kilobytes', () => {

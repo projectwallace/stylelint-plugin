@@ -64,6 +64,6 @@ test('should error when file size exceeds the limit', async () => {
 		severity: 'error',
 	})
 	expect(warnings[0].text).toBe(
-		'File size is 17 byte which is 7 byte greater than the allowed 10 byte (projectwallace/max-file-size)',
+		'File size is 17 bytes which is 7 bytes greater than the allowed 10 bytes (projectwallace/max-file-size)',
 	)
 })
