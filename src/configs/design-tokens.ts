@@ -15,6 +15,7 @@ export default {
 			recommended.rules['projectwallace/max-unique-font-sizes'],
 		'projectwallace/max-unique-line-heights':
 			recommended.rules['projectwallace/max-unique-line-heights'],
+		'projectwallace/max-unique-keyframes': recommended.rules['projectwallace/max-unique-keyframes'],
 		'projectwallace/max-unique-gradients': recommended.rules['projectwallace/max-unique-gradients'],
 	},
 }

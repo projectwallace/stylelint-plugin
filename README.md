@@ -79,6 +79,7 @@ Rules that encourage the use of design tokens in your CSS.
 | [max-unique-gradients](src/rules/max-unique-gradients/README.md)                     | Limit the number of unique gradient values used across the stylesheet            |
 | [max-unique-font-families](src/rules/max-unique-font-families/README.md)             | Limit the number of unique font families used across the stylesheet              |
 | [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                   | Limit the number of unique font sizes used across the stylesheet                 |
+| [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                     | Limit the number of unique keyframe animations defined across the stylesheet     |
 | [max-unique-media-queries](src/rules/max-unique-media-queries/README.md)             | Limit the number of unique media queries used across the stylesheet              |
 
 ### Correctness
@@ -102,23 +103,24 @@ Rules to help prevent errors.
 
 Rules that limit complexity and enforce conventions to keep CSS easy to reason about and manage over time.
 
-| Rule                                                                                       | Description                                                               |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| [max-average-declarations-per-rule](src/rules/max-average-declarations-per-rule/README.md) | Limit the average number of declarations per rule across the stylesheet   |
-| [max-average-selector-complexity](src/rules/max-average-selector-complexity/README.md)     | Limit the average selector complexity across the stylesheet               |
-| [max-average-selectors-per-rule](src/rules/max-average-selectors-per-rule/README.md)       | Limit the average number of selectors per rule across the stylesheet      |
-| [max-average-specificity](src/rules/max-average-specificity/README.md)                     | Limit the average specificity across the stylesheet                       |
-| [max-declarations-per-rule](src/rules/max-declarations-per-rule/README.md)                 | Limit the number of declarations in a single rule                         |
-| [max-important-ratio](src/rules/max-important-ratio/README.md)                             | Limit the ratio of `!important` declarations relative to all declarations |
-| [max-selector-complexity](src/rules/max-selector-complexity/README.md)                     | Prevent selector complexity from going over a predefined maximum          |
-| [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                       | Limit the number of selectors in a single rule                            |
-| [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet      |
-| [max-unique-units](src/rules/max-unique-units/README.md)                                   | Limit the number of unique CSS units used across the stylesheet           |
-| [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)   | Enforce a minimum ratio of unique declarations across the stylesheet      |
-| [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)         | Enforce a minimum ratio of unique selectors across the stylesheet         |
-| [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                             | Disallow anonymous (unnamed) `@layer` blocks                              |
-| [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                   | Prevent the use of known browserhacks for properties                      |
-| [no-property-shorthand](src/rules/no-property-shorthand/README.md)                         | Disallow the use of shorthand properties                                  |
+| Rule                                                                                       | Description                                                                  |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| [max-average-declarations-per-rule](src/rules/max-average-declarations-per-rule/README.md) | Limit the average number of declarations per rule across the stylesheet      |
+| [max-average-selector-complexity](src/rules/max-average-selector-complexity/README.md)     | Limit the average selector complexity across the stylesheet                  |
+| [max-average-selectors-per-rule](src/rules/max-average-selectors-per-rule/README.md)       | Limit the average number of selectors per rule across the stylesheet         |
+| [max-average-specificity](src/rules/max-average-specificity/README.md)                     | Limit the average specificity across the stylesheet                          |
+| [max-declarations-per-rule](src/rules/max-declarations-per-rule/README.md)                 | Limit the number of declarations in a single rule                            |
+| [max-important-ratio](src/rules/max-important-ratio/README.md)                             | Limit the ratio of `!important` declarations relative to all declarations    |
+| [max-selector-complexity](src/rules/max-selector-complexity/README.md)                     | Prevent selector complexity from going over a predefined maximum             |
+| [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                       | Limit the number of selectors in a single rule                               |
+| [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet         |
+| [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                           | Limit the number of unique keyframe animations defined across the stylesheet |
+| [max-unique-units](src/rules/max-unique-units/README.md)                                   | Limit the number of unique CSS units used across the stylesheet              |
+| [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)   | Enforce a minimum ratio of unique declarations across the stylesheet         |
+| [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)         | Enforce a minimum ratio of unique selectors across the stylesheet            |
+| [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                             | Disallow anonymous (unnamed) `@layer` blocks                                 |
+| [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                   | Prevent the use of known browserhacks for properties                         |
+| [no-property-shorthand](src/rules/no-property-shorthand/README.md)                         | Disallow the use of shorthand properties                                     |
 
 ## Credits
 
