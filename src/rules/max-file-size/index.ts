@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { format_filesize } from '../../utils/format-bytes'
 
 const { createPlugin, utils } = stylelint
 
@@ -7,7 +8,7 @@ const rule_name = 'projectwallace/max-file-size'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`File size is ${actual} bytes which is greater than the allowed ${expected} bytes`,
+		`File size is ${format_filesize(actual)} which is ${format_filesize(actual - expected)} greater than the allowed ${format_filesize(expected)}`,
 })
 
 const meta = {
