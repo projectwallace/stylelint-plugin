@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk } from '@projectwallace/css-parser/walker'
-import { isAllowed as isIgnored } from '../../utils/allow-list.js'
+import { isAllowed } from '../../utils/allow-list.js'
 import { is_function } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
@@ -60,7 +60,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (/^(repeating-)?(linear|conic|radial)-gradient$/.test(node.name)) {
 						const gradient = node.text
 
-						if (!isIgnored(gradient, ignore)) {
+						if (!isAllowed(gradient, ignore)) {
 							unique_gradients.add(gradient)
 						}
 					}

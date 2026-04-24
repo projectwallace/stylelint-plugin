@@ -18,7 +18,7 @@ const meta = {
 }
 
 interface SecondaryOptions {
-	allowList?: Array<string | RegExp>
+	ignore?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
@@ -33,7 +33,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			{
 				actual: secondaryOptions,
 				possible: {
-					allowList: [
+					ignore: [
 						String as unknown as (v: unknown) => boolean,
 						(v: unknown) => v instanceof RegExp,
 					],
@@ -46,13 +46,13 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			return
 		}
 
-		const allowList = secondaryOptions?.allowList ?? []
+		const ignore = secondaryOptions?.ignore ?? []
 		const unique_sizes = new Set<string>()
 		const violating_declarations: Declaration[] = []
 
 		root.walkDecls('font-size', (declaration) => {
 			const before = unique_sizes.size
-			if (!isAllowed(declaration.value, allowList)) {
+			if (!isAllowed(declaration.value, ignore)) {
 				unique_sizes.add(declaration.value)
 			}
 			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {
@@ -64,7 +64,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			const before = unique_sizes.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})
-			if (destructured?.font_size && !isAllowed(destructured.font_size, allowList)) {
+			if (destructured?.font_size && !isAllowed(destructured.font_size, ignore)) {
 				unique_sizes.add(destructured.font_size)
 			}
 			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {

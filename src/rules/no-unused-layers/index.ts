@@ -15,7 +15,7 @@ const meta = {
 }
 
 interface SecondaryOptions {
-	allowlist?: Array<string | RegExp>
+	ignore?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
@@ -55,7 +55,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		for (const [layer, node] of declared_layers) {
 			if (defined_layers.has(layer)) continue
-			if (secondaryOptions?.allowlist && isAllowed(layer, secondaryOptions.allowlist)) continue
+			if (secondaryOptions?.ignore && isAllowed(layer, secondaryOptions.ignore)) continue
 
 			utils.report({
 				result,

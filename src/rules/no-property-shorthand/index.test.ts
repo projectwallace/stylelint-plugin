@@ -103,7 +103,7 @@ test('should match shorthand properties case-insensitively', async () => {
 	expect(warnings).toHaveLength(1)
 })
 
-test('should not error when a shorthand is in the allowList (string)', async () => {
+test('should not error when a shorthand is in the ignore (string)', async () => {
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -111,7 +111,7 @@ test('should not error when a shorthand is in the allowList (string)', async () 
 		config: {
 			plugins: [plugin],
 			rules: {
-				[rule_name]: [true, { allowList: ['background'] }],
+				[rule_name]: [true, { ignore: ['background'] }],
 			},
 		},
 	})
@@ -120,7 +120,7 @@ test('should not error when a shorthand is in the allowList (string)', async () 
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error when a shorthand matches an allowList RegExp', async () => {
+test('should not error when a shorthand matches an ignore RegExp', async () => {
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -128,7 +128,7 @@ test('should not error when a shorthand matches an allowList RegExp', async () =
 		config: {
 			plugins: [plugin],
 			rules: {
-				[rule_name]: [true, { allowList: [/^border-/] }],
+				[rule_name]: [true, { ignore: [/^border-/] }],
 			},
 		},
 	})
@@ -137,7 +137,7 @@ test('should not error when a shorthand matches an allowList RegExp', async () =
 	expect(warnings).toStrictEqual([])
 })
 
-test('should still error on shorthands not in the allowList', async () => {
+test('should still error on shorthands not in the ignore', async () => {
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -145,7 +145,7 @@ test('should still error on shorthands not in the allowList', async () => {
 		config: {
 			plugins: [plugin],
 			rules: {
-				[rule_name]: [true, { allowList: ['background'] }],
+				[rule_name]: [true, { ignore: ['background'] }],
 			},
 		},
 	})

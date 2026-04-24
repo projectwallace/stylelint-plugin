@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { namedColors, colorFunctions, colorKeywords } from '@projectwallace/css-analyzer/values'
-import { isAllowed as isIgnored } from '../../utils/allow-list.js'
+import { isAllowed } from '../../utils/allow-list.js'
 import {
 	parse_value,
 	walk,
@@ -88,14 +88,14 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				if (is_hash(node)) {
 					const hash = node.text
 					// The parser already guarantees HASH nodes are valid hex colors.
-					if (!isIgnored(hash, ignore)) {
+					if (!isAllowed(hash, ignore)) {
 						unique_colors.add(hash)
 					}
 				} else if (is_identifier(node)) {
 					const ident = node.text
 					// namedColors and colorKeywords both perform case-insensitive matching.
 					if (namedColors.has(ident) || colorKeywords.has(ident)) {
-						if (!isIgnored(ident, ignore)) {
+						if (!isAllowed(ident, ignore)) {
 							unique_colors.add(ident)
 						}
 					}
@@ -108,7 +108,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (colorFunctions.has(fn_name)) {
 						// Numeric-channel color functions (rgb, hsl, oklch, …).
 						// SKIP children — they are numbers, not color tokens.
-						if (!isIgnored(fn, ignore)) {
+						if (!isAllowed(fn, ignore)) {
 							unique_colors.add(fn)
 						}
 						return SKIP
@@ -119,7 +119,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (COLOR_COMPOSING_FUNCTIONS.has(fn_name_lower)) {
 						// Composing color functions (color-mix, light-dark, device-cmyk) take
 						// color values as arguments. SKIP children so they are not double-counted.
-						if (!isIgnored(fn, ignore)) {
+						if (!isAllowed(fn, ignore)) {
 							unique_colors.add(node.text)
 						}
 						return SKIP
@@ -131,7 +131,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 						// any fallback color values are still evaluated.
 						const first = node.first_child
 						if (first !== null && is_identifier(first) && color_custom_properties.has(first.text)) {
-							if (!isIgnored(fn, ignore)) {
+							if (!isAllowed(fn, ignore)) {
 								unique_colors.add(fn)
 							}
 						}

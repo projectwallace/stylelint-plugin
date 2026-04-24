@@ -58,7 +58,7 @@ The following patterns are _not_ considered problems:
 
 ## Optional secondary options
 
-### `allowList: [/regex/, "non-regex"]`
+### `ignore: [/regex/, "non-regex"]`
 
 Allow specific container names that are declared but never queried. Useful for container names intended to be queried in other stylesheets or by external tools.
 

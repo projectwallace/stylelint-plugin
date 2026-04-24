@@ -137,14 +137,14 @@ test('should error for each undeclared layer in a list', async () => {
 	expect(warnings.length).toBe(3)
 })
 
-test('should not error when an unused layer is in the allowlist (string)', async () => {
+test('should not error when an unused layer is in the ignore (string)', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
 				{
-					allowlist: ['utilities'],
+					ignore: ['utilities'],
 				},
 			],
 		},
@@ -164,14 +164,14 @@ test('should not error when an unused layer is in the allowlist (string)', async
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error when an unused layer matches the allowlist (RegExp)', async () => {
+test('should not error when an unused layer matches the ignore (RegExp)', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
 				{
-					allowlist: [/^vendor-/],
+					ignore: [/^vendor-/],
 				},
 			],
 		},
@@ -191,14 +191,14 @@ test('should not error when an unused layer matches the allowlist (RegExp)', asy
 	expect(warnings).toStrictEqual([])
 })
 
-test('should still error for layers not in the allowlist when allowlist is set', async () => {
+test('should still error for layers not in the ignore when ignore is set', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
 				{
-					allowlist: ['utilities'],
+					ignore: ['utilities'],
 				},
 			],
 		},

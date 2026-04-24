@@ -34,16 +34,16 @@ a {
 
 ## Options
 
-### `allowList: Array<string | RegExp>`
+### `ignore: Array<string | RegExp>`
 
 Allows specific shorthand properties to be used. Accepts exact strings or regular expressions.
 
 <!-- prettier-ignore -->
 ```json
-[true, { "allowList": ["background", "/^border-/"] }]
+[true, { "ignore": ["background", "/^border-/"] }]
 ```
 
-The following are _not_ considered violations when `allowList: ["background"]` is set:
+The following are _not_ considered violations when `ignore: ["background"]` is set:
 
 <!-- prettier-ignore -->
 ```css

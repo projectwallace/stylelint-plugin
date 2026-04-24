@@ -19,7 +19,7 @@ const meta = {
 
 interface SecondaryOptions {
 	allowFallback?: boolean
-	allowList?: Array<string | RegExp>
+	ignore?: Array<string | RegExp>
 	importFrom?: ImportFrom[]
 }
 
@@ -46,7 +46,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			if (declared_properties.has(usage.name)) continue
 			if (imported_properties?.has(usage.name)) continue
 			if (secondaryOptions?.allowFallback && usage.has_fallback) continue
-			if (secondaryOptions?.allowList && isAllowed(usage.name, secondaryOptions.allowList)) continue
+			if (secondaryOptions?.ignore && isAllowed(usage.name, secondaryOptions.ignore)) continue
 
 			utils.report({
 				result,

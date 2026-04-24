@@ -245,11 +245,11 @@ test('should not error on anonymous @container queries', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error when allowList string matches unused container name', async () => {
+test('should not error when ignore string matches unused container name', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: ['sidebar'] }],
+			[rule_name]: [true, { ignore: ['sidebar'] }],
 		},
 	}
 
@@ -264,11 +264,11 @@ test('should not error when allowList string matches unused container name', asy
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error when allowList RegExp matches unused container name', async () => {
+test('should not error when ignore RegExp matches unused container name', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: [/^side/] }],
+			[rule_name]: [true, { ignore: [/^side/] }],
 		},
 	}
 
@@ -283,11 +283,11 @@ test('should not error when allowList RegExp matches unused container name', asy
 	expect(warnings).toStrictEqual([])
 })
 
-test('should still error when allowList does not match the unused container name', async () => {
+test('should still error when ignore does not match the unused container name', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: ['header'] }],
+			[rule_name]: [true, { ignore: ['header'] }],
 		},
 	}
 

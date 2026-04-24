@@ -19,7 +19,7 @@ const meta = {
 }
 
 interface SecondaryOptions {
-	allowList?: Array<string | RegExp>
+	ignore?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
@@ -36,7 +36,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		root.walkDecls(/^--/, (decl) => {
 			const property = decl.prop
 
-			if (secondaryOptions?.allowList && isAllowed(property, secondaryOptions.allowList)) return
+			if (secondaryOptions?.ignore && isAllowed(property, secondaryOptions.ignore)) return
 
 			const parsed = parse_value(decl.value)
 

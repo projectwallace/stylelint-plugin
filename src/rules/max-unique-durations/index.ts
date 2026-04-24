@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import { isAllowed as isIgnored } from '../../utils/allow-list.js'
+import { isAllowed } from '../../utils/allow-list.js'
 import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
@@ -60,7 +60,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (child.type !== OPERATOR) {
 						let duration = child.text
 
-						if (!isIgnored(duration, ignore)) {
+						if (!isAllowed(duration, ignore)) {
 							unique_durations.add(duration)
 						}
 					}
@@ -69,7 +69,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				analyzeAnimation(parsed, function (item) {
 					if (item.type === 'duration') {
 						let duration = item.value.text
-						if (!isIgnored(duration, ignore)) {
+						if (!isAllowed(duration, ignore)) {
 							unique_durations.add(duration)
 						}
 					}
