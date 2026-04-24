@@ -129,6 +129,26 @@ test('should count margin: 0 0 as a reset', async () => {
 	expect(warnings).toHaveLength(1)
 })
 
+test('should count margin-inline: 0 0 as a reset', async () => {
+	const { warnings } = await lint(`a { margin-inline: 0 0; }`, 0)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should count padding-inline: 0 0 as a reset', async () => {
+	const { warnings } = await lint(`a { padding-inline: 0 0; }`, 0)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should count margin-block: 0 0 as a reset', async () => {
+	const { warnings } = await lint(`a { margin-block: 0 0; }`, 0)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should count padding-block: 0 0 as a reset', async () => {
+	const { warnings } = await lint(`a { padding-block: 0 0; }`, 0)
+	expect(warnings).toHaveLength(1)
+})
+
 test('should count all spacing properties as resets', async () => {
 	const css = [
 		'a { margin: 0; }',
@@ -136,9 +156,16 @@ test('should count all spacing properties as resets', async () => {
 		'c { margin-right: 0; }',
 		'd { margin-bottom: 0; }',
 		'e { margin-left: 0; }',
-		'f { padding: 0; }',
-		'g { padding-top: 0; }',
+		'f { margin-inline: 0; }',
+		'g { margin-block: 0; }',
+		'h { padding: 0; }',
+		'i { padding-top: 0; }',
+		'j { padding-right: 0; }',
+		'k { padding-bottom: 0; }',
+		'l { padding-left: 0; }',
+		'm { padding-inline: 0; }',
+		'n { padding-block: 0; }',
 	].join(' ')
-	const { warnings } = await lint(css, 6)
+	const { warnings } = await lint(css, 13)
 	expect(warnings).toHaveLength(1)
 })
