@@ -11,7 +11,7 @@
    - `index.ts` — the rule implementation
    - `index.test.ts` — tests for the rule
    - `README.md` — documentation (see [Rule README guidelines](#rule-readme-guidelines))
-2. Register the rule in `src/index.ts`
+2. Register the rule in `src/index.ts` and update `/src/index.test.ts` accordingly
 3. Consider adding the rule to one or more of the configuration presets in `src/configs/`
 4. Add the rule to the corresponding preset configuration rules list in `README.md`
 5. Use PostCSS API's as much as possible. Only if goals cannot be achieved reach for `@projectwallace/css-parser`

@@ -20,6 +20,7 @@ import max_unique_font_families from './rules/max-unique-font-families/index.js'
 import max_unique_font_sizes from './rules/max-unique-font-sizes/index.js'
 import max_unique_gradients from './rules/max-unique-gradients/index.js'
 import max_unique_line_heights from './rules/max-unique-line-heights/index.js'
+import max_unique_media_queries from './rules/max-unique-media-queries/index.js'
 import max_unique_units from './rules/max-unique-units/index.js'
 import min_declaration_uniqueness_ratio from './rules/min-declaration-uniqueness-ratio/index.js'
 import min_selector_uniqueness_ratio from './rules/min-selector-uniqueness-ratio/index.js'
@@ -61,6 +62,7 @@ const plugins: stylelint.Plugin[] = [
 	max_unique_font_sizes,
 	max_unique_gradients,
 	max_unique_line_heights,
+	max_unique_media_queries,
 	max_unique_units,
 	min_declaration_uniqueness_ratio,
 	min_selector_uniqueness_ratio,
