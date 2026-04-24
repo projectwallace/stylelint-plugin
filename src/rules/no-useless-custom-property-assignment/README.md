@@ -59,7 +59,7 @@ The following patterns are _not_ considered problems:
 
 ## Optional secondary options
 
-### `allowList: [/regex/, "non-regex"]`
+### `ignore: [/regex/, "non-regex"]`
 
 Allow specific custom properties to be exempt from this rule, by exact string or RegExp pattern.
 

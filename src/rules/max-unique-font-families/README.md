@@ -43,7 +43,7 @@ b { font: bold 16px Arial, sans-serif; }
 /* Both declarations share the same font-family value → only 1 unique entry */
 ```
 
-### `allowList` (optional)
+### `ignore` (optional)
 
 Type: `Array<string | RegExp>`
 
@@ -51,7 +51,7 @@ A list of font family values to exclude from the count. Each entry can be an exa
 
 Given:
 
-`[2, { "allowList": ["Arial, sans-serif"] }]`
+`[2, { "ignore": ["Arial, sans-serif"] }]`
 
 the following are _not_ considered violations:
 

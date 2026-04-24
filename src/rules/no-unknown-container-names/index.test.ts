@@ -226,11 +226,11 @@ test('should not error on @container with scroll-state query', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error on unknown name matched by allowList string', async () => {
+test('should not error on unknown name matched by ignore string', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: ['sidebar'] }],
+			[rule_name]: [true, { ignore: ['sidebar'] }],
 		},
 	}
 
@@ -245,11 +245,11 @@ test('should not error on unknown name matched by allowList string', async () =>
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error on unknown name matched by allowList RegExp', async () => {
+test('should not error on unknown name matched by ignore RegExp', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: [/^side/] }],
+			[rule_name]: [true, { ignore: [/^side/] }],
 		},
 	}
 
@@ -264,11 +264,11 @@ test('should not error on unknown name matched by allowList RegExp', async () =>
 	expect(warnings).toStrictEqual([])
 })
 
-test('should still error when allowList does not match the unknown container name', async () => {
+test('should still error when ignore does not match the unknown container name', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: ['header'] }],
+			[rule_name]: [true, { ignore: ['header'] }],
 		},
 	}
 

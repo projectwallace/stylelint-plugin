@@ -167,43 +167,43 @@ test('should not count font-family as a size', async () => {
 })
 
 // ---------------------------------------------------------------------------
-// allowList secondary option
+// ignore secondary option
 // ---------------------------------------------------------------------------
 
-test('should not count an exact string match in allowList', async () => {
+test('should not count an exact string match in ignore', async () => {
 	const { warnings, errored } = await lint(`a { font-size: 16px; } b { font-size: 24px; }`, 1, {
-		allowList: ['16px'],
+		ignore: ['16px'],
 	})
 	// 16px is ignored → only 24px counts → within limit
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not count values matching a RegExp in allowList', async () => {
+test('should not count values matching a RegExp in ignore', async () => {
 	const { warnings, errored } = await lint(
 		`a { font-size: 12px; } b { font-size: 16px; } c { font-size: 24px; }`,
 		1,
-		{ allowList: [/^(12px|16px)$/] },
+		{ ignore: [/^(12px|16px)$/] },
 	)
 	// 12px and 16px are ignored → only 24px counts → within limit
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not count allowListed values from font shorthand', async () => {
+test('should not count ignoreed values from font shorthand', async () => {
 	const { warnings, errored } = await lint(`a { font: 16px Arial; } b { font-size: 24px; }`, 1, {
-		allowList: ['16px'],
+		ignore: ['16px'],
 	})
 	// 16px (from font shorthand) is ignored → only 24px counts
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
-test('should error when non-allowListed values exceed the limit', async () => {
+test('should error when non-ignoreed values exceed the limit', async () => {
 	const { warnings, errored } = await lint(
 		`a { font-size: 12px; } b { font-size: 16px; } c { font-size: 24px; }`,
 		1,
-		{ allowList: ['12px'] },
+		{ ignore: ['12px'] },
 	)
 	// 12px ignored → 16px + 24px = 2 → exceeds limit of 1
 	expect(errored).toBe(true)

@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import { isAllowed as isIgnored } from '../../utils/allow-list.js'
+import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -31,10 +31,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			{
 				actual: secondaryOptions,
 				possible: {
-					ignore: [
-						String as unknown as (v: unknown) => boolean,
-						(v: unknown) => v instanceof RegExp,
-					],
+					ignore: ignoreOptionValidators,
 				},
 				optional: true,
 			},
@@ -52,7 +49,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			const before = unique_shadows.size
 			const value = declaration.value
 
-			if (!isIgnored(value, ignore)) {
+			if (!isAllowed(value, ignore)) {
 				unique_shadows.add(value)
 			}
 

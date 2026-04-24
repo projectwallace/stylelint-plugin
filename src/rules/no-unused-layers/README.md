@@ -48,7 +48,7 @@ The following patterns are _not_ considered problems:
 
 ## Optional secondary options
 
-### `allowlist: [/regex/, "non-regex"]`
+### `ignore: [/regex/, "non-regex"]`
 
 Ignore specific layer names that are declared but not defined. This is useful for layers that are intentionally defined in external stylesheets (e.g. third-party resets).
 

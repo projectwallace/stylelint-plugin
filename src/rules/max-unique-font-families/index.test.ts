@@ -182,47 +182,47 @@ test('should not count font-size as a family', async () => {
 })
 
 // ---------------------------------------------------------------------------
-// allowList secondary option
+// ignore secondary option
 // ---------------------------------------------------------------------------
 
-test('should not count an exact string match in allowList', async () => {
+test('should not count an exact string match in ignore', async () => {
 	const { warnings, errored } = await lint(
 		`a { font-family: Arial; } b { font-family: Georgia; }`,
 		1,
-		{ allowList: ['Arial'] },
+		{ ignore: ['Arial'] },
 	)
 	// Arial is ignored → only Georgia counts → within limit
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not count values matching a RegExp in allowList', async () => {
+test('should not count values matching a RegExp in ignore', async () => {
 	const { warnings, errored } = await lint(
 		`a { font-family: Arial; } b { font-family: Georgia; } c { font-family: monospace; }`,
 		1,
-		{ allowList: [/^(Arial|Georgia)$/] },
+		{ ignore: [/^(Arial|Georgia)$/] },
 	)
 	// Arial and Georgia are ignored → only monospace counts → within limit
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not count allowListed values from font shorthand', async () => {
+test('should not count ignoreed values from font shorthand', async () => {
 	const { warnings, errored } = await lint(
 		`a { font: 16px Arial; } b { font-family: Georgia; }`,
 		1,
-		{ allowList: ['Arial'] },
+		{ ignore: ['Arial'] },
 	)
 	// Arial (from font shorthand) is ignored → only Georgia counts
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
-test('should still count non-allowListed values', async () => {
+test('should still count non-ignoreed values', async () => {
 	const { warnings, errored } = await lint(
 		`a { font-family: Arial; } b { font-family: Georgia; }`,
 		1,
-		{ allowList: ['Arial'] },
+		{ ignore: ['Arial'] },
 	)
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
@@ -251,14 +251,14 @@ test('should not count font-family inside @font-face but still count outside', a
 })
 
 // ---------------------------------------------------------------------------
-// allowList secondary option (continued)
+// ignore secondary option (continued)
 // ---------------------------------------------------------------------------
 
-test('should error when non-allowListed values exceed the limit', async () => {
+test('should error when non-ignoreed values exceed the limit', async () => {
 	const { warnings, errored } = await lint(
 		`a { font-family: Arial; } b { font-family: Georgia; } c { font-family: monospace; }`,
 		1,
-		{ allowList: ['Arial'] },
+		{ ignore: ['Arial'] },
 	)
 	// Arial ignored → Georgia + monospace = 2 → exceeds limit of 1
 	expect(errored).toBe(true)

@@ -45,7 +45,7 @@ a {
 
 ## Optional secondary options
 
-### `ignoreProperties: [/regex/, "non-regex"]`
+### `ignore: [/regex/, "non-regex"]`
 
 Ignore specific unused custom properties.
 

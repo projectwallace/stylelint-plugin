@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
-import { isAllowed } from '../../utils/allow-list.js'
+import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -18,7 +18,7 @@ const meta = {
 }
 
 interface SecondaryOptions {
-	allowList?: Array<string | RegExp>
+	ignore?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
@@ -33,10 +33,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			{
 				actual: secondaryOptions,
 				possible: {
-					allowList: [
-						String as unknown as (v: unknown) => boolean,
-						(v: unknown) => v instanceof RegExp,
-					],
+					ignore: ignoreOptionValidators,
 				},
 				optional: true,
 			},
@@ -46,13 +43,13 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			return
 		}
 
-		const allowList = secondaryOptions?.allowList ?? []
+		const ignore = secondaryOptions?.ignore ?? []
 		const unique_sizes = new Set<string>()
 		const violating_declarations: Declaration[] = []
 
 		root.walkDecls('font-size', (declaration) => {
 			const before = unique_sizes.size
-			if (!isAllowed(declaration.value, allowList)) {
+			if (!isAllowed(declaration.value, ignore)) {
 				unique_sizes.add(declaration.value)
 			}
 			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {
@@ -64,7 +61,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			const before = unique_sizes.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})
-			if (destructured?.font_size && !isAllowed(destructured.font_size, allowList)) {
+			if (destructured?.font_size && !isAllowed(destructured.font_size, ignore)) {
 				unique_sizes.add(destructured.font_size)
 			}
 			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {

@@ -208,11 +208,11 @@ test('should not error on undeclared var() with empty fallback when allowFallbac
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error on undeclared property matched by allowList string', async () => {
+test('should not error on undeclared property matched by ignore string', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: ['--external-color'] }],
+			[rule_name]: [true, { ignore: ['--external-color'] }],
 		},
 	}
 
@@ -227,11 +227,11 @@ test('should not error on undeclared property matched by allowList string', asyn
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error on undeclared property matched by allowList RegExp', async () => {
+test('should not error on undeclared property matched by ignore RegExp', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: [/^--external-/] }],
+			[rule_name]: [true, { ignore: [/^--external-/] }],
 		},
 	}
 
@@ -246,11 +246,11 @@ test('should not error on undeclared property matched by allowList RegExp', asyn
 	expect(warnings).toStrictEqual([])
 })
 
-test('should still error on undeclared property not matched by allowList', async () => {
+test('should still error on undeclared property not matched by ignore', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: ['--external-color'] }],
+			[rule_name]: [true, { ignore: ['--external-color'] }],
 		},
 	}
 
@@ -268,11 +268,11 @@ test('should still error on undeclared property not matched by allowList', async
 	)
 })
 
-test('ignores allowList when entries have incorrect types', async () => {
+test('ignores ignore when entries have incorrect types', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
-			[rule_name]: [true, { allowList: [false] }],
+			[rule_name]: [true, { ignore: [false] }],
 		},
 	}
 

@@ -122,14 +122,14 @@ test('should error on a single unused custom property', async () => {
 	expect(column).toBe(5)
 })
 
-test('should not error on when an unused custom property is allowed in options.ignoreProperties (string)', async () => {
+test('should not error on when an unused custom property is allowed in options.ignore (string)', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
 				{
-					ignoreProperties: ['--ignored'],
+					ignore: ['--ignored'],
 				},
 			],
 		},
@@ -146,14 +146,14 @@ test('should not error on when an unused custom property is allowed in options.i
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error on when an unused custom property is allowed in options.ignoreProperties (RegExp)', async () => {
+test('should not error on when an unused custom property is allowed in options.ignore (RegExp)', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
 				{
-					ignoreProperties: [/regex/],
+					ignore: [/regex/],
 				},
 			],
 		},
@@ -222,14 +222,14 @@ test('should error when a custom property declared via @property is never used',
 	)
 })
 
-test('ignores options when options.ignoreProperties types are incorrect', async () => {
+test('ignores options when options.ignore types are incorrect', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
 			[rule_name]: [
 				true,
 				{
-					ignoreProperties: [false],
+					ignore: [false],
 				},
 			],
 		},

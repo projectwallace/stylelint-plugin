@@ -20,7 +20,7 @@ const meta = {
 }
 
 interface SecondaryOptions {
-	allowList?: Array<string | RegExp>
+	ignore?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
@@ -40,7 +40,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		for (const [name, node] of declared_names) {
 			if (used_names.has(name)) continue
 
-			if (secondaryOptions?.allowList && isAllowed(name, secondaryOptions.allowList)) continue
+			if (secondaryOptions?.ignore && isAllowed(name, secondaryOptions.ignore)) continue
 
 			utils.report({
 				result,

@@ -47,7 +47,7 @@ a {
 
 ## Optional secondary options
 
-### `allowList: [/regex/, "non-regex"]`
+### `ignore: [/regex/, "non-regex"]`
 
 Allow specific undeclared custom properties by exact string or RegExp pattern. Useful for custom properties defined externally (e.g. design tokens, theming systems) that are not declared in the stylesheet being linted.
 

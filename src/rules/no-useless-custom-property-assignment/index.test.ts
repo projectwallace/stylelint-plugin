@@ -92,7 +92,7 @@ test('should only report once even if the same self-reference appears multiple t
 	expect(warnings.length).toBe(1)
 })
 
-test('should not error when allowList matches the property as a string', async () => {
+test('should not error when ignore matches the property as a string', async () => {
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -100,7 +100,7 @@ test('should not error when allowList matches the property as a string', async (
 		config: {
 			plugins: [plugin],
 			rules: {
-				[rule_name]: [true, { allowList: ['--color'] }],
+				[rule_name]: [true, { ignore: ['--color'] }],
 			},
 		},
 	})
@@ -109,7 +109,7 @@ test('should not error when allowList matches the property as a string', async (
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error when allowList matches the property as a RegExp', async () => {
+test('should not error when ignore matches the property as a RegExp', async () => {
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -117,7 +117,7 @@ test('should not error when allowList matches the property as a RegExp', async (
 		config: {
 			plugins: [plugin],
 			rules: {
-				[rule_name]: [true, { allowList: [/^--color-/] }],
+				[rule_name]: [true, { ignore: [/^--color-/] }],
 			},
 		},
 	})
@@ -126,7 +126,7 @@ test('should not error when allowList matches the property as a RegExp', async (
 	expect(warnings).toStrictEqual([])
 })
 
-test('should still error on self-assignment not matched by allowList', async () => {
+test('should still error on self-assignment not matched by ignore', async () => {
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -134,7 +134,7 @@ test('should still error on self-assignment not matched by allowList', async () 
 		config: {
 			plugins: [plugin],
 			rules: {
-				[rule_name]: [true, { allowList: ['--color'] }],
+				[rule_name]: [true, { ignore: ['--color'] }],
 			},
 		},
 	})

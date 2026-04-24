@@ -16,7 +16,7 @@ const meta = {
 }
 
 interface SecondaryOptions {
-	allowList?: Array<string | RegExp>
+	ignore?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) => {
@@ -33,7 +33,7 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 		root.walkDecls((declaration) => {
 			const property = declaration.prop.toLowerCase()
 			if (!shorthand_properties.has(property)) return
-			if (secondaryOptions?.allowList && isAllowed(property, secondaryOptions.allowList)) return
+			if (secondaryOptions?.ignore && isAllowed(property, secondaryOptions.ignore)) return
 
 			utils.report({
 				message: messages.rejected(declaration.prop),

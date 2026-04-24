@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
-import { isAllowed } from '../../utils/allow-list.js'
+import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -18,7 +18,7 @@ const meta = {
 }
 
 interface SecondaryOptions {
-	allowList?: Array<string | RegExp>
+	ignore?: Array<string | RegExp>
 }
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
@@ -33,10 +33,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			{
 				actual: secondaryOptions,
 				possible: {
-					allowList: [
-						String as unknown as (v: unknown) => boolean,
-						(v: unknown) => v instanceof RegExp,
-					],
+					ignore: ignoreOptionValidators,
 				},
 				optional: true,
 			},
@@ -46,7 +43,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			return
 		}
 
-		const allowList = secondaryOptions?.allowList ?? []
+		const ignore = secondaryOptions?.ignore ?? []
 		const unique_families = new Set<string>()
 		const violating_declarations: Declaration[] = []
 
@@ -58,7 +55,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				return
 			}
 			const before = unique_families.size
-			if (!isAllowed(declaration.value, allowList)) {
+			if (!isAllowed(declaration.value, ignore)) {
 				unique_families.add(declaration.value)
 			}
 			if (unique_families.size > before && unique_families.size > primaryOption) {
@@ -70,7 +67,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			const before = unique_families.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})
-			if (destructured?.font_family && !isAllowed(destructured.font_family, allowList)) {
+			if (destructured?.font_family && !isAllowed(destructured.font_family, ignore)) {
 				unique_families.add(destructured.font_family)
 			}
 			if (unique_families.size > before && unique_families.size > primaryOption) {

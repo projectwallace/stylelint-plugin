@@ -43,7 +43,7 @@ b { font: bold 16px Arial, sans-serif; }
 /* Both declarations share the same font-size value → only 1 unique entry */
 ```
 
-### `allowList` (optional)
+### `ignore` (optional)
 
 Type: `Array<string | RegExp>`
 
@@ -51,7 +51,7 @@ A list of font size values to exclude from the count. Each entry can be an exact
 
 Given:
 
-`[2, { "allowList": ["16px"] }]`
+`[2, { "ignore": ["16px"] }]`
 
 the following are _not_ considered violations:
 
