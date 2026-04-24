@@ -9,6 +9,7 @@ const rules = [
 	'projectwallace/max-important-ratio',
 	'projectwallace/max-selector-complexity',
 	'projectwallace/max-selectors-per-rule',
+	'projectwallace/max-unique-media-queries',
 	'projectwallace/max-unique-units',
 	'projectwallace/min-declaration-uniqueness-ratio',
 	'projectwallace/min-selector-uniqueness-ratio',

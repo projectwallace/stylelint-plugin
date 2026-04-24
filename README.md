@@ -79,6 +79,7 @@ Rules that encourage the use of design tokens in your CSS.
 | [max-unique-gradients](src/rules/max-unique-gradients/README.md)                     | Limit the number of unique gradient values used across the stylesheet            |
 | [max-unique-font-families](src/rules/max-unique-font-families/README.md)             | Limit the number of unique font families used across the stylesheet              |
 | [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                   | Limit the number of unique font sizes used across the stylesheet                 |
+| [max-unique-media-queries](src/rules/max-unique-media-queries/README.md)             | Limit the number of unique media queries used across the stylesheet              |
 
 ### Correctness
 
