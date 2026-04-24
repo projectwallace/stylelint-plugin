@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { namedColors, colorFunctions, colorKeywords } from '@projectwallace/css-analyzer/values'
-import { isAllowed } from '../../utils/allow-list.js'
+import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
 import {
 	parse_value,
 	walk,
@@ -55,10 +55,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			{
 				actual: secondaryOptions,
 				possible: {
-					ignore: [
-						String as unknown as (v: unknown) => boolean,
-						(v: unknown) => v instanceof RegExp,
-					],
+					ignore: ignoreOptionValidators,
 				},
 				optional: true,
 			},

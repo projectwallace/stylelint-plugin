@@ -1,7 +1,3 @@
-/**
- * Check if a given value matches any pattern in an allowList.
- * Each pattern can be an exact string or a RegExp.
- */
 export function isAllowed(value: string, allowList: Array<string | RegExp>): boolean {
 	return allowList.some(
 		(pattern) =>
@@ -9,3 +5,8 @@ export function isAllowed(value: string, allowList: Array<string | RegExp>): boo
 			(pattern instanceof RegExp && pattern.test(value)),
 	)
 }
+
+export const ignoreOptionValidators: Array<(v: unknown) => boolean> = [
+	String as unknown as (v: unknown) => boolean,
+	(v: unknown) => v instanceof RegExp,
+]

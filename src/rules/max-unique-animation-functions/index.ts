@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import { isAllowed } from '../../utils/allow-list.js'
+import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
 import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
@@ -34,10 +34,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			{
 				actual: secondaryOptions,
 				possible: {
-					ignore: [
-						String as unknown as (v: unknown) => boolean,
-						(v: unknown) => v instanceof RegExp,
-					],
+					ignore: ignoreOptionValidators,
 				},
 				optional: true,
 			},
