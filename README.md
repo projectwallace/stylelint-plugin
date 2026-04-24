@@ -16,35 +16,15 @@ npm install --save-dev @projectwallace/stylelint-plugin
 
 The easiest way to get started is by extending one of the preset configs:
 
-**`recommended`** — enables all rules with sensible defaults:
+- **`recommended`** — enables all rules with sensible defaults
+- **`design-tokens`** — enables rules that encourage the use of design tokens in your CSS
+- **`performance`** — enables rules that affect file size and loading performance
+- **`maintainability`** — enables rules that limit complexity and enforce conventions to keep CSS easy to reason about and manage over time
+- **`correctness`** - enables rules to help prevent errors
 
 ```json
 {
-	"extends": ["@projectwallace/stylelint-plugin/configs/recommended"]
-}
-```
-
-**`performance`** — enables only the rules that affect file size and loading performance:
-
-```json
-{
-	"extends": ["@projectwallace/stylelint-plugin/configs/performance"]
-}
-```
-
-**`maintainability`** — enables rules that limit complexity and enforce conventions to keep CSS easy to reason about and manage over time:
-
-```json
-{
-	"extends": ["@projectwallace/stylelint-plugin/configs/maintainability"]
-}
-```
-
-**`design-tokens`** — enables rules that encourage the use of design tokens in your CSS:
-
-```json
-{
-	"extends": ["@projectwallace/stylelint-plugin/configs/design-tokens"]
+  "extends": ["@projectwallace/stylelint-plugin/configs/recommended"]
 }
 ```
 
@@ -54,45 +34,45 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 
 ```json
 {
-	"plugins": ["@projectwallace/stylelint-plugin"],
-	"rules": {
-		"projectwallace/max-average-declarations-per-rule": 5,
-		"projectwallace/max-average-selector-complexity": 2,
-		"projectwallace/max-average-selectors-per-rule": 2,
-		"projectwallace/max-average-specificity": [0, 2.5, 1],
-		"projectwallace/max-comment-size": 2500,
-		"projectwallace/max-embedded-content-size": 10000,
-		"projectwallace/max-file-size": 200000,
-		"projectwallace/max-important-ratio": 1,
-		"projectwallace/max-declarations-per-rule": 15,
-		"projectwallace/max-lines-of-code": 200,
-		"projectwallace/max-selector-complexity": 5,
-		"projectwallace/max-selectors-per-rule": 10,
-		"projectwallace/max-unique-animation-functions": 4,
-		"projectwallace/max-unique-colors": 5,
-		"projectwallace/max-unique-durations": 8,
-		"projectwallace/max-unique-box-shadows": 3,
-		"projectwallace/max-unique-gradients": 5,
-		"projectwallace/max-unique-font-families": 4,
-		"projectwallace/max-unique-font-sizes": 16,
-		"projectwallace/max-unique-units": 5,
-		"projectwallace/min-declaration-uniqueness-ratio": 0.5,
-		"projectwallace/min-selector-uniqueness-ratio": 0.66,
-		"projectwallace/no-anonymous-layers": true,
-		"projectwallace/no-duplicate-data-urls": true,
-		"projectwallace/no-property-browserhacks": true,
-		"projectwallace/no-static-container-query": true,
-		"projectwallace/no-static-media-query": true,
-		"projectwallace/no-undeclared-container-names": true,
-		"projectwallace/no-unknown-custom-property": true,
-		"projectwallace/no-unreachable-media-conditions": true,
-		"projectwallace/no-unused-container-names": true,
-		"projectwallace/no-unused-custom-properties": true,
-		"projectwallace/no-unused-layers": true,
-		"projectwallace/no-invalid-z-index": true,
-		"projectwallace/no-property-shorthand": true,
-		"projectwallace/no-useless-custom-property-assignment": true
-	}
+  "plugins": ["@projectwallace/stylelint-plugin"],
+  "rules": {
+    "projectwallace/max-average-declarations-per-rule": 5,
+    "projectwallace/max-average-selector-complexity": 2,
+    "projectwallace/max-average-selectors-per-rule": 2,
+    "projectwallace/max-average-specificity": [0, 2.5, 1],
+    "projectwallace/max-comment-size": 2500,
+    "projectwallace/max-embedded-content-size": 10000,
+    "projectwallace/max-file-size": 200000,
+    "projectwallace/max-important-ratio": 1,
+    "projectwallace/max-declarations-per-rule": 15,
+    "projectwallace/max-lines-of-code": 200,
+    "projectwallace/max-selector-complexity": 5,
+    "projectwallace/max-selectors-per-rule": 10,
+    "projectwallace/max-unique-animation-functions": 4,
+    "projectwallace/max-unique-colors": 5,
+    "projectwallace/max-unique-durations": 8,
+    "projectwallace/max-unique-box-shadows": 3,
+    "projectwallace/max-unique-gradients": 5,
+    "projectwallace/max-unique-font-families": 4,
+    "projectwallace/max-unique-font-sizes": 16,
+    "projectwallace/max-unique-units": 5,
+    "projectwallace/min-declaration-uniqueness-ratio": 0.5,
+    "projectwallace/min-selector-uniqueness-ratio": 0.66,
+    "projectwallace/no-anonymous-layers": true,
+    "projectwallace/no-duplicate-data-urls": true,
+    "projectwallace/no-property-browserhacks": true,
+    "projectwallace/no-static-container-query": true,
+    "projectwallace/no-static-media-query": true,
+    "projectwallace/no-undeclared-container-names": true,
+    "projectwallace/no-unknown-custom-property": true,
+    "projectwallace/no-unreachable-media-conditions": true,
+    "projectwallace/no-unused-container-names": true,
+    "projectwallace/no-unused-custom-properties": true,
+    "projectwallace/no-unused-layers": true,
+    "projectwallace/no-invalid-z-index": true,
+    "projectwallace/no-property-shorthand": true,
+    "projectwallace/no-useless-custom-property-assignment": true
+  }
 }
 ```
 
