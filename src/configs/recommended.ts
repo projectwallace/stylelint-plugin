@@ -37,5 +37,6 @@ export default {
 		'projectwallace/max-average-specificity': [0.02, 2.5, 1],
 		'projectwallace/max-selectors-per-rule': 10,
 		'projectwallace/max-declarations-per-rule': 15,
+		'projectwallace/max-spacing-resets': 16,
 	},
 }

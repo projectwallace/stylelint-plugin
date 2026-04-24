@@ -15,6 +15,7 @@ const rules = [
 	'projectwallace/no-anonymous-layers',
 	'projectwallace/no-property-browserhacks',
 	'projectwallace/no-property-shorthand',
+	'projectwallace/max-spacing-resets',
 ] as const
 
 export default {

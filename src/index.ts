@@ -35,6 +35,7 @@ import max_unique_gradients from './rules/max-unique-gradients/index.js'
 import max_unique_box_shadows from './rules/max-unique-box-shadows/index.js'
 import max_unique_durations from './rules/max-unique-durations/index.js'
 import max_unique_animation_functions from './rules/max-unique-animation-functions/index.js'
+import max_spacing_resets from './rules/max-spacing-resets/index.js'
 
 const plugins: stylelint.Plugin[] = [
 	max_selector_complexity,
@@ -73,6 +74,7 @@ const plugins: stylelint.Plugin[] = [
 	max_unique_box_shadows,
 	max_unique_durations,
 	max_unique_animation_functions,
+	max_spacing_resets,
 ]
 
 export default plugins

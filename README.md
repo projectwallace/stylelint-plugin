@@ -111,6 +111,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [max-important-ratio](src/rules/max-important-ratio/README.md)                             | Limit the ratio of `!important` declarations relative to all declarations |
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                     | Prevent selector complexity from going over a predefined maximum          |
 | [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                       | Limit the number of selectors in a single rule                            |
+| [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet      |
 | [max-unique-units](src/rules/max-unique-units/README.md)                                   | Limit the number of unique CSS units used across the stylesheet           |
 | [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)   | Enforce a minimum ratio of unique declarations across the stylesheet      |
 | [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)         | Enforce a minimum ratio of unique selectors across the stylesheet         |
