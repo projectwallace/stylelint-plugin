@@ -53,6 +53,46 @@ if (!isAllowed(value, ignore)) {
 }
 ```
 
+## Testing conventions
+
+**`lint()` helper** — rules with a primary option use a shared async helper so each test only passes the CSS and options:
+
+```ts
+async function lint(code: string, primaryOption: unknown, secondaryOptions?: unknown) {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]:
+				secondaryOptions !== undefined ? [primaryOption, secondaryOptions] : primaryOption,
+		},
+	}
+	const {
+		results: [result],
+	} = await stylelint.lint({ code, config })
+	return result
+}
+```
+
+**Section headers** — group tests with 75-dash divider comments:
+
+```ts
+// ---------------------------------------------------------------------------
+// No violation
+// ---------------------------------------------------------------------------
+```
+
+**Test naming** — use the following prefixes consistently:
+
+- `should not run when …` — for invalid/disabled config (option validation)
+- `should not error when …` — for valid CSS that passes the rule
+- `should error when …` — for CSS that triggers a violation
+
+**Assertions** — always check both `errored` and `warnings` together. Use `toStrictEqual([])` for empty warnings.
+
+**`ignore` option tests** — whenever a rule supports the `ignore` secondary option, cover both a plain string match and a `RegExp` pattern in the tests.
+
+**`test.each`** — use `test.each([])` instead of individual `test()` calls when testing multiple similar inputs (e.g. a list of CSS keywords or property values). This keeps test files concise.
+
 ## Adding a new config
 
 1. Create a new file under `src/configs/<config-name>.ts`

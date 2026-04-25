@@ -212,3 +212,26 @@ test('should support RegExp patterns in ignore', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// CSS keywords
+// ---------------------------------------------------------------------------
+
+test.each(['none', 'inherit', 'initial', 'unset', 'revert', 'revert-layer'])(
+	'should not count %s as a unique box shadow',
+	async (keyword) => {
+		const { warnings, errored } = await lint(`a { box-shadow: ${keyword}; }`, 1)
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test('should count design token shadows while ignoring keywords mixed in', async () => {
+	const { warnings, errored } = await lint(
+		`a { box-shadow: 0 2px 4px red; } b { box-shadow: none; } c { box-shadow: 0 4px 8px blue; }`,
+		1,
+	)
+	// none is a keyword and is not counted → 2 unique shadows → exceeds limit of 1
+	expect(errored).toBe(true)
+	expect(warnings[0].text).toContain('Found 2 unique box shadows')
+})

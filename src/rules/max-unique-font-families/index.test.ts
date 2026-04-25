@@ -264,3 +264,26 @@ test('should error when non-ignoreed values exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique font families')
 })
+
+// ---------------------------------------------------------------------------
+// CSS keywords
+// ---------------------------------------------------------------------------
+
+test.each(['inherit', 'initial', 'unset', 'revert', 'revert-layer'])(
+	'should not count %s as a unique font family',
+	async (keyword) => {
+		const { warnings, errored } = await lint(`a { font-family: ${keyword}; }`, 0)
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test('should count design token families while ignoring keywords mixed in', async () => {
+	const { warnings, errored } = await lint(
+		`a { font-family: Arial; } b { font-family: inherit; } c { font-family: Georgia; }`,
+		1,
+	)
+	// inherit is a keyword and is not counted → Arial + Georgia = 2 → exceeds limit of 1
+	expect(errored).toBe(true)
+	expect(warnings[0].text).toContain('Found 2 unique font families')
+})

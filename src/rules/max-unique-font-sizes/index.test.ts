@@ -209,3 +209,26 @@ test('should error when non-ignoreed values exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique font sizes')
 })
+
+// ---------------------------------------------------------------------------
+// CSS keywords
+// ---------------------------------------------------------------------------
+
+test.each(['inherit', 'initial', 'unset', 'revert', 'revert-layer', 'auto'])(
+	'should not count %s as a unique font size',
+	async (keyword) => {
+		const { warnings, errored } = await lint(`a { font-size: ${keyword}; }`, 0)
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test('should count design token sizes while ignoring keywords mixed in', async () => {
+	const { warnings, errored } = await lint(
+		`a { font-size: 16px; } b { font-size: inherit; } c { font-size: 24px; }`,
+		1,
+	)
+	// inherit is a keyword and is not counted → 16px + 24px = 2 → exceeds limit of 1
+	expect(errored).toBe(true)
+	expect(warnings[0].text).toContain('Found 2 unique font sizes')
+})

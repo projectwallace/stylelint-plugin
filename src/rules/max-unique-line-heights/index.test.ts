@@ -204,3 +204,26 @@ test('should error when non-ignored values exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Found 2 unique line heights')
 })
+
+// ---------------------------------------------------------------------------
+// CSS keywords
+// ---------------------------------------------------------------------------
+
+test.each(['inherit', 'initial', 'unset', 'revert', 'revert-layer'])(
+	'should not count %s as a unique line height',
+	async (keyword) => {
+		const { warnings, errored } = await lint(`a { line-height: ${keyword}; }`, 0)
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test('should count design token heights while ignoring keywords mixed in', async () => {
+	const { warnings, errored } = await lint(
+		`a { line-height: 1.5; } b { line-height: inherit; } c { line-height: 2; }`,
+		1,
+	)
+	// inherit is a keyword and is not counted → 1.5 + 2 = 2 → exceeds limit of 1
+	expect(errored).toBe(true)
+	expect(warnings[0].text).toContain('Found 2 unique line heights')
+})

@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
+import { keywords } from '@projectwallace/css-analyzer/values'
 import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
@@ -49,7 +50,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			const before = unique_shadows.size
 			const value = declaration.value
 
-			if (!isAllowed(value, ignore)) {
+			if (!keywords.has(value) && !isAllowed(value, ignore)) {
 				unique_shadows.add(value)
 			}
 

@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
+import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
 import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
@@ -49,7 +49,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		root.walkDecls('font-size', (declaration) => {
 			const before = unique_sizes.size
-			if (!isAllowed(declaration.value, ignore)) {
+			if (!keywords.has(declaration.value) && !isAllowed(declaration.value, ignore)) {
 				unique_sizes.add(declaration.value)
 			}
 			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {
