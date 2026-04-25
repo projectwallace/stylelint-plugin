@@ -4,6 +4,7 @@ const rules = [
 	'projectwallace/max-lines-of-code',
 	'projectwallace/no-unused-layers',
 	'projectwallace/no-duplicate-data-urls',
+	'projectwallace/no-empty-rules',
 	'projectwallace/max-file-size',
 	'projectwallace/max-embedded-content-size',
 ] as const
