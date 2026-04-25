@@ -237,3 +237,26 @@ test('should support RegExp patterns in ignore', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// CSS keywords
+// ---------------------------------------------------------------------------
+
+test.each(['inherit', 'initial', 'unset', 'revert', 'revert-layer'])(
+	'should not count %s as a unique duration',
+	async (keyword) => {
+		const { warnings, errored } = await lint(`a { animation-duration: ${keyword}; }`, 1)
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test('should count design token durations while ignoring keywords mixed in', async () => {
+	const { warnings, errored } = await lint(
+		`a { animation-duration: 1s; } b { animation-duration: inherit; } c { animation-duration: 2s; }`,
+		1,
+	)
+	// inherit is a keyword and is not counted → 1s + 2s = 2 → exceeds limit of 1
+	expect(errored).toBe(true)
+	expect(warnings[0].text).toContain('Found 2 unique durations')
+})

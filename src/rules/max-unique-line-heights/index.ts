@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
+import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
 import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
 
 const { createPlugin, utils } = stylelint
@@ -49,7 +49,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		root.walkDecls('line-height', (declaration) => {
 			const before = unique_heights.size
-			if (!isAllowed(declaration.value, ignore)) {
+			if (!keywords.has(declaration.value) && !isAllowed(declaration.value, ignore)) {
 				unique_heights.add(declaration.value)
 			}
 			if (unique_heights.size > before && unique_heights.size > primaryOption) {
