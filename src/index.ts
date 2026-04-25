@@ -27,6 +27,7 @@ import min_declaration_uniqueness_ratio from './rules/min-declaration-uniqueness
 import min_selector_uniqueness_ratio from './rules/min-selector-uniqueness-ratio/index.js'
 import no_anonymous_layers from './rules/no-anonymous-layers/index.js'
 import no_duplicate_data_urls from './rules/no-duplicate-data-urls/index.js'
+import no_empty_rules from './rules/no-empty-rules/index.js'
 import no_invalid_z_index from './rules/no-invalid-z-index/index.js'
 import no_property_browserhacks from './rules/no-property-browserhacks/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
@@ -70,6 +71,7 @@ const plugins: stylelint.Plugin[] = [
 	min_selector_uniqueness_ratio,
 	no_anonymous_layers,
 	no_duplicate_data_urls,
+	no_empty_rules,
 	no_invalid_z_index,
 	no_property_browserhacks,
 	no_property_shorthand,

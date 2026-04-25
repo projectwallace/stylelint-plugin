@@ -5,6 +5,7 @@ const rules = [
 	'projectwallace/no-unknown-container-names',
 	'projectwallace/no-unknown-custom-property',
 	'projectwallace/no-unreachable-media-conditions',
+	'projectwallace/no-empty-rules',
 	'projectwallace/no-useless-custom-property-assignment',
 	'projectwallace/no-unused-custom-properties',
 	'projectwallace/no-unused-container-names',
