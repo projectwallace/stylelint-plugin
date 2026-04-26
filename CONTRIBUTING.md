@@ -28,7 +28,7 @@
 
 Every rule's `README.md` must follow this structure exactly:
 
-```md
+````md
 # Rule name
 
 One-sentence description.
@@ -38,7 +38,7 @@ One-sentence description.
 selector or declaration {}
 /*  ↑
 *   what this arrow points at */
-```
+````
 
 One paragraph explaining what is measured and why it matters.
 
@@ -63,7 +63,8 @@ The following patterns are _not_ considered violations:
 ```css
 /* passing CSS */
 ```
-```
+
+````
 
 Rules:
 - Wrap all CSS blocks with `<!-- prettier-ignore -->` to prevent reformatting
@@ -87,7 +88,7 @@ import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
   possible: { ignore: ignoreOptionValidators },
   optional: true,
 }
-```
+````
 
 **Checking** — import `isAllowed` from the same utility and call it with the value and the option:
 
