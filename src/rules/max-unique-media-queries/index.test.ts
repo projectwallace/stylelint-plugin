@@ -34,8 +34,9 @@ test('should error when 0 is configured and any media query is used', async () =
 	const { warnings, errored } = await lint(`@media (max-width: 768px) {}`, 0)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toContain('Found 1 unique media queries')
-	expect(warnings[0].text).toContain('exceeds the maximum of 0')
+	expect(warnings[0].text).toBe(
+		'Found 1 unique media queries ((max-width: 768px)) which exceeds the maximum of 0 (projectwallace/max-unique-media-queries)',
+	)
 })
 
 test('should not error when 0 is configured and no media query is used', async () => {
@@ -96,8 +97,9 @@ test('should error when unique queries exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique media queries')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toBe(
+		'Found 3 unique media queries ((max-width: 768px), (min-width: 1024px), (min-width: 1440px)) which exceeds the maximum of 2 (projectwallace/max-unique-media-queries)',
+	)
 })
 
 test('should error at the at-rule level', async () => {
@@ -118,7 +120,9 @@ test('should treat different query strings as different unique entries', async (
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique media queries')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique media queries ((max-width: 768px), screen and (max-width: 768px)) which exceeds the maximum of 1 (projectwallace/max-unique-media-queries)',
+	)
 })
 
 // ---------------------------------------------------------------------------
@@ -152,5 +156,7 @@ test('should error when non-ignored values exceed the limit', async () => {
 		{ ignore: ['(max-width: 768px)'] },
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique media queries')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique media queries ((min-width: 1024px), (min-width: 1440px)) which exceeds the maximum of 1 (projectwallace/max-unique-media-queries)',
+	)
 })

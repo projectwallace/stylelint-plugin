@@ -142,7 +142,9 @@ test('should error when average specificity exceeds the limit', async () => {
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('greater than the allowed')
+	expect(warnings[0].text).toBe(
+		'Average specificity is [0, 0, 1] which is greater than the allowed [0, 0, 0] (projectwallace/max-average-specificity)',
+	)
 })
 
 test('should error when average specificity with ids exceeds the limit', async () => {

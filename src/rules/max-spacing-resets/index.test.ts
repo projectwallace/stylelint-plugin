@@ -81,8 +81,9 @@ test('should error when 0 is configured and a reset is used', async () => {
 	const { warnings, errored } = await lint(`a { margin: 0; }`, 0)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toContain('Found 1 spacing resets')
-	expect(warnings[0].text).toContain('exceeds the maximum of 0')
+	expect(warnings[0].text).toBe(
+		'Found 1 spacing resets which exceeds the maximum of 0 (projectwallace/max-spacing-resets)',
+	)
 })
 
 test('should error when limit is exceeded', async () => {
@@ -92,8 +93,9 @@ test('should error when limit is exceeded', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toContain('Found 3 spacing resets')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toBe(
+		'Found 3 spacing resets which exceeds the maximum of 2 (projectwallace/max-spacing-resets)',
+	)
 })
 
 test('should report each declaration that pushed count over limit', async () => {
