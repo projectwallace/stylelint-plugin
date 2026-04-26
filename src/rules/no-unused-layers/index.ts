@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import { isAllowed } from '../../utils/allow-list.js'
+import { is_allowed } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -55,7 +55,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		for (const [layer, node] of declared_layers) {
 			if (defined_layers.has(layer)) continue
-			if (secondaryOptions?.ignore && isAllowed(layer, secondaryOptions.ignore)) continue
+			if (secondaryOptions?.ignore && is_allowed(layer, secondaryOptions.ignore)) continue
 
 			utils.report({
 				result,

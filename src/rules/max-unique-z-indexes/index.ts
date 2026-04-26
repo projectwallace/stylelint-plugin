@@ -2,7 +2,11 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk, NUMBER } from '@projectwallace/css-parser'
-import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
+import {
+	is_allowed,
+	ignore_option_validators,
+	is_valid_non_negative_integer,
+} from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -28,20 +32,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			rule_name,
 			{
 				actual: primaryOption,
-				possible: [(v: unknown) => typeof v === 'number'],
+				possible: [is_valid_non_negative_integer],
 			},
 			{
 				actual: secondaryOptions,
 				possible: {
-					ignore: ignoreOptionValidators,
+					ignore: ignore_option_validators,
 				},
 				optional: true,
 			},
 		)
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption < 0) {
-			return
-		}
+		if (!validOptions) return
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_zindexes = new Set<string>()
@@ -54,7 +56,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			walk(parsed, (node) => {
 				if (node.type !== NUMBER) return
 				const text = node.text
-				if (!isAllowed(text, ignore)) {
+				if (!is_allowed(text, ignore)) {
 					unique_zindexes.add(text)
 				}
 			})

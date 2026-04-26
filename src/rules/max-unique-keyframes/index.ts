@@ -1,6 +1,10 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
+import {
+	is_allowed,
+	ignore_option_validators,
+	is_valid_non_negative_integer,
+} from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,20 +30,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			rule_name,
 			{
 				actual: primaryOption,
-				possible: [(v: unknown) => typeof v === 'number'],
+				possible: [is_valid_non_negative_integer],
 			},
 			{
 				actual: secondaryOptions,
 				possible: {
-					ignore: ignoreOptionValidators,
+					ignore: ignore_option_validators,
 				},
 				optional: true,
 			},
 		)
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption < 0) {
-			return
-		}
+		if (!validOptions) return
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_keyframes = new Set<string>()
@@ -47,7 +49,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		root.walkAtRules('keyframes', (atRule) => {
 			const before = unique_keyframes.size
-			if (!isAllowed(atRule.params, ignore)) {
+			if (!is_allowed(atRule.params, ignore)) {
 				unique_keyframes.add(atRule.params)
 			}
 			if (unique_keyframes.size > before && unique_keyframes.size > primaryOption) {

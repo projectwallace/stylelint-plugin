@@ -2,6 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_selector } from '@projectwallace/css-parser/parse-selector'
 import { getComplexity } from '@projectwallace/css-analyzer/selectors'
+import { is_valid_positive_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -20,12 +21,10 @@ const ruleFunction = (primaryOption: number) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
-			possible: [Number as unknown as (v: unknown) => boolean],
+			possible: [is_valid_positive_integer],
 		})
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
-			return
-		}
+		if (!validOptions) return
 
 		let total_complexity = 0
 		let selector_count = 0

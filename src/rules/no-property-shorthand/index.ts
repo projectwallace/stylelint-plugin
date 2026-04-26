@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { shorthand_properties } from '@projectwallace/css-analyzer/properties'
-import { isAllowed } from '../../utils/allow-list.js'
+import { is_allowed } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -33,7 +33,7 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 		root.walkDecls((declaration) => {
 			const property = declaration.prop.toLowerCase()
 			if (!shorthand_properties.has(property)) return
-			if (secondaryOptions?.ignore && isAllowed(property, secondaryOptions.ignore)) return
+			if (secondaryOptions?.ignore && is_allowed(property, secondaryOptions.ignore)) return
 
 			utils.report({
 				message: messages.rejected(declaration.prop),

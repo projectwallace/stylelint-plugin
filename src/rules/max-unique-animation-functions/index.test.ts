@@ -25,15 +25,13 @@ async function lint(code: string, primaryOption: unknown, secondaryOptions?: unk
 // ---------------------------------------------------------------------------
 
 test('should not run when config is negative', async () => {
-	const { warnings, errored } = await lint(`a { animation-timing-function: ease; }`, -1)
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	const { errored } = await lint(`a { animation-timing-function: ease; }`, -1)
+	expect(errored).toBe(true)
 })
 
 test('should not run when config is a float', async () => {
-	const { warnings, errored } = await lint(`a { animation-timing-function: ease; }`, 1.5)
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	const { errored } = await lint(`a { animation-timing-function: ease; }`, 1.5)
+	expect(errored).toBe(true)
 })
 
 test('should not run when rule is disabled with null', async () => {

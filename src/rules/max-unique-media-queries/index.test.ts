@@ -25,9 +25,8 @@ async function lint(code: string, primaryOption: unknown, secondaryOptions?: unk
 // ---------------------------------------------------------------------------
 
 test('should not run when config is negative', async () => {
-	const { warnings, errored } = await lint(`@media (max-width: 768px) {}`, -1)
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	const { errored } = await lint(`@media (max-width: 768px) {}`, -1)
+	expect(errored).toBe(true)
 })
 
 test('should error when 0 is configured and any media query is used', async () => {
@@ -46,9 +45,8 @@ test('should not error when 0 is configured and no media query is used', async (
 })
 
 test('should not run when config is a float', async () => {
-	const { warnings, errored } = await lint(`@media (max-width: 768px) {}`, 1.5)
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	const { errored } = await lint(`@media (max-width: 768px) {}`, 1.5)
+	expect(errored).toBe(true)
 })
 
 test('should not run when rule is disabled with null', async () => {

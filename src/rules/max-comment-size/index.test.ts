@@ -13,14 +13,13 @@ test('should not run when config is set to a value lower than or equal to 0', as
 	}
 
 	const {
-		results: [{ warnings, errored }],
+		results: [{ errored }],
 	} = await stylelint.lint({
 		code: `/* comment */ a { color: red; }`,
 		config,
 	})
 
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	expect(errored).toBe(true)
 })
 
 test('should not error when there are no comments', async () => {

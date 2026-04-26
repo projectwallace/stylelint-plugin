@@ -13,14 +13,13 @@ test('should not run when config is set to a negative value', async () => {
 	}
 
 	const {
-		results: [{ warnings, errored }],
+		results: [{ errored }],
 	} = await stylelint.lint({
 		code: `a { color: red !important; }`,
 		config,
 	})
 
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	expect(errored).toBe(true)
 })
 
 test('should not run when config is set to a value greater than 1', async () => {
@@ -32,14 +31,13 @@ test('should not run when config is set to a value greater than 1', async () => 
 	}
 
 	const {
-		results: [{ warnings, errored }],
+		results: [{ errored }],
 	} = await stylelint.lint({
 		code: `a { color: red !important; }`,
 		config,
 	})
 
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	expect(errored).toBe(true)
 })
 
 test('should not error when there are no !important declarations', async () => {

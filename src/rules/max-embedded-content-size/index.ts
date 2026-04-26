@@ -3,6 +3,7 @@ import type { Root } from 'postcss'
 import { walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_url } from '@projectwallace/css-parser'
+import { is_valid_positive_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -21,12 +22,10 @@ const ruleFunction = (primaryOption: number) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
-			possible: [Number as unknown as (v: unknown) => boolean],
+			possible: [is_valid_positive_integer],
 		})
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
-			return
-		}
+		if (!validOptions) return
 
 		let total_size = 0
 

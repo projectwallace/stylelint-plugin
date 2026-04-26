@@ -2,7 +2,11 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk } from '@projectwallace/css-parser/walker'
-import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
+import {
+	is_allowed,
+	ignore_option_validators,
+	is_valid_positive_integer,
+} from '../../utils/option-validators.js'
 import { is_function } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
@@ -29,20 +33,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			rule_name,
 			{
 				actual: primaryOption,
-				possible: [Number as unknown as (v: unknown) => boolean],
+				possible: [is_valid_positive_integer],
 			},
 			{
 				actual: secondaryOptions,
 				possible: {
-					ignore: ignoreOptionValidators,
+					ignore: ignore_option_validators,
 				},
 				optional: true,
 			},
 		)
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
-			return
-		}
+		if (!validOptions) return
 
 		const ignore = secondaryOptions?.ignore ?? []
 
@@ -57,7 +59,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (/^(repeating-)?(linear|conic|radial)-gradient$/.test(node.name)) {
 						const gradient = node.text
 
-						if (!isAllowed(gradient, ignore)) {
+						if (!is_allowed(gradient, ignore)) {
 							unique_gradients.add(gradient)
 						}
 					}

@@ -1,6 +1,10 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
+import {
+	is_allowed,
+	ignore_option_validators,
+	is_valid_positive_integer,
+} from '../../utils/option-validators.js'
 import { analyzeAnimation, keywords } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
@@ -29,20 +33,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			rule_name,
 			{
 				actual: primaryOption,
-				possible: [Number as unknown as (v: unknown) => boolean],
+				possible: [is_valid_positive_integer],
 			},
 			{
 				actual: secondaryOptions,
 				possible: {
-					ignore: ignoreOptionValidators,
+					ignore: ignore_option_validators,
 				},
 				optional: true,
 			},
 		)
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption <= 0) {
-			return
-		}
+		if (!validOptions) return
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_durations = new Set<string>()
@@ -57,7 +59,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (child.type !== OPERATOR) {
 						let duration = child.text
 
-						if (!keywords.has(duration) && !isAllowed(duration, ignore)) {
+						if (!keywords.has(duration) && !is_allowed(duration, ignore)) {
 							unique_durations.add(duration)
 						}
 					}
@@ -66,7 +68,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				analyzeAnimation(parsed, function (item) {
 					if (item.type === 'duration') {
 						let duration = item.value.text
-						if (!isAllowed(duration, ignore)) {
+						if (!is_allowed(duration, ignore)) {
 							unique_durations.add(duration)
 						}
 					}

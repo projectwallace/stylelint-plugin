@@ -13,14 +13,13 @@ test('should not run when config is set to a value lower than 0', async () => {
 	}
 
 	const {
-		results: [{ warnings, errored }],
+		results: [{ errored }],
 	} = await stylelint.lint({
 		code: `a {}`,
 		config,
 	})
 
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	expect(errored).toBe(true)
 })
 
 test('should not error on a very simple stylesheet with max-lines=2', async () => {

@@ -2,7 +2,11 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
-import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
+import {
+	is_allowed,
+	ignore_option_validators,
+	is_valid_non_negative_integer,
+} from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -28,20 +32,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			rule_name,
 			{
 				actual: primaryOption,
-				possible: [(v: unknown) => typeof v === 'number'],
+				possible: [is_valid_non_negative_integer],
 			},
 			{
 				actual: secondaryOptions,
 				possible: {
-					ignore: ignoreOptionValidators,
+					ignore: ignore_option_validators,
 				},
 				optional: true,
 			},
 		)
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption < 0) {
-			return
-		}
+		if (!validOptions) return
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_heights = new Set<string>()
@@ -49,7 +51,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		root.walkDecls('line-height', (declaration) => {
 			const before = unique_heights.size
-			if (!keywords.has(declaration.value) && !isAllowed(declaration.value, ignore)) {
+			if (!keywords.has(declaration.value) && !is_allowed(declaration.value, ignore)) {
 				unique_heights.add(declaration.value)
 			}
 			if (unique_heights.size > before && unique_heights.size > primaryOption) {
@@ -61,7 +63,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			const before = unique_heights.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})
-			if (destructured?.line_height && !isAllowed(destructured.line_height, ignore)) {
+			if (destructured?.line_height && !is_allowed(destructured.line_height, ignore)) {
 				unique_heights.add(destructured.line_height)
 			}
 			if (unique_heights.size > before && unique_heights.size > primaryOption) {

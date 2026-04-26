@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { isAllowed } from '../../utils/allow-list.js'
+import { is_allowed } from '../../utils/option-validators.js'
 import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
@@ -36,7 +36,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		root.walkDecls(/^--/, (decl) => {
 			const property = decl.prop
 
-			if (secondaryOptions?.ignore && isAllowed(property, secondaryOptions.ignore)) return
+			if (secondaryOptions?.ignore && is_allowed(property, secondaryOptions.ignore)) return
 
 			const parsed = parse_value(decl.value)
 
