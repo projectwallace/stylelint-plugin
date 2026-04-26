@@ -39,6 +39,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-anonymous-layers',
 		'projectwallace/no-duplicate-data-urls',
 		'projectwallace/no-empty-rules',
+		'projectwallace/no-important-in-keyframes',
 		'projectwallace/no-invalid-z-index',
 		'projectwallace/no-property-browserhacks',
 		'projectwallace/no-property-shorthand',

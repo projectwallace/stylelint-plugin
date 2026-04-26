@@ -96,6 +96,7 @@ Rules to help prevent errors.
 | [no-static-container-query](src/rules/no-static-container-query/README.md)                         | Disallow static (exact-match) numeric container feature conditions         |
 | [no-static-media-query](src/rules/no-static-media-query/README.md)                                 | Disallow static (exact-match) numeric media feature conditions             |
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match  |
+| [no-important-in-keyframes](src/rules/no-important-in-keyframes/README.md)                         | Disallow `!important` declarations inside `@keyframes` blocks              |
 | [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                       | Disallow `z-index` values that are not valid 32-bit integers               |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never implemented            |
 

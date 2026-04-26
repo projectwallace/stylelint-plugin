@@ -18,6 +18,7 @@ export default {
 		'projectwallace/no-useless-custom-property-assignment': true,
 		'projectwallace/no-duplicate-data-urls': true,
 		'projectwallace/no-empty-rules': true,
+		'projectwallace/no-important-in-keyframes': true,
 		'projectwallace/no-invalid-z-index': true,
 		'projectwallace/max-file-size': 200000,
 		'projectwallace/max-embedded-content-size': 10000,
