@@ -33,6 +33,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-unique-line-heights',
 		'projectwallace/max-unique-media-queries',
 		'projectwallace/max-unique-units',
+		'projectwallace/max-unique-z-indexes',
 		'projectwallace/min-declaration-uniqueness-ratio',
 		'projectwallace/min-selector-uniqueness-ratio',
 		'projectwallace/no-anonymous-layers',

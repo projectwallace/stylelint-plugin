@@ -116,6 +116,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet         |
 | [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                           | Limit the number of unique keyframe animations defined across the stylesheet |
 | [max-unique-units](src/rules/max-unique-units/README.md)                                   | Limit the number of unique CSS units used across the stylesheet              |
+| [max-unique-z-indexes](src/rules/max-unique-z-indexes/README.md)                           | Limit the number of unique z-index values used across the stylesheet         |
 | [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)   | Enforce a minimum ratio of unique declarations across the stylesheet         |
 | [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)         | Enforce a minimum ratio of unique selectors across the stylesheet            |
 | [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                             | Disallow anonymous (unnamed) `@layer` blocks                                 |

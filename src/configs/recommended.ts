@@ -33,6 +33,7 @@ export default {
 		'projectwallace/max-unique-font-families': 4,
 		'projectwallace/max-unique-font-sizes': 16,
 		'projectwallace/max-unique-line-heights': 12,
+		'projectwallace/max-unique-z-indexes': 8,
 		'projectwallace/max-unique-media-queries': 12,
 		'projectwallace/max-unique-keyframes': 8,
 		'projectwallace/max-unique-gradients': 8,
