@@ -86,8 +86,9 @@ test('should error when unique durations exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique durations')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toBe(
+		'Found 3 unique durations (1s, 2s, 3s) which exceeds the maximum of 2 (projectwallace/max-unique-durations)',
+	)
 	expect(warnings[0].line).toBe(4)
 })
 
@@ -116,7 +117,9 @@ test('should count a single animation-duration', async () => {
 test('should count comma-separated animation-duration values as separate durations', async () => {
 	const { warnings, errored } = await lint(`a { animation-duration: 1s, 2s; }`, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique durations')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique durations (1s, 2s) which exceeds the maximum of 1 (projectwallace/max-unique-durations)',
+	)
 })
 
 test('should not double-count repeated values in animation-duration list', async () => {
@@ -138,7 +141,9 @@ test('should count a single transition-duration', async () => {
 test('should count comma-separated transition-duration values as separate durations', async () => {
 	const { warnings, errored } = await lint(`a { transition-duration: 100ms, 200ms; }`, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique durations')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique durations (100ms, 200ms) which exceeds the maximum of 1 (projectwallace/max-unique-durations)',
+	)
 })
 
 // ---------------------------------------------------------------------------
@@ -160,7 +165,9 @@ test('should error when animation shorthand introduces a new unique duration', a
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique durations')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique durations (1s, 2s) which exceeds the maximum of 1 (projectwallace/max-unique-durations)',
+	)
 })
 
 // ---------------------------------------------------------------------------
@@ -182,7 +189,9 @@ test('should error when transition shorthand introduces a new unique duration', 
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique durations')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique durations (100ms, 300ms) which exceeds the maximum of 1 (projectwallace/max-unique-durations)',
+	)
 })
 
 // ---------------------------------------------------------------------------
@@ -198,7 +207,9 @@ test('should count durations across animation-duration and transition-duration',
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique durations')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique durations (1s, 2s) which exceeds the maximum of 1 (projectwallace/max-unique-durations)',
+	)
 })
 
 test('should deduplicate the same duration across different properties', async () => {
@@ -258,5 +269,7 @@ test('should count design token durations while ignoring keywords mixed in', asy
 	)
 	// inherit is a keyword and is not counted → 1s + 2s = 2 → exceeds limit of 1
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique durations')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique durations (1s, 2s) which exceeds the maximum of 1 (projectwallace/max-unique-durations)',
+	)
 })

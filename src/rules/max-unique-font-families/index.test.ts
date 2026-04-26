@@ -34,8 +34,9 @@ test('should error when 0 is configured and any font-family is used', async () =
 	const { warnings, errored } = await lint(`a { font-family: Arial; }`, 0)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toContain('Found 1 unique font families')
-	expect(warnings[0].text).toContain('exceeds the maximum of 0')
+	expect(warnings[0].text).toBe(
+		'Found 1 unique font families (Arial) which exceeds the maximum of 0 (projectwallace/max-unique-font-families)',
+	)
 })
 
 test('should not error when 0 is configured and no font-family is used', async () => {
@@ -102,8 +103,9 @@ test('should error when unique values exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique font families')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toBe(
+		'Found 3 unique font families (Arial, Georgia, monospace) which exceeds the maximum of 2 (projectwallace/max-unique-font-families)',
+	)
 })
 
 test('should error at the declaration level', async () => {
@@ -125,7 +127,9 @@ test('should treat different value strings as different unique entries', async (
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique font families')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique font families (Arial, sans-serif, Arial) which exceeds the maximum of 1 (projectwallace/max-unique-font-families)',
+	)
 })
 
 // ---------------------------------------------------------------------------
@@ -147,7 +151,9 @@ test('should extract font-family list from font shorthand', async () => {
 test('should count families from font shorthand and font-family together', async () => {
 	const { warnings, errored } = await lint(`a { font-family: Arial; } b { font: 16px Georgia; }`, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique font families')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique font families (Arial, Georgia) which exceeds the maximum of 1 (projectwallace/max-unique-font-families)',
+	)
 })
 
 test('should deduplicate identical font-family values across font and font-family', async () => {
@@ -247,7 +253,9 @@ test('should not count font-family inside @font-face but still count outside', a
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique font families')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique font families (Arial, Georgia) which exceeds the maximum of 1 (projectwallace/max-unique-font-families)',
+	)
 })
 
 // ---------------------------------------------------------------------------
@@ -262,7 +270,9 @@ test('should error when non-ignoreed values exceed the limit', async () => {
 	)
 	// Arial ignored → Georgia + monospace = 2 → exceeds limit of 1
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique font families')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique font families (Georgia, monospace) which exceeds the maximum of 1 (projectwallace/max-unique-font-families)',
+	)
 })
 
 // ---------------------------------------------------------------------------
@@ -285,5 +295,7 @@ test('should count design token families while ignoring keywords mixed in', asyn
 	)
 	// inherit is a keyword and is not counted → Arial + Georgia = 2 → exceeds limit of 1
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique font families')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique font families (Arial, Georgia) which exceeds the maximum of 1 (projectwallace/max-unique-font-families)',
+	)
 })

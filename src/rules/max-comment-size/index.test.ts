@@ -82,7 +82,9 @@ test('should error when comment size exceeds the limit', async () => {
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('greater than the allowed 1 bytes')
+	expect(warnings[0].text).toBe(
+		'Comment size is 23 bytes which is greater than the allowed 1 bytes (projectwallace/max-comment-size)',
+	)
 })
 
 test('should ignore copyright comments starting with ! when ignoreCopyrightComments is true', async () => {

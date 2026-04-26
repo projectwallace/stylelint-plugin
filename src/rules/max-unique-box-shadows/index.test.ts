@@ -92,8 +92,9 @@ test('should error when unique box-shadows exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique box shadows')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toBe(
+		'Found 3 unique box shadows (0 2px 4px red, 0 4px 8px blue, 0 8px 16px green) which exceeds the maximum of 2 (projectwallace/max-unique-box-shadows)',
+	)
 	expect(warnings[0].line).toBe(4)
 })
 
@@ -156,8 +157,9 @@ test('should treat different shadow values as different unique shadows', async (
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique box shadows')
-	expect(warnings[0].text).toContain('exceeds the maximum of 1')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique box shadows (0 2px 4px red, 0 4px 8px red) which exceeds the maximum of 1 (projectwallace/max-unique-box-shadows)',
+	)
 	expect(warnings[0].line).toBe(3)
 })
 
@@ -171,7 +173,9 @@ test('should count unique box-shadows across the entire stylesheet', async () =>
 		2,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 3 unique box shadows')
+	expect(warnings[0].text).toBe(
+		'Found 3 unique box shadows (0 2px 4px red, 0 4px 8px blue, 0 8px 16px green) which exceeds the maximum of 2 (projectwallace/max-unique-box-shadows)',
+	)
 	expect(warnings[0].line).toBe(4)
 })
 
@@ -233,5 +237,7 @@ test('should count design token shadows while ignoring keywords mixed in', async
 	)
 	// none is a keyword and is not counted → 2 unique shadows → exceeds limit of 1
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique box shadows')
+	expect(warnings[0].text).toBe(
+		'Found 2 unique box shadows (0 2px 4px red, 0 4px 8px blue) which exceeds the maximum of 1 (projectwallace/max-unique-box-shadows)',
+	)
 })
