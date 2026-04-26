@@ -1,5 +1,11 @@
 # Contributing
 
+## Project structure
+
+- All lint rules live in `src/rules`
+- Each rule is self-contained: `index.ts` for rule source, `index.test.ts` for tests and `README.md` for the rule documentation
+- Rule presets live in `src/configs`
+
 ## Developing
 
 - Before committing, run the linter: `npm run lint`
@@ -7,12 +13,12 @@
 
 ## Adding a new rule
 
-1. Create a new folder under `src/rules/<rule-name>/` with the following files:
+1. Create a new folder under `src/rules/<rule-name>/` with **all three** of the following files (none are optional):
    - `index.ts` — the rule implementation
    - `index.test.ts` — tests for the rule
    - `README.md` — documentation (see [Rule README guidelines](#rule-readme-guidelines))
-2. Register the rule in `src/index.ts` and update `/src/index.test.ts` accordingly
-3. Consider adding the rule to one or more of the configuration presets in `src/configs/`
+2. Register the rule in `src/index.ts` (import + plugins array) at the correct alphabetical position and update `src/index.test.ts` (expected names array) accordingly
+3. Add the rule to **all applicable** configuration presets in `src/configs/` — the `src/configs/recommended.test.ts` asserts that every exported rule appears in `recommended.ts`, so omitting it will fail the test suite
 4. Add the rule to the corresponding preset configuration rules list in `README.md`
 5. Use PostCSS API's as much as possible. Only if goals cannot be achieved reach for `@projectwallace/css-parser`
 6. Only use `@projectwallace/css-parser` methods `parse_value()`, `parse_selector()`, or `parse_atrule_prelude()`. Other parsing methods SHOULD NOT be necessary.
@@ -20,10 +26,50 @@
 
 ## Rule README guidelines
 
-Every rule's `README.md` must:
+Every rule's `README.md` must follow this structure exactly:
 
-- Show at least one example of a **violation** and one **passing** pattern
-- Document all available options
+````md
+# Rule name
+
+One-sentence description.
+
+<!-- prettier-ignore -->
+```css
+selector or declaration {}
+/*  ↑
+*   what this arrow points at */
+````
+
+One paragraph explaining what is measured and why it matters.
+
+## Options
+
+`type signature`
+
+Description of each component (e.g. for [a, b, c] tuples: what a, b, c mean).
+
+Given: `<example option value>`
+
+the following are considered violations:
+
+<!-- prettier-ignore -->
+```css
+/* violating CSS */
+```
+
+The following patterns are _not_ considered violations:
+
+<!-- prettier-ignore -->
+```css
+/* passing CSS */
+```
+
+````
+
+Rules:
+- Wrap all CSS blocks with `<!-- prettier-ignore -->` to prevent reformatting
+- Show at least one violation and one passing pattern
+- Document all options including their type signature
 
 ## The `ignore` option pattern
 
@@ -42,7 +88,7 @@ import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
   possible: { ignore: ignoreOptionValidators },
   optional: true,
 }
-```
+````
 
 **Checking** — import `isAllowed` from the same utility and call it with the value and the option:
 
@@ -92,6 +138,52 @@ async function lint(code: string, primaryOption: unknown, secondaryOptions?: unk
 **`ignore` option tests** — whenever a rule supports the `ignore` secondary option, cover both a plain string match and a `RegExp` pattern in the tests.
 
 **`test.each`** — use `test.each([])` instead of individual `test()` calls when testing multiple similar inputs (e.g. a list of CSS keywords or property values). This keeps test files concise.
+
+## Rule option patterns
+
+### Single integer option
+
+Validate with `possible: [Number as unknown as (v: unknown) => boolean]` and guard with `!Number.isInteger(primaryOption) || primaryOption <= <min>`.
+
+### Array (tuple) option — e.g. `[a, b, c]` specificity
+
+Set `ruleFunction.primaryOptionArray = true` so stylelint treats the array as the primary option rather than a secondary-option wrapper. Validate with a custom function:
+
+```ts
+function is_valid_specificity(v: unknown): boolean {
+	return (
+		Array.isArray(v) &&
+		v.length === 3 &&
+		v.every((n: unknown) => typeof n === 'number' && Number.isInteger(n) && n >= 0)
+	)
+}
+```
+
+Use `possible: is_valid_specificity` inside `validateOptions`.
+
+### Comparing CSS specificity
+
+```ts
+import { getSpecificity, compareSpecificity } from '@projectwallace/css-analyzer/selectors'
+
+// compareSpecificity returns > 0 when first arg has higher specificity than second
+if (compareSpecificity(actual, max) > 0) {
+	// violation
+}
+```
+
+For per-selector checks, parse first then call `getSpecificity` on each individual selector text:
+
+```ts
+import { parse_selector } from '@projectwallace/css-parser/parse-selector'
+
+const selector_list = parse_selector(rule.selector)
+for (const selector of selector_list.children) {
+	const specificities = getSpecificity(selector.text)
+	const specificity = specificities[0] as [number, number, number]
+	// compare specificity here
+}
+```
 
 ## Adding a new config
 

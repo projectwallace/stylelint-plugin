@@ -3,6 +3,7 @@ export default {
 	rules: {
 		'projectwallace/max-lines-of-code': 10000,
 		'projectwallace/max-selector-complexity': 15,
+		'projectwallace/max-selector-specificity': [0, 5, 0],
 		'projectwallace/no-anonymous-layers': true,
 		'projectwallace/no-property-browserhacks': true,
 		'projectwallace/no-property-shorthand': true,

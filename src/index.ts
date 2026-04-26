@@ -10,6 +10,7 @@ import max_file_size from './rules/max-file-size/index.js'
 import max_important_ratio from './rules/max-important-ratio/index.js'
 import max_lines_of_code from './rules/max-lines-of-code/index.js'
 import max_selector_complexity from './rules/max-selector-complexity/index.js'
+import max_selector_specificity from './rules/max-selector-specificity/index.js'
 import max_selectors_per_rule from './rules/max-selectors-per-rule/index.js'
 import max_spacing_resets from './rules/max-spacing-resets/index.js'
 import max_unique_animation_functions from './rules/max-unique-animation-functions/index.js'
@@ -54,6 +55,7 @@ const plugins: stylelint.Plugin[] = [
 	max_important_ratio,
 	max_lines_of_code,
 	max_selector_complexity,
+	max_selector_specificity,
 	max_selectors_per_rule,
 	max_spacing_resets,
 	max_unique_animation_functions,
