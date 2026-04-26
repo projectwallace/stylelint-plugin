@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { collect_declared_properties, collect_var_usages } from '../../utils/custom-properties.js'
-import { isAllowed } from '../../utils/allow-list.js'
+import { is_allowed } from '../../utils/option-validators.js'
 import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
 
@@ -45,7 +45,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		for (const [prop, node] of declared_properties) {
 			if (used_names.has(prop)) continue
 
-			if (secondaryOptions?.ignore && isAllowed(prop, secondaryOptions.ignore)) continue
+			if (secondaryOptions?.ignore && is_allowed(prop, secondaryOptions.ignore)) continue
 
 			utils.report({
 				result,

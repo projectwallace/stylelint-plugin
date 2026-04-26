@@ -13,14 +13,13 @@ test('should not run when config is set to a value lower than 1', async () => {
 	}
 
 	const {
-		results: [{ warnings, errored }],
+		results: [{ errored }],
 	} = await stylelint.lint({
 		code: `a { font-size: 12px; }`,
 		config,
 	})
 
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	expect(errored).toBe(true)
 })
 
 test('should not error when there are no units', async () => {

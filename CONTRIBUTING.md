@@ -77,24 +77,24 @@ When a rule should let users exclude specific values from being checked, name th
 
 **Naming:** always `ignore`, never `allowList`, `ignoreValues`, `ignoreProperties`, or any other variant.
 
-**Validation** — import `ignoreOptionValidators` from `src/utils/allow-list.ts` and pass it to `validateOptions`:
+**Validation** — import `ignore_option_validators` from `src/utils/option-validators.ts` and pass it to `validateOptions`:
 
 ```ts
-import { isAllowed, ignoreOptionValidators } from '../../utils/allow-list.js'
+import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
 
 // inside validateOptions:
 {
   actual: secondaryOptions,
-  possible: { ignore: ignoreOptionValidators },
+  possible: { ignore: ignore_option_validators },
   optional: true,
 }
 ````
 
-**Checking** — import `isAllowed` from the same utility and call it with the value and the option:
+**Checking** — import `is_allowed` from the same utility and call it with the value and the option:
 
 ```ts
 const ignore = secondaryOptions?.ignore ?? []
-if (!isAllowed(value, ignore)) {
+if (!is_allowed(value, ignore)) {
 	/* count or report */
 }
 ```
@@ -133,7 +133,7 @@ async function lint(code: string, primaryOption: unknown, secondaryOptions?: unk
 - `should not error when …` — for valid CSS that passes the rule
 - `should error when …` — for CSS that triggers a violation
 
-**Assertions** — always check both `errored` and `warnings` together. Use `toStrictEqual([])` for empty warnings.
+**Assertions** — always check both `errored` and `warnings` together. Use `toStrictEqual([])` for empty warnings. Exception: invalid-option tests (the `should not run when …` group) only assert `expect(errored).toBe(true)` — no `warnings` check, since the count and content of validation errors are stylelint internals.
 
 **`ignore` option tests** — whenever a rule supports the `ignore` secondary option, cover both a plain string match and a `RegExp` pattern in the tests.
 
@@ -143,7 +143,22 @@ async function lint(code: string, primaryOption: unknown, secondaryOptions?: unk
 
 ### Single integer option
 
-Validate with `possible: [Number as unknown as (v: unknown) => boolean]` and guard with `!Number.isInteger(primaryOption) || primaryOption <= <min>`.
+Import the appropriate validator from `src/utils/option-validators.ts` and pass it directly to `possible`. No secondary guard is needed.
+
+| Validator                       | Accepts      | Use for                           |
+| ------------------------------- | ------------ | --------------------------------- |
+| `is_valid_positive_integer`     | integer > 0  | counts that must be at least 1    |
+| `is_valid_non_negative_integer` | integer >= 0 | counts that may be 0 (to disable) |
+| `is_valid_ratio`                | float 0–1    | percentage/ratio options          |
+
+```ts
+import { is_valid_positive_integer } from '../../utils/option-validators.js'
+
+// inside validateOptions:
+{ actual: primaryOption, possible: [is_valid_positive_integer] }
+```
+
+Passing an out-of-range value (e.g. `-1` or `1.5` to a count rule) is a **breaking error** — stylelint reports `errored: true` rather than silently skipping the rule.
 
 ### Array (tuple) option — e.g. `[a, b, c]` specificity
 

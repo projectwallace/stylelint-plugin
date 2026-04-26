@@ -4,7 +4,7 @@ import {
 	collect_declared_container_names,
 	collect_container_name_usages,
 } from '../../utils/container-names.js'
-import { isAllowed } from '../../utils/allow-list.js'
+import { is_allowed } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -40,7 +40,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		for (const [name, node] of declared_names) {
 			if (used_names.has(name)) continue
 
-			if (secondaryOptions?.ignore && isAllowed(name, secondaryOptions.ignore)) continue
+			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) continue
 
 			utils.report({
 				result,

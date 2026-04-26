@@ -2,6 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { isValueReset } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -23,12 +24,10 @@ const ruleFunction = (primaryOption: number) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
-			possible: [(v: unknown) => typeof v === 'number'],
+			possible: [is_valid_non_negative_integer],
 		})
 
-		if (!validOptions || !Number.isInteger(primaryOption) || primaryOption < 0) {
-			return
-		}
+		if (!validOptions) return
 
 		// TODO: at some point we could have a setting to ignore resets in a reset/normalize layer,
 		// e.g. `ignoreLayers: ['reset', 'normalize']`

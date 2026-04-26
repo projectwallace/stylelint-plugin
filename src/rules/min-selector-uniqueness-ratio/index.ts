@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { is_valid_ratio } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -18,17 +19,10 @@ const ruleFunction = (primaryOption: number) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
 			actual: primaryOption,
-			possible: [(v: unknown) => typeof v === 'number' && !Number.isNaN(v as number)],
+			possible: [is_valid_ratio],
 		})
 
-		if (
-			!validOptions ||
-			!Number.isFinite(primaryOption) ||
-			primaryOption < 0 ||
-			primaryOption > 1
-		) {
-			return
-		}
+		if (!validOptions) return
 
 		const unique_selectors = new Set<string>()
 		let total_count = 0

@@ -13,14 +13,13 @@ test('should not run when config is set to a value lower than or equal to 0', as
 	}
 
 	const {
-		results: [{ warnings, errored }],
+		results: [{ errored }],
 	} = await stylelint.lint({
 		code: `a { color: red; font-size: 1em; }`,
 		config,
 	})
 
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
+	expect(errored).toBe(true)
 })
 
 test('should not error when average declarations per rule is within limit', async () => {
