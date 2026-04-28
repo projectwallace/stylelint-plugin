@@ -34,6 +34,7 @@ import no_important_in_keyframes from './rules/no-important-in-keyframes/index.j
 import no_invalid_z_index from './rules/no-invalid-z-index/index.js'
 import no_property_browserhacks from './rules/no-property-browserhacks/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
+import no_value_browserhacks from './rules/no-value-browserhacks/index.js'
 import no_static_container_query from './rules/no-static-container-query/index.js'
 import no_static_media_query from './rules/no-static-media-query/index.js'
 import no_unknown_container_names from './rules/no-unknown-container-names/index.js'
@@ -90,6 +91,7 @@ const plugins: stylelint.Plugin[] = [
 	no_unused_custom_properties,
 	no_unused_layers,
 	no_useless_custom_property_assignment,
+	no_value_browserhacks,
 ]
 
 export default plugins
