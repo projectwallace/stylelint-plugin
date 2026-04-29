@@ -20,6 +20,7 @@ export default {
 		'projectwallace/no-empty-rules': true,
 		'projectwallace/no-important-in-keyframes': true,
 		'projectwallace/no-invalid-z-index': true,
+		'projectwallace/no-value-browserhacks': true,
 		'projectwallace/max-file-size': 200000,
 		'projectwallace/max-embedded-content-size': 10000,
 		'projectwallace/max-comment-size': [2500, { ignoreCopyrightComments: true }],

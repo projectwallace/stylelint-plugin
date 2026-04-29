@@ -123,6 +123,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                             | Disallow anonymous (unnamed) `@layer` blocks                                 |
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                   | Prevent the use of known browserhacks for properties                         |
 | [no-property-shorthand](src/rules/no-property-shorthand/README.md)                         | Disallow the use of shorthand properties                                     |
+| [no-value-browserhacks](src/rules/no-value-browserhacks/README.md)                         | Disallow the use of known browser hacks in values                            |
 
 ## Credits
 
