@@ -8,18 +8,22 @@ test('exports an array of stylelint rules', () => {
 		return plugin.ruleName
 	})
 	expect(names).toStrictEqual([
+		'projectwallace/max-atrules',
 		'projectwallace/max-average-declarations-per-rule',
 		'projectwallace/max-average-selector-complexity',
 		'projectwallace/max-average-selectors-per-rule',
 		'projectwallace/max-average-specificity',
 		'projectwallace/max-comment-size',
+		'projectwallace/max-declarations',
 		'projectwallace/max-declarations-per-rule',
 		'projectwallace/max-embedded-content-size',
 		'projectwallace/max-file-size',
 		'projectwallace/max-important-ratio',
 		'projectwallace/max-lines-of-code',
+		'projectwallace/max-rules',
 		'projectwallace/max-selector-complexity',
 		'projectwallace/max-selector-specificity',
+		'projectwallace/max-selectors',
 		'projectwallace/max-selectors-per-rule',
 		'projectwallace/max-spacing-resets',
 		'projectwallace/max-unique-animation-functions',

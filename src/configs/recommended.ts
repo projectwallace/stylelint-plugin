@@ -1,7 +1,11 @@
 export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
-		'projectwallace/max-lines-of-code': 10000,
+		'projectwallace/max-rules': 1000,
+		'projectwallace/max-atrules': 250,
+		'projectwallace/max-selectors': 2500,
+		'projectwallace/max-declarations': 5000,
+		'projectwallace/max-lines-of-code': 10_000,
 		'projectwallace/max-selector-complexity': 15,
 		'projectwallace/max-selector-specificity': [0, 5, 0],
 		'projectwallace/no-anonymous-layers': true,
@@ -21,8 +25,8 @@ export default {
 		'projectwallace/no-important-in-keyframes': true,
 		'projectwallace/no-invalid-z-index': true,
 		'projectwallace/no-value-browserhacks': true,
-		'projectwallace/max-file-size': 200000,
-		'projectwallace/max-embedded-content-size': 10000,
+		'projectwallace/max-file-size': 200_000,
+		'projectwallace/max-embedded-content-size': 10_000,
 		'projectwallace/max-comment-size': [2500, { ignoreCopyrightComments: true }],
 		'projectwallace/max-average-selectors-per-rule': 3,
 		'projectwallace/max-average-declarations-per-rule': 6,

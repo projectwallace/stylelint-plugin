@@ -1,16 +1,20 @@
 import type stylelint from 'stylelint'
+import max_atrules from './rules/max-atrules/index.js'
 import max_average_declarations_per_rule from './rules/max-average-declarations-per-rule/index.js'
 import max_average_selector_complexity from './rules/max-average-selector-complexity/index.js'
 import max_average_selectors_per_rule from './rules/max-average-selectors-per-rule/index.js'
 import max_average_specificity from './rules/max-average-specificity/index.js'
 import max_comment_size from './rules/max-comment-size/index.js'
+import max_declarations from './rules/max-declarations/index.js'
 import max_declarations_per_rule from './rules/max-declarations-per-rule/index.js'
 import max_embedded_content_size from './rules/max-embedded-content-size/index.js'
 import max_file_size from './rules/max-file-size/index.js'
 import max_important_ratio from './rules/max-important-ratio/index.js'
 import max_lines_of_code from './rules/max-lines-of-code/index.js'
+import max_rules from './rules/max-rules/index.js'
 import max_selector_complexity from './rules/max-selector-complexity/index.js'
 import max_selector_specificity from './rules/max-selector-specificity/index.js'
+import max_selectors from './rules/max-selectors/index.js'
 import max_selectors_per_rule from './rules/max-selectors-per-rule/index.js'
 import max_spacing_resets from './rules/max-spacing-resets/index.js'
 import max_unique_animation_functions from './rules/max-unique-animation-functions/index.js'
@@ -49,18 +53,22 @@ import no_useless_custom_property_assignment from './rules/no-useless-custom-pro
 
 // Alphabetically ordered list of all plugins
 const plugins: stylelint.Plugin[] = [
+	max_atrules,
 	max_average_declarations_per_rule,
 	max_average_selector_complexity,
 	max_average_selectors_per_rule,
 	max_average_specificity,
 	max_comment_size,
+	max_declarations,
 	max_declarations_per_rule,
 	max_embedded_content_size,
 	max_file_size,
 	max_important_ratio,
 	max_lines_of_code,
+	max_rules,
 	max_selector_complexity,
 	max_selector_specificity,
+	max_selectors,
 	max_selectors_per_rule,
 	max_spacing_resets,
 	max_unique_animation_functions,
