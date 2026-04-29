@@ -24,6 +24,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-spacing-resets',
 		'projectwallace/max-unique-animation-functions',
 		'projectwallace/max-unique-box-shadows',
+		'projectwallace/max-unique-color-formats',
 		'projectwallace/max-unique-colors',
 		'projectwallace/max-unique-durations',
 		'projectwallace/max-unique-font-families',

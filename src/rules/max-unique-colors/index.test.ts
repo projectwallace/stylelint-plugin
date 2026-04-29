@@ -246,16 +246,16 @@ test('should recognise color() as a color', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
-test('should recognise color-mix() as a color', async () => {
-	const { warnings, errored } = await lint(`a { color: color-mix(in srgb, #fff 50%, #000); }`, 1)
-	// color-mix() counts as 1 unique color; inner #fff and #000 are NOT counted separately
+test('should count inner colors of color-mix(), not color-mix itself', async () => {
+	const { warnings, errored } = await lint(`a { color: color-mix(in srgb, #fff 50%, #000); }`, 2)
+	// color-mix() is transparent; #fff and #000 are counted as 2 unique colors
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
-test('should recognise light-dark() as a color', async () => {
-	const { warnings, errored } = await lint(`a { color: light-dark(white, black); }`, 1)
-	// light-dark() counts as 1 unique color; white and black inside are NOT counted separately
+test('should count inner colors of light-dark(), not light-dark itself', async () => {
+	const { warnings, errored } = await lint(`a { color: light-dark(white, black); }`, 2)
+	// light-dark() is transparent; white and black are counted as 2 unique colors
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })

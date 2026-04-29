@@ -70,17 +70,18 @@ Rules that affect file size and loading performance.
 
 Rules that encourage the use of design tokens in your CSS.
 
-| Rule                                                                                 | Description                                                                      |
-| ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| [max-unique-animation-functions](src/rules/max-unique-animation-functions/README.md) | Limit the number of unique animation timing functions used across the stylesheet |
-| [max-unique-box-shadows](src/rules/max-unique-box-shadows/README.md)                 | Limit the number of unique box-shadow values used across the stylesheet          |
-| [max-unique-colors](src/rules/max-unique-colors/README.md)                           | Limit the number of unique color values used across the stylesheet               |
-| [max-unique-durations](src/rules/max-unique-durations/README.md)                     | Limit the number of unique duration values used across the stylesheet            |
-| [max-unique-gradients](src/rules/max-unique-gradients/README.md)                     | Limit the number of unique gradient values used across the stylesheet            |
-| [max-unique-font-families](src/rules/max-unique-font-families/README.md)             | Limit the number of unique font families used across the stylesheet              |
-| [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                   | Limit the number of unique font sizes used across the stylesheet                 |
-| [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                     | Limit the number of unique keyframe animations defined across the stylesheet     |
-| [max-unique-media-queries](src/rules/max-unique-media-queries/README.md)             | Limit the number of unique media queries used across the stylesheet              |
+| Rule                                                                                 | Description                                           |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| [max-unique-animation-functions](src/rules/max-unique-animation-functions/README.md) | Limit the number of unique animation timing functions |
+| [max-unique-box-shadows](src/rules/max-unique-box-shadows/README.md)                 | Limit the number of unique box-shadow values          |
+| [max-unique-color-formats](src/rules/max-unique-color-formats/README.md)             | Limit the number of distinct color formats            |
+| [max-unique-colors](src/rules/max-unique-colors/README.md)                           | Limit the number of unique color values               |
+| [max-unique-durations](src/rules/max-unique-durations/README.md)                     | Limit the number of unique duration values            |
+| [max-unique-gradients](src/rules/max-unique-gradients/README.md)                     | Limit the number of unique gradient values            |
+| [max-unique-font-families](src/rules/max-unique-font-families/README.md)             | Limit the number of unique font families              |
+| [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                   | Limit the number of unique font sizes                 |
+| [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                     | Limit the number of unique keyframe animations        |
+| [max-unique-media-queries](src/rules/max-unique-media-queries/README.md)             | Limit the number of unique media queries              |
 
 ### Correctness
 
@@ -115,6 +116,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                     | Prevent selector complexity from going over a predefined maximum             |
 | [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                       | Limit the number of selectors in a single rule                               |
 | [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet         |
+| [max-unique-color-formats](src/rules/max-unique-color-formats/README.md)                   | Limit the number of distinct color formats used across the stylesheet        |
 | [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                           | Limit the number of unique keyframe animations defined across the stylesheet |
 | [max-unique-units](src/rules/max-unique-units/README.md)                                   | Limit the number of unique CSS units used across the stylesheet              |
 | [max-unique-z-indexes](src/rules/max-unique-z-indexes/README.md)                           | Limit the number of unique z-index values used across the stylesheet         |
