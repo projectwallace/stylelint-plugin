@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { isIe9Hack } from '@projectwallace/css-analyzer/values'
+import { isValueBrowserhack } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 
 const { createPlugin, utils } = stylelint
@@ -28,14 +28,14 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 			const value = declaration.value.trim()
-			if (isIe9Hack(parse_value(value))) {
+			isValueBrowserhack(parse_value(value), function () {
 				utils.report({
 					message: messages.rejected(value),
 					node: declaration,
 					result,
 					ruleName: rule_name,
 				})
-			}
+			})
 		})
 	}
 }

@@ -44,6 +44,12 @@ test('should not error on a normal multi-word value', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
+test('should not error on a custom property', async () => {
+	const { warnings, errored } = await lint('a { --color: red; }', true)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 // ---------------------------------------------------------------------------
 // Violation
 // ---------------------------------------------------------------------------
@@ -59,11 +65,20 @@ test('should error when value ends with \\9 (IE9 hack)', async () => {
 	expect(column).toBe(5)
 })
 
-test('should error on color value with \\9 hack', async () => {
-	const { warnings, errored } = await lint('a { color: blue\\9 }', true)
+test('should error on color value with \\7 hack', async () => {
+	const { warnings, errored } = await lint('a { color: blue\\7 }', true)
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Value "blue\\9" is a browserhack and is not allowed (${rule_name})`)
+	expect(text).toBe(`Value "blue\\7" is a browserhack and is not allowed (${rule_name})`)
+})
+
+test('should error on color value with alpha() hack', async () => {
+	const { warnings, errored } = await lint('a { filter: alpha(opacity=50); }', true)
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+
+	const [{ text }] = warnings
+	expect(text).toBe(`Value "alpha(opacity=50)" is a browserhack and is not allowed (${rule_name})`)
 })
