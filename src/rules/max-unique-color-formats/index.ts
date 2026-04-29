@@ -1,64 +1,36 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import {
-	is_allowed,
-	ignore_option_validators,
-	is_valid_positive_integer,
-} from '../../utils/option-validators.js'
+import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { parse_value } from '@projectwallace/css-parser'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'projectwallace/max-unique-colors'
+const rule_name = 'projectwallace/max-unique-color-formats'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, colors: string[]) =>
-		`Found ${actual} unique colors (${colors.join(', ')}) which exceeds the maximum of ${expected}`,
+	rejected: (actual: number, expected: number, formats: string[]) =>
+		`Found ${actual} unique color formats (${formats.join(', ')}) which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-colors/README.md',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-color-formats/README.md',
 }
 
-interface SecondaryOptions {
-	ignore?: Array<string | RegExp>
-}
-
-const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
+const ruleFunction = (primaryOption: number) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
-			result,
-			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_positive_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
-		)
-
+		const validOptions = utils.validateOptions(result, rule_name, {
+			actual: primaryOption,
+			possible: [is_valid_positive_integer],
+		})
 		if (!validOptions) return
 
-		const ignore = secondaryOptions?.ignore ?? []
-
-		/**
-		 * Collect custom properties declared as @property { syntax: '<color>' }.
-		 * var() references to these are recognised as color values.
-		 */
 		const color_custom_properties = new Set<string>()
-		const unique_colors = new Set<string>()
+		const unique_formats = new Set<string>()
 
 		function run_collect(parsed: ReturnType<typeof parse_value>, resolve_var: boolean): void {
-			collect_colors(parsed, resolve_var, color_custom_properties, (color) => {
-				if (!is_allowed(color, ignore)) {
-					unique_colors.add(color)
-				}
+			collect_colors(parsed, resolve_var, color_custom_properties, (_color, format) => {
+				unique_formats.add(format)
 			})
 		}
 
@@ -67,7 +39,6 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			if (!prop_name.startsWith('--')) return
 
 			atRule.walkDecls('syntax', (decl) => {
-				// syntax values may be quoted: '"<color>"' or "'<color>'"
 				const syntax = decl.value.trim().replace(/^['"]|['"]$/g, '')
 				if (syntax === '<color>') {
 					color_custom_properties.add(prop_name)
@@ -84,17 +55,17 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const violating_declarations: Declaration[] = []
 
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
-			const before = unique_colors.size
+			const before = unique_formats.size
 			run_collect(parse_value(declaration.value), true)
-			if (unique_colors.size > before && unique_colors.size > primaryOption) {
+			if (unique_formats.size > before && unique_formats.size > primaryOption) {
 				violating_declarations.push(declaration)
 			}
 		})
 
-		const actual = unique_colors.size
+		const actual = unique_formats.size
 		for (const declaration of violating_declarations) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_colors]),
+				message: messages.rejected(actual, primaryOption, [...unique_formats]),
 				node: declaration,
 				result,
 				ruleName: rule_name,

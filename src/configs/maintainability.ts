@@ -1,6 +1,7 @@
 import recommended from './recommended.js'
 
 const rules = [
+	'projectwallace/max-unique-color-formats',
 	'projectwallace/max-average-declarations-per-rule',
 	'projectwallace/max-average-selector-complexity',
 	'projectwallace/max-average-selectors-per-rule',
