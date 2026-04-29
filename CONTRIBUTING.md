@@ -19,7 +19,7 @@
    - `README.md` — documentation (see [Rule README guidelines](#rule-readme-guidelines))
 2. Register the rule in `src/index.ts` (import + plugins array) at the correct alphabetical position and update `src/index.test.ts` (expected names array) accordingly
 3. Add the rule to **all applicable** configuration presets in `src/configs/` — the `src/configs/recommended.test.ts` asserts that every exported rule appears in `recommended.ts`, so omitting it will fail the test suite
-4. Add the rule to the corresponding preset configuration rules list in `README.md`
+4. Add the rule to the corresponding preset configuration rules list in root `README.md`
 5. Use PostCSS API's as much as possible. Only if goals cannot be achieved reach for `@projectwallace/css-parser`
 6. Only use `@projectwallace/css-parser` methods `parse_value()`, `parse_selector()`, or `parse_atrule_prelude()`. Other parsing methods SHOULD NOT be necessary.
 7. If the rule should allow users to exclude specific values, add a secondary `ignore` option (see [the `ignore` option pattern](#the-ignore-option-pattern) below).
