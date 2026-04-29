@@ -108,13 +108,17 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 
 | Rule                                                                                       | Description                                                                  |
 | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| [max-atrules](src/rules/max-atrules/README.md)                                             | Limit the total number of at-rules in a stylesheet                           |
 | [max-average-declarations-per-rule](src/rules/max-average-declarations-per-rule/README.md) | Limit the average number of declarations per rule across the stylesheet      |
 | [max-average-selector-complexity](src/rules/max-average-selector-complexity/README.md)     | Limit the average selector complexity across the stylesheet                  |
 | [max-average-selectors-per-rule](src/rules/max-average-selectors-per-rule/README.md)       | Limit the average number of selectors per rule across the stylesheet         |
 | [max-average-specificity](src/rules/max-average-specificity/README.md)                     | Limit the average specificity across the stylesheet                          |
+| [max-declarations](src/rules/max-declarations/README.md)                                   | Limit the total number of declarations in a stylesheet                       |
 | [max-declarations-per-rule](src/rules/max-declarations-per-rule/README.md)                 | Limit the number of declarations in a single rule                            |
 | [max-important-ratio](src/rules/max-important-ratio/README.md)                             | Limit the ratio of `!important` declarations relative to all declarations    |
+| [max-rules](src/rules/max-rules/README.md)                                                 | Limit the total number of rules in a stylesheet                              |
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                     | Prevent selector complexity from going over a predefined maximum             |
+| [max-selectors](src/rules/max-selectors/README.md)                                         | Limit the total number of selectors in a stylesheet                          |
 | [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                       | Limit the number of selectors in a single rule                               |
 | [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet         |
 | [max-unique-color-formats](src/rules/max-unique-color-formats/README.md)                   | Limit the number of distinct color formats used across the stylesheet        |
