@@ -7,6 +7,8 @@ export default {
 			recommended.rules['projectwallace/max-unique-animation-functions'],
 		'projectwallace/max-unique-box-shadows':
 			recommended.rules['projectwallace/max-unique-box-shadows'],
+		'projectwallace/max-unique-text-shadows':
+			recommended.rules['projectwallace/max-unique-text-shadows'],
 		'projectwallace/max-unique-color-formats':
 			recommended.rules['projectwallace/max-unique-color-formats'],
 		'projectwallace/max-unique-colors': recommended.rules['projectwallace/max-unique-colors'],

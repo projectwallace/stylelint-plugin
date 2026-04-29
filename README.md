@@ -82,6 +82,7 @@ Rules that encourage the use of design tokens in your CSS.
 | [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                   | Limit the number of unique font sizes                 |
 | [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                     | Limit the number of unique keyframe animations        |
 | [max-unique-media-queries](src/rules/max-unique-media-queries/README.md)             | Limit the number of unique media queries              |
+| [max-unique-text-shadows](src/rules/max-unique-text-shadows/README.md)               | Limit the number of unique text-shadow values         |
 
 ### Correctness
 
