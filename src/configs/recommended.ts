@@ -52,6 +52,7 @@ export default {
 		'projectwallace/max-unique-media-queries': 12,
 		'projectwallace/max-unique-keyframes': 8,
 		'projectwallace/max-unique-gradients': 8,
+		'projectwallace/max-unique-supports-queries': 8,
 		'projectwallace/max-unique-units': 10,
 		'projectwallace/min-selector-uniqueness-ratio': 0.66,
 		'projectwallace/min-declaration-uniqueness-ratio': 0.5,

@@ -37,6 +37,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-unique-keyframes',
 		'projectwallace/max-unique-line-heights',
 		'projectwallace/max-unique-media-queries',
+		'projectwallace/max-unique-supports-queries',
 		'projectwallace/max-unique-text-shadows',
 		'projectwallace/max-unique-units',
 		'projectwallace/max-unique-z-indexes',

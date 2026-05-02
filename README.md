@@ -82,6 +82,7 @@ Rules that encourage the use of design tokens in your CSS.
 | [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                   | Limit the number of unique font sizes                 |
 | [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                     | Limit the number of unique keyframe animations        |
 | [max-unique-media-queries](src/rules/max-unique-media-queries/README.md)             | Limit the number of unique media queries              |
+| [max-unique-supports-queries](src/rules/max-unique-supports-queries/README.md)       | Limit the number of unique supports queries           |
 | [max-unique-text-shadows](src/rules/max-unique-text-shadows/README.md)               | Limit the number of unique text-shadow values         |
 
 ### Correctness
@@ -123,6 +124,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet         |
 | [max-unique-color-formats](src/rules/max-unique-color-formats/README.md)                   | Limit the number of distinct color formats used across the stylesheet        |
 | [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                           | Limit the number of unique keyframe animations defined across the stylesheet |
+| [max-unique-supports-queries](src/rules/max-unique-supports-queries/README.md)             | Limit the number of unique supports queries used across the stylesheet       |
 | [max-unique-units](src/rules/max-unique-units/README.md)                                   | Limit the number of unique CSS units used across the stylesheet              |
 | [max-unique-z-indexes](src/rules/max-unique-z-indexes/README.md)                           | Limit the number of unique z-index values used across the stylesheet         |
 | [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)   | Enforce a minimum ratio of unique declarations across the stylesheet         |

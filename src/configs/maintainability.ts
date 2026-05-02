@@ -17,6 +17,7 @@ const rules = [
 	'projectwallace/max-selector-specificity',
 	'projectwallace/max-unique-keyframes',
 	'projectwallace/max-unique-media-queries',
+	'projectwallace/max-unique-supports-queries',
 	'projectwallace/max-unique-units',
 	'projectwallace/max-unique-z-indexes',
 	'projectwallace/min-declaration-uniqueness-ratio',
