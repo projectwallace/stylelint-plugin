@@ -41,7 +41,7 @@
 		"@codecov/rollup-plugin": "^2.0.1",
 		"@types/node": "^25.5.0",
 		"@vitest/coverage-v8": "^4.1.5",
-		"oxfmt": "^0.46.0",
+		"oxfmt": "^0.47.0",
 		"oxlint": "^1.61.0",
 		"publint": "^0.3.18",
 		"stylelint": "^17.9.0",
