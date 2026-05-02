@@ -9,6 +9,7 @@ export default {
 		'projectwallace/max-selector-complexity': 15,
 		'projectwallace/max-selector-specificity': [0, 5, 0],
 		'projectwallace/no-anonymous-layers': true,
+		'projectwallace/no-atrule-browserhacks': true,
 		'projectwallace/no-prefixed-atrules': true,
 		'projectwallace/no-prefixed-properties': [true, { ignore: ['-webkit-text-fill-color'] }],
 		'projectwallace/no-prefixed-selectors': [

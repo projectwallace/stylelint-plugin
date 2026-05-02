@@ -23,6 +23,7 @@ const rules = [
 	'projectwallace/min-declaration-uniqueness-ratio',
 	'projectwallace/min-selector-uniqueness-ratio',
 	'projectwallace/no-anonymous-layers',
+	'projectwallace/no-atrule-browserhacks',
 	'projectwallace/no-prefixed-atrules',
 	'projectwallace/no-prefixed-properties',
 	'projectwallace/no-prefixed-selectors',

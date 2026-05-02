@@ -44,6 +44,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/min-declaration-uniqueness-ratio',
 		'projectwallace/min-selector-uniqueness-ratio',
 		'projectwallace/no-anonymous-layers',
+		'projectwallace/no-atrule-browserhacks',
 		'projectwallace/no-duplicate-data-urls',
 		'projectwallace/no-empty-rules',
 		'projectwallace/no-important-in-keyframes',
