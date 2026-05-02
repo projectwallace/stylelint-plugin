@@ -73,8 +73,6 @@ a { --ignored: green; }
 
 Load `var()` usages from external CSS files. Any custom property consumed via `var()` in those files counts as "used", preventing false positives when a tokens file declares variables that are only consumed by separate component stylesheets.
 
-Inspired by the `importFrom` option in [csstools/postcss-custom-properties](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-properties).
-
 Each entry is either a file path string or an object with a `filePath` key.
 
 Given `component.css`:
@@ -110,3 +108,7 @@ The following patterns are _not_ considered problems:
 	/* ↑ both are used in component.css */
 }
 ```
+
+## Credits
+
+`importFrom` inspired by the same option in [csstools/postcss-custom-properties](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-properties).

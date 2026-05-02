@@ -102,3 +102,7 @@ The following patterns are _not_ considered violations:
 /* valid @import media condition */
 @import url(wide.css) (min-width: 600px) and (max-width: 1200px);
 ```
+
+## Credits
+
+Idea for this rule came from [@andydavies](https://github.com/andydavies) via [Bluesky](https://bsky.app/profile/andydavies.me/post/3lgvt5gjyxc2e)

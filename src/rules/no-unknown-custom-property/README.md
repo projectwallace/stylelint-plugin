@@ -106,8 +106,6 @@ a { color: var(--undeclared, var(--also-undeclared, red)); }
 
 Load custom property declarations from external CSS files. Any property declared in those files — via a regular declaration or `@property` — is treated as known when linting the current file. This is the main solution for multi-file projects where tokens or design system variables are defined in a separate stylesheet.
 
-Inspired by the `importFrom` option in [csstools/postcss-custom-properties](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-properties).
-
 Each entry is either a file path string or an object with a `filePath` key.
 
 Given `tokens.css`:
@@ -140,3 +138,7 @@ The following patterns are _not_ considered problems:
 a { color: var(--brand-color); }
 /*               ↑ declared in tokens.css */
 ```
+
+## Credits
+
+`importFrom` inspired by the same option in [csstools/postcss-custom-properties](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-properties).

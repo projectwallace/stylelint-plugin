@@ -132,10 +132,6 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [no-property-shorthand](src/rules/no-property-shorthand/README.md)                         | Disallow the use of shorthand properties                                     |
 | [no-value-browserhacks](src/rules/no-value-browserhacks/README.md)                         | Disallow the use of known browser hacks in values                            |
 
-## Credits
-
-The `importFrom` option on [no-unknown-custom-property](src/rules/no-unknown-custom-property/README.md) and [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md) was inspired by the `importFrom` option in [csstools/postcss-custom-properties](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-properties).
-
 ## License
 
 MIT
