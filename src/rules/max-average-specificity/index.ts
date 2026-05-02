@@ -1,12 +1,11 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { getSpecificity, compareSpecificity } from '@projectwallace/css-analyzer/selectors'
+import type { Specificity } from '@projectwallace/css-analyzer'
 
 const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-average-specificity'
-
-type Specificity = [number, number, number]
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: string, expected: string) =>
