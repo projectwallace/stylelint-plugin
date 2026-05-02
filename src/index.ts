@@ -38,6 +38,10 @@ import no_duplicate_data_urls from './rules/no-duplicate-data-urls/index.js'
 import no_empty_rules from './rules/no-empty-rules/index.js'
 import no_important_in_keyframes from './rules/no-important-in-keyframes/index.js'
 import no_invalid_z_index from './rules/no-invalid-z-index/index.js'
+import no_prefixed_atrules from './rules/no-prefixed-atrules/index.js'
+import no_prefixed_properties from './rules/no-prefixed-properties/index.js'
+import no_prefixed_selectors from './rules/no-prefixed-selectors/index.js'
+import no_prefixed_values from './rules/no-prefixed-values/index.js'
 import no_property_browserhacks from './rules/no-property-browserhacks/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
 import no_value_browserhacks from './rules/no-value-browserhacks/index.js'
@@ -92,6 +96,10 @@ const plugins: stylelint.Plugin[] = [
 	no_empty_rules,
 	no_important_in_keyframes,
 	no_invalid_z_index,
+	no_prefixed_atrules,
+	no_prefixed_properties,
+	no_prefixed_selectors,
+	no_prefixed_values,
 	no_property_browserhacks,
 	no_property_shorthand,
 	no_static_container_query,

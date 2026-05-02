@@ -128,6 +128,10 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)   | Enforce a minimum ratio of unique declarations across the stylesheet         |
 | [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)         | Enforce a minimum ratio of unique selectors across the stylesheet            |
 | [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                             | Disallow anonymous (unnamed) `@layer` blocks                                 |
+| [no-prefixed-atrules](src/rules/no-prefixed-atrules/README.md)                             | Disallow vendor-prefixed at-rules                                            |
+| [no-prefixed-properties](src/rules/no-prefixed-properties/README.md)                       | Disallow vendor-prefixed CSS properties                                      |
+| [no-prefixed-selectors](src/rules/no-prefixed-selectors/README.md)                         | Disallow vendor-prefixed pseudo-classes and pseudo-elements in selectors     |
+| [no-prefixed-values](src/rules/no-prefixed-values/README.md)                               | Disallow vendor-prefixed CSS values                                          |
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                   | Prevent the use of known browserhacks for properties                         |
 | [no-property-shorthand](src/rules/no-property-shorthand/README.md)                         | Disallow the use of shorthand properties                                     |
 | [no-value-browserhacks](src/rules/no-value-browserhacks/README.md)                         | Disallow the use of known browser hacks in values                            |

@@ -9,6 +9,13 @@ export default {
 		'projectwallace/max-selector-complexity': 15,
 		'projectwallace/max-selector-specificity': [0, 5, 0],
 		'projectwallace/no-anonymous-layers': true,
+		'projectwallace/no-prefixed-atrules': true,
+		'projectwallace/no-prefixed-properties': [true, { ignore: ['-webkit-text-fill-color'] }],
+		'projectwallace/no-prefixed-selectors': [
+			true,
+			{ ignore: [/^::-webkit-scrollbar/, ':-webkit-autofill'] },
+		],
+		'projectwallace/no-prefixed-values': true,
 		'projectwallace/no-property-browserhacks': true,
 		'projectwallace/no-property-shorthand': true,
 		'projectwallace/no-static-container-query': true,
