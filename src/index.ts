@@ -29,6 +29,7 @@ import max_unique_gradients from './rules/max-unique-gradients/index.js'
 import max_unique_keyframes from './rules/max-unique-keyframes/index.js'
 import max_unique_line_heights from './rules/max-unique-line-heights/index.js'
 import max_unique_media_queries from './rules/max-unique-media-queries/index.js'
+import max_unique_supports_queries from './rules/max-unique-supports-queries/index.js'
 import max_unique_units from './rules/max-unique-units/index.js'
 import max_unique_z_indexes from './rules/max-unique-z-indexes/index.js'
 import min_declaration_uniqueness_ratio from './rules/min-declaration-uniqueness-ratio/index.js'
@@ -86,6 +87,7 @@ const plugins: stylelint.Plugin[] = [
 	max_unique_keyframes,
 	max_unique_line_heights,
 	max_unique_media_queries,
+	max_unique_supports_queries,
 	max_unique_text_shadows,
 	max_unique_units,
 	max_unique_z_indexes,
