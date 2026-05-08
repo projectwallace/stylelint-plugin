@@ -14,6 +14,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-average-selectors-per-rule',
 		'projectwallace/max-average-specificity',
 		'projectwallace/max-comment-size',
+		'projectwallace/max-comments',
 		'projectwallace/max-declarations',
 		'projectwallace/max-declarations-per-rule',
 		'projectwallace/max-embedded-content-size',

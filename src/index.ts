@@ -5,6 +5,7 @@ import max_average_selector_complexity from './rules/max-average-selector-comple
 import max_average_selectors_per_rule from './rules/max-average-selectors-per-rule/index.js'
 import max_average_specificity from './rules/max-average-specificity/index.js'
 import max_comment_size from './rules/max-comment-size/index.js'
+import max_comments from './rules/max-comments/index.js'
 import max_declarations from './rules/max-declarations/index.js'
 import max_declarations_per_rule from './rules/max-declarations-per-rule/index.js'
 import max_embedded_content_size from './rules/max-embedded-content-size/index.js'
@@ -66,6 +67,7 @@ const plugins: stylelint.Plugin[] = [
 	max_average_selectors_per_rule,
 	max_average_specificity,
 	max_comment_size,
+	max_comments,
 	max_declarations,
 	max_declarations_per_rule,
 	max_embedded_content_size,
