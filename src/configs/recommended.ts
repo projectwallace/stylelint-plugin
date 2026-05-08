@@ -37,6 +37,7 @@ export default {
 		'projectwallace/max-file-size': 200_000,
 		'projectwallace/max-embedded-content-size': 10_000,
 		'projectwallace/max-comment-size': [2500, { ignoreCopyrightComments: true }],
+		'projectwallace/max-comments': [64, { ignoreCopyrightComments: true }],
 		'projectwallace/max-average-selectors-per-rule': 3,
 		'projectwallace/max-average-declarations-per-rule': 6,
 		'projectwallace/max-average-selector-complexity': 3,

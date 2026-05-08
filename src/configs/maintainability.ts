@@ -34,6 +34,7 @@ export default {
 		'projectwallace/no-prefixed-values': true,
 		'projectwallace/no-property-browserhacks': true,
 		'projectwallace/no-property-shorthand': true,
+		'projectwallace/max-comments': [64, { ignoreCopyrightComments: true }],
 		'projectwallace/max-spacing-resets': 16,
 	},
 }

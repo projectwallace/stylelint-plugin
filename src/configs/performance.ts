@@ -8,5 +8,11 @@ export default {
 		'projectwallace/max-file-size': 200_000,
 		'projectwallace/max-embedded-content-size': 10_000,
 		'projectwallace/max-comment-size': 0,
+		'projectwallace/max-comments': [
+			0,
+			{
+				ignoreCopyrightComments: true,
+			},
+		],
 	},
 }
