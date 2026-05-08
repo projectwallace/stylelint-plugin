@@ -12,6 +12,7 @@ export default {
 		'projectwallace/max-average-specificity': [0.02, 2.5, 1],
 		'projectwallace/max-declarations-per-rule': 15,
 		'projectwallace/max-important-ratio': 0.1,
+		'projectwallace/max-nesting-depth': 1,
 		'projectwallace/max-selector-complexity': 15,
 		'projectwallace/max-selectors-per-rule': 10,
 		'projectwallace/max-selector-specificity': [0, 5, 0],

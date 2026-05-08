@@ -6,6 +6,7 @@ export default {
 		'projectwallace/max-selectors': 2500,
 		'projectwallace/max-declarations': 5000,
 		'projectwallace/max-lines-of-code': 10_000,
+		'projectwallace/max-nesting-depth': 1,
 		'projectwallace/max-selector-complexity': 15,
 		'projectwallace/max-selector-specificity': [0, 5, 0],
 		'projectwallace/no-anonymous-layers': true,
