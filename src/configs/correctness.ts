@@ -1,24 +1,17 @@
-import recommended from './recommended.js'
-
-const rules = [
-	'projectwallace/no-invalid-z-index',
-	'projectwallace/no-unknown-container-names',
-	'projectwallace/no-unknown-custom-property',
-	'projectwallace/no-unreachable-media-conditions',
-	'projectwallace/no-empty-rules',
-	'projectwallace/no-important-in-keyframes',
-	'projectwallace/no-useless-custom-property-assignment',
-	'projectwallace/no-unused-custom-properties',
-	'projectwallace/no-unused-container-names',
-	'projectwallace/no-unused-layers',
-	'projectwallace/no-static-media-query',
-	'projectwallace/no-static-container-query',
-] as const
-
 export default {
 	plugins: ['@projectwallace/stylelint-plugin'],
-	rules: Object.fromEntries(rules.map((rule) => [rule, recommended.rules[rule]])) as Pick<
-		typeof recommended.rules,
-		(typeof rules)[number]
-	>,
+	rules: {
+		'projectwallace/no-invalid-z-index': true,
+		'projectwallace/no-unknown-container-names': true,
+		'projectwallace/no-unknown-custom-property': true,
+		'projectwallace/no-unreachable-media-conditions': true,
+		'projectwallace/no-empty-rules': true,
+		'projectwallace/no-important-in-keyframes': true,
+		'projectwallace/no-useless-custom-property-assignment': true,
+		'projectwallace/no-unused-custom-properties': true,
+		'projectwallace/no-unused-container-names': true,
+		'projectwallace/no-unused-layers': true,
+		'projectwallace/no-static-media-query': true,
+		'projectwallace/no-static-container-query': true,
+	},
 }

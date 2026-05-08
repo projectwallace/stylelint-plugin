@@ -22,9 +22,11 @@
 	],
 	"type": "module",
 	"main": "./dist/index.mjs",
+	"sideEffects": false,
 	"exports": {
 		".": "./dist/index.mjs",
 		"./configs/*": "./dist/configs/*.mjs",
+		"./rules/*": "./dist/rules/*/index.mjs",
 		"./package.json": "./package.json"
 	},
 	"scripts": {
