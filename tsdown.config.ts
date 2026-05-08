@@ -2,7 +2,7 @@ import { defineConfig } from 'tsdown'
 import { codecovRollupPlugin } from '@codecov/rollup-plugin'
 
 export default defineConfig({
-	entry: ['./src/index.ts', './src/configs/*.ts', '!./**/*.test.ts'],
+	entry: ['./src/index.ts', './src/configs/*.ts', './src/rules/*/index.ts', '!./**/*.test.ts'],
 	format: ['esm'],
 	platform: 'node',
 	dts: true,
