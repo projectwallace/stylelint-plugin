@@ -60,6 +60,7 @@ Rules that affect file size and loading performance.
 | Rule                                                                       | Description                                                               |
 | -------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | [max-comment-size](src/rules/max-comment-size/README.md)                   | Limit the total byte size of comments in a stylesheet                     |
+| [max-comments](src/rules/max-comments/README.md)                           | Prevent the total number of comments from exceeding a predefined limit.   |
 | [max-embedded-content-size](src/rules/max-embedded-content-size/README.md) | Limit the total byte size of embedded content (data URIs) in a stylesheet |
 | [max-file-size](src/rules/max-file-size/README.md)                         | Limit the total byte size of a stylesheet                                 |
 | [max-lines-of-code](src/rules/max-lines-of-code/README.md)                 | Prevent a stylesheet from exceeding a predefined number of lines of code  |
@@ -114,9 +115,11 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [max-average-selector-complexity](src/rules/max-average-selector-complexity/README.md)     | Limit the average selector complexity across the stylesheet                  |
 | [max-average-selectors-per-rule](src/rules/max-average-selectors-per-rule/README.md)       | Limit the average number of selectors per rule across the stylesheet         |
 | [max-average-specificity](src/rules/max-average-specificity/README.md)                     | Limit the average specificity across the stylesheet                          |
+| [max-comments](src/rules/max-comments/README.md)                                           | Prevent the total number of comments from exceeding a predefined limit.      |
 | [max-declarations](src/rules/max-declarations/README.md)                                   | Limit the total number of declarations in a stylesheet                       |
 | [max-declarations-per-rule](src/rules/max-declarations-per-rule/README.md)                 | Limit the number of declarations in a single rule                            |
 | [max-important-ratio](src/rules/max-important-ratio/README.md)                             | Limit the ratio of `!important` declarations relative to all declarations    |
+| [max-nesting-depth](src/rules/max-nesting-depth/README.md)                                 | Limit the maximum nesting depth of CSS rules and at-rules.                   |
 | [max-rules](src/rules/max-rules/README.md)                                                 | Limit the total number of rules in a stylesheet                              |
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                     | Prevent selector complexity from going over a predefined maximum             |
 | [max-selectors](src/rules/max-selectors/README.md)                                         | Limit the total number of selectors in a stylesheet                          |
@@ -130,6 +133,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)   | Enforce a minimum ratio of unique declarations across the stylesheet         |
 | [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)         | Enforce a minimum ratio of unique selectors across the stylesheet            |
 | [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                             | Disallow anonymous (unnamed) `@layer` blocks                                 |
+| [no-atrule-browserhacks](src/rules/no-atrule-browserhacks/README.md)                       | Disallow the use of known browser hacks in at-rule preludes                  |
 | [no-prefixed-atrules](src/rules/no-prefixed-atrules/README.md)                             | Disallow vendor-prefixed at-rules                                            |
 | [no-prefixed-properties](src/rules/no-prefixed-properties/README.md)                       | Disallow vendor-prefixed CSS properties                                      |
 | [no-prefixed-selectors](src/rules/no-prefixed-selectors/README.md)                         | Disallow vendor-prefixed pseudo-classes and pseudo-elements in selectors     |
