@@ -20,6 +20,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-file-size',
 		'projectwallace/max-important-ratio',
 		'projectwallace/max-lines-of-code',
+		'projectwallace/max-nesting-depth',
 		'projectwallace/max-rules',
 		'projectwallace/max-selector-complexity',
 		'projectwallace/max-selector-specificity',

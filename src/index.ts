@@ -11,6 +11,7 @@ import max_embedded_content_size from './rules/max-embedded-content-size/index.j
 import max_file_size from './rules/max-file-size/index.js'
 import max_important_ratio from './rules/max-important-ratio/index.js'
 import max_lines_of_code from './rules/max-lines-of-code/index.js'
+import max_nesting_depth from './rules/max-nesting-depth/index.js'
 import max_rules from './rules/max-rules/index.js'
 import max_selector_complexity from './rules/max-selector-complexity/index.js'
 import max_selector_specificity from './rules/max-selector-specificity/index.js'
@@ -71,6 +72,7 @@ const plugins: stylelint.Plugin[] = [
 	max_file_size,
 	max_important_ratio,
 	max_lines_of_code,
+	max_nesting_depth,
 	max_rules,
 	max_selector_complexity,
 	max_selector_specificity,
