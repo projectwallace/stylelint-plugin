@@ -12,8 +12,8 @@ importers:
         specifier: ^9.8.0
         version: 9.8.0
       '@projectwallace/css-parser':
-        specifier: ^0.14.10
-        version: 0.14.10
+        specifier: ^0.15.0
+        version: 0.15.0
     devDependencies:
       '@codecov/rollup-plugin':
         specifier: ^2.0.1
@@ -522,6 +522,9 @@ packages:
 
   '@projectwallace/css-parser@0.14.10':
     resolution: {integrity: sha512-zE9boYHnGLk+6nn2hTz+QQs67E+BVOkPqDmBry/sUVWho+g/ZICBuSRssvRsCa+5ZCPhL1SkeupDqM8BEi85hA==}
+
+  '@projectwallace/css-parser@0.15.0':
+    resolution: {integrity: sha512-93/+vgClR/Zb0m4cWQLGaNOLBzeLRPRXNSEaxW6ZAwEOnri48kcpiaB1uUBicLvt660DPvjNExFHINipdkOB1w==}
 
   '@publint/pack@0.1.4':
     resolution: {integrity: sha512-HDVTWq3H0uTXiU0eeSQntcVUTPP3GamzeXI41+x7uU9J65JgWQh3qWZHblR1i0npXfFtF+mxBiU2nJH8znxWnQ==}
@@ -2169,6 +2172,8 @@ snapshots:
       '@projectwallace/css-parser': 0.14.10
 
   '@projectwallace/css-parser@0.14.10': {}
+
+  '@projectwallace/css-parser@0.15.0': {}
 
   '@publint/pack@0.1.4': {}
 
