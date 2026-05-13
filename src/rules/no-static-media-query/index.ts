@@ -1,14 +1,9 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import {
-	MEDIA_QUERY,
-	MEDIA_FEATURE,
-	DIMENSION,
-	NUMBER,
-	PRELUDE_OPERATOR,
-} from '@projectwallace/css-parser/nodes'
+import { MEDIA_QUERY, MEDIA_FEATURE, PRELUDE_OPERATOR } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { walk, BREAK } from '@projectwallace/css-parser/walker'
+import { is_dimension, is_number } from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
@@ -71,13 +66,12 @@ function find_static_feature_in_prelude(
 			if (property.startsWith('min-') || property.startsWith('max-')) return
 
 			// A numeric value makes this an equality (static) condition
-			for (const child of node.children) {
-				if (child.type === DIMENSION || child.type === NUMBER) {
-					const value = child.value
-					if (value !== null && !Number.isNaN(value)) {
-						static_feature = { feature: property, value: child.text }
-						return BREAK
-					}
+			const child = node.value
+			if (child !== null && (is_dimension(child) || is_number(child))) {
+				const value = child.value
+				if (value !== null && !Number.isNaN(value)) {
+					static_feature = { feature: property, value: child.text }
+					return BREAK
 				}
 			}
 		})

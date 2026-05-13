@@ -71,13 +71,11 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 			if (property.startsWith('min-') || property.startsWith('max-')) return
 
 			// A numeric value makes this an equality (static) condition
-			for (const child of media_feature) {
-				if (is_dimension(child) || is_number(child)) {
-					const { value } = child
-					if (value != null && !Number.isNaN(value)) {
-						static_feature = { feature: property, value: child.text }
-						return
-					}
+			const child = media_feature.value
+			if (child !== null && (is_dimension(child) || is_number(child))) {
+				const { value } = child
+				if (value != null && !Number.isNaN(value)) {
+					static_feature = { feature: property, value: child.text }
 				}
 			}
 		})

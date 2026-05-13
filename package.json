@@ -40,7 +40,7 @@
 		"build": "tsdown"
 	},
 	"dependencies": {
-		"@projectwallace/css-analyzer": "^9.8.0",
+		"@projectwallace/css-analyzer": "^9.8.1",
 		"@projectwallace/css-parser": "^0.15.0"
 	},
 	"devDependencies": {
