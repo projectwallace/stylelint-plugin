@@ -47,20 +47,18 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
 		feature = property
 	}
 
-	// Find first DIMENSION or NUMBER child
-	for (const child of node.children) {
-		if (is_dimension(child) || is_number(child)) {
-			const value = child.value
-			const unit = is_dimension(child) ? child.unit : ''
-			if (value == null || Number.isNaN(value)) return []
-			if (direction === 'both') {
-				return [
-					{ feature, value, unit, inclusive: true, direction: 'lower' },
-					{ feature, value, unit, inclusive: true, direction: 'upper' },
-				]
-			}
-			return [{ feature, value, unit, inclusive: true, direction }]
+	const child = node.value
+	if (child !== null && (is_dimension(child) || is_number(child))) {
+		const value = child.value
+		const unit = is_dimension(child) ? child.unit : ''
+		if (value == null || Number.isNaN(value)) return []
+		if (direction === 'both') {
+			return [
+				{ feature, value, unit, inclusive: true, direction: 'lower' },
+				{ feature, value, unit, inclusive: true, direction: 'upper' },
+			]
 		}
+		return [{ feature, value, unit, inclusive: true, direction }]
 	}
 
 	return []
