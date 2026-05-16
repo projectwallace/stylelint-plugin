@@ -2,8 +2,6 @@
 
 A stylelint plugin that checks the complexity of your CSS.
 
-> Only use this plugin with standard CSS. Non-standard CSS (Sass, Less, etc.) is not supported.
-
 ## Installation
 
 ```sh
