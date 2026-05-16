@@ -1,8 +1,6 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import plugin from './index.js'
-
-const rule_name = 'projectwallace/no-property-shorthand'
+import plugin, { rule_name } from './index.js'
 
 const config = {
 	plugins: [plugin],
@@ -28,6 +26,18 @@ test('should not error on a custom property', async () => {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
 		code: `a { --my-background: red }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should not error on a custom property whose name matches a shorthand', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { --font: bold 16px sans-serif }`,
 		config,
 	})
 
@@ -153,4 +163,73 @@ test('should still error on shorthands not in the ignore', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(`Shorthand property "font" is not allowed (${rule_name})`)
+})
+
+test('should not error on a single-value shorthand when "single-value" is ignored', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { margin-inline: var(--my-margin) }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { ignore: ['single-value'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should not error on a keyword-only single-value shorthand when "single-value" is ignored', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { font: inherit }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { ignore: ['single-value'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should still error on multi-value shorthands when "single-value" is ignored', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { font: bold 16px/1.5 sans-serif }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { ignore: ['single-value'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should combine "single-value" with property name ignores', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { font: inherit; background: no-repeat center; padding: 10px 20px }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { ignore: ['single-value', 'background'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(`Shorthand property "padding" is not allowed (${rule_name})`)
 })

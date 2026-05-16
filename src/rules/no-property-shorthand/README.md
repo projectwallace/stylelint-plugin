@@ -34,9 +34,47 @@ a {
 
 ## Options
 
-### `ignore: Array<string | RegExp>`
+### `ignore: Array<string | RegExp | "single-value">`
 
-Allows specific shorthand properties to be used. Accepts exact strings or regular expressions.
+Allows specific shorthand properties or patterns to be used. Accepts exact strings, regular expressions, or the special keyword `"single-value"`.
+
+#### `"single-value"`
+
+When `"single-value"` is included, shorthand properties with a single value token are allowed. This covers keyword-only values like `inherit` and function calls like `var(--foo)`.
+
+<!-- prettier-ignore -->
+```json
+[true, { "ignore": ["single-value"] }]
+```
+
+The following are _not_ considered violations when `ignore: ["single-value"]` is set:
+
+<!-- prettier-ignore -->
+```css
+a {
+	font: inherit;
+}
+```
+
+<!-- prettier-ignore -->
+```css
+a {
+	margin-inline: var(--my-margin);
+}
+```
+
+The following _is_ still a violation (multiple value tokens):
+
+<!-- prettier-ignore -->
+```css
+a {
+	font: bold 16px/1.5 sans-serif;
+}
+```
+
+#### Property names and patterns
+
+Allows specific shorthand properties by exact name or regular expression.
 
 <!-- prettier-ignore -->
 ```json
@@ -50,6 +88,13 @@ The following are _not_ considered violations when `ignore: ["background"]` is s
 a {
 	background: red;
 }
+```
+
+Both `"single-value"` and property names can be combined:
+
+<!-- prettier-ignore -->
+```json
+[true, { "ignore": ["single-value", "background"] }]
 ```
 
 ## Patterns
