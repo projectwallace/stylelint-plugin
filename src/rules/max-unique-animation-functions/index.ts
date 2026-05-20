@@ -58,7 +58,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				declaration.prop === 'animation-timing-function' ||
 				declaration.prop === 'transition-timing-function'
 			) {
-				for (let child of parsed.children) {
+				for (let child of parsed) {
 					if (child.type !== OPERATOR) {
 						let fn = child.text
 						if (!is_allowed(fn, ignore)) {

@@ -55,7 +55,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			const before = unique_durations.size
 
 			if (declaration.prop === 'animation-duration' || declaration.prop === 'transition-duration') {
-				for (let child of parsed.children) {
+				for (let child of parsed) {
 					if (child.type !== OPERATOR) {
 						let duration = child.text
 

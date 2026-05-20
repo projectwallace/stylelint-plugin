@@ -33,7 +33,7 @@ const ruleFunction = (primaryOption: number) => {
 
 			const selector_list = parse_selector_list(selector_text)
 
-			for (const selector of selector_list.children) {
+			for (const selector of selector_list) {
 				const complexity = getComplexity(selector)
 				const stringified = selector.text.replace(/\n/g, '')
 

@@ -193,7 +193,7 @@ For per-selector checks, parse first then call `getSpecificity` on each individu
 import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 
 const selector_list = parse_selector_list(rule.selector)
-for (const selector of selector_list.children) {
+for (const selector of selector_list) {
 	const specificities = getSpecificity(selector.text)
 	const specificity = specificities[0] as [number, number, number]
 	// compare specificity here
