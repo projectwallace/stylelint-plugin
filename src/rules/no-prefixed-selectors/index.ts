@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_selector, walk, BREAK } from '@projectwallace/css-parser'
+import { walk, BREAK, parse_selector_list } from '@projectwallace/css-parser'
 import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
@@ -39,9 +39,9 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 			const selector_text = rule.selector
 			if (!selector_text.trim()) return
 
-			const selector_list = parse_selector(selector_text)
+			const selector_list = parse_selector_list(selector_text)
 
-			for (const selector of selector_list.children) {
+			for (const selector of selector_list) {
 				walk(selector, (node) => {
 					if (node.is_vendor_prefixed && !is_allowed(node.text, ignore)) {
 						utils.report({

@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_selector } from '@projectwallace/css-parser/parse-selector'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
@@ -26,8 +26,8 @@ const ruleFunction = (primaryOption: number) => {
 		if (!validOptions) return
 
 		root.walkRules((rule) => {
-			const parsed = parse_selector(rule.selector)
-			const actual = parsed.children.length
+			const parsed = parse_selector_list(rule.selector)
+			const actual = parsed.child_count
 
 			if (actual > primaryOption) {
 				utils.report({
