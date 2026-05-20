@@ -65,7 +65,7 @@ export function collect_usages_from_files(importFrom: ImportFrom[]): Set<string>
 		})
 		walk(ast, (node) => {
 			if (node.type === FUNCTION && node.name === 'var') {
-				for (const child of node.children) {
+				for (const child of node) {
 					if (child.type === IDENTIFIER && child.text.startsWith('--')) {
 						result.add(child.text)
 						break

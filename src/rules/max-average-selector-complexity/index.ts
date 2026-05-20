@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_selector } from '@projectwallace/css-parser/parse-selector'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 import { getComplexity } from '@projectwallace/css-analyzer/selectors'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 
@@ -30,9 +30,9 @@ const ruleFunction = (primaryOption: number) => {
 		let selector_count = 0
 
 		root.walkRules((rule) => {
-			const parsed = parse_selector(rule.selector)
+			const parsed = parse_selector_list(rule.selector)
 
-			for (const selector of parsed.children) {
+			for (const selector of parsed) {
 				total_complexity += getComplexity(selector)
 				selector_count++
 			}

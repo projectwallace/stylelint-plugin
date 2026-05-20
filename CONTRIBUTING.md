@@ -21,7 +21,7 @@
 3. Add the rule to **all applicable** configuration presets in `src/configs/` — the `src/configs/recommended.test.ts` asserts that every exported rule appears in `recommended.ts`, so omitting it will fail the test suite
 4. Add the rule to the corresponding preset configuration rules list in root `README.md`
 5. Use PostCSS API's as much as possible. Only if goals cannot be achieved reach for `@projectwallace/css-parser`
-6. Only use `@projectwallace/css-parser` methods `parse_value()`, `parse_selector()`, or `parse_atrule_prelude()`. Other parsing methods SHOULD NOT be necessary.
+6. Only use `@projectwallace/css-parser` methods `parse_value()`, `parse_selector()`, `parse_selector_list()` or `parse_atrule_prelude()`. Other parsing methods SHOULD NOT be necessary.
 7. If the rule should allow users to exclude specific values, add a secondary `ignore` option (see [the `ignore` option pattern](#the-ignore-option-pattern) below).
 
 ## Rule README guidelines
@@ -190,10 +190,10 @@ if (compareSpecificity(actual, max) > 0) {
 For per-selector checks, parse first then call `getSpecificity` on each individual selector text:
 
 ```ts
-import { parse_selector } from '@projectwallace/css-parser/parse-selector'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 
-const selector_list = parse_selector(rule.selector)
-for (const selector of selector_list.children) {
+const selector_list = parse_selector_list(rule.selector)
+for (const selector of selector_list) {
 	const specificities = getSpecificity(selector.text)
 	const specificity = specificities[0] as [number, number, number]
 	// compare specificity here

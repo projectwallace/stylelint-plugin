@@ -46,7 +46,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				if (reported) return BREAK
 				if (child.type !== FUNCTION || child.name !== 'var') return
 
-				for (const grandchild of child.children) {
+				for (const grandchild of child) {
 					if (grandchild.type === IDENTIFIER && grandchild.text === property) {
 						utils.report({
 							result,
