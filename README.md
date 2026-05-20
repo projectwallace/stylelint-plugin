@@ -2,6 +2,8 @@
 
 A stylelint plugin that checks the complexity of your CSS.
 
+<!-- BREAK -->
+
 ## Installation
 
 ```sh
