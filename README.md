@@ -1,6 +1,9 @@
+![Stylelint Plugin Project Wallace](./assets/logo--dark.webp#gh-dark-mode-only)
+![Stylelint Plugin Project Wallace](./assets/logo--light.webp#gh-light-mode-only)
+
 # @projectwallace/stylelint-plugin
 
-A stylelint plugin that checks the complexity of your CSS.
+A stylelint plugin that checks the complexity, design tokens, maintainability and correctness of your CSS.
 
 <!-- BREAK -->
 
@@ -142,6 +145,6 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [no-property-shorthand](src/rules/no-property-shorthand/README.md)                         | Disallow the use of shorthand properties                                     |
 | [no-value-browserhacks](src/rules/no-value-browserhacks/README.md)                         | Disallow the use of known browser hacks in values                            |
 
-## License
+## Acknowledgements
 
-MIT
+- [Daniel Yuschick's](https://github.com/yuschick) [stylelint-plugin-defensive-css](https://github.com/yuschick/stylelint-plugin-defensive-css) has been a great learning resource while building this package and you should definitely include it in your stylelint config ad well.
