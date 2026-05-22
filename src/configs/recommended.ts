@@ -27,6 +27,7 @@ export default {
 		'projectwallace/no-unreachable-media-conditions': true,
 		'projectwallace/no-unused-container-names': true,
 		'projectwallace/no-unused-custom-properties': true,
+		'projectwallace/no-unused-keyframes': true,
 		'projectwallace/no-unused-layers': true,
 		'projectwallace/no-useless-custom-property-assignment': true,
 		'projectwallace/no-duplicate-data-urls': true,
