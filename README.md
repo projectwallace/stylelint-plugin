@@ -60,15 +60,16 @@ All rules are included in the **recommended** config. The specialized configs be
 
 Rules that affect file size and loading performance.
 
-| Rule                                                                       | Description                                                               |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [max-comment-size](src/rules/max-comment-size/README.md)                   | Limit the total byte size of comments in a stylesheet                     |
-| [max-comments](src/rules/max-comments/README.md)                           | Prevent the total number of comments from exceeding a predefined limit.   |
-| [max-embedded-content-size](src/rules/max-embedded-content-size/README.md) | Limit the total byte size of embedded content (data URIs) in a stylesheet |
-| [max-file-size](src/rules/max-file-size/README.md)                         | Limit the total byte size of a stylesheet                                 |
-| [max-lines-of-code](src/rules/max-lines-of-code/README.md)                 | Prevent a stylesheet from exceeding a predefined number of lines of code  |
-| [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)       | Disallow the same data URL from being used more than once                 |
-| [no-unused-layers](src/rules/no-unused-layers/README.md)                   | Disallow `@layer` names that are declared but never implemented           |
+| Rule                                                                       | Description                                                                     |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| [max-comment-size](src/rules/max-comment-size/README.md)                   | Limit the total byte size of comments in a stylesheet                           |
+| [max-comments](src/rules/max-comments/README.md)                           | Prevent the total number of comments from exceeding a predefined limit.         |
+| [max-embedded-content-size](src/rules/max-embedded-content-size/README.md) | Limit the total byte size of embedded content (data URIs) in a stylesheet       |
+| [max-file-size](src/rules/max-file-size/README.md)                         | Limit the total byte size of a stylesheet                                       |
+| [max-lines-of-code](src/rules/max-lines-of-code/README.md)                 | Prevent a stylesheet from exceeding a predefined number of lines of code        |
+| [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)       | Disallow the same data URL from being used more than once                       |
+| [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)             | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
+| [no-unused-layers](src/rules/no-unused-layers/README.md)                   | Disallow `@layer` names that are declared but never implemented                 |
 
 ### Design Tokens
 
@@ -93,19 +94,20 @@ Rules that encourage the use of design tokens in your CSS.
 
 Rules to help prevent errors.
 
-| Rule                                                                                               | Description                                                                |
-| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [no-unknown-container-names](src/rules/no-unknown-container-names/README.md)                       | Disallow container names in `@container` that were never declared          |
-| [no-unknown-custom-property](src/rules/no-unknown-custom-property/README.md)                       | Disallow the use of undeclared custom properties in a `var()`              |
-| [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md) | Disallow custom property assignments that reference themselves via `var()` |
-| [no-unused-container-names](src/rules/no-unused-container-names/README.md)                         | Disallow container names that are declared but never queried               |
-| [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)                     | Disallow custom properties that are never used in a `var()`                |
-| [no-static-container-query](src/rules/no-static-container-query/README.md)                         | Disallow static (exact-match) numeric container feature conditions         |
-| [no-static-media-query](src/rules/no-static-media-query/README.md)                                 | Disallow static (exact-match) numeric media feature conditions             |
-| [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match  |
-| [no-important-in-keyframes](src/rules/no-important-in-keyframes/README.md)                         | Disallow `!important` declarations inside `@keyframes` blocks              |
-| [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                       | Disallow `z-index` values that are not valid 32-bit integers               |
-| [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never implemented            |
+| Rule                                                                                               | Description                                                                     |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| [no-unknown-container-names](src/rules/no-unknown-container-names/README.md)                       | Disallow container names in `@container` that were never declared               |
+| [no-unknown-custom-property](src/rules/no-unknown-custom-property/README.md)                       | Disallow the use of undeclared custom properties in a `var()`                   |
+| [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md) | Disallow custom property assignments that reference themselves via `var()`      |
+| [no-unused-container-names](src/rules/no-unused-container-names/README.md)                         | Disallow container names that are declared but never queried                    |
+| [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)                     | Disallow custom properties that are never used in a `var()`                     |
+| [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)                                     | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
+| [no-static-container-query](src/rules/no-static-container-query/README.md)                         | Disallow static (exact-match) numeric container feature conditions              |
+| [no-static-media-query](src/rules/no-static-media-query/README.md)                                 | Disallow static (exact-match) numeric media feature conditions                  |
+| [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match       |
+| [no-important-in-keyframes](src/rules/no-important-in-keyframes/README.md)                         | Disallow `!important` declarations inside `@keyframes` blocks                   |
+| [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                       | Disallow `z-index` values that are not valid 32-bit integers                    |
+| [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never implemented                 |
 
 ### Maintainability
 

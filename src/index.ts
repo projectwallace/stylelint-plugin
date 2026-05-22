@@ -56,6 +56,7 @@ import no_unknown_custom_property from './rules/no-unknown-custom-property/index
 import no_unreachable_media_conditions from './rules/no-unreachable-media-conditions/index.js'
 import no_unused_container_names from './rules/no-unused-container-names/index.js'
 import no_unused_custom_properties from './rules/no-unused-custom-properties/index.js'
+import no_unused_keyframes from './rules/no-unused-keyframes/index.js'
 import no_unused_layers from './rules/no-unused-layers/index.js'
 import no_useless_custom_property_assignment from './rules/no-useless-custom-property-assignment/index.js'
 
@@ -117,6 +118,7 @@ const plugins: stylelint.Plugin[] = [
 	no_unreachable_media_conditions,
 	no_unused_container_names,
 	no_unused_custom_properties,
+	no_unused_keyframes,
 	no_unused_layers,
 	no_useless_custom_property_assignment,
 	no_value_browserhacks,

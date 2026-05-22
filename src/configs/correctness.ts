@@ -10,6 +10,7 @@ export default {
 		'projectwallace/no-useless-custom-property-assignment': true,
 		'projectwallace/no-unused-custom-properties': true,
 		'projectwallace/no-unused-container-names': true,
+		'projectwallace/no-unused-keyframes': true,
 		'projectwallace/no-unused-layers': true,
 		'projectwallace/no-static-media-query': true,
 		'projectwallace/no-static-container-query': true,
