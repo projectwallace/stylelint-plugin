@@ -176,4 +176,6 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 
 ## Acknowledgements
 
-- [Daniel Yuschick's](https://github.com/yuschick) [stylelint-plugin-defensive-css](https://github.com/yuschick/stylelint-plugin-defensive-css) has been a great learning resource while building this package and you should definitely include it in your stylelint config ad well.
+- [Daniel Yuschick's](https://github.com/yuschick) [stylelint-plugin-defensive-css](https://github.com/yuschick/stylelint-plugin-defensive-css) has been a great learning resource while building this package and you should definitely include it in your stylelint config as well.
+- The `no-static-media-query` plugin was [an idea](https://bsky.app/profile/andydavies.me/post/3lgvt5gjyxc2e) from [Andy Davies](https://github.com/andydavies).
+- Some of the rules (like `no-empty-rules`, `no-unused-custom-properties`, etc.) also exist in other plugins. Our rule are new implementations based on `@projectwallace/css-parser` for performance and correctness. It also helps reduce the amount of plugins needed to install.
