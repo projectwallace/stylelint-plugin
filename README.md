@@ -7,7 +7,7 @@ A stylelint plugin that checks the complexity, design tokens, maintainability an
 
 <!-- BREAK -->
 
-- 📏 Over 70 rules to keep your CSS in check
+- 📏 Over 60 rules to keep your CSS in check
 - ⚙️ 5 configuration presets for different concerns
 - 🌲 Fully tree-shakeable — only pay for what you use
 - ⚡ Powered by `@projectwallace/css-parser` for fast parsing of selectors, values and at-rule preludes
@@ -95,6 +95,7 @@ Rules that affect file size and loading performance.
 | [max-file-size](src/rules/max-file-size/README.md)                         | Limit the total byte size of a stylesheet                                       |
 | [max-lines-of-code](src/rules/max-lines-of-code/README.md)                 | Prevent a stylesheet from exceeding a predefined number of lines of code        |
 | [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)       | Disallow the same data URL from being used more than once                       |
+| [no-empty-rules](src/rules/no-empty-rules/README.md)                       | Disallow empty rules and at-rules (including those containing only comments)    |
 | [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)             | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                   | Disallow `@layer` names that are declared but never implemented                 |
 
@@ -113,6 +114,7 @@ Rules that encourage the use of design tokens in your CSS.
 | [max-unique-font-families](src/rules/max-unique-font-families/README.md)             | Limit the number of unique font families              |
 | [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                   | Limit the number of unique font sizes                 |
 | [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                     | Limit the number of unique keyframe animations        |
+| [max-unique-line-heights](src/rules/max-unique-line-heights/README.md)               | Limit the number of unique line height values         |
 | [max-unique-media-queries](src/rules/max-unique-media-queries/README.md)             | Limit the number of unique media queries              |
 | [max-unique-supports-queries](src/rules/max-unique-supports-queries/README.md)       | Limit the number of unique supports queries           |
 | [max-unique-text-shadows](src/rules/max-unique-text-shadows/README.md)               | Limit the number of unique text-shadow values         |
@@ -132,6 +134,7 @@ Rules to help prevent errors.
 | [no-static-container-query](src/rules/no-static-container-query/README.md)                         | Disallow static (exact-match) numeric container feature conditions              |
 | [no-static-media-query](src/rules/no-static-media-query/README.md)                                 | Disallow static (exact-match) numeric media feature conditions                  |
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match       |
+| [no-empty-rules](src/rules/no-empty-rules/README.md)                                               | Disallow empty rules and at-rules (including those containing only comments)    |
 | [no-important-in-keyframes](src/rules/no-important-in-keyframes/README.md)                         | Disallow `!important` declarations inside `@keyframes` blocks                   |
 | [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                       | Disallow `z-index` values that are not valid 32-bit integers                    |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never implemented                 |
@@ -154,6 +157,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [max-nesting-depth](src/rules/max-nesting-depth/README.md)                                 | Limit the maximum nesting depth of CSS rules and at-rules.                   |
 | [max-rules](src/rules/max-rules/README.md)                                                 | Limit the total number of rules in a stylesheet                              |
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                     | Prevent selector complexity from going over a predefined maximum             |
+| [max-selector-specificity](src/rules/max-selector-specificity/README.md)                   | Prevent individual selector specificity from exceeding a predefined maximum  |
 | [max-selectors](src/rules/max-selectors/README.md)                                         | Limit the total number of selectors in a stylesheet                          |
 | [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                       | Limit the number of selectors in a single rule                               |
 | [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet         |
