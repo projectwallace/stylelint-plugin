@@ -16,6 +16,9 @@ A stylelint plugin that checks the complexity, design tokens, maintainability an
 - 🗂️ Whole-stylesheet analysis — reasons about ratios, averages and uniqueness counts across the entire file, not just node-by-node
 - ✅ Compatible with Stylelint 17
 
+> [!TIP]
+> For the most accurate results, lint your **shipped CSS bundle(s)** rather than source files. Rules that measure file size, uniqueness counts, and ratios mostly make sense against the CSS your users actually receive.
+
 ## Installation
 
 ```sh
@@ -52,7 +55,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 		"projectwallace/no-unused-custom-properties": true,
 		"projectwallace/no-property-shorthand": true,
 		"projectwallace/no-duplicate-data-urls": true,
-		"projectwallace/max-unique-colors": 128,
+		"projectwallace/max-unique-colors": 128,\
 		"projectwallace/max-selector-complexity": 15,
 		"projectwallace/max-spacing-resets": 16,
 		"projectwallace/max-important-ratio": 0.1
