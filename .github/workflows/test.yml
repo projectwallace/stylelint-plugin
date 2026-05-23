@@ -18,10 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - node: 18
+          - node: 22
             stylelint: '16'
-          - node: 20
-            stylelint: '17'
           - node: 22
             stylelint: '17'
           - node: 24
