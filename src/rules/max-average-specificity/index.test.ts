@@ -190,3 +190,27 @@ test('should allow float values in the primary option', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// Keyframe selectors
+// ---------------------------------------------------------------------------
+
+test('should not count keyframe stops in the average', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [0, 0, 0],
+		},
+	}
+
+	// `from`/`100%` inside @keyframes are stops — must not skew the average
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@keyframes fade { from { opacity: 0; } 100% { opacity: 1; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

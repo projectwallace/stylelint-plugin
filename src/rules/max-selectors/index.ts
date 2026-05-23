@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Rule } from 'postcss'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
+import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,6 +27,7 @@ const ruleFunction = (primaryOption: number) => {
 
 		let actual = 0
 		root.walkRules((rule: Rule) => {
+			if (is_keyframe_rule(rule)) return
 			actual += rule.selectors.length
 		})
 

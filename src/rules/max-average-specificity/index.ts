@@ -2,6 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { getSpecificity, compareSpecificity } from '@projectwallace/css-analyzer/selectors'
 import type { Specificity } from '@projectwallace/css-analyzer'
+import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -37,6 +38,7 @@ const ruleFunction = (primaryOption: Specificity) => {
 		let selector_count = 0
 
 		root.walkRules((rule) => {
+			if (is_keyframe_rule(rule)) return
 			const specificities = getSpecificity(rule.selector)
 			for (const specificity of specificities) {
 				sum[0] += specificity[0]

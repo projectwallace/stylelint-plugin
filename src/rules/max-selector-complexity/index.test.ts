@@ -185,3 +185,27 @@ test('should only report the one selector in a list thats problematic', async ()
 		text: 'Selector complexity of "a a a a" is 7 which is greater than the allowed 2 (projectwallace/max-selector-complexity)',
 	})
 })
+
+// ---------------------------------------------------------------------------
+// Keyframe selectors
+// ---------------------------------------------------------------------------
+
+test('should not check keyframe stops', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 2,
+		},
+	}
+
+	// `from`/`to` inside @keyframes are stops, not selectors — must not be analyzed
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@keyframes fade { from { opacity: 0; } to { opacity: 1; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
