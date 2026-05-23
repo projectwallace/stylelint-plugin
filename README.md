@@ -7,6 +7,18 @@ A stylelint plugin that checks the complexity, design tokens, maintainability an
 
 <!-- BREAK -->
 
+- 📏 Over 70 rules to keep your CSS in check
+- ⚙️ 5 configuration presets for different concerns
+- 🌲 Fully tree-shakeable — only pay for what you use
+- ⚡ Powered by `@projectwallace/css-parser` for fast parsing of selectors, values and at-rule preludes
+- 🔬 Same battle-tested analysis engine as `@projectwallace/css-analyzer`
+- 🚀 Zero config to get started — one `extends` line covers you with sensible defaults
+- 🗂️ Whole-stylesheet analysis — reasons about ratios, averages and uniqueness counts across the entire file, not just node-by-node
+- ✅ Compatible with Stylelint 17
+
+> [!TIP]
+> For the most accurate results, lint your **shipped CSS bundle(s)** rather than source files. Rules that measure file size, uniqueness counts, and ratios mostly make sense against the CSS your users actually receive.
+
 ## Installation
 
 ```sh
@@ -19,11 +31,11 @@ npm install --save-dev @projectwallace/stylelint-plugin
 
 The easiest way to get started is by extending one of the preset configs:
 
-- **`recommended`** — enables all rules with sensible defaults
-- **`design-tokens`** — enables rules that encourage the use of design tokens in your CSS
-- **`performance`** — enables rules that affect file size and loading performance
-- **`maintainability`** — enables rules that limit complexity and enforce conventions to keep CSS easy to reason about and manage over time
-- **`correctness`** - enables rules to help prevent errors
+- **[`recommended`](#rules)** — enables all rules with sensible defaults
+- **[`design-tokens`](#design-tokens)** — enables rules that encourage the use of design tokens in your CSS
+- **[`performance`](#performance)** — enables rules that affect file size and loading performance
+- **[`maintainability`](#maintainability)** — enables rules that limit complexity and enforce conventions to keep CSS easy to reason about and manage over time
+- **[`correctness`](#correctness)** - enables rules to help prevent errors
 
 ```json
 {
@@ -39,16 +51,31 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 {
 	"plugins": ["@projectwallace/stylelint-plugin"],
 	"rules": {
-		"projectwallace/max-average-declarations-per-rule": 5,
-		"projectwallace/max-average-selector-complexity": 2,
-		"projectwallace/max-average-selectors-per-rule": 2,
-		"projectwallace/max-average-specificity": [0, 2.5, 1],
-		"projectwallace/max-comment-size": 2500,
-		"projectwallace/max-embedded-content-size": 10000,
-		"projectwallace/max-file-size": 200000,
-		"projectwallace/max-important-ratio": 1
-		// ... etc ...
+		"projectwallace/no-static-media-query": true,
+		"projectwallace/no-unused-custom-properties": true,
+		"projectwallace/no-property-shorthand": true,
+		"projectwallace/no-duplicate-data-urls": true,
+		"projectwallace/max-unique-colors": 128,\
+		"projectwallace/max-selector-complexity": 15,
+		"projectwallace/max-spacing-resets": 16,
+		"projectwallace/max-important-ratio": 0.1
 	}
+}
+```
+
+### Tree-shakable imports
+
+To only load a single rule instead of the entire plugin, import it directly by rule name:
+
+```js
+// stylelint.config.js
+import maxFileSize from '@projectwallace/stylelint-plugin/rules/max-file-size'
+
+export default {
+	plugins: [maxFileSize],
+	rules: {
+		'projectwallace/max-file-size': 200000,
+	},
 }
 ```
 
