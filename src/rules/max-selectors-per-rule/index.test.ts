@@ -108,3 +108,27 @@ test('should report violation on the correct rule node', async () => {
 		'Selectors per rule is 11 which is greater than the allowed 10 (projectwallace/max-selectors-per-rule)',
 	)
 })
+
+// ---------------------------------------------------------------------------
+// Keyframe selectors
+// ---------------------------------------------------------------------------
+
+test('should not check keyframe stops', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// `from` and `to` are keyframe stops, not real selectors — must not be analyzed
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@keyframes fade { from { opacity: 0; } to { opacity: 1; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

@@ -66,3 +66,27 @@ test('should error when average selectors per rule exceeds the limit', async () 
 	})
 	expect(warnings[0].text).toContain('greater than the allowed 1')
 })
+
+// ---------------------------------------------------------------------------
+// Keyframe selectors
+// ---------------------------------------------------------------------------
+
+test('should not count keyframe stops in the average', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// `from`/`to` inside @keyframes are stops — must not skew the average
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@keyframes fade { from { opacity: 0; } to { opacity: 1; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

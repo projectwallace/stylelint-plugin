@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { is_valid_ratio } from '../../utils/option-validators.js'
+import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -28,6 +29,7 @@ const ruleFunction = (primaryOption: number) => {
 		let total_count = 0
 
 		root.walkRules((rule) => {
+			if (is_keyframe_rule(rule)) return
 			for (const selector of rule.selectors) {
 				unique_selectors.add(selector.trim())
 				total_count++

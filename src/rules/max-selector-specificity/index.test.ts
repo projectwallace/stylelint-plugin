@@ -254,3 +254,27 @@ test('should match issue example: [0, 2, 0] passes [0, 4, 0]', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// Keyframe selectors
+// ---------------------------------------------------------------------------
+
+test('should not check keyframe stops', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: [0, 0, 0],
+		},
+	}
+
+	// `from`/`to`/`100%` inside @keyframes are stops, not selectors — must not be analyzed
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `@keyframes fade { from { opacity: 0; } 100% { opacity: 1; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

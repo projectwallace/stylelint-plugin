@@ -86,3 +86,16 @@ test('should error when count exceeds limit of 0', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 })
+
+// ---------------------------------------------------------------------------
+// Keyframe selectors
+// ---------------------------------------------------------------------------
+
+test('should not count keyframe stops as selectors', async () => {
+	const { warnings, errored } = await lint(
+		'@keyframes fade { from { opacity: 0; } to { opacity: 1; } }',
+		0,
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

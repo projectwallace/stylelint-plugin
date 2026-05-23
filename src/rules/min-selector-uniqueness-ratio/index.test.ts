@@ -223,3 +223,23 @@ test('should not error when selectors inside nested atrules are all unique', asy
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test('should not count keyframe selectors', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	// Only `a` is a real selector; `from`/`to` are keyframe stops and must not be counted
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: red; } @keyframes fade { from { opacity: 0; } to { opacity: 1; } }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

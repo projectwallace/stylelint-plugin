@@ -2,6 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 import { getSpecificity, compareSpecificity } from '@projectwallace/css-analyzer/selectors'
+import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -36,6 +37,7 @@ const ruleFunction = (primaryOption: Specificity) => {
 		if (!validOptions || !is_valid_specificity(primaryOption)) return
 
 		root.walkRules((rule) => {
+			if (is_keyframe_rule(rule)) return
 			const selector_text = rule.selector
 			if (!selector_text.trim()) return
 
