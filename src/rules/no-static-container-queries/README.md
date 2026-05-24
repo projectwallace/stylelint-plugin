@@ -1,4 +1,4 @@
-# no-static-container-query
+# no-static-container-queries
 
 Disallow static (exact-match) numeric container feature conditions.
 
@@ -9,7 +9,7 @@ A static container query uses the equality syntax like `(width: 300px)`, which f
 ### `true`
 
 ```json
-{ "projectwallace/no-static-container-query": true }
+{ "projectwallace/no-static-container-queries": true }
 ```
 
 ## Examples

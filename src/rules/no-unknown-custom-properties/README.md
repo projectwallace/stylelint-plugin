@@ -1,4 +1,4 @@
-# No unknown custom property
+# No unknown custom properties
 
 Disallow the use of undeclared custom properties in `var()`.
 

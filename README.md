@@ -51,7 +51,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 {
 	"plugins": ["@projectwallace/stylelint-plugin"],
 	"rules": {
-		"projectwallace/no-static-media-query": true,
+		"projectwallace/no-static-media-queries": true,
 		"projectwallace/no-unused-custom-properties": true,
 		"projectwallace/no-property-shorthand": true,
 		"projectwallace/no-duplicate-data-urls": true,
@@ -126,13 +126,13 @@ Rules to help prevent errors.
 | Rule                                                                                               | Description                                                                     |
 | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | [no-unknown-container-names](src/rules/no-unknown-container-names/README.md)                       | Disallow container names in `@container` that were never declared               |
-| [no-unknown-custom-property](src/rules/no-unknown-custom-property/README.md)                       | Disallow the use of undeclared custom properties in a `var()`                   |
+| [no-unknown-custom-properties](src/rules/no-unknown-custom-properties/README.md)                   | Disallow the use of undeclared custom properties in a `var()`                   |
 | [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md) | Disallow custom property assignments that reference themselves via `var()`      |
 | [no-unused-container-names](src/rules/no-unused-container-names/README.md)                         | Disallow container names that are declared but never queried                    |
 | [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)                     | Disallow custom properties that are never used in a `var()`                     |
 | [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)                                     | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
-| [no-static-container-query](src/rules/no-static-container-query/README.md)                         | Disallow static (exact-match) numeric container feature conditions              |
-| [no-static-media-query](src/rules/no-static-media-query/README.md)                                 | Disallow static (exact-match) numeric media feature conditions                  |
+| [no-static-container-queries](src/rules/no-static-container-queries/README.md)                     | Disallow static (exact-match) numeric container feature conditions              |
+| [no-static-media-queries](src/rules/no-static-media-queries/README.md)                             | Disallow static (exact-match) numeric media feature conditions                  |
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match       |
 | [no-empty-rules](src/rules/no-empty-rules/README.md)                                               | Disallow empty rules and at-rules (including those containing only comments)    |
 | [no-important-in-keyframes](src/rules/no-important-in-keyframes/README.md)                         | Disallow `!important` declarations inside `@keyframes` blocks                   |
@@ -149,7 +149,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [max-average-declarations-per-rule](src/rules/max-average-declarations-per-rule/README.md) | Limit the average number of declarations per rule across the stylesheet      |
 | [max-average-selector-complexity](src/rules/max-average-selector-complexity/README.md)     | Limit the average selector complexity across the stylesheet                  |
 | [max-average-selectors-per-rule](src/rules/max-average-selectors-per-rule/README.md)       | Limit the average number of selectors per rule across the stylesheet         |
-| [max-average-specificity](src/rules/max-average-specificity/README.md)                     | Limit the average specificity across the stylesheet                          |
+| [max-average-selector-specificity](src/rules/max-average-selector-specificity/README.md)   | Limit the average specificity across the stylesheet                          |
 | [max-comments](src/rules/max-comments/README.md)                                           | Prevent the total number of comments from exceeding a predefined limit.      |
 | [max-declarations](src/rules/max-declarations/README.md)                                   | Limit the total number of declarations in a stylesheet                       |
 | [max-declarations-per-rule](src/rules/max-declarations-per-rule/README.md)                 | Limit the number of declarations in a single rule                            |
@@ -253,5 +253,5 @@ stylelint "src/**/*.css" "dist/**/*.css"
 ## Acknowledgements
 
 - [Daniel Yuschick's](https://github.com/yuschick) [stylelint-plugin-defensive-css](https://github.com/yuschick/stylelint-plugin-defensive-css) has been a great learning resource while building this package and you should definitely include it in your stylelint config as well.
-- The `no-static-media-query` plugin was [an idea](https://bsky.app/profile/andydavies.me/post/3lgvt5gjyxc2e) from [Andy Davies](https://github.com/andydavies).
+- The `no-static-media-queries` plugin was [an idea](https://bsky.app/profile/andydavies.me/post/3lgvt5gjyxc2e) from [Andy Davies](https://github.com/andydavies).
 - Some of the rules (like `no-empty-rules`, `no-unused-custom-properties`, etc.) also exist in other plugins. Our rule are new implementations based on `@projectwallace/css-parser` for performance and correctness. It also helps reduce the amount of plugins needed to install.

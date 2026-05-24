@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'projectwallace/no-static-container-query'
+const rule_name = 'projectwallace/no-static-container-queries'
 
 const config = {
 	plugins: [plugin],

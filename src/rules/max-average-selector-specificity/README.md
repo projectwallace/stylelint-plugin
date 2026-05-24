@@ -1,4 +1,4 @@
-# Max average specificity
+# Max average selector specificity
 
 Prevent the average specificity from exceeding a predefined maximum.
 

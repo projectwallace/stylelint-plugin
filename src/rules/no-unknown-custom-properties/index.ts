@@ -7,14 +7,14 @@ import { is_allowed } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'projectwallace/no-unknown-custom-property'
+const rule_name = 'projectwallace/no-unknown-custom-properties'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (property: string) => `"${property}" is used in a var() but was never declared`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unknown-custom-property/README.md',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unknown-custom-properties/README.md',
 }
 
 interface SecondaryOptions {

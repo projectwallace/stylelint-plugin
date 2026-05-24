@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
 
-const rule_name = 'projectwallace/max-average-specificity'
+const rule_name = 'projectwallace/max-average-selector-specificity'
 
 test('should not run with invalid option (not an array)', async () => {
 	const config = {
@@ -143,7 +143,7 @@ test('should error when average specificity exceeds the limit', async () => {
 		severity: 'error',
 	})
 	expect(warnings[0].text).toBe(
-		'Average specificity is [0, 0, 1] which is greater than the allowed [0, 0, 0] (projectwallace/max-average-specificity)',
+		'Average specificity is [0, 0, 1] which is greater than the allowed [0, 0, 0] (projectwallace/max-average-selector-specificity)',
 	)
 })
 

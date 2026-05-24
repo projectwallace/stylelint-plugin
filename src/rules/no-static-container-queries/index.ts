@@ -1,21 +1,28 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { MEDIA_QUERY, MEDIA_FEATURE, PRELUDE_OPERATOR } from '@projectwallace/css-parser/nodes'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
-import { walk, BREAK } from '@projectwallace/css-parser/walker'
-import { is_dimension, is_number } from '@projectwallace/css-parser'
+import {
+	parse_atrule_prelude,
+	walk,
+	BREAK,
+	is_container_query,
+	is_dimension,
+	is_media_feature,
+	is_number,
+	is_prelude_operator,
+	type MediaFeature,
+} from '@projectwallace/css-parser'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'projectwallace/no-static-media-query'
+const rule_name = 'projectwallace/no-static-container-queries'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (feature: string, value: string) =>
-		`Media feature "${feature}: ${value}" is a static equality condition that will almost never match any viewport`,
+		`Container feature "${feature}: ${value}" is a static equality condition that will almost never match any container`,
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-static-media-query/README.md',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-static-container-queries/README.md',
 }
 
 type StaticFeatureInfo = {
@@ -25,25 +32,22 @@ type StaticFeatureInfo = {
 
 /**
  * Parse an at-rule prelude and return the first static (equality-bound) feature name
- * and its value, or null if no static media features are found.
+ * and its value, or null if no static container features are found.
  *
- * A static media feature uses the equality syntax like `(width: 300px)` — without
+ * A static container feature uses the equality syntax like `(width: 300px)` — without
  * a `min-` or `max-` prefix. This fixes the feature to a single exact value, which
  * almost never matches in practice.
  */
-function find_static_feature_in_prelude(
-	at_rule_name: string,
-	prelude: string,
-): StaticFeatureInfo | null {
-	const parsed = parse_atrule_prelude(at_rule_name, prelude)
+function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | null {
+	const parsed = parse_atrule_prelude('container', prelude)
 
 	for (const query_node of parsed) {
-		if (query_node.type !== MEDIA_QUERY) continue
+		if (!is_container_query(query_node)) continue
 
 		// Skip queries that contain `not` or `or` — too complex to analyse safely
 		let skip = false
 		walk(query_node, (node) => {
-			if (node.type === PRELUDE_OPERATOR) {
+			if (is_prelude_operator(node)) {
 				const operator = node.text.trim().toLowerCase()
 				if (operator === 'not' || operator === 'or') {
 					skip = true
@@ -57,21 +61,21 @@ function find_static_feature_in_prelude(
 
 		walk(query_node, (node) => {
 			if (static_feature !== null) return
-			if (node.type !== MEDIA_FEATURE) return
+			if (!is_media_feature(node)) return
 
-			const property = node.property
+			const media_feature = node as MediaFeature
+			const property = media_feature.property
 			if (!property) return
 
 			// Only check unprefixed features — min-/max- are range features
 			if (property.startsWith('min-') || property.startsWith('max-')) return
 
 			// A numeric value makes this an equality (static) condition
-			const child = node.value
+			const child = media_feature.value
 			if (child !== null && (is_dimension(child) || is_number(child))) {
-				const value = child.value
-				if (value !== null && !Number.isNaN(value)) {
+				const { value } = child
+				if (value != null && !Number.isNaN(value)) {
 					static_feature = { feature: property, value: child.text }
-					return BREAK
 				}
 			}
 		})
@@ -91,11 +95,11 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
-		root.walkAtRules(/^(media|import)$/, (at_rule) => {
+		root.walkAtRules('container', (at_rule) => {
 			const prelude = at_rule.params
 			if (!prelude) return
 
-			const static_feature = find_static_feature_in_prelude(at_rule.name, prelude)
+			const static_feature = find_static_feature_in_prelude(prelude)
 
 			if (static_feature !== null) {
 				utils.report({

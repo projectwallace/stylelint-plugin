@@ -3,7 +3,7 @@ export default {
 	rules: {
 		'projectwallace/no-invalid-z-index': true,
 		'projectwallace/no-unknown-container-names': true,
-		'projectwallace/no-unknown-custom-property': true,
+		'projectwallace/no-unknown-custom-properties': true,
 		'projectwallace/no-unreachable-media-conditions': true,
 		'projectwallace/no-empty-rules': true,
 		'projectwallace/no-important-in-keyframes': true,
@@ -12,7 +12,7 @@ export default {
 		'projectwallace/no-unused-container-names': true,
 		'projectwallace/no-unused-keyframes': true,
 		'projectwallace/no-unused-layers': true,
-		'projectwallace/no-static-media-query': true,
-		'projectwallace/no-static-container-query': true,
+		'projectwallace/no-static-media-queries': true,
+		'projectwallace/no-static-container-queries': true,
 	},
 }

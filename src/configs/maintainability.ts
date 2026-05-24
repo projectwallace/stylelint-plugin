@@ -9,7 +9,7 @@ export default {
 		'projectwallace/max-average-declarations-per-rule': 6,
 		'projectwallace/max-average-selector-complexity': 3,
 		'projectwallace/max-average-selectors-per-rule': 3,
-		'projectwallace/max-average-specificity': [0.02, 2.5, 1],
+		'projectwallace/max-average-selector-specificity': [0.02, 2.5, 1],
 		'projectwallace/max-declarations-per-rule': 15,
 		'projectwallace/max-important-ratio': 0.1,
 		'projectwallace/max-nesting-depth': 1,

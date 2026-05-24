@@ -1,4 +1,4 @@
-# No Static Media Query
+# No Static Media Queries
 
 Disallow media features that use an exact equality value — e.g. `(width: 300px)` — instead of a range condition.
 

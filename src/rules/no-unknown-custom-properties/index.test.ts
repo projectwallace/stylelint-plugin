@@ -23,7 +23,7 @@ afterEach(() => {
 	}
 })
 
-const rule_name = 'projectwallace/no-unknown-custom-property'
+const rule_name = 'projectwallace/no-unknown-custom-properties'
 
 test('should not error when a custom property is declared and used', async () => {
 	const config = {
