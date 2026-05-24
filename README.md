@@ -17,7 +17,7 @@ A stylelint plugin that checks the complexity, design tokens, maintainability an
 - ✅ Compatible with Stylelint 16 and 17
 
 > [!TIP]
-> For the most accurate results, lint your **shipped CSS bundle(s)** rather than source files. Rules that measure file size, uniqueness counts, and ratios mostly make sense against the CSS your users actually receive.
+> For the most accurate results, lint your **shipped CSS bundle(s)** rather than source files. Rules that measure file size, uniqueness counts, and ratios mostly make sense against the CSS your users actually receive. See [Holistic linting](#holistic-linting) for setup examples.
 
 ## Installation
 
@@ -177,6 +177,78 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                   | Prevent the use of known browserhacks for properties                         |
 | [no-property-shorthand](src/rules/no-property-shorthand/README.md)                         | Disallow the use of shorthand properties                                     |
 | [no-value-browserhacks](src/rules/no-value-browserhacks/README.md)                         | Disallow the use of known browser hacks in values                            |
+
+## Holistic linting
+
+Project Wallace highly encourages looking at your CSS with a helicopter view. Linting individual files and components is good, but we must not forget to look at the big picture. This plugin has several rules to help with that.
+
+Rules like `max-selectors`, `max-unique-colors`, and `max-font-count` are most meaningful when run against your **compiled CSS output** (e.g. `dist/styles.css`), not individual source files. There are two ways to set this up.
+
+### Option 1: Separate holistic config
+
+Create a dedicated `.stylelintrc-holistic.mjs` that targets your compiled output:
+
+```js
+// .stylelintrc-holistic.mjs — using a preset (recommended)
+export default {
+	extends: ['@projectwallace/stylelint-plugin/configs/recommended'],
+}
+```
+
+Or configure rules individually with the plugin:
+
+```js
+// .stylelintrc-holistic.mjs — manual rule selection
+export default {
+	plugins: ['@projectwallace/stylelint-plugin'],
+	rules: {
+		'projectwallace/max-selectors': 4096,
+		'projectwallace/max-unique-colors': 10,
+		'projectwallace/max-unique-font-sizes': 4,
+	},
+}
+```
+
+Run it separately against your compiled CSS:
+
+```sh
+stylelint --config .stylelintrc-holistic.mjs "dist/**/*.css"
+```
+
+### Option 2: Overrides in your existing config
+
+Use stylelint's `overrides` to keep everything in one config file — one set of rules for source files and one for the compiled output:
+
+```js
+// .stylelintrc.mjs
+export default {
+	overrides: [
+		// Configure linting for source files
+		{
+			files: ['src/**/*.css'],
+			rules: {
+				// source-file rules here
+			},
+		},
+		// Configure holistic linting
+		{
+			files: ['dist/**/*.css'],
+			plugins: ['@projectwallace/stylelint-plugin'],
+			rules: {
+				'projectwallace/max-selectors': 4096,
+				'projectwallace/max-unique-colors': 10,
+				'projectwallace/max-font-count': 4,
+			},
+		},
+	],
+}
+```
+
+Make sure to include both `src/` and `dist/` when running stylelint:
+
+```sh
+stylelint "src/**/*.css" "dist/**/*.css"
+```
 
 ## Acknowledgements
 
