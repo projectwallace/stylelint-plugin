@@ -182,7 +182,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 
 Project Wallace highly encourages looking at your CSS with a helicopter view. Linting individual files and components is good, but we must not forget to look at the big picture. This plugin has several rules to help with that.
 
-Rules like `max-selectors`, `max-unique-colors`, and `max-font-count` are most meaningful when run against your **compiled CSS output** (e.g. `dist/styles.css`), not individual source files. There are two ways to set this up.
+Rules like `max-selectors`, `max-unique-colors`, and `max-file-size` are most meaningful when run against your **compiled CSS output** (e.g. `dist/styles.css`), not individual source files. There are two ways to set this up.
 
 ### Option 1: Separate holistic config
 
