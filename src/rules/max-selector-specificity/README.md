@@ -9,7 +9,7 @@ Prevent individual selector specificity from exceeding a predefined maximum.
 *   this selector's specificity is [1, 2, 1] */
 ```
 
-This rule checks the **specificity of each individual selector** and reports a violation when any single selector exceeds the configured maximum. This complements `max-average-specificity`, which only tracks the stylesheet-wide average and can miss outlier selectors that force a specificity arms race.
+This rule checks the **specificity of each individual selector** and reports a violation when any single selector exceeds the configured maximum. This complements `max-average-selector-specificity`, which only tracks the stylesheet-wide average and can miss outlier selectors that force a specificity arms race.
 
 ## Options
 

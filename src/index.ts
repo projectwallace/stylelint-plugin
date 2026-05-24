@@ -3,7 +3,7 @@ import max_atrules from './rules/max-atrules/index.js'
 import max_average_declarations_per_rule from './rules/max-average-declarations-per-rule/index.js'
 import max_average_selector_complexity from './rules/max-average-selector-complexity/index.js'
 import max_average_selectors_per_rule from './rules/max-average-selectors-per-rule/index.js'
-import max_average_specificity from './rules/max-average-specificity/index.js'
+import max_average_selector_specificity from './rules/max-average-selector-specificity/index.js'
 import max_comment_size from './rules/max-comment-size/index.js'
 import max_comments from './rules/max-comments/index.js'
 import max_declarations from './rules/max-declarations/index.js'
@@ -49,10 +49,10 @@ import no_prefixed_values from './rules/no-prefixed-values/index.js'
 import no_property_browserhacks from './rules/no-property-browserhacks/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
 import no_value_browserhacks from './rules/no-value-browserhacks/index.js'
-import no_static_container_query from './rules/no-static-container-query/index.js'
-import no_static_media_query from './rules/no-static-media-query/index.js'
+import no_static_container_queries from './rules/no-static-container-queries/index.js'
+import no_static_media_queries from './rules/no-static-media-queries/index.js'
 import no_unknown_container_names from './rules/no-unknown-container-names/index.js'
-import no_unknown_custom_property from './rules/no-unknown-custom-property/index.js'
+import no_unknown_custom_properties from './rules/no-unknown-custom-properties/index.js'
 import no_unreachable_media_conditions from './rules/no-unreachable-media-conditions/index.js'
 import no_unused_container_names from './rules/no-unused-container-names/index.js'
 import no_unused_custom_properties from './rules/no-unused-custom-properties/index.js'
@@ -66,7 +66,7 @@ const plugins: stylelint.Plugin[] = [
 	max_average_declarations_per_rule,
 	max_average_selector_complexity,
 	max_average_selectors_per_rule,
-	max_average_specificity,
+	max_average_selector_specificity,
 	max_comment_size,
 	max_comments,
 	max_declarations,
@@ -111,10 +111,10 @@ const plugins: stylelint.Plugin[] = [
 	no_prefixed_values,
 	no_property_browserhacks,
 	no_property_shorthand,
-	no_static_container_query,
-	no_static_media_query,
+	no_static_container_queries,
+	no_static_media_queries,
 	no_unknown_container_names,
-	no_unknown_custom_property,
+	no_unknown_custom_properties,
 	no_unreachable_media_conditions,
 	no_unused_container_names,
 	no_unused_custom_properties,

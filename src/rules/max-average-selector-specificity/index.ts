@@ -6,7 +6,7 @@ import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'projectwallace/max-average-specificity'
+const rule_name = 'projectwallace/max-average-selector-specificity'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: string, expected: string) =>
@@ -14,7 +14,7 @@ const messages = utils.ruleMessages(rule_name, {
 })
 
 const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-average-specificity/README.md',
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-average-selector-specificity/README.md',
 }
 
 function is_valid_specificity(v: unknown): boolean {
