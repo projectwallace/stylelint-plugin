@@ -1,18 +1,32 @@
 {
 	"name": "@projectwallace/stylelint-plugin",
 	"version": "0.5.0",
-	"description": "A stylelint plugin that checks the complexity of your CSS.",
+	"description": "A stylelint plugin that checks the complexity, design tokens, maintainability and correctness of your CSS.",
 	"keywords": [
+		"browserhacks",
 		"complexity",
+		"correctness",
 		"css",
+		"css-quality",
+		"custom-properties",
+		"design-tokens",
 		"lint",
+		"linting",
+		"maintainability",
+		"performance",
+		"specificity",
 		"stylelint",
 		"stylelint-plugin",
+		"vendor-prefix",
 		"wallace"
 	],
 	"homepage": "https://github.com/projectwallace/stylelint-plugin",
 	"bugs": "https://github.com/projectwallace/stylelint-plugin/issues",
 	"license": "MIT",
+	"author": {
+		"name": "Bart Veneman",
+		"email": "bart@projectwallace.com"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/projectwallace/stylelint-plugin.git"
@@ -63,7 +77,7 @@
 		"@projectwallace/css-parser": "$@projectwallace/css-parser"
 	},
 	"engines": {
-		"node": ">=22"
+		"node": ">=18"
 	},
 	"packageManager": "pnpm@11.1.1"
 }

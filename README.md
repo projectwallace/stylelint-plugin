@@ -55,7 +55,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 		"projectwallace/no-unused-custom-properties": true,
 		"projectwallace/no-property-shorthand": true,
 		"projectwallace/no-duplicate-data-urls": true,
-		"projectwallace/max-unique-colors": 128,\
+		"projectwallace/max-unique-colors": 128,
 		"projectwallace/max-selector-complexity": 15,
 		"projectwallace/max-spacing-resets": 16,
 		"projectwallace/max-important-ratio": 0.1
@@ -237,7 +237,7 @@ export default {
 			rules: {
 				'projectwallace/max-selectors': 4096,
 				'projectwallace/max-unique-colors': 10,
-				'projectwallace/max-font-count': 4,
+				'projectwallace/max-unique-font-families': 4,
 			},
 		},
 	],
