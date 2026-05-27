@@ -20,13 +20,13 @@
 		"vendor-prefix",
 		"wallace"
 	],
+	"homepage": "https://github.com/projectwallace/stylelint-plugin",
+	"bugs": "https://github.com/projectwallace/stylelint-plugin/issues",
+	"license": "MIT",
 	"author": {
 		"name": "Bart Veneman",
 		"email": "bart@projectwallace.com"
 	},
-	"homepage": "https://github.com/projectwallace/stylelint-plugin",
-	"bugs": "https://github.com/projectwallace/stylelint-plugin/issues",
-	"license": "MIT",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/projectwallace/stylelint-plugin.git"
