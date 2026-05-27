@@ -77,7 +77,7 @@
 		"@projectwallace/css-parser": "$@projectwallace/css-parser"
 	},
 	"engines": {
-		"node": ">=22"
+		"node": ">=18"
 	},
 	"packageManager": "pnpm@11.1.1"
 }
