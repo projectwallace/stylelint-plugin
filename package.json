@@ -10,6 +10,10 @@
 		"stylelint-plugin",
 		"wallace"
 	],
+	"author": {
+		"name": "Bart Veneman",
+		"email": "bart@projectwallace.com"
+	},
 	"homepage": "https://github.com/projectwallace/stylelint-plugin",
 	"bugs": "https://github.com/projectwallace/stylelint-plugin/issues",
 	"license": "MIT",
