@@ -14,5 +14,6 @@ export default {
 		'projectwallace/no-unused-layers': true,
 		'projectwallace/no-static-media-queries': true,
 		'projectwallace/no-static-container-queries': true,
+		'projectwallace/no-pseudo-elements-in-is-where': true,
 	},
 }
