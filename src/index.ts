@@ -46,6 +46,7 @@ import no_prefixed_atrules from './rules/no-prefixed-atrules/index.js'
 import no_prefixed_properties from './rules/no-prefixed-properties/index.js'
 import no_prefixed_selectors from './rules/no-prefixed-selectors/index.js'
 import no_prefixed_values from './rules/no-prefixed-values/index.js'
+import no_pseudo_elements_in_is_where from './rules/no-pseudo-elements-in-is-where/index.js'
 import no_property_browserhacks from './rules/no-property-browserhacks/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
 import no_value_browserhacks from './rules/no-value-browserhacks/index.js'
@@ -111,6 +112,7 @@ const plugins: stylelint.Plugin[] = [
 	no_prefixed_values,
 	no_property_browserhacks,
 	no_property_shorthand,
+	no_pseudo_elements_in_is_where,
 	no_static_container_queries,
 	no_static_media_queries,
 	no_unknown_container_names,
