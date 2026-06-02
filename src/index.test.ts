@@ -57,6 +57,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-prefixed-values',
 		'projectwallace/no-property-browserhacks',
 		'projectwallace/no-property-shorthand',
+		'projectwallace/no-pseudo-elements-in-is-where',
 		'projectwallace/no-static-container-queries',
 		'projectwallace/no-static-media-queries',
 		'projectwallace/no-unknown-container-names',
