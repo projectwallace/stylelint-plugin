@@ -1,9 +1,9 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import {
-	collect_declared_container_names,
-	collect_container_name_usages,
-} from '../../utils/container-names.js'
+import { IDENTIFIER, OPERATOR } from '@projectwallace/css-parser/nodes'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import { keywords } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
@@ -34,22 +34,44 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const declared_names = collect_declared_container_names(root)
-		const usages = collect_container_name_usages(root)
+		const declared_names = new Set<string>()
 
-		for (const usage of usages) {
-			if (declared_names.has(usage.name)) continue
+		root.walkDecls(/^container(-name)?$/i, (decl) => {
+			if (keywords.has(decl.value.trim())) {
+				return
+			}
+			const ast = parse_value(decl.value)
+			for (const node of ast) {
+				if (node.type === OPERATOR) {
+					break
+				}
+				if (node.type === IDENTIFIER) {
+					declared_names.add(node.text)
+				}
+			}
+		})
 
-			if (secondaryOptions?.ignore && is_allowed(usage.name, secondaryOptions.ignore)) continue
-
+		root.walkAtRules('container', (atRule) => {
+			const prelude = parse_atrule_prelude('container', atRule.params.trim())
+			const first_child = prelude.at(0)?.first_child
+			if (first_child?.type !== IDENTIFIER) {
+				return
+			}
+			const name = first_child.text
+			if (declared_names.has(name)) {
+				return
+			}
+			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) {
+				return
+			}
 			utils.report({
 				result,
 				ruleName: rule_name,
-				message: messages.rejected(usage.name),
-				node: usage.node,
-				word: usage.name,
+				message: messages.rejected(name),
+				node: atRule,
+				word: name,
 			})
-		}
+		})
 	}
 }
 

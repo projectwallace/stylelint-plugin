@@ -1,10 +1,11 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
-import {
-	collect_declared_container_names,
-	collect_container_name_usages,
-} from '../../utils/container-names.js'
+import type { Root, Declaration } from 'postcss'
+import { IDENTIFIER, OPERATOR } from '@projectwallace/css-parser/nodes'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import { keywords } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
+import { DefinedUsed } from '../../utils/defined-used.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -34,13 +35,35 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const declared_names = collect_declared_container_names(root)
-		const used_names = new Set(collect_container_name_usages(root).map((u) => u.name))
+		const tracker = new DefinedUsed<Declaration>()
 
-		for (const [name, node] of declared_names) {
-			if (used_names.has(name)) continue
+		root.walkDecls(/^container(-name)?$/i, (decl) => {
+			if (keywords.has(decl.value.trim())) {
+				return
+			}
+			const ast = parse_value(decl.value)
+			for (const node of ast) {
+				if (node.type === OPERATOR) {
+					break
+				}
+				if (node.type === IDENTIFIER) {
+					tracker.define(node.text, decl)
+				}
+			}
+		})
 
-			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) continue
+		root.walkAtRules('container', (atRule) => {
+			const prelude = parse_atrule_prelude('container', atRule.params.trim())
+			const first_child = prelude.at(0)?.first_child
+			if (first_child?.type === IDENTIFIER) {
+				tracker.use(first_child.text)
+			}
+		})
+
+		for (const [name, node] of tracker.unused()) {
+			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) {
+				continue
+			}
 
 			utils.report({
 				result,
