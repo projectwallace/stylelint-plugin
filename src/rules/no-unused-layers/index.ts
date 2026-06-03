@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import { is_allowed } from '../../utils/option-validators.js'
+import { DefinedUsed } from '../../utils/defined-used.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -29,16 +30,13 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const declared_layers = new Map<string, AtRule>()
-		const defined_layers = new Set<string>()
+		const tracker = new DefinedUsed<AtRule>()
 
 		root.walkAtRules('layer', (atRule) => {
 			if (atRule.nodes !== undefined) {
 				// Block rule: @layer name { ... }
 				const name = atRule.params.trim()
-				if (name) {
-					defined_layers.add(name)
-				}
+				if (name) tracker.use(name)
 			} else {
 				// Statement: @layer name; or @layer a, b, c;
 				const names = atRule.params
@@ -46,15 +44,12 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					.map((n) => n.trim())
 					.filter(Boolean)
 				for (const name of names) {
-					if (!declared_layers.has(name)) {
-						declared_layers.set(name, atRule)
-					}
+					tracker.define(name, atRule)
 				}
 			}
 		})
 
-		for (const [layer, node] of declared_layers) {
-			if (defined_layers.has(layer)) continue
+		for (const [layer, node] of tracker.unused()) {
 			if (secondaryOptions?.ignore && is_allowed(layer, secondaryOptions.ignore)) continue
 
 			utils.report({
