@@ -1,6 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { collect_declared_properties, collect_var_usages } from '../../utils/custom-properties.js'
+import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { walk } from '@projectwallace/css-parser/walker'
 import { collect_declarations_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
 import { is_allowed } from '../../utils/option-validators.js'
@@ -34,28 +36,56 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const declared_properties = collect_declared_properties(root)
+		const declared_properties = new Set<string>()
 
-		const imported_properties = secondaryOptions?.importFrom?.length
-			? collect_declarations_from_files(secondaryOptions.importFrom)
-			: null
+		root.walkAtRules('property', (atRule) => {
+			const property_name = atRule.params.trim()
+			if (property_name.startsWith('--')) {
+				declared_properties.add(property_name)
+			}
+		})
 
-		const usages = collect_var_usages(root)
+		root.walkDecls((decl) => {
+			if (decl.prop.startsWith('--')) {
+				declared_properties.add(decl.prop)
+			}
+		})
 
-		for (const usage of usages) {
-			if (declared_properties.has(usage.name)) continue
-			if (imported_properties?.has(usage.name)) continue
-			if (secondaryOptions?.allowFallback && usage.has_fallback) continue
-			if (secondaryOptions?.ignore && is_allowed(usage.name, secondaryOptions.ignore)) continue
-
-			utils.report({
-				result,
-				ruleName: rule_name,
-				message: messages.rejected(usage.name),
-				node: usage.node,
-				word: usage.name,
-			})
+		if (secondaryOptions?.importFrom?.length) {
+			for (const name of collect_declarations_from_files(secondaryOptions.importFrom)) {
+				declared_properties.add(name)
+			}
 		}
+
+		root.walkDecls((decl) => {
+			walk(parse_value(decl.value), (node) => {
+				if (node.type !== FUNCTION || node.name !== 'var') {
+					return
+				}
+				const first = node.first_child
+				if (first === null || first.type !== IDENTIFIER || !first.text.startsWith('--')) {
+					return
+				}
+				const name = first.text
+				const has_fallback = first.next_sibling !== null
+				if (declared_properties.has(name)) {
+					return
+				}
+				if (secondaryOptions?.allowFallback && has_fallback) {
+					return
+				}
+				if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) {
+					return
+				}
+				utils.report({
+					result,
+					ruleName: rule_name,
+					message: messages.rejected(name),
+					node: decl,
+					word: name,
+				})
+			})
+		})
 	}
 }
 

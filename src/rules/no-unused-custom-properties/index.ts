@@ -1,9 +1,12 @@
 import stylelint from 'stylelint'
-import type { Root } from 'postcss'
-import { collect_declared_properties, collect_var_usages } from '../../utils/custom-properties.js'
+import type { Root, Declaration, AtRule } from 'postcss'
+import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { walk } from '@projectwallace/css-parser/walker'
 import { is_allowed } from '../../utils/option-validators.js'
 import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
+import { DefinedUsed } from '../../utils/defined-used.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -33,19 +36,42 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		const declared_properties = collect_declared_properties(root)
-		const used_names = new Set(collect_var_usages(root).map((u) => u.name))
+		const tracker = new DefinedUsed<Declaration | AtRule>()
+
+		// Declarations are visited first so they take precedence over @property
+		// when both exist for the same name — also collects var() usages in one pass
+		root.walkDecls((decl) => {
+			if (decl.prop.startsWith('--')) {
+				tracker.define(decl.prop, decl)
+			}
+			walk(parse_value(decl.value), (node) => {
+				if (node.type !== FUNCTION || node.name !== 'var') {
+					return
+				}
+				const first = node.first_child
+				if (first !== null && first.type === IDENTIFIER && first.text.startsWith('--')) {
+					tracker.use(first.text)
+				}
+			})
+		})
+
+		root.walkAtRules('property', (atRule) => {
+			const property_name = atRule.params.trim()
+			if (property_name.startsWith('--')) {
+				tracker.define(property_name, atRule)
+			}
+		})
 
 		if (secondaryOptions?.importFrom?.length) {
 			for (const name of collect_usages_from_files(secondaryOptions.importFrom)) {
-				used_names.add(name)
+				tracker.use(name)
 			}
 		}
 
-		for (const [prop, node] of declared_properties) {
-			if (used_names.has(prop)) continue
-
-			if (secondaryOptions?.ignore && is_allowed(prop, secondaryOptions.ignore)) continue
+		for (const [prop, node] of tracker.unused()) {
+			if (secondaryOptions?.ignore && is_allowed(prop, secondaryOptions.ignore)) {
+				continue
+			}
 
 			utils.report({
 				result,
