@@ -36,7 +36,9 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			if (atRule.nodes !== undefined) {
 				// Block rule: @layer name { ... }
 				const name = atRule.params.trim()
-				if (name) tracker.use(name)
+				if (name) {
+					tracker.use(name)
+				}
 			} else {
 				// Statement: @layer name; or @layer a, b, c;
 				const names = atRule.params
@@ -50,7 +52,9 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		})
 
 		for (const [layer, node] of tracker.unused()) {
-			if (secondaryOptions?.ignore && is_allowed(layer, secondaryOptions.ignore)) continue
+			if (secondaryOptions?.ignore && is_allowed(layer, secondaryOptions.ignore)) {
+				continue
+			}
 
 			utils.report({
 				result,

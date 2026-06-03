@@ -13,7 +13,9 @@ export class DefinedUsed<Node> {
 	#unknown = new Set<string>()
 
 	define(name: string, node: Node): void {
-		if (this.#defined.has(name)) return
+		if (this.#defined.has(name)) {
+			return
+		}
 		this.#defined.set(name, node)
 		if (this.#used.has(name)) {
 			this.#unknown.delete(name)
@@ -23,7 +25,9 @@ export class DefinedUsed<Node> {
 	}
 
 	use(name: string): void {
-		if (this.#used.has(name)) return
+		if (this.#used.has(name)) {
+			return
+		}
 		this.#used.add(name)
 		if (this.#defined.has(name)) {
 			this.#unused.delete(name)

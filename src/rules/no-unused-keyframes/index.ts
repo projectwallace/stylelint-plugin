@@ -38,16 +38,22 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		root.walkAtRules(/^keyframes$/i, (atRule) => {
 			const name = atRule.params.trim()
-			if (name) tracker.define(name, atRule)
+			if (name) {
+				tracker.define(name, atRule)
+			}
 		})
 
-		if (tracker.defined_size === 0) return
+		if (tracker.defined_size === 0) {
+			return
+		}
 
 		root.walkDecls(/^animation-name$/i, (decl) => {
 			const ast = parse_value(decl.value)
 			for (const node of ast) {
 				if (node.type === IDENTIFIER) {
-					if (node.text.toLowerCase() !== 'none') tracker.use(node.text)
+					if (node.text.toLowerCase() !== 'none') {
+						tracker.use(node.text)
+					}
 				} else if (node.type === STRING) {
 					tracker.use(node.text)
 				}
@@ -57,16 +63,22 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		root.walkDecls(/^animation$/i, (decl) => {
 			const ast = parse_value(decl.value)
 			analyzeAnimation(ast, ({ type, value }) => {
-				if (type === 'name') tracker.use(value.text)
+				if (type === 'name') {
+					tracker.use(value.text)
+				}
 			})
 			// analyzeAnimation only handles identifiers; handle quoted names separately
 			for (const node of ast) {
-				if (node.type === STRING) tracker.use(node.text)
+				if (node.type === STRING) {
+					tracker.use(node.text)
+				}
 			}
 		})
 
 		for (const [name, node] of tracker.unused()) {
-			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) continue
+			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) {
+				continue
+			}
 
 			utils.report({
 				result,
