@@ -55,6 +55,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 						tracker.use(node.text)
 					}
 				} else if (node.type === STRING) {
+					// Suprisingly: keyframe names MAY be quoted
 					tracker.use(node.text)
 				}
 			}
@@ -67,9 +68,12 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					tracker.use(value.text)
 				}
 			})
-			// analyzeAnimation only handles identifiers; handle quoted names separately
+			// analyzeAnimation doesn't handle <string> nodes; quoted names are valid
+			// per spec (<keyframes-name> = <custom-ident> | <string>) but the
+			// function silently skips them — work around it here until that's fixed
 			for (const node of ast) {
 				if (node.type === STRING) {
+					// Suprisingly: keyframe names MAY be quoted
 					tracker.use(node.text)
 				}
 			}
