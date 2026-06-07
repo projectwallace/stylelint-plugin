@@ -1,7 +1,20 @@
 import { test, expect } from 'vitest'
-import type stylelint from 'stylelint'
+import stylelint from 'stylelint'
 import rules from '../index.js'
 import recommended from './recommended.js'
+
+test('recommended config runs without invalid option warnings', async () => {
+	const {
+		results: [result],
+	} = await stylelint.lint({
+		code: 'a { color: red; }',
+		config: {
+			plugins: rules,
+			rules: recommended.rules,
+		},
+	})
+	expect(result.invalidOptionWarnings).toHaveLength(0)
+})
 
 test('recommended config contains exactly all exported rules', () => {
 	const exportedRuleNames = rules
