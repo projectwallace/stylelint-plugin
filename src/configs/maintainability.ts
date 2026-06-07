@@ -33,7 +33,7 @@ export default {
 		],
 		'projectwallace/no-prefixed-values': true,
 		'projectwallace/no-property-browserhacks': true,
-		'projectwallace/no-property-shorthand': [true, { ignore: ['single-value '] }],
+		'projectwallace/no-property-shorthand': [true, { ignore: ['single-value'] }],
 		'projectwallace/max-comments': [64, { ignoreCopyrightComments: true }],
 		'projectwallace/max-spacing-resets': 16,
 	},
