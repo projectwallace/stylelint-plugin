@@ -53,7 +53,7 @@ Alternatively, add the plugin and configure rules individually in your stylelint
 	"rules": {
 		"projectwallace/no-static-media-queries": true,
 		"projectwallace/no-unused-custom-properties": true,
-		"projectwallace/no-property-shorthand": [true, { "ignore": "single-value" }],
+		"projectwallace/no-property-shorthand": [true, { "ignore": ["single-value"] }],
 		"projectwallace/no-duplicate-data-urls": true,
 		"projectwallace/max-unique-colors": 128,
 		"projectwallace/max-selector-complexity": 15,
