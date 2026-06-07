@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { is_valid_positive_integer } from '../../utils/option-validators.js'
+import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,7 +26,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			rule_name,
 			{
 				actual: primaryOption,
-				possible: [is_valid_positive_integer],
+				possible: [is_valid_non_negative_integer],
 			},
 			{
 				actual: secondaryOptions,

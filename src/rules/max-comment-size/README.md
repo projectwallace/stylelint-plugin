@@ -13,7 +13,9 @@ This rule counts the **total byte size** of all CSS comments in the stylesheet.
 
 ## Options
 
-`Number`
+`Number` (non-negative integer)
+
+Use `0` to disallow all comments entirely.
 
 Given:
 

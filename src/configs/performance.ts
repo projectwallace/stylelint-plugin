@@ -8,7 +8,12 @@ export default {
 		'projectwallace/no-empty-rules': true,
 		'projectwallace/max-file-size': 200_000,
 		'projectwallace/max-embedded-content-size': 10_000,
-		'projectwallace/max-comment-size': 0,
+		'projectwallace/max-comment-size': [
+			0,
+			{
+				ignoreCopyrightComments: true,
+			},
+		],
 		'projectwallace/max-comments': [
 			0,
 			{
