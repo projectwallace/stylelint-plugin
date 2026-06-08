@@ -50,6 +50,8 @@ b { text-shadow: 1px 1px red; }
 
 Type: `Array<string | RegExp>`
 
+Strings wrapped in `/` delimiters (e.g. `"/^red/"`, `"/^red/i"`) are treated as regular expressions. This allows regex patterns in JSON config files without needing a `.mjs` config.
+
 A list of text-shadow values to exclude from the count. Each entry can be an exact string or a regular expression.
 
 > **Note**: String patterns are matched against the exact string value of the detected shadow.

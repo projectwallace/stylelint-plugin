@@ -47,6 +47,8 @@ b { font: bold 16px Arial, sans-serif; }
 
 Type: `Array<string | RegExp>`
 
+Strings wrapped in `/` delimiters (e.g. `"/^red/"`, `"/^red/i"`) are treated as regular expressions. This allows regex patterns in JSON config files without needing a `.mjs` config.
+
 A list of font family values to exclude from the count. Each entry can be an exact string or a regular expression matched against the full value string.
 
 Given:

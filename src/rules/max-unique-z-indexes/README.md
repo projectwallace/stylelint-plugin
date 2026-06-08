@@ -47,6 +47,8 @@ c { z-index: 20; }
 
 Type: `Array<string | RegExp>`
 
+Strings wrapped in `/` delimiters (e.g. `"/^red/"`, `"/^red/i"`) are treated as regular expressions. This allows regex patterns in JSON config files without needing a `.mjs` config.
+
 A list of z-index values to exclude from the count. Each entry can be an exact string or a regular expression.
 
 Given:

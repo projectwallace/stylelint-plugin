@@ -47,9 +47,11 @@ a {
 
 ## Optional secondary options
 
-### `ignore: [/regex/, "non-regex"]`
+### `ignore: Array<string | RegExp>`
 
 Allow specific undeclared custom properties by exact string or RegExp pattern. Useful for custom properties defined externally (e.g. design tokens, theming systems) that are not declared in the stylesheet being linted.
+
+Strings wrapped in `/` delimiters (e.g. `"/^--brand/"`, `"/^--brand/i"`) are treated as regular expressions, allowing regex patterns in JSON config files.
 
 Given:
 

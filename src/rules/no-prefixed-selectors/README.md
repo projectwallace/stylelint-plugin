@@ -51,6 +51,8 @@ input::placeholder {
 
 Ignore specific vendor-prefixed pseudo-classes or pseudo-elements by exact string or regular expression.
 
+Strings wrapped in `/` delimiters (e.g. `"/^-webkit-/"`, `"/^-webkit-/i"`) are treated as regular expressions, allowing regex patterns in JSON config files.
+
 Given: `{ ignore: ["::-webkit-scrollbar"] }`
 
 the following are _not_ considered violations:

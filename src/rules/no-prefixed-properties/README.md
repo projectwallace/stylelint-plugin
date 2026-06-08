@@ -58,6 +58,8 @@ a {
 
 Ignore specific vendor-prefixed properties by exact string or regular expression.
 
+Strings wrapped in `/` delimiters (e.g. `"/^-webkit-/"`, `"/^-webkit-/i"`) are treated as regular expressions, allowing regex patterns in JSON config files.
+
 Given: `{ ignore: ["-webkit-appearance"] }`
 
 the following are _not_ considered violations:

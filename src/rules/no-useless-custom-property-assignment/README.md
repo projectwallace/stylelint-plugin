@@ -59,9 +59,11 @@ The following patterns are _not_ considered problems:
 
 ## Optional secondary options
 
-### `ignore: [/regex/, "non-regex"]`
+### `ignore: Array<string | RegExp>`
 
 Allow specific custom properties to be exempt from this rule, by exact string or RegExp pattern.
+
+Strings wrapped in `/` delimiters (e.g. `"/^--brand/"`, `"/^--brand/i"`) are treated as regular expressions, allowing regex patterns in JSON config files.
 
 Given:
 

@@ -45,6 +45,8 @@ The following patterns are _not_ considered violations:
 
 Type: `Array<string | RegExp>`
 
+Strings wrapped in `/` delimiters (e.g. `"/^red/"`, `"/^red/i"`) are treated as regular expressions. This allows regex patterns in JSON config files without needing a `.mjs` config.
+
 A list of media query values to exclude from the count. Each entry can be an exact string or a regular expression matched against the full params string.
 
 Given:
