@@ -45,9 +45,11 @@ a {
 
 ## Optional secondary options
 
-### `ignore: [/regex/, "non-regex"]`
+### `ignore: Array<string | RegExp>`
 
 Ignore specific unused custom properties.
+
+Strings wrapped in `/` delimiters (e.g. `"/^--brand/"`, `"/^--brand/i"`) are treated as regular expressions, allowing regex patterns in JSON config files.
 
 Given:
 

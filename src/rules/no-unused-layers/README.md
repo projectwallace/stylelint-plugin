@@ -48,9 +48,11 @@ The following patterns are _not_ considered problems:
 
 ## Optional secondary options
 
-### `ignore: [/regex/, "non-regex"]`
+### `ignore: Array<string | RegExp>`
 
 Ignore specific layer names that are declared but not defined. This is useful for layers that are intentionally defined in external stylesheets (e.g. third-party resets).
+
+Strings wrapped in `/` delimiters (e.g. `"/^--brand/"`, `"/^--brand/i"`) are treated as regular expressions, allowing regex patterns in JSON config files.
 
 Given:
 

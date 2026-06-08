@@ -36,7 +36,7 @@ a {
 
 ### `ignore: Array<string | RegExp | "single-value">`
 
-Allows specific shorthand properties or patterns to be used. Accepts exact strings, regular expressions, or the special keyword `"single-value"`.
+Allows specific shorthand properties or patterns to be used. Accepts exact strings, regular expressions, the special keyword `"single-value"`, or strings wrapped in `/` delimiters (e.g. `"/^border/"`) which are treated as regular expressions — enabling regex patterns in JSON config files.
 
 #### `"single-value"`
 

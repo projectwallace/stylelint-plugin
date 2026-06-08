@@ -58,9 +58,11 @@ The following patterns are _not_ considered problems:
 
 ## Optional secondary options
 
-### `ignore: [/regex/, "non-regex"]`
+### `ignore: Array<string | RegExp>`
 
 Allow specific container names that are declared but never queried. Useful for container names intended to be queried in other stylesheets or by external tools.
+
+Strings wrapped in `/` delimiters (e.g. `"/^--brand/"`, `"/^--brand/i"`) are treated as regular expressions, allowing regex patterns in JSON config files.
 
 Given:
 

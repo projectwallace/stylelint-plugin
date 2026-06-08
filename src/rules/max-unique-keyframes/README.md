@@ -55,6 +55,8 @@ Vendor-prefixed at-rules such as `@-webkit-keyframes` are not counted. Only unpr
 
 Type: `Array<string | RegExp>`
 
+Strings wrapped in `/` delimiters (e.g. `"/^red/"`, `"/^red/i"`) are treated as regular expressions. This allows regex patterns in JSON config files without needing a `.mjs` config.
+
 A list of keyframe names to exclude from the count. Each entry can be an exact string or a regular expression matched against the full keyframe name.
 
 Given:

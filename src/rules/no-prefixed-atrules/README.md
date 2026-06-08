@@ -46,6 +46,8 @@ The following patterns are _not_ considered violations:
 
 Ignore specific vendor-prefixed at-rule names by exact string or regular expression.
 
+Strings wrapped in `/` delimiters (e.g. `"/^-webkit-/"`, `"/^-webkit-/i"`) are treated as regular expressions, allowing regex patterns in JSON config files.
+
 Given: `{ ignore: ["-webkit-keyframes"] }`
 
 the following are _not_ considered violations:
