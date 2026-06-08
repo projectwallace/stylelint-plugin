@@ -10,7 +10,7 @@ export function is_allowed(value: string, allow_list: Array<string | RegExp>): b
 		const pattern = parse_string_or_regex(raw)
 		return typeof pattern === 'string'
 			? pattern === value
-			: pattern.test(value)
+			: pattern instanceof RegExp && pattern.test(value)
 	})
 }
 
