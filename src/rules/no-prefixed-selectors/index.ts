@@ -47,9 +47,10 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 						utils.report({
 							message: messages.rejected(selector.text),
 							node: rule,
+							index: node.start,
+							endIndex: node.end,
 							result,
 							ruleName: rule_name,
-							word: node.text,
 						})
 						return BREAK
 					}

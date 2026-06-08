@@ -151,7 +151,7 @@ test('should error when specificity exceeds the limit', async () => {
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
-		code: `#foo .bar a { color: red; }`,
+		code: `a {} #foo .bar a { color: red; }`,
 		config,
 	})
 
@@ -159,7 +159,9 @@ test('should error when specificity exceeds the limit', async () => {
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({
 		line: 1,
-		column: 1,
+		column: 6,
+		endLine: 1,
+		endColumn: 17, // end of "#foo .bar a", not the whole rule
 		rule: rule_name,
 		severity: 'error',
 		text: 'Specificity of "#foo .bar a" is [1, 1, 1] which is greater than the allowed [0, 4, 0] (projectwallace/max-selector-specificity)',
@@ -185,6 +187,10 @@ test('should error only on the violating selector in a selector list', async () 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({
+		line: 1,
+		column: 4, // "#foo" starts after "a, "
+		endLine: 1,
+		endColumn: 8, // end of "#foo", not the whole rule
 		rule: rule_name,
 		severity: 'error',
 		text: 'Specificity of "#foo" is [1, 0, 0] which is greater than the allowed [0, 4, 0] (projectwallace/max-selector-specificity)',

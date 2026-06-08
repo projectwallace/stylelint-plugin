@@ -40,6 +40,7 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 				utils.report({
 					message: messages.rejected(name),
 					node: at_rule,
+					word: name,
 					result,
 					ruleName: rule_name,
 				})

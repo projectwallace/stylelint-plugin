@@ -43,6 +43,8 @@ const ruleFunction = (primaryOption: number) => {
 					utils.report({
 						message: messages.rejected(stringified, complexity, primaryOption),
 						node: rule,
+						index: selector.start,
+						endIndex: selector.end,
 						result,
 						ruleName: rule_name,
 					})

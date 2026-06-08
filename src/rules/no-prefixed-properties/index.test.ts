@@ -56,16 +56,18 @@ test('should not error on custom property', async () => {
 // ---------------------------------------------------------------------------
 
 test.each([
-	['-webkit-transform', 'a { -webkit-transform: rotate(45deg) }'],
-	['-moz-appearance', 'a { -moz-appearance: none }'],
-	['-ms-flex', 'a { -ms-flex: 1 }'],
-	['-o-transition', 'a { -o-transition: all 0.3s }'],
-	['-webkit-user-select', 'a { -webkit-user-select: none }'],
-])('should error when property is "%s"', async (property, code) => {
+	['-webkit-transform', 'a { -webkit-transform: rotate(45deg) }', 5, 22],
+	['-moz-appearance', 'a { -moz-appearance: none }', 5, 20],
+	['-ms-flex', 'a { -ms-flex: 1 }', 5, 13],
+	['-o-transition', 'a { -o-transition: all 0.3s }', 5, 18],
+	['-webkit-user-select', 'a { -webkit-user-select: none }', 5, 24],
+])('should error when property is "%s"', async (property, code, column, endColumn) => {
 	const { warnings, errored } = await lint(code, true)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toContain(property)
+	expect(warnings[0].column).toBe(column)
+	expect(warnings[0].endColumn).toBe(endColumn)
 })
 
 // ---------------------------------------------------------------------------

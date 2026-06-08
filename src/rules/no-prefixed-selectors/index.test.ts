@@ -56,15 +56,20 @@ test('should not error on standard ::selection', async () => {
 // ---------------------------------------------------------------------------
 
 test.each([
-	['input::-webkit-input-placeholder { color: red }'],
-	['::-moz-placeholder { color: red }'],
-	['::-webkit-scrollbar { width: 8px }'],
-	['::-moz-selection { background: blue }'],
-])('should error when selector contains vendor-prefixed pseudo', async (code) => {
-	const { warnings, errored } = await lint(code, true)
-	expect(errored).toBe(true)
-	expect(warnings).toHaveLength(1)
-})
+	['input::-webkit-input-placeholder { color: red }', 6, 33],
+	['::-moz-placeholder { color: red }', 1, 19],
+	['::-webkit-scrollbar { width: 8px }', 1, 20],
+	['::-moz-selection { background: blue }', 1, 17],
+])(
+	'should error when selector contains vendor-prefixed pseudo',
+	async (code, column, endColumn) => {
+		const { warnings, errored } = await lint(code, true)
+		expect(errored).toBe(true)
+		expect(warnings).toHaveLength(1)
+		expect(warnings[0].column).toBe(column)
+		expect(warnings[0].endColumn).toBe(endColumn)
+	},
+)
 
 // ---------------------------------------------------------------------------
 // Ignore option

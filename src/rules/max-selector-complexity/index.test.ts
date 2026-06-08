@@ -82,7 +82,7 @@ test('should error on a very complex selector', async () => {
 		line: 1,
 		column: 1,
 		endLine: 1,
-		endColumn: 17,
+		endColumn: 14, // end of "a b c d e f g", not the whole rule
 		rule: 'projectwallace/max-selector-complexity',
 		severity: 'error',
 		text: 'Selector complexity of "a b c d e f g" is 13 which is greater than the allowed 2 (projectwallace/max-selector-complexity)',
@@ -114,7 +114,7 @@ test('should error on multiple complex selectors', async () => {
 		line: 2,
 		column: 4,
 		endLine: 2,
-		endColumn: 20,
+		endColumn: 17, // end of "a b c d e f g", not the whole rule
 		rule: 'projectwallace/max-selector-complexity',
 		severity: 'error',
 		text: 'Selector complexity of "a b c d e f g" is 13 which is greater than the allowed 2 (projectwallace/max-selector-complexity)',
@@ -123,7 +123,7 @@ test('should error on multiple complex selectors', async () => {
 		line: 4,
 		column: 4,
 		endLine: 4,
-		endColumn: 27,
+		endColumn: 24, // end of ".a .b .c .d #e #f #g", not the whole rule
 		rule: 'projectwallace/max-selector-complexity',
 		severity: 'error',
 		text: 'Selector complexity of ".a .b .c .d #e #f #g" is 13 which is greater than the allowed 2 (projectwallace/max-selector-complexity)',
@@ -151,7 +151,7 @@ test('should error on a low-specificity/high-complexity selector', async () => {
 		line: 1,
 		column: 1,
 		endLine: 1,
-		endColumn: 33,
+		endColumn: 30, // end of ":-moz-any(#a #b #c, #d #e #f)", not the whole rule
 		rule: 'projectwallace/max-selector-complexity',
 		severity: 'error',
 		text: 'Selector complexity of ":-moz-any(#a #b #c, #d #e #f)" is 12 which is greater than the allowed 2 (projectwallace/max-selector-complexity)',
@@ -179,7 +179,7 @@ test('should only report the one selector in a list thats problematic', async ()
 		line: 1,
 		column: 1,
 		endLine: 1,
-		endColumn: 14,
+		endColumn: 8, // end of "a a a a", not the whole rule
 		rule: 'projectwallace/max-selector-complexity',
 		severity: 'error',
 		text: 'Selector complexity of "a a a a" is 7 which is greater than the allowed 2 (projectwallace/max-selector-complexity)',

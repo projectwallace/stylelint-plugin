@@ -92,7 +92,8 @@ test('equality width alone — error', async () => {
 		`Container feature "width: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
 	)
 	expect(warnings[0].line).toBe(1)
-	expect(warnings[0].column).toBe(1)
+	expect(warnings[0].column).toBe(12) // points to "(width: 300px)", not the whole @container rule
+	expect(warnings[0].endColumn).toBe(26)
 })
 
 test('named container with equality width — error', async () => {
