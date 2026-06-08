@@ -1,8 +1,6 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
-import plugin from './index.js'
-
-const rule_name = 'projectwallace/no-unused-layers'
+import plugin, { rule_name } from './index.js'
 
 test('should not error when a declared layer is defined in a block', async () => {
 	const config = {
@@ -71,7 +69,7 @@ test('should not error when there are only layer block definitions (no ordering 
 	expect(warnings).toStrictEqual([])
 })
 
-test('should error when a layer in an ordering list is never defined', async () => {
+test('should error when a layer in an ordering list is never used', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -93,10 +91,10 @@ test('should error when a layer in an ordering list is never defined', async () 
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Layer "utilities" was declared but never defined (${rule_name})`)
+	expect(text).toBe(`Layer "utilities" was declared but never used (${rule_name})`)
 })
 
-test('should error when a single-name layer statement is never defined', async () => {
+test('should error when a single-name layer statement is never used', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -115,10 +113,10 @@ test('should error when a single-name layer statement is never defined', async (
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Layer "utilities" was declared but never defined (${rule_name})`)
+	expect(text).toBe(`Layer "utilities" was declared but never used (${rule_name})`)
 })
 
-test('should error for each undeclared layer in a list', async () => {
+test('should error for each unused layer in a list', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {

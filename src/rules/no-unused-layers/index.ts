@@ -5,10 +5,10 @@ import { DefinedUsed } from '../../utils/defined-used.js'
 
 const { createPlugin, utils } = stylelint
 
-const rule_name = 'projectwallace/no-unused-layers'
+export const rule_name = 'projectwallace/no-unused-layers'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (layer: string) => `Layer "${layer}" was declared but never defined`,
+	rejected: (layer: string) => `Layer "${layer}" was declared but never used`,
 })
 
 const meta = {
