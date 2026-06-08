@@ -41,9 +41,15 @@ describe('is_allowed', () => {
 	})
 
 	test('mixed allow list', () => {
-		expect(is_allowed('outline', ['single-value', '/^border/', 'outline', 'text-decoration'])).toBe(true)
-		expect(is_allowed('border-radius', ['single-value', '/^border/', 'outline', 'text-decoration'])).toBe(true)
-		expect(is_allowed('background', ['single-value', '/^border/', 'outline', 'text-decoration'])).toBe(false)
+		expect(is_allowed('outline', ['single-value', '/^border/', 'outline', 'text-decoration'])).toBe(
+			true,
+		)
+		expect(
+			is_allowed('border-radius', ['single-value', '/^border/', 'outline', 'text-decoration']),
+		).toBe(true)
+		expect(
+			is_allowed('background', ['single-value', '/^border/', 'outline', 'text-decoration']),
+		).toBe(false)
 	})
 })
 
