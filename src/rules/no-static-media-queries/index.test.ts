@@ -104,7 +104,8 @@ test('equality width alone — error', async () => {
 		`Media feature "width: 300px" is a static equality condition that will almost never match any viewport (${rule_name})`,
 	)
 	expect(warnings[0].line).toBe(1)
-	expect(warnings[0].column).toBe(1)
+	expect(warnings[0].column).toBe(8) // points to "(width: 300px)", not the whole @media rule
+	expect(warnings[0].endColumn).toBe(22)
 })
 
 test('equality width with conflicting min-width — error', async () => {

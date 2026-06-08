@@ -28,6 +28,8 @@ const meta = {
 type StaticFeatureInfo = {
 	feature: string
 	value: string
+	start: number
+	end: number
 }
 
 /**
@@ -75,7 +77,12 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 			if (child !== null && (is_dimension(child) || is_number(child))) {
 				const { value } = child
 				if (value != null && !Number.isNaN(value)) {
-					static_feature = { feature: property, value: child.text }
+					static_feature = {
+						feature: property,
+						value: child.text,
+						start: node.start,
+						end: node.end,
+					}
 				}
 			}
 		})
@@ -102,9 +109,12 @@ const ruleFunction = (primaryOption: true) => {
 			const static_feature = find_static_feature_in_prelude(prelude)
 
 			if (static_feature !== null) {
+				const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
 				utils.report({
 					message: messages.rejected(static_feature.feature, static_feature.value),
 					node: at_rule,
+					index: params_offset + static_feature.start,
+					endIndex: params_offset + static_feature.end,
 					result,
 					ruleName: rule_name,
 				})

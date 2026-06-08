@@ -43,6 +43,7 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 					utils.report({
 						message: messages.rejected(node.text),
 						node: declaration,
+						word: node.text,
 						result,
 						ruleName: rule_name,
 					})

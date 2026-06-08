@@ -200,6 +200,84 @@ for (const selector of selector_list) {
 }
 ```
 
+## Error positioning in `utils.report`
+
+Always pass `index`/`endIndex` (or `word`) to `utils.report` so the error highlights only the offending token, not the whole PostCSS node. The correct approach depends on which node type you're reporting on.
+
+### Rule nodes — selector position
+
+`parse_selector_list` returns nodes with `.start`/`.end` as character offsets within the selector string. Since a Rule node's source starts with the selector, these map directly to `index`/`endIndex`:
+
+```ts
+const selector_list = parse_selector_list(rule.selector)
+for (const selector of selector_list) {
+    if (/* violation */) {
+        utils.report({
+            node: rule,
+            index: selector.start,
+            endIndex: selector.end,
+            // ...
+        })
+    }
+}
+```
+
+For a specific token within a selector (e.g. a prefixed pseudo-element), use the token node's `.start`/`.end` — they are also relative to `rule.selector`:
+
+```ts
+walk(selector, (node) => {
+	if (node.is_vendor_prefixed) {
+		utils.report({ node: rule, index: node.start, endIndex: node.end /* ... */ })
+	}
+})
+```
+
+### Declaration nodes — property or value
+
+Use `word: decl.prop` to highlight just the property name. Use `word: node.text` to highlight a specific parsed value token:
+
+```ts
+// Property violation
+utils.report({ node: declaration, word: declaration.prop /* ... */ })
+
+// Value token violation (node from parse_value / walk)
+utils.report({ node: declaration, word: node.text /* ... */ })
+```
+
+### AtRule nodes — name
+
+Use `word: at_rule.name` to highlight just the at-rule name (after `@`):
+
+```ts
+utils.report({ node: at_rule, word: at_rule.name /* ... */ })
+```
+
+### AtRule nodes — params position
+
+Nodes returned by `parse_atrule_prelude` have `.start`/`.end` relative to `at_rule.params`. To convert to an offset within the AtRule node source (which starts at `@`), add the params prefix length:
+
+```ts
+const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
+utils.report({
+	node: at_rule,
+	index: params_offset + parsed_node.start,
+	endIndex: params_offset + parsed_node.end,
+	// ...
+})
+```
+
+### Testing positioning
+
+Violation tests must assert `column` and `endColumn` to prove the error focuses on the right token rather than the whole node:
+
+```ts
+expect(warnings[0]).toMatchObject({
+	column: 5, // start of the offending token
+	endColumn: 22, // end of the offending token, not the end of the whole rule
+	// ...
+})
+```
+
 ## Adding a new config
 
 1. Create a new file under `src/configs/<config-name>.ts`

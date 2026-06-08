@@ -53,18 +53,22 @@ test('should not error on standard linear-gradient', async () => {
 // ---------------------------------------------------------------------------
 
 test.each([
-	['a { display: -webkit-flex }'],
-	['a { background: -webkit-linear-gradient(top, red, blue) }'],
-])('should error when value contains vendor prefix', async (code) => {
+	['a { display: -webkit-flex }', 14, 26],
+	['a { background: -webkit-linear-gradient(top, red, blue) }', 17, 56],
+])('should error when value contains vendor prefix', async (code, column, endColumn) => {
 	const { warnings, errored } = await lint(code, true)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
+	expect(warnings[0].column).toBe(column)
+	expect(warnings[0].endColumn).toBe(endColumn)
 })
 
 test('should error on custom property', async () => {
 	const { warnings, errored } = await lint('a { --display: -webkit-flex }', true)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
+	expect(warnings[0].column).toBe(16) // "-webkit-flex" inside "--display: "
+	expect(warnings[0].endColumn).toBe(28)
 })
 
 // ---------------------------------------------------------------------------

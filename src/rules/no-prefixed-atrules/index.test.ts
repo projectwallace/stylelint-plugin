@@ -60,6 +60,8 @@ test('should error when @-webkit-keyframes is used', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toContain('-webkit-keyframes')
+	expect(warnings[0].column).toBe(2) // points to "-webkit-keyframes", not the whole @rule
+	expect(warnings[0].endColumn).toBe(19)
 })
 
 test('should error when @-moz-keyframes is used', async () => {
@@ -67,6 +69,8 @@ test('should error when @-moz-keyframes is used', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toContain('-moz-keyframes')
+	expect(warnings[0].column).toBe(2)
+	expect(warnings[0].endColumn).toBe(16)
 })
 
 test('should error when @-ms-viewport is used', async () => {
@@ -74,6 +78,8 @@ test('should error when @-ms-viewport is used', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toContain('-ms-viewport')
+	expect(warnings[0].column).toBe(2)
+	expect(warnings[0].endColumn).toBe(14)
 })
 
 // ---------------------------------------------------------------------------
