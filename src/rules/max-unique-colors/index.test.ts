@@ -84,7 +84,7 @@ test('should error when unique colors exceed the limit', async () => {
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
 	expect(warnings[0].text).toBe(
-		'Found 3 unique colors (red, blue, green) which exceeds the maximum of 2 (projectwallace/max-unique-colors)',
+		'Found 3 unique colors which exceeds the maximum of 2 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -110,7 +110,7 @@ test('should recognise named colors case-insensitively as colors', async () => {
 	// Red ≠ RED → 2 unique colors → violation
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (Red, RED) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -124,7 +124,7 @@ test('should recognise transparent as a color', async () => {
 	const { warnings, errored } = await lint(`a { background-color: transparent; color: red; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (transparent, red) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -132,7 +132,7 @@ test('should recognise currentColor as a color', async () => {
 	const { warnings, errored } = await lint(`a { border-color: currentColor; color: red; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (currentColor, red) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -169,7 +169,7 @@ test('should treat different hex strings as different unique colors', async () =
 	const { warnings, errored } = await lint(`a { color: #f00; background-color: #ff0000; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (#f00, #ff0000) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -178,7 +178,7 @@ test('should preserve hex casing for uniqueness', async () => {
 	const { warnings, errored } = await lint(`a { color: #FFF; } b { color: #fff; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (#FFF, #fff) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -280,7 +280,7 @@ test('should detect colors in box-shadow', async () => {
 	const { warnings, errored } = await lint(`a { box-shadow: 0 0 10px red, 0 0 20px blue; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (red, blue) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -294,7 +294,7 @@ test('should detect named colors inside linear-gradient()', async () => {
 	const { warnings, errored } = await lint(`a { background-image: linear-gradient(red, blue); }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (red, blue) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -305,7 +305,7 @@ test('should detect hex colors inside radial-gradient()', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (#fff, #000) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -352,7 +352,7 @@ test('should count multiple fallback colors from different var() declarations', 
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (red, blue) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -406,7 +406,7 @@ test('should count initial-value AND usages together', async () => {
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (red, blue) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -436,7 +436,7 @@ test('should count initial-value with hex color', async () => {
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (#ff0000, blue) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -475,7 +475,7 @@ test('should count var() as a unique color when it is a @property <color>', asyn
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 4 unique colors (red, blue, var(--brand-color), var(--accent-color)) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 4 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -493,7 +493,7 @@ test('should count the var() expression AND fallback colors separately', async (
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 3 unique colors (blue, var(--brand-color, red), red) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 3 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -594,7 +594,7 @@ test('should detect colors declared in custom properties', async () => {
 	const { warnings, errored } = await lint(`a { --text-color: red; --bg-color: blue; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique colors (red, blue) which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
+		'Found 2 unique colors which exceeds the maximum of 1 (projectwallace/max-unique-colors)',
 	)
 })
 
@@ -609,7 +609,7 @@ test('should count unique colors across the entire stylesheet', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 3 unique colors (red, blue, green) which exceeds the maximum of 2 (projectwallace/max-unique-colors)',
+		'Found 3 unique colors which exceeds the maximum of 2 (projectwallace/max-unique-colors)',
 	)
 })
 

@@ -9,8 +9,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-unique-color-formats'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, formats: string[]) =>
-		`Found ${actual} unique color formats (${formats.join(', ')}) which exceeds the maximum of ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Found ${actual} unique color formats which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
@@ -65,7 +65,7 @@ const ruleFunction = (primaryOption: number) => {
 		const actual = unique_formats.size
 		for (const declaration of violating_declarations) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_formats]),
+				message: messages.rejected(actual, primaryOption),
 				node: declaration,
 				result,
 				ruleName: rule_name,

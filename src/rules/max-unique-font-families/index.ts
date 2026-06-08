@@ -13,8 +13,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-unique-font-families'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, families: string[]) =>
-		`Found ${actual} unique font families (${families.join(', ')}) which exceeds the maximum of ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Found ${actual} unique font families which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
@@ -80,7 +80,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const actual = unique_families.size
 		for (const declaration of violating_declarations) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_families]),
+				message: messages.rejected(actual, primaryOption),
 				node: declaration,
 				result,
 				ruleName: rule_name,

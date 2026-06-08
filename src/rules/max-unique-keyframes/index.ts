@@ -11,8 +11,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-unique-keyframes'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, names: string[]) =>
-		`Found ${actual} unique keyframes (${names.join(', ')}) which exceeds the maximum of ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Found ${actual} unique keyframes which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
@@ -60,7 +60,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const actual = unique_keyframes.size
 		for (const atRule of violating_at_rules) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_keyframes]),
+				message: messages.rejected(actual, primaryOption),
 				node: atRule,
 				result,
 				ruleName: rule_name,
