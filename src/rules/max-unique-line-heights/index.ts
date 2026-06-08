@@ -13,8 +13,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-unique-line-heights'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, heights: string[]) =>
-		`Found ${actual} unique line heights (${heights.join(', ')}) which exceeds the maximum of ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Found ${actual} unique line heights which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
@@ -74,7 +74,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const actual = unique_heights.size
 		for (const declaration of violating_declarations) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_heights]),
+				message: messages.rejected(actual, primaryOption),
 				node: declaration,
 				result,
 				ruleName: rule_name,

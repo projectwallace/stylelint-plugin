@@ -12,8 +12,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-unique-text-shadows'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, shadows: string[]) =>
-		`Found ${actual} unique text shadows (${shadows.join(', ')}) which exceeds the maximum of ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Found ${actual} unique text shadows which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
@@ -64,7 +64,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const actual = unique_shadows.size
 		for (const declaration of violating_declarations) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_shadows]),
+				message: messages.rejected(actual, primaryOption),
 				node: declaration,
 				result,
 				ruleName: rule_name,

@@ -14,8 +14,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-unique-animation-functions'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, shadows: string[]) =>
-		`Found ${actual} unique animation-functions (${shadows.join(', ')}) which exceeds the maximum of ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Found ${actual} unique animation-functions which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
@@ -85,7 +85,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const actual = unique_functions.size
 		for (const declaration of violating_declarations) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_functions]),
+				message: messages.rejected(actual, primaryOption),
 				node: declaration,
 				result,
 				ruleName: rule_name,

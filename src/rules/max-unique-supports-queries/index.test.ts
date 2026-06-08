@@ -34,7 +34,7 @@ test('should error when 0 is configured and any supports query is used', async (
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		'Found 1 unique supports queries ((display: grid)) which exceeds the maximum of 0 (projectwallace/max-unique-supports-queries)',
+		'Found 1 unique supports queries which exceeds the maximum of 0 (projectwallace/max-unique-supports-queries)',
 	)
 })
 
@@ -96,7 +96,7 @@ test('should error when unique queries exceed the limit', async () => {
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
 	expect(warnings[0].text).toBe(
-		'Found 3 unique supports queries ((display: grid), (display: flex), (display: contents)) which exceeds the maximum of 2 (projectwallace/max-unique-supports-queries)',
+		'Found 3 unique supports queries which exceeds the maximum of 2 (projectwallace/max-unique-supports-queries)',
 	)
 })
 
@@ -119,7 +119,7 @@ test('should treat different query strings as different unique entries', async (
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique supports queries ((display: grid), not (display: grid)) which exceeds the maximum of 1 (projectwallace/max-unique-supports-queries)',
+		'Found 2 unique supports queries which exceeds the maximum of 1 (projectwallace/max-unique-supports-queries)',
 	)
 })
 
@@ -155,6 +155,6 @@ test('should error when non-ignored values exceed the limit', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique supports queries ((display: flex), (display: contents)) which exceeds the maximum of 1 (projectwallace/max-unique-supports-queries)',
+		'Found 2 unique supports queries which exceeds the maximum of 1 (projectwallace/max-unique-supports-queries)',
 	)
 })

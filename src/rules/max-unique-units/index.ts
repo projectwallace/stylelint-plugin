@@ -9,8 +9,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-unique-units'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, units: string[]) =>
-		`Found ${actual} unique CSS units (${units.join(', ')}) which is greater than the allowed ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Found ${actual} unique CSS units which is greater than the allowed ${expected}`,
 })
 
 const meta = {
@@ -50,7 +50,7 @@ const ruleFunction = (primaryOption: number) => {
 		const actual = unique_units.size
 		for (const declaration of violating_declarations) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_units]),
+				message: messages.rejected(actual, primaryOption),
 				node: declaration,
 				result,
 				ruleName: rule_name,

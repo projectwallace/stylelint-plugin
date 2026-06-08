@@ -11,8 +11,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-unique-supports-queries'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number, queries: string[]) =>
-		`Found ${actual} unique supports queries (${queries.join(', ')}) which exceeds the maximum of ${expected}`,
+	rejected: (actual: number, expected: number) =>
+		`Found ${actual} unique supports queries which exceeds the maximum of ${expected}`,
 })
 
 const meta = {
@@ -60,7 +60,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const actual = unique_queries.size
 		for (const at_rule of violating_at_rules) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption, [...unique_queries]),
+				message: messages.rejected(actual, primaryOption),
 				node: at_rule,
 				result,
 				ruleName: rule_name,
