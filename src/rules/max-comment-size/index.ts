@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { format_filesize } from '../../utils/format-bytes.js'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
@@ -8,7 +9,7 @@ const rule_name = 'projectwallace/max-comment-size'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Comment size is ${actual} bytes which is greater than the allowed ${expected} bytes`,
+		`Comment size is ${format_filesize(actual)} which is ${format_filesize(actual - expected)} greater than the allowed ${format_filesize(expected)}`,
 })
 
 const meta = {
