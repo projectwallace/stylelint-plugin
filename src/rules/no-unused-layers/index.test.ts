@@ -216,6 +216,74 @@ test('should still error for layers not in the ignore when ignore is set', async
 	expect(warnings.length).toBe(2)
 })
 
+test('should not error when a declared layer is used via a sublayer block rule', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			@layer core;
+			@layer core.reset { * { margin: 0; } }
+		`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should error when a declared layer only has sublayer ordering statements (no block or @import usage)', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			@layer core;
+			@layer core.reset, core.tokens;
+		`,
+		config,
+	})
+
+	// core, core.reset, core.tokens are all declared but never used
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(3)
+})
+
+test('should not error when a declared layer is used via @import layer()', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			@layer core, core.reset;
+			@import url('reset.css') layer(core.reset);
+		`,
+		config,
+	})
+
+	// @import layer(core.reset) counts as usage of both core.reset and core
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should not run when primary option is invalid', async () => {
 	const config = {
 		plugins: [plugin],

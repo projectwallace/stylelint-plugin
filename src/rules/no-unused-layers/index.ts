@@ -1,5 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
+import { LAYER_NAME } from '@projectwallace/css-parser/nodes'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
 
@@ -17,6 +19,13 @@ const meta = {
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
+}
+
+function mark_ancestors_used(name: string, tracker: DefinedUsed<AtRule>) {
+	const parts = name.split('.')
+	for (let i = 1; i < parts.length; i++) {
+		tracker.use(parts.slice(0, i).join('.'))
+	}
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
@@ -38,6 +47,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				const name = atRule.params.trim()
 				if (name) {
 					tracker.use(name)
+					mark_ancestors_used(name, tracker)
 				}
 			} else {
 				// Statement: @layer name; or @layer a, b, c;
@@ -47,6 +57,17 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					.filter(Boolean)
 				for (const name of names) {
 					tracker.define(name, atRule)
+				}
+			}
+		})
+
+		// @import url() layer(name) counts as usage of both `name` and all ancestor layers
+		root.walkAtRules('import', (atRule) => {
+			const parsed = parse_atrule_prelude('import', atRule.params)
+			for (const child of parsed) {
+				if (child.type === LAYER_NAME && child.name) {
+					tracker.use(child.name)
+					mark_ancestors_used(child.name, tracker)
 				}
 			}
 		})
