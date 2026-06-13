@@ -68,7 +68,8 @@ function find_static_feature_in_prelude(
 			if (property.startsWith('min-') || property.startsWith('max-')) return
 
 			// These features intentionally take an integer count, not a length
-			if (property === 'horizontal-viewport-segments' || property === 'vertical-viewport-segments') return
+			if (property === 'horizontal-viewport-segments' || property === 'vertical-viewport-segments')
+				return
 
 			// A numeric value makes this an equality (static) condition
 			const child = node.value
