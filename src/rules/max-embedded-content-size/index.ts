@@ -3,6 +3,7 @@ import type { Root } from 'postcss'
 import { walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_url } from '@projectwallace/css-parser'
+import { format_filesize } from '../../utils/format-bytes.js'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint
@@ -11,7 +12,7 @@ const rule_name = 'projectwallace/max-embedded-content-size'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Embedded content size is ${actual} bytes which is greater than the allowed ${expected} bytes`,
+		`Embedded content size is ${format_filesize(actual)} which is ${format_filesize(actual - expected)} greater than the allowed ${format_filesize(expected)}`,
 })
 
 const meta = {

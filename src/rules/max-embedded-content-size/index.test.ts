@@ -81,5 +81,5 @@ test('should error when embedded content size exceeds the limit', async () => {
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('greater than the allowed 1 bytes')
+	expect(warnings[0].text).toContain('greater than the allowed 1 byte')
 })
