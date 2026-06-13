@@ -94,6 +94,18 @@ test('valid @import media condition — no error', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
+test('horizontal-viewport-segments with integer — no error', async () => {
+	const { errored, warnings } = await lint('@media (horizontal-viewport-segments: 2) {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('vertical-viewport-segments with integer — no error', async () => {
+	const { errored, warnings } = await lint('@media (vertical-viewport-segments: 2) {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 // === Invalid cases (should error) ===
 
 test('equality width alone — error', async () => {

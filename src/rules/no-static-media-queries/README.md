@@ -100,3 +100,10 @@ The following patterns are _not_ considered violations:
 /* queries with `not` are skipped to avoid false positives */
 @media not screen {}
 ```
+
+<!-- prettier-ignore -->
+```css
+/* viewport-segments features always use an integer count */
+@media (horizontal-viewport-segments: 2) {}
+@media (vertical-viewport-segments: 2) {}
+```
