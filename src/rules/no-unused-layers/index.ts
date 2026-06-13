@@ -1,5 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
+import { LAYER_NAME } from '@projectwallace/css-parser/nodes'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
 
@@ -61,12 +63,13 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		// @import url() layer(name) counts as usage of both `name` and all ancestor layers
 		root.walkAtRules('import', (atRule) => {
-			const match = atRule.params.match(/\blayer\(([^)]*)\)/)
-			if (!match) return
-			const name = match[1].trim()
-			if (!name) return
-			tracker.use(name)
-			mark_ancestors_used(name, tracker)
+			const parsed = parse_atrule_prelude('import', atRule.params)
+			for (const child of parsed) {
+				if (child.type === LAYER_NAME && child.name) {
+					tracker.use(child.name)
+					mark_ancestors_used(child.name, tracker)
+				}
+			}
 		})
 
 		for (const [layer, node] of tracker.unused()) {
