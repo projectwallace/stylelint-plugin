@@ -32,6 +32,7 @@ npm install --save-dev @projectwallace/stylelint-plugin
 The easiest way to get started is by extending one of the preset configs:
 
 - **[`recommended`](#rules)** — enables all rules with sensible defaults
+- **[`holistic`](#holistic)** — enables rules that require analyzing the full stylesheet (counts, ratios, averages, uniqueness, cross-references)
 - **[`design-tokens`](#design-tokens)** — enables rules that encourage the use of design tokens in your CSS
 - **[`performance`](#performance)** — enables rules that affect file size and loading performance
 - **[`maintainability`](#maintainability)** — enables rules that limit complexity and enforce conventions to keep CSS easy to reason about and manage over time
@@ -82,6 +83,52 @@ export default {
 ## Rules
 
 All rules are included in the **recommended** config. The specialized configs below group rules by concern.
+
+### Holistic
+
+Rules that require analyzing the full stylesheet rather than individual nodes — counts, ratios, averages, uniqueness, and cross-references between defined and used values.
+
+```json
+{
+	"extends": ["@projectwallace/stylelint-plugin/configs/holistic"]
+}
+```
+
+| Rule                                                                                       | Description                                                                     |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| [max-atrules](src/rules/max-atrules/README.md)                                             | Limit the total number of at-rules in a stylesheet                              |
+| [max-rules](src/rules/max-rules/README.md)                                                 | Limit the total number of rules in a stylesheet                                 |
+| [max-declarations](src/rules/max-declarations/README.md)                                   | Limit the total number of declarations in a stylesheet                          |
+| [max-comments](src/rules/max-comments/README.md)                                           | Prevent the total number of comments from exceeding a predefined limit          |
+| [max-lines-of-code](src/rules/max-lines-of-code/README.md)                                 | Prevent a stylesheet from exceeding a predefined number of lines of code        |
+| [max-file-size](src/rules/max-file-size/README.md)                                         | Limit the total byte size of a stylesheet                                       |
+| [max-embedded-content-size](src/rules/max-embedded-content-size/README.md)                 | Limit the total byte size of embedded content (data URIs) in a stylesheet       |
+| [max-average-declarations-per-rule](src/rules/max-average-declarations-per-rule/README.md) | Limit the average number of declarations per rule across the stylesheet         |
+| [max-average-selectors-per-rule](src/rules/max-average-selectors-per-rule/README.md)       | Limit the average number of selectors per rule across the stylesheet            |
+| [max-average-selector-specificity](src/rules/max-average-selector-specificity/README.md)   | Limit the average specificity across the stylesheet                             |
+| [max-average-selector-complexity](src/rules/max-average-selector-complexity/README.md)     | Limit the average selector complexity across the stylesheet                     |
+| [max-important-ratio](src/rules/max-important-ratio/README.md)                             | Limit the ratio of `!important` declarations relative to all declarations       |
+| [min-declaration-uniqueness-ratio](src/rules/min-declaration-uniqueness-ratio/README.md)   | Enforce a minimum ratio of unique declarations across the stylesheet            |
+| [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)         | Enforce a minimum ratio of unique selectors across the stylesheet               |
+| [max-unique-colors](src/rules/max-unique-colors/README.md)                                 | Limit the number of unique color values                                         |
+| [max-unique-color-formats](src/rules/max-unique-color-formats/README.md)                   | Limit the number of distinct color formats                                      |
+| [max-unique-font-families](src/rules/max-unique-font-families/README.md)                   | Limit the number of unique font families                                        |
+| [max-unique-font-sizes](src/rules/max-unique-font-sizes/README.md)                         | Limit the number of unique font sizes                                           |
+| [max-unique-line-heights](src/rules/max-unique-line-heights/README.md)                     | Limit the number of unique line height values                                   |
+| [max-unique-z-indexes](src/rules/max-unique-z-indexes/README.md)                           | Limit the number of unique z-index values used across the stylesheet            |
+| [max-unique-units](src/rules/max-unique-units/README.md)                                   | Limit the number of unique CSS units used across the stylesheet                 |
+| [max-unique-durations](src/rules/max-unique-durations/README.md)                           | Limit the number of unique duration values                                      |
+| [max-unique-animation-functions](src/rules/max-unique-animation-functions/README.md)       | Limit the number of unique animation timing functions                           |
+| [max-unique-gradients](src/rules/max-unique-gradients/README.md)                           | Limit the number of unique gradient values                                      |
+| [max-unique-box-shadows](src/rules/max-unique-box-shadows/README.md)                       | Limit the number of unique box-shadow values                                    |
+| [max-unique-text-shadows](src/rules/max-unique-text-shadows/README.md)                     | Limit the number of unique text-shadow values                                   |
+| [max-unique-keyframes](src/rules/max-unique-keyframes/README.md)                           | Limit the number of unique keyframe animations                                  |
+| [max-unique-media-queries](src/rules/max-unique-media-queries/README.md)                   | Limit the number of unique media queries                                        |
+| [max-unique-supports-queries](src/rules/max-unique-supports-queries/README.md)             | Limit the number of unique supports queries                                     |
+| [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)                             | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
+| [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)             | Disallow custom properties that are never used in a `var()`                     |
+| [no-unused-layers](src/rules/no-unused-layers/README.md)                                   | Disallow `@layer` names that are declared but never implemented                 |
+| [no-unused-container-names](src/rules/no-unused-container-names/README.md)                 | Disallow container names that are declared but never queried                    |
 
 ### Performance
 
