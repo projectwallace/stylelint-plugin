@@ -19,6 +19,13 @@ interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
 }
 
+function mark_ancestors_used(name: string, tracker: DefinedUsed<AtRule>) {
+	const parts = name.split('.')
+	for (let i = 1; i < parts.length; i++) {
+		tracker.use(parts.slice(0, i).join('.'))
+	}
+}
+
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(result, rule_name, {
@@ -38,6 +45,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				const name = atRule.params.trim()
 				if (name) {
 					tracker.use(name)
+					mark_ancestors_used(name, tracker)
 				}
 			} else {
 				// Statement: @layer name; or @layer a, b, c;
@@ -47,6 +55,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					.filter(Boolean)
 				for (const name of names) {
 					tracker.define(name, atRule)
+					mark_ancestors_used(name, tracker)
 				}
 			}
 		})

@@ -216,6 +216,54 @@ test('should still error for layers not in the ignore when ignore is set', async
 	expect(warnings.length).toBe(2)
 })
 
+test('should not error when a declared layer is used as a parent namespace for sublayers', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	// core is declared, then core.reset sublayer is declared AND used in a block
+	// → core itself should not be flagged as unused because core.reset uses it
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			@layer core;
+			@layer core.reset { * { margin: 0; } }
+		`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should error for declared layer that has no sublayers or block usage', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			@layer core, utility;
+			@layer core.reset { * { margin: 0; } }
+		`,
+		config,
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+	const [{ text }] = warnings
+	expect(text).toBe(`Layer "utility" was declared but never used (${rule_name})`)
+})
+
 test('should not run when primary option is invalid', async () => {
 	const config = {
 		plugins: [plugin],
