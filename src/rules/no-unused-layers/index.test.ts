@@ -216,7 +216,7 @@ test('should still error for layers not in the ignore when ignore is set', async
 	expect(warnings.length).toBe(2)
 })
 
-test('should not error when a declared layer is used as a parent namespace for sublayers', async () => {
+test('should not error when a declared layer is used via a sublayer block rule', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -224,8 +224,6 @@ test('should not error when a declared layer is used as a parent namespace for s
 		},
 	}
 
-	// core is declared, then core.reset sublayer is declared AND used in a block
-	// → core itself should not be flagged as unused because core.reset uses it
 	const {
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
@@ -240,7 +238,7 @@ test('should not error when a declared layer is used as a parent namespace for s
 	expect(warnings).toStrictEqual([])
 })
 
-test('should error for declared layer that has no sublayers or block usage', async () => {
+test('should error when a declared layer only has sublayer ordering statements (no block or @import usage)', async () => {
 	const config = {
 		plugins: [plugin],
 		rules: {
@@ -252,16 +250,38 @@ test('should error for declared layer that has no sublayers or block usage', asy
 		results: [{ warnings, errored }],
 	} = await stylelint.lint({
 		code: `
-			@layer core, utility;
-			@layer core.reset { * { margin: 0; } }
+			@layer core;
+			@layer core.reset, core.tokens;
 		`,
 		config,
 	})
 
+	// core, core.reset, core.tokens are all declared but never used
 	expect(errored).toBe(true)
-	expect(warnings.length).toBe(1)
-	const [{ text }] = warnings
-	expect(text).toBe(`Layer "utility" was declared but never used (${rule_name})`)
+	expect(warnings.length).toBe(3)
+})
+
+test('should not error when a declared layer is used via @import layer()', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `
+			@layer core, core.reset;
+			@import url('reset.css') layer(core.reset);
+		`,
+		config,
+	})
+
+	// @import layer(core.reset) counts as usage of both core.reset and core
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
 })
 
 test('should not run when primary option is invalid', async () => {

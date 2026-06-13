@@ -55,9 +55,18 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					.filter(Boolean)
 				for (const name of names) {
 					tracker.define(name, atRule)
-					mark_ancestors_used(name, tracker)
 				}
 			}
+		})
+
+		// @import url() layer(name) counts as usage of both `name` and all ancestor layers
+		root.walkAtRules('import', (atRule) => {
+			const match = atRule.params.match(/\blayer\(([^)]*)\)/)
+			if (!match) return
+			const name = match[1].trim()
+			if (!name) return
+			tracker.use(name)
+			mark_ancestors_used(name, tracker)
 		})
 
 		for (const [layer, node] of tracker.unused()) {
