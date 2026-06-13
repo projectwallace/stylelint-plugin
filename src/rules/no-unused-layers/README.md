@@ -81,7 +81,7 @@ The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
-/* Using a sublayer block marks the parent as used */
+/* Using a sublayer block marks the parent as well as the sublayer itself as used */
 @layer core;
 @layer core.reset { * { margin: 0; } }
 ```
