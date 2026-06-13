@@ -35,6 +35,7 @@ const ruleFunction = (primaryOption: true) => {
 						utils.report({
 							message: messages.rejected(hack),
 							node: at_rule,
+							word: hack,
 							result,
 							ruleName: rule_name,
 						})
@@ -44,6 +45,7 @@ const ruleFunction = (primaryOption: true) => {
 						utils.report({
 							message: messages.rejected(hack),
 							node: at_rule,
+							word: hack,
 							result,
 							ruleName: rule_name,
 						})

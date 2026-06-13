@@ -59,9 +59,12 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const actual = unique_keyframes.size
 		for (const atRule of violating_at_rules) {
+			const params_offset = 1 + atRule.name.length + (atRule.raws.afterName ?? ' ').length
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: atRule,
+				index: params_offset,
+				endIndex: params_offset + atRule.params.length,
 				result,
 				ruleName: rule_name,
 			})

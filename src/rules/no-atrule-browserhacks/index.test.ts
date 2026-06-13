@@ -62,6 +62,8 @@ test('should error on @media with \\0 media type browserhack', async () => {
 	const [{ text }] = warnings
 	expect(text).toContain(rule_name)
 	expect(text).toContain('\\0')
+	expect(warnings[0].column).toBe(8) // points to "\0", not the whole @media rule
+	expect(warnings[0].endColumn).toBe(10)
 })
 
 test('should error on @media with -moz-images-in-menus feature browserhack', async () => {
@@ -72,6 +74,8 @@ test('should error on @media with -moz-images-in-menus feature browserhack', asy
 	const [{ text }] = warnings
 	expect(text).toContain(rule_name)
 	expect(text).toContain('-moz-images-in-menus')
+	expect(warnings[0].column).toBe(9) // points to "-moz-images-in-menus", not the whole @media rule
+	expect(warnings[0].endColumn).toBe(29)
 })
 
 test('should error on @media with min--moz-device-pixel-ratio browserhack', async () => {
@@ -96,6 +100,8 @@ test('should error on @supports with -webkit-appearance: none browserhack', asyn
 	const [{ text }] = warnings
 	expect(text).toContain(rule_name)
 	expect(text).toContain('-webkit-appearance')
+	expect(warnings[0].column).toBe(12) // points to "-webkit-appearance: none", not the whole @supports rule
+	expect(warnings[0].endColumn).toBe(36)
 })
 
 test('should error on @supports with -moz-appearance: meterbar browserhack', async () => {

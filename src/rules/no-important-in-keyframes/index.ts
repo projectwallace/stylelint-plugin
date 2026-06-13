@@ -26,6 +26,7 @@ const ruleFunction = (primaryOption: true) => {
 					utils.report({
 						message: messages.rejected(),
 						node: decl,
+						word: '!important',
 						result,
 						ruleName: rule_name,
 					})

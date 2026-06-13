@@ -35,6 +35,8 @@ test('should error when 0 is configured and any keyframe is used', async () => {
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toContain('Found 1 unique keyframes')
 	expect(warnings[0].text).toContain('exceeds the maximum of 0')
+	expect(warnings[0].column).toBe(12) // points to "foo", not the whole @keyframes rule
+	expect(warnings[0].endColumn).toBe(15)
 })
 
 test('should not error when 0 is configured and no keyframe is used', async () => {
@@ -90,9 +92,11 @@ test('should error when unique keyframes exceed the limit', async () => {
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
 	expect(warnings[0].text).toContain('Found 3 unique keyframes')
 	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].column).toBe(48) // points to "baz", not the whole @keyframes rule
+	expect(warnings[0].endColumn).toBe(51)
 })
 
-test('should error at the at-rule level', async () => {
+test('should error at the at-rule prelude level', async () => {
 	const { warnings } = await lint(
 		`
 		@keyframes foo {}
@@ -102,6 +106,8 @@ test('should error at the at-rule level', async () => {
 	)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].line).toBe(3)
+	expect(warnings[0].column).toBe(14) // points to "bar", not the whole @keyframes rule
+	expect(warnings[0].endColumn).toBe(17)
 })
 
 test('should treat different keyframe names as different unique entries', async () => {
