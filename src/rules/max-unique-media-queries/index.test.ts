@@ -36,6 +36,8 @@ test('should error when 0 is configured and any media query is used', async () =
 	expect(warnings[0].text).toBe(
 		'Found 1 unique media queries which exceeds the maximum of 0 (projectwallace/max-unique-media-queries)',
 	)
+	expect(warnings[0].column).toBe(8) // points to "(max-width: 768px)", not the whole @media rule
+	expect(warnings[0].endColumn).toBe(26)
 })
 
 test('should not error when 0 is configured and no media query is used', async () => {
@@ -98,9 +100,11 @@ test('should error when unique queries exceed the limit', async () => {
 	expect(warnings[0].text).toBe(
 		'Found 3 unique media queries which exceeds the maximum of 2 (projectwallace/max-unique-media-queries)',
 	)
+	expect(warnings[0].column).toBe(67) // points to "(min-width: 1440px)", not the whole @media rule
+	expect(warnings[0].endColumn).toBe(86)
 })
 
-test('should error at the at-rule level', async () => {
+test('should error at the at-rule prelude level', async () => {
 	const { warnings } = await lint(
 		`
 		@media (max-width: 768px) {}
@@ -110,6 +114,8 @@ test('should error at the at-rule level', async () => {
 	)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].line).toBe(3)
+	expect(warnings[0].column).toBe(10) // points to "(min-width: 1024px)", not the whole @media rule
+	expect(warnings[0].endColumn).toBe(29)
 })
 
 test('should treat different query strings as different unique entries', async () => {

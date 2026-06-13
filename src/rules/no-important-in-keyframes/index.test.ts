@@ -76,6 +76,8 @@ test('should error when a keyframe step has !important', async () => {
 
 	const [{ text }] = warnings
 	expect(text).toBe(`Unexpected !important inside @keyframes (${rule_name})`)
+	expect(warnings[0].column).toBe(37) // points to "!important", not the whole declaration
+	expect(warnings[0].endColumn).toBe(47)
 })
 
 test('should error for each declaration with !important', async () => {
