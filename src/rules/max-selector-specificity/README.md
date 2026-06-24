@@ -52,4 +52,4 @@ a, .foo, .bar {}
 ## Prior art
 
 - stylelint's [`selector-max-specificity`](https://stylelint.io/user-guide/rules/selector-max-specificity) rule
-- [Specificity calculator](https://specificity.keegan.st/)
+- [`bramus/specificity`](https://github.com/bramus/specificity) — specificity calculation and comparison library

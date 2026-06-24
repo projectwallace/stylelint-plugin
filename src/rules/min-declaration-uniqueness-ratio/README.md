@@ -46,8 +46,3 @@ b { color: blue; margin: 0; }
 a { color: red; font-size: 1em; }
 b { color: red; margin: 0; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

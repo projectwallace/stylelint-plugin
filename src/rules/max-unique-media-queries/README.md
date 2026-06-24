@@ -61,8 +61,3 @@ the following are _not_ considered problems:
 @media (min-width: 1024px) { }
 @media (min-width: 1440px) { }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

@@ -48,8 +48,3 @@ The following patterns are _not_ considered problems:
 .b { color: #ff0000; }
 .c { color: #0000ff; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

@@ -75,8 +75,3 @@ the following is _not_ considered a violation:
 a { background-image: linear-gradient(red, blue); }
 b { background-image: conic-gradient(red, blue); }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

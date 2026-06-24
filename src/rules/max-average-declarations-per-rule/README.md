@@ -40,7 +40,3 @@ b { color: blue; }
 ```css
 a { color: red; font-size: 1em; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool

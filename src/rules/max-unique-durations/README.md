@@ -70,8 +70,3 @@ the following is _not_ considered a violation:
 a { animation-duration: 1s; }
 b { animation-duration: 2s; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

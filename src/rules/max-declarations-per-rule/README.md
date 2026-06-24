@@ -35,7 +35,3 @@ a { color: red; font-size: 1rem; }
 ```css
 a { color: red; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool

@@ -39,7 +39,3 @@ c { color: blue; }
 ```css
 a { color: red; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool

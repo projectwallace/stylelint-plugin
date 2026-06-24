@@ -63,8 +63,3 @@ a { z-index: 1; }
 b { z-index: 2; }
 c { z-index: 9999; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

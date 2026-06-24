@@ -67,8 +67,3 @@ the following is _not_ considered a violation:
 a { box-shadow: 0 2px 4px red; }
 b { box-shadow: 0 4px 8px blue; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

@@ -39,7 +39,3 @@ The following patterns are _not_ considered problems:
 a { margin: 0; }
 b { padding: 0; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool

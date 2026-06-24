@@ -112,8 +112,3 @@ Without a `@property` declaration, `var()` is not counted (the actual color valu
 /* var(--unknown) → not counted; "blue" fallback → counted as 1 color */
 a { color: var(--unknown, blue); }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

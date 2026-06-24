@@ -58,8 +58,3 @@ The following pattern is _not_ considered a problem:
 /*! Copyright 2024 My Company. All rights reserved. */
 a { color: red; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Parker](https://github.com/katiefenn/parker) — stylesheet analysis tool

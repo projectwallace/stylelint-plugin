@@ -144,7 +144,3 @@ a { color: var(--brand-color); }
 ## Credits
 
 `importFrom` inspired by the same option in [csstools/postcss-custom-properties](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-properties).
-
-## Prior art
-
-- stylelint's [`custom-property-no-missing-var-function`](https://stylelint.io/user-guide/rules/custom-property-no-missing-var-function) rule

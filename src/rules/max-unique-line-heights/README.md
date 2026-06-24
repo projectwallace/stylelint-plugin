@@ -63,8 +63,3 @@ a { line-height: 1.5; }  /* ignored */
 b { line-height: 2; }
 c { line-height: 3; }
 ```
-
-## Prior art
-
-- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
-- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin
