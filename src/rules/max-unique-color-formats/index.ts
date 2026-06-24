@@ -52,21 +52,34 @@ const ruleFunction = (primaryOption: number) => {
 			})
 		})
 
-		const violating_declarations: Declaration[] = []
+		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
 			const before = unique_formats.size
-			run_collect(parse_value(declaration.value), true)
+			let triggering_color = declaration.value
+			collect_colors(
+				parse_value(declaration.value),
+				true,
+				color_custom_properties,
+				(color, format) => {
+					const is_new = !unique_formats.has(format)
+					unique_formats.add(format)
+					if (is_new && unique_formats.size > primaryOption) {
+						triggering_color = color
+					}
+				},
+			)
 			if (unique_formats.size > before && unique_formats.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({ declaration, word: triggering_color })
 			}
 		})
 
 		const actual = unique_formats.size
-		for (const declaration of violating_declarations) {
+		for (const { declaration, word } of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				word,
 				result,
 				ruleName: rule_name,
 			})

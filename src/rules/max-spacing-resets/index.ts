@@ -48,6 +48,7 @@ const ruleFunction = (primaryOption: number) => {
 			utils.report({
 				message: messages.rejected(reset_count, primaryOption),
 				node: declaration,
+				word: declaration.value,
 				result,
 				ruleName: rule_name,
 			})

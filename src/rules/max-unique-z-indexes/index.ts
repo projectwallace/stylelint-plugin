@@ -47,30 +47,42 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_zindexes = new Set<string>()
-		const violating_declarations: Declaration[] = []
+		const violating_declarations: Array<{ declaration: Declaration; start: number; end: number }> =
+			[]
 
 		root.walkDecls(/^z-index$/i, (declaration) => {
 			const before = unique_zindexes.size
 			const parsed = parse_value(declaration.value)
+			let trigger_start = 0
+			let trigger_end = declaration.value.length
 
 			walk(parsed, (node) => {
 				if (node.type !== NUMBER) return
 				const text = node.text
 				if (!is_allowed(text, ignore)) {
+					const is_new = !unique_zindexes.has(text)
 					unique_zindexes.add(text)
+					if (is_new && unique_zindexes.size > primaryOption) {
+						trigger_start = node.start
+						trigger_end = node.end
+					}
 				}
 			})
 
 			if (unique_zindexes.size > before && unique_zindexes.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({ declaration, start: trigger_start, end: trigger_end })
 			}
 		})
 
 		const actual = unique_zindexes.size
-		for (const declaration of violating_declarations) {
+		for (const { declaration, start, end } of violating_declarations) {
+			const value_offset =
+				declaration.prop.length + (declaration.raws.between ?? ': ').length
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				index: value_offset + start,
+				endIndex: value_offset + end,
 				result,
 				ruleName: rule_name,
 			})
