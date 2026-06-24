@@ -163,3 +163,19 @@ c { padding: 10%; }
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].line).toBe(4)
 })
+
+// ---------------------------------------------------------------------------
+// Error position
+// ---------------------------------------------------------------------------
+
+test('should report the position of the triggering dimension token', async () => {
+	// a { font-size: 1rem; } b { font-size: 2px; }
+	// Second decl `font-size` starts at col 28; `2px` at offset 11 (9 + 2)
+	// => column 39, endColumn 42 (2px = 3 chars)
+	const { warnings } = await lint(`a { font-size: 1rem; } b { font-size: 2px; }`, 1)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(1)
+	expect(warnings[0].column).toBe(39)
+	expect(warnings[0].endLine).toBe(1)
+	expect(warnings[0].endColumn).toBe(42)
+})
