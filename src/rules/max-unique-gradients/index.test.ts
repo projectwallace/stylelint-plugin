@@ -256,17 +256,17 @@ test('should support RegExp patterns in ignore', async () => {
 // ---------------------------------------------------------------------------
 
 test('should report the position of the triggering gradient function', async () => {
-	// a { background: linear-gradient(red, blue); } b { background: conic-gradient(red, blue); }
-	// Second decl `background` starts at col 51; `conic-gradient(...)` at offset 12 (10 + 2)
-	// conic-gradient(red, blue) = 25 chars => endOffset = 12 + 25 = 37
-	// => column 63, endColumn 88
+	// a { background-image: linear-gradient(red, blue); } b { background-image: conic-gradient(red, blue); }
+	// Second decl `background-image` starts at col 57; `conic-gradient(...)` at offset 18 (16 + 2)
+	// conic-gradient(red, blue) = 25 chars => endOffset = 18 + 25 = 43
+	// => column 75, endColumn 100
 	const { warnings } = await lint(
-		`a { background: linear-gradient(red, blue); } b { background: conic-gradient(red, blue); }`,
+		`a { background-image: linear-gradient(red, blue); } b { background-image: conic-gradient(red, blue); }`,
 		1,
 	)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].line).toBe(1)
-	expect(warnings[0].column).toBe(63)
+	expect(warnings[0].column).toBe(75)
 	expect(warnings[0].endLine).toBe(1)
-	expect(warnings[0].endColumn).toBe(88)
+	expect(warnings[0].endColumn).toBe(100)
 })
