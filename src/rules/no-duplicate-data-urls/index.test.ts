@@ -49,7 +49,7 @@ test('should error when the same data URL is used more than once', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toContain(
-		`Duplicate data URL found. Store it in a custom property and use var() to reuse it. (${rule_name})`,
+		`Unexpected duplicate data URL (${rule_name})`,
 	)
 })
 

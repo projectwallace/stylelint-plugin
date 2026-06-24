@@ -68,7 +68,7 @@ test('should error when a custom property is used but never declared', async () 
 
 	const [{ line, column, text }] = warnings
 
-	expect(text).toBe(`"--undeclared" is used in a var() but was never declared (${rule_name})`)
+	expect(text).toBe(`Unexpected unknown custom property "--undeclared" (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(16)
 })
@@ -122,7 +122,7 @@ test('should error when var() uses an undeclared property even if @property exis
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--undeclared" is used in a var() but was never declared (${rule_name})`,
+		`Unexpected unknown custom property "--undeclared" (${rule_name})`,
 	)
 })
 
@@ -144,7 +144,7 @@ test('should error on undeclared var() with fallback when allowFallback is not s
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--undeclared" is used in a var() but was never declared (${rule_name})`,
+		`Unexpected unknown custom property "--undeclared" (${rule_name})`,
 	)
 })
 
@@ -185,7 +185,7 @@ test('should not error on undeclared var() with var() fallback when allowFallbac
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--also-undeclared" is used in a var() but was never declared (${rule_name})`,
+		`Unexpected unknown custom property "--also-undeclared" (${rule_name})`,
 	)
 })
 
@@ -264,7 +264,7 @@ test('should still error on undeclared property not matched by ignore', async ()
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--undeclared" is used in a var() but was never declared (${rule_name})`,
+		`Unexpected unknown custom property "--undeclared" (${rule_name})`,
 	)
 })
 
@@ -394,7 +394,7 @@ test('should still error when var() uses a property not present in any importFro
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--not-in-tokens" is used in a var() but was never declared (${rule_name})`,
+		`Unexpected unknown custom property "--not-in-tokens" (${rule_name})`,
 	)
 })
 

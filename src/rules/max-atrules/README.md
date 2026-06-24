@@ -30,9 +30,14 @@ the following are considered violations:
 @media print  { a { color: blue; } }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
 @media screen { a { color: red; } }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
+- [Parker](https://github.com/katiefenn/parker) — stylesheet analysis tool

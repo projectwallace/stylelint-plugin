@@ -10,8 +10,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-static-media-queries'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (feature: string, value: string) =>
-		`Media feature "${feature}: ${value}" is a static equality condition that will almost never match any viewport`,
+	rejected: (feature: string, value: string) => `Unexpected static value in media query`,
 })
 
 const meta = {

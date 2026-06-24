@@ -32,10 +32,14 @@ b { padding: 0; }
 c { margin-top: 0; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
 a { margin: 0; }
 b { padding: 0; }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool

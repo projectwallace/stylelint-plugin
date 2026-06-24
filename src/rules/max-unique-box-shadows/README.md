@@ -38,7 +38,7 @@ b { box-shadow: 0 4px 8px blue; }
 c { box-shadow: 0 8px 16px green; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -67,3 +67,8 @@ the following is _not_ considered a violation:
 a { box-shadow: 0 2px 4px red; }
 b { box-shadow: 0 4px 8px blue; }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
+- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

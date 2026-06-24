@@ -13,7 +13,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-unused-custom-properties'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) => `"${property}" was declared but never used in a var()`,
+	rejected: (property: string) => `Unexpected unused custom property "${property}"`,
 })
 
 const meta = {

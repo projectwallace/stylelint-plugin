@@ -31,7 +31,7 @@ a b c d {} a {} b {}
 #a .b [c="d"] {} a {}
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -42,3 +42,7 @@ a b {} a {}
 ```css
 a {} b {} c {}
 ```
+
+## Prior art
+
+- stylelint's [`selector-max-compound-selectors`](https://stylelint.io/user-guide/rules/selector-max-compound-selectors) rule

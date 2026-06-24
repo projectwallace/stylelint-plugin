@@ -13,7 +13,7 @@ const rule_name = 'projectwallace/max-unique-box-shadows'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique box shadows which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique box shadows but found ${actual}`,
 })
 
 const meta = {

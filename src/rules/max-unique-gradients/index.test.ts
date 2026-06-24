@@ -87,8 +87,7 @@ test('should error when unique gradients exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique gradients')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toContain('Expected no more than 2 unique gradients but found 3')
 	expect(warnings[0].line).toBe(4)
 })
 
@@ -196,8 +195,7 @@ test('should treat different gradient expressions as different unique gradients'
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique gradients')
-	expect(warnings[0].text).toContain('exceeds the maximum of 1')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique gradients but found 2')
 	expect(warnings[0].line).toBe(3)
 })
 
@@ -211,7 +209,7 @@ test('should count unique gradients across the entire stylesheet', async () => {
 		2,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 3 unique gradients')
+	expect(warnings[0].text).toContain('Expected no more than 2 unique gradients but found 3')
 	expect(warnings[0].line).toBe(4)
 })
 

@@ -9,7 +9,7 @@ const rule_name = 'projectwallace/min-selector-uniqueness-ratio'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Selector uniqueness ratio is ${actual} which is less than the required ${expected}`,
+		`Expected a selector uniqueness ratio of at least ${expected} but got ${actual}`,
 })
 
 const meta = {

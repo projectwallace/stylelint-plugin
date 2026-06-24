@@ -28,9 +28,14 @@ the following are considered violations:
 a { width: 10px; height: 5em; margin: 1rem; padding: 2vh; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
 a { width: 10px; height: 5px; margin: 1rem; }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
+- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

@@ -43,7 +43,7 @@ test('should error on a *property hack', async () => {
 
 	const [{ line, column, text }] = warnings
 
-	expect(text).toBe(`Property "*zoom" is a browserhack and is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected browserhack property "*zoom" (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(6) // points to "zoom", not the whole declaration
 	expect(warnings[0].endColumn).toBe(10)
@@ -69,7 +69,7 @@ test('should error on a _property hack', async () => {
 
 	const [{ line, column, text }] = warnings
 
-	expect(text).toBe(`Property "_zoom" is a browserhack and is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected browserhack property "_zoom" (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(6) // points to "zoom", not the whole declaration
 	expect(warnings[0].endColumn).toBe(10)

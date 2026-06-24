@@ -12,7 +12,7 @@ const rule_name = 'projectwallace/max-unique-keyframes'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique keyframes which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique keyframes but found ${actual}`,
 })
 
 const meta = {

@@ -44,7 +44,7 @@ test('should error when a container name is used in @container but never declare
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Container name "sidebar" is used in a @container query but was never declared (${rule_name})`,
+		`Unexpected unknown container name "sidebar" (${rule_name})`,
 	)
 })
 
@@ -282,7 +282,7 @@ test('should still error when ignore does not match the unknown container name',
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Container name "sidebar" is used in a @container query but was never declared (${rule_name})`,
+		`Unexpected unknown container name "sidebar" (${rule_name})`,
 	)
 })
 

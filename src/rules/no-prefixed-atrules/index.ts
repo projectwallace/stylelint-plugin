@@ -6,7 +6,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-prefixed-atrules'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (name: string) => `At-rule "@${name}" is vendor-prefixed and is not allowed`,
+	rejected: (name: string) => `Unexpected vendor-prefixed at-rule "@${name}"`,
 })
 
 const meta = {

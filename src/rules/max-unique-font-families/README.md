@@ -34,7 +34,7 @@ b { font-family: Georgia, serif; }
 c { font-family: monospace; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -55,7 +55,7 @@ Given:
 
 `[2, { "ignore": ["Arial, sans-serif"] }]`
 
-the following are _not_ considered violations:
+the following are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -63,3 +63,8 @@ a { font-family: Arial, sans-serif; }  /* ignored */
 b { font-family: Georgia, serif; }
 c { font-family: monospace; }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
+- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

@@ -58,7 +58,7 @@ test('should error on the "background" shorthand', async () => {
 
 	const [{ text }] = warnings
 
-	expect(text).toBe(`Shorthand property "background" is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected shorthand property "background" (${rule_name})`)
 })
 
 test('should error on the "border" shorthand', async () => {
@@ -74,7 +74,7 @@ test('should error on the "border" shorthand', async () => {
 
 	const [{ text }] = warnings
 
-	expect(text).toBe(`Shorthand property "border" is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected shorthand property "border" (${rule_name})`)
 })
 
 test('should error on the "font" shorthand', async () => {
@@ -162,7 +162,7 @@ test('should still error on shorthands not in the ignore', async () => {
 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(`Shorthand property "font" is not allowed (${rule_name})`)
+	expect(warnings[0].text).toBe(`Unexpected shorthand property "font" (${rule_name})`)
 })
 
 test('should not error on a single-value shorthand when "single-value" is ignored', async () => {
@@ -231,5 +231,5 @@ test('should combine "single-value" with property name ignores', async () => {
 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(`Shorthand property "padding" is not allowed (${rule_name})`)
+	expect(warnings[0].text).toBe(`Unexpected shorthand property "padding" (${rule_name})`)
 })

@@ -48,3 +48,7 @@ The following patterns are _not_ considered violations:
 ```css
 @supports (display: grid) { }
 ```
+
+## Prior art
+
+- [browserhacks.com](http://browserhacks.com) — catalogue of browser-specific CSS hacks

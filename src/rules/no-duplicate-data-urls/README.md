@@ -40,3 +40,8 @@ thing {
   mask-image: var(--icon);
 }
 ```
+
+## Prior art
+
+- stylelint's [`declaration-no-important`](https://stylelint.io/user-guide/rules) and similar deduplication rules
+- The DRY (Don't Repeat Yourself) principle applied to CSS

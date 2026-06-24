@@ -30,7 +30,7 @@ the following are considered violations:
 .d { color: hsl(60, 100%, 50%); }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -48,3 +48,8 @@ The following patterns are _not_ considered violations:
 .b { color: #ff0000; }
 .c { color: #0000ff; }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
+- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

@@ -15,7 +15,7 @@ const rule_name = 'projectwallace/max-unique-animation-functions'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique animation-functions which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique animation-functions but found ${actual}`,
 })
 
 const meta = {

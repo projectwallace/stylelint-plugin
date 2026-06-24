@@ -110,7 +110,7 @@ test('should error with the correct message', async () => {
 	const { warnings, errored } = await lint(`a { color: red; background-color: #00f; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 
@@ -165,7 +165,7 @@ test('should count rgb and rgba as different formats', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 
@@ -176,7 +176,7 @@ test('should count hsl and hsla as different formats', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 
@@ -229,7 +229,7 @@ test('should detect mixed formats inside color-mix', async () => {
 	// red → named, #000 → hex = 2 unique formats
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 
@@ -238,7 +238,7 @@ test('should detect mixed formats inside light-dark', async () => {
 	// white → named, #000 → hex = 2 unique formats
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 
@@ -280,7 +280,7 @@ test('should count format from @property initial-value', async () => {
 	const { warnings, errored } = await lint(code, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 
@@ -298,7 +298,7 @@ test('should detect format in box-shadow', async () => {
 	const { warnings, errored } = await lint(`a { box-shadow: 0 0 10px red, 0 0 20px #00f; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 
@@ -306,7 +306,7 @@ test('should detect formats inside gradient functions', async () => {
 	const { warnings, errored } = await lint(`a { background-image: linear-gradient(red, #00f); }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 
@@ -314,7 +314,7 @@ test('should detect formats in custom properties', async () => {
 	const { warnings, errored } = await lint(`a { --text: red; --bg: #000; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique color formats which exceeds the maximum of 1 (projectwallace/max-unique-color-formats)',
+		'Expected no more than 1 unique color formats but found 2 (projectwallace/max-unique-color-formats)',
 	)
 })
 

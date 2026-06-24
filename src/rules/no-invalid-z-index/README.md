@@ -60,3 +60,7 @@ a { z-index: var(--my-z); }
 /* var() with valid fallback */
 a { z-index: var(--my-z, 100); }
 ```
+
+## Prior art
+
+- [CSS z-index spec](https://www.w3.org/TR/CSS2/visuren.html#z-index) — valid integer range

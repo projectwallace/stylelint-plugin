@@ -32,7 +32,7 @@ the following are considered violations:
 @supports (display: contents) { }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -53,7 +53,7 @@ Given:
 
 `[2, { "ignore": ["(display: grid)"] }]`
 
-the following are _not_ considered violations:
+the following are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -61,3 +61,8 @@ the following are _not_ considered violations:
 @supports (display: flex) { }
 @supports (display: contents) { }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
+- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin

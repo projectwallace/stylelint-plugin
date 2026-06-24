@@ -60,7 +60,7 @@ test('should error when value ends with \\9 (IE9 hack)', async () => {
 	expect(warnings.length).toBe(1)
 
 	const [{ line, column, text }] = warnings
-	expect(text).toBe(`Value "red\\9" is a browserhack and is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected browserhack value "red\\9" (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(17) // points to "red\9", not the whole declaration
 	expect(warnings[0].endColumn).toBe(22)
@@ -72,7 +72,7 @@ test('should error on color value with \\7 hack', async () => {
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Value "blue\\7" is a browserhack and is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected browserhack value "blue\\7" (${rule_name})`)
 })
 
 test('should error on color value with alpha() hack', async () => {
@@ -81,5 +81,5 @@ test('should error on color value with alpha() hack', async () => {
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Value "alpha(opacity=50)" is a browserhack and is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected browserhack value "alpha(opacity=50)" (${rule_name})`)
 })

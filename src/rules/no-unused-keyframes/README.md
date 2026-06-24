@@ -72,3 +72,7 @@ The following patterns are _not_ considered violations:
 @keyframes slide-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
 ```
+
+## Prior art
+
+- ESLint's [`no-unused-vars`](https://eslint.org/docs/latest/rules/no-unused-vars) rule — same concept applied to CSS

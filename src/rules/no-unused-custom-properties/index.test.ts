@@ -117,7 +117,7 @@ test('should error on a single unused custom property', async () => {
 
 	const [{ line, column, text }] = warnings
 
-	expect(text).toBe(`"--unused" was declared but never used in a var() (${rule_name})`)
+	expect(text).toBe(`Unexpected unused custom property "--unused" (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(5)
 })
@@ -218,7 +218,7 @@ test('should error when a custom property declared via @property is never used',
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--unused-color" was declared but never used in a var() (${rule_name})`,
+		`Unexpected unused custom property "--unused-color" (${rule_name})`,
 	)
 })
 
@@ -247,7 +247,7 @@ test('ignores options when options.ignore types are incorrect', async () => {
 
 	const [{ line, column, text }] = warnings
 
-	expect(text).toBe(`"--unused" was declared but never used in a var() (${rule_name})`)
+	expect(text).toBe(`Unexpected unused custom property "--unused" (${rule_name})`)
 	expect(line).toBe(1)
 	expect(column).toBe(5)
 })
@@ -332,7 +332,7 @@ test('should still error when a declared property is not used in the current fil
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--never-used" was declared but never used in a var() (${rule_name})`,
+		`Unexpected unused custom property "--never-used" (${rule_name})`,
 	)
 })
 

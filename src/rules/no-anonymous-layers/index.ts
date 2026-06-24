@@ -8,7 +8,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-anonymous-layers'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: () => `Anonymous @layer is not allowed`,
+	rejected: () => `Unexpected anonymous @layer`,
 })
 
 const meta = {

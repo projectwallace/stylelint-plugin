@@ -14,7 +14,7 @@ const rule_name = 'projectwallace/max-unique-font-families'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique font families which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique font families but found ${actual}`,
 })
 
 const meta = {

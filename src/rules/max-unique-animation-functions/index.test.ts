@@ -84,8 +84,7 @@ test('should error when unique animation functions exceed the limit', async () =
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique animation-functions')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toContain('Expected no more than 2 unique animation-functions but found 3')
 	expect(warnings[0].line).toBe(4)
 })
 
@@ -114,7 +113,7 @@ test('should count a single animation-timing-function', async () => {
 test('should count comma-separated animation-timing-function values as separate functions', async () => {
 	const { warnings, errored } = await lint(`a { animation-timing-function: ease, linear; }`, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique animation-functions')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique animation-functions but found 2')
 })
 
 test('should not double-count repeated values in animation-timing-function list', async () => {
@@ -136,7 +135,7 @@ test('should count a single transition-timing-function', async () => {
 test('should count comma-separated transition-timing-function values as separate functions', async () => {
 	const { warnings, errored } = await lint(`a { transition-timing-function: ease, linear; }`, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique animation-functions')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique animation-functions but found 2')
 })
 
 // ---------------------------------------------------------------------------
@@ -158,7 +157,7 @@ test('should error when animation shorthand introduces a new unique timing funct
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique animation-functions')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique animation-functions but found 2')
 })
 
 // ---------------------------------------------------------------------------
@@ -180,7 +179,7 @@ test('should error when transition shorthand introduces a new unique timing func
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique animation-functions')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique animation-functions but found 2')
 })
 
 // ---------------------------------------------------------------------------
@@ -196,7 +195,7 @@ test('should count timing functions across animation-timing-function and transit
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique animation-functions')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique animation-functions but found 2')
 })
 
 test('should deduplicate the same timing function across different properties', async () => {

@@ -8,7 +8,7 @@ const rule_name = 'projectwallace/max-declarations'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Counted ${actual} declarations which is greater than the allowed ${expected}`,
+		`Expected no more than ${expected} declarations but found ${actual}`,
 })
 
 const meta = {

@@ -12,7 +12,7 @@ type Specificity = [number, number, number]
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (selector: string, actual: string, expected: string) =>
-		`Specificity of "${selector}" is [${actual}] which is greater than the allowed [${expected}]`,
+		`Expected specificity of no more than [${expected}] but found [${actual}]`,
 })
 
 const meta = {

@@ -80,7 +80,7 @@ test('should error when 0 is configured and a reset is used', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		'Found 1 spacing resets which exceeds the maximum of 0 (projectwallace/max-spacing-resets)',
+		'Expected no more than 0 spacing resets but found 1 (projectwallace/max-spacing-resets)',
 	)
 })
 
@@ -92,7 +92,7 @@ test('should error when limit is exceeded', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		'Found 3 spacing resets which exceeds the maximum of 2 (projectwallace/max-spacing-resets)',
+		'Expected no more than 2 spacing resets but found 3 (projectwallace/max-spacing-resets)',
 	)
 })
 

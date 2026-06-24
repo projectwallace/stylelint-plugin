@@ -14,7 +14,7 @@ const rule_name = 'projectwallace/max-unique-line-heights'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique line heights which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique line heights but found ${actual}`,
 })
 
 const meta = {

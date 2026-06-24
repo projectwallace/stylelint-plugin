@@ -109,3 +109,7 @@ a { /* comment */ }
 /* "comments" */
 @media screen { /* comment */ }
 ```
+
+## Prior art
+
+- stylelint's [`block-no-empty`](https://stylelint.io/user-guide/rules/block-no-empty) rule

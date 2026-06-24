@@ -12,7 +12,7 @@ const rule_name = 'projectwallace/max-unique-supports-queries'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique supports queries which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique supports queries but found ${actual}`,
 })
 
 const meta = {

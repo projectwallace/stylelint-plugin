@@ -10,7 +10,7 @@ const rule_name = 'projectwallace/max-unique-color-formats'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique color formats which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique color formats but found ${actual}`,
 })
 
 const meta = {

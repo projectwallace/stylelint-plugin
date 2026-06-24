@@ -75,6 +75,6 @@ test('should error when lines of code exceeds allowed setting', async () => {
 		endColumn: 3,
 		rule: rule_name,
 		severity: 'error',
-		text: 'Counted 4 Lines of Code which is greater than the allowed 2 (projectwallace/max-lines-of-code)',
+		text: 'Expected no more than 2 lines of code but found 4 (projectwallace/max-lines-of-code)',
 	})
 })

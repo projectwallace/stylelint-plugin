@@ -28,7 +28,7 @@ a { color: red; font-size: 1em; line-height: 1.5; }
 b { color: blue; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -40,3 +40,7 @@ b { color: blue; }
 ```css
 a { color: red; font-size: 1em; }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool

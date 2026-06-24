@@ -67,7 +67,7 @@ test('should error when a container name is declared but never used', async () =
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Container name "sidebar" was declared but never used in a @container query (${rule_name})`,
+		`Unexpected unused container name "sidebar" (${rule_name})`,
 	)
 })
 
@@ -92,7 +92,7 @@ test('should error when a container name is declared in shorthand with multiple 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Container name "test" was declared but never used in a @container query (${rule_name})`,
+		`Unexpected unused container name "test" (${rule_name})`,
 	)
 })
 
@@ -155,7 +155,7 @@ test('should error when container shorthand name is never used', async () => {
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Container name "sidebar" was declared but never used in a @container query (${rule_name})`,
+		`Unexpected unused container name "sidebar" (${rule_name})`,
 	)
 })
 
@@ -218,7 +218,7 @@ test('should handle multiple container names declared on one element', async () 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Container name "header" was declared but never used in a @container query (${rule_name})`,
+		`Unexpected unused container name "header" (${rule_name})`,
 	)
 })
 
@@ -301,6 +301,6 @@ test('should still error when ignore does not match the unused container name', 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Container name "sidebar" was declared but never used in a @container query (${rule_name})`,
+		`Unexpected unused container name "sidebar" (${rule_name})`,
 	)
 })

@@ -10,8 +10,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-useless-custom-property-assignment'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) =>
-		`"${property}" is assigned to itself via var(), which has no effect`,
+	rejected: (property: string) => `Unexpected useless custom property assignment for "${property}"`,
 })
 
 const meta = {

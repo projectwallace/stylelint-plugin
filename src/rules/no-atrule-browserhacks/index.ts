@@ -7,7 +7,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-atrule-browserhacks'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (hack: string) => `At-rule prelude contains a browserhack "${hack}" and is not allowed`,
+	rejected: (hack: string) => `Unexpected browserhack in at-rule prelude "${hack}"`,
 })
 
 const meta = {

@@ -12,7 +12,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-unknown-custom-properties'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) => `"${property}" is used in a var() but was never declared`,
+	rejected: (property: string) => `Unexpected unknown custom property "${property}"`,
 })
 
 const meta = {

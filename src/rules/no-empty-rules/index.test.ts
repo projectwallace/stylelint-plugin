@@ -55,7 +55,7 @@ test('should error for an empty rule', async () => {
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Empty rules are not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected empty rule (${rule_name})`)
 })
 
 test('should error for a rule containing only comments', async () => {
@@ -76,7 +76,7 @@ test('should error for an empty at-rule block', async () => {
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Empty rules are not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected empty rule (${rule_name})`)
 })
 
 test('should error for an at-rule containing only comments', async () => {

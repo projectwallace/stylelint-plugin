@@ -6,7 +6,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-property-browserhacks'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) => `Property "${property}" is a browserhack and is not allowed`,
+	rejected: (property: string) => `Unexpected browserhack property "${property}"`,
 })
 
 const meta = {

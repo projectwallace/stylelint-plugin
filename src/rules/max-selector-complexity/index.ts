@@ -10,7 +10,7 @@ const rule_name = 'projectwallace/max-selector-complexity'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (selector: string, actual: number, expected: number) =>
-		`Selector complexity of "${selector}" is ${actual} which is greater than the allowed ${expected}`,
+		`Expected a selector complexity of no more than ${expected} but found ${actual}`,
 })
 
 const meta = {

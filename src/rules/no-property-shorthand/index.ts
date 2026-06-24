@@ -9,7 +9,7 @@ const { createPlugin, utils } = stylelint
 export const rule_name = 'projectwallace/no-property-shorthand'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) => `Shorthand property "${property}" is not allowed`,
+	rejected: (property: string) => `Unexpected shorthand property "${property}"`,
 })
 
 const meta = {

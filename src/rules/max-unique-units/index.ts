@@ -10,7 +10,7 @@ const rule_name = 'projectwallace/max-unique-units'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique CSS units which is greater than the allowed ${expected}`,
+		`Expected no more than ${expected} unique units but found ${actual}`,
 })
 
 const meta = {

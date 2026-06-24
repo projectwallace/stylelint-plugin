@@ -94,3 +94,7 @@ The following patterns are _not_ considered problems:
 	.card { font-size: 1rem; }
 }
 ```
+
+## Prior art
+
+- stylelint's [`custom-property-no-missing-var-function`](https://stylelint.io/user-guide/rules/custom-property-no-missing-var-function) rule

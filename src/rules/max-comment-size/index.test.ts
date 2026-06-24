@@ -101,7 +101,7 @@ test('should error when comment size exceeds the limit', async () => {
 		severity: 'error',
 	})
 	expect(warnings[0].text).toBe(
-		'Comment size is 23 bytes which is 22 bytes greater than the allowed 1 byte (projectwallace/max-comment-size)',
+		'Expected a comment size of no more than 1 characters but found 23 (projectwallace/max-comment-size)',
 	)
 })
 

@@ -89,3 +89,7 @@ The following patterns are _not_ considered problems:
 ```css
 .layout { container-name: layout-header; }
 ```
+
+## Prior art
+
+- ESLint's [`no-unused-vars`](https://eslint.org/docs/latest/rules/no-unused-vars) rule — same concept applied to CSS

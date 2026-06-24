@@ -106,3 +106,7 @@ The following patterns are _not_ considered violations:
 ## Credits
 
 Idea for this rule came from [@andydavies](https://github.com/andydavies) via [Bluesky](https://bsky.app/profile/andydavies.me/post/3lgvt5gjyxc2e)
+
+## Prior art
+
+- [CSS Media Queries spec](https://www.w3.org/TR/mediaqueries-4/) — valid range conditions

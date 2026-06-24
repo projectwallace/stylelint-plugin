@@ -59,7 +59,7 @@ test('should error when rule count exceeds the limit', async () => {
 	expect(warnings[0]).toMatchObject({
 		rule: rule_name,
 		severity: 'error',
-		text: `Counted 2 rules which is greater than the allowed 1 (${rule_name})`,
+		text: `Expected no more than 1 rules but found 2 (${rule_name})`,
 	})
 })
 

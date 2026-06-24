@@ -11,8 +11,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-unused-keyframes'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (name: string) =>
-		`Keyframes "${name}" was declared but never used in an animation-name or animation`,
+	rejected: (name: string) => `Unexpected unused keyframe "${name}"`,
 })
 
 const meta = {

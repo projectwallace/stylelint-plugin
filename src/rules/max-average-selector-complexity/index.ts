@@ -11,7 +11,7 @@ const rule_name = 'projectwallace/max-average-selector-complexity'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Average selector complexity is ${actual} which is greater than the allowed ${expected}`,
+		`Expected an average selector complexity of no more than ${expected} but found ${actual}`,
 })
 
 const meta = {

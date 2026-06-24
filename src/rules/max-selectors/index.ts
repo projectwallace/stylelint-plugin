@@ -9,7 +9,7 @@ const rule_name = 'projectwallace/max-selectors'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Counted ${actual} selectors which is greater than the allowed ${expected}`,
+		`Expected no more than ${expected} selectors but found ${actual}`,
 })
 
 const meta = {

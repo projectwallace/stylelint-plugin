@@ -65,7 +65,7 @@ test('should error when selector count exceeds the limit', async () => {
 	expect(warnings[0]).toMatchObject({
 		rule: rule_name,
 		severity: 'error',
-		text: `Counted 2 selectors which is greater than the allowed 1 (${rule_name})`,
+		text: `Expected no more than 1 selectors but found 2 (${rule_name})`,
 	})
 })
 
@@ -77,7 +77,7 @@ test('should count comma-separated selectors towards the total', async () => {
 	expect(warnings[0]).toMatchObject({
 		rule: rule_name,
 		severity: 'error',
-		text: `Counted 2 selectors which is greater than the allowed 1 (${rule_name})`,
+		text: `Expected no more than 1 selectors but found 2 (${rule_name})`,
 	})
 })
 

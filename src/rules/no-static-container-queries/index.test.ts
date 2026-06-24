@@ -89,7 +89,7 @@ test('equality width alone — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "width: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 	expect(warnings[0].line).toBe(1)
 	expect(warnings[0].column).toBe(12) // points to "(width: 300px)", not the whole @container rule
@@ -101,7 +101,7 @@ test('named container with equality width — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "width: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 })
 
@@ -110,7 +110,7 @@ test('equality width with conflicting min-width — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "width: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 })
 
@@ -119,7 +119,7 @@ test('equality width with conflicting max-width — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "width: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 })
 
@@ -128,7 +128,7 @@ test('equality height alone — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "height: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 })
 
@@ -137,7 +137,7 @@ test('equality inline-size alone — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "inline-size: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 })
 
@@ -146,7 +146,7 @@ test('equality block-size alone — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "block-size: 300px" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 })
 
@@ -166,7 +166,7 @@ test('equality width in em — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "width: 30em" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 })
 
@@ -175,7 +175,7 @@ test('equality width in rem — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Container feature "width: 30rem" is a static equality condition that will almost never match any container (${rule_name})`,
+		`Unexpected static value in container query (${rule_name})`,
 	)
 })
 

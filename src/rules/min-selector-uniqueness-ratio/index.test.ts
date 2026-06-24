@@ -121,7 +121,7 @@ test('should error when uniqueness ratio is below the limit', async () => {
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('less than the required 0.66')
+	expect(warnings[0].text).toContain('at least 0.66 but got')
 })
 
 test('should count individual selectors in selector lists', async () => {

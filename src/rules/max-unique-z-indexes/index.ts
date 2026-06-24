@@ -14,7 +14,7 @@ const rule_name = 'projectwallace/max-unique-z-indexes'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique z-indexes which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique z-indexes but found ${actual}`,
 })
 
 const meta = {

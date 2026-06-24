@@ -32,7 +32,7 @@ the following are considered violations:
 #a { color: red; } #b { color: blue; } #c { color: green; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -43,3 +43,8 @@ a { color: red; } b { color: blue; }
 ```css
 .foo { color: red; } .bar { color: blue; } a { color: green; }
 ```
+
+## Prior art
+
+- stylelint's [`selector-max-specificity`](https://stylelint.io/user-guide/rules/selector-max-specificity) rule
+- [Specificity calculator](https://specificity.keegan.st/)

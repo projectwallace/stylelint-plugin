@@ -12,8 +12,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-unused-container-names'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (name: string) =>
-		`Container name "${name}" was declared but never used in a @container query`,
+	rejected: (name: string) => `Unexpected unused container name "${name}"`,
 })
 
 const meta = {

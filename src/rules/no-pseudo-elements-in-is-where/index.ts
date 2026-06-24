@@ -13,7 +13,7 @@ const rule_name = 'projectwallace/no-pseudo-elements-in-is-where'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (pseudo_element: string, pseudo_function: string) =>
-		`Pseudo-element "${pseudo_element}" is not allowed inside ":${pseudo_function}()"`,
+		`Unexpected pseudo-element "${pseudo_element}" inside ":${pseudo_function}()"`,
 })
 
 const meta = {

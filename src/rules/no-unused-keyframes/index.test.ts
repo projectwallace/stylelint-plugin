@@ -75,7 +75,7 @@ test('should error when quoted keyframe name is never used', async () => {
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Keyframes ""slide in"" was declared but never used in an animation-name or animation (${rule_name})`,
+		`Unexpected unused keyframe ""slide in"" (${rule_name})`,
 	)
 })
 
@@ -190,7 +190,7 @@ test('should error when a keyframe is declared but never used', async () => {
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Keyframes "slide-in" was declared but never used in an animation-name or animation (${rule_name})`,
+		`Unexpected unused keyframe "slide-in" (${rule_name})`,
 	)
 })
 
@@ -206,7 +206,7 @@ test('should error when one of multiple keyframes is unused', async () => {
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Keyframes "fade-out" was declared but never used in an animation-name or animation (${rule_name})`,
+		`Unexpected unused keyframe "fade-out" (${rule_name})`,
 	)
 })
 
@@ -243,6 +243,6 @@ test('should still error when ignore does not match the unused keyframe name', a
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`Keyframes "slide-in" was declared but never used in an animation-name or animation (${rule_name})`,
+		`Unexpected unused keyframe "slide-in" (${rule_name})`,
 	)
 })

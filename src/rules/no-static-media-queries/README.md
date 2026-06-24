@@ -107,3 +107,7 @@ The following patterns are _not_ considered violations:
 @media (horizontal-viewport-segments: 2) {}
 @media (vertical-viewport-segments: 2) {}
 ```
+
+## Prior art
+
+- [Media Queries spec](https://www.w3.org/TR/mediaqueries-5/) — rationale for dynamic conditions

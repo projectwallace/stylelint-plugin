@@ -8,7 +8,7 @@ const rule_name = 'projectwallace/max-important-ratio'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`!important ratio is ${actual} which is greater than the allowed ${expected}`,
+		`Expected an important ratio of no more than ${expected} but found ${actual}`,
 })
 
 const meta = {

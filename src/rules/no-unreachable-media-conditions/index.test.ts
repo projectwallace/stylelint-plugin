@@ -101,7 +101,7 @@ test('min-width greater than max-width', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 	expect(warnings[0].line).toBe(1)
 	expect(warnings[0].column).toBe(1)
@@ -114,7 +114,7 @@ test('issue example: screen and conflicting min/max', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (1020px) exceeds upper bound (739px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -123,7 +123,7 @@ test('range syntax: width > X and width < X (exclusive equal bounds)', async () 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (1000px) exceeds upper bound (1000px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -152,7 +152,7 @@ test('mix of old and new syntax: double-sided range conflicts with min-width', a
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (1000px) exceeds upper bound (800px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -177,7 +177,7 @@ test('double-sided range where lower bound exceeds upper bound', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (500px) exceeds upper bound (400px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -186,7 +186,7 @@ test('height: min > max should error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "height" creates an unreachable condition: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -197,7 +197,7 @@ test('inline-size (logical property): min > max should error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "inline-size" creates an unreachable condition: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -208,7 +208,7 @@ test('device-pixel-ratio (unitless): min > max should error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "device-pixel-ratio" creates an unreachable condition: lower bound (3) exceeds upper bound (1) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -233,7 +233,7 @@ test('@import with contradictory double-sided range should error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (400px) exceeds upper bound (200px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -261,7 +261,7 @@ test('equality width with conflicting min-width — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (400px) exceeds upper bound (300px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -270,7 +270,7 @@ test('equality width with conflicting max-width — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (300px) exceeds upper bound (200px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -279,7 +279,7 @@ test('equality width with exclusive range bound at same value — error', async 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (300px) exceeds upper bound (300px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -300,7 +300,7 @@ test('equality height with conflicting min-height — error', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "height" creates an unreachable condition: lower bound (400px) exceeds upper bound (300px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -311,7 +311,7 @@ test('equality inline-size with conflicting min-inline-size — error', async ()
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "inline-size" creates an unreachable condition: lower bound (400px) exceeds upper bound (300px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -320,7 +320,7 @@ test('equality width in em with conflicting min-width in em — error', async ()
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (40em) exceeds upper bound (30em) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -329,7 +329,7 @@ test('equality width in em with conflicting max-width in em — error', async ()
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (30em) exceeds upper bound (20em) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -374,7 +374,7 @@ test('nested @media: ancestor has comma-separated queries — reports even when 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -387,7 +387,7 @@ test('nested @media: all comma-separated ancestor branches are contradictory —
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -421,7 +421,7 @@ test('nested @media: outer min-width > inner max-width', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -434,7 +434,7 @@ test('nested @media: outer max-width < inner min-width', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -447,7 +447,7 @@ test('nested @media: range syntax conflict', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -462,7 +462,7 @@ test('nested @media: three levels deep conflict', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition across nested @media rules: lower bound (1000px) exceeds upper bound (500px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })
 
@@ -476,6 +476,6 @@ test('nested @media: inner already self-contradictory — no double-report', asy
 	// check should not add a second warning for the same node.
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Media feature "width" creates an unreachable condition: lower bound (2000px) exceeds upper bound (100px) (${rule_name})`,
+		`Unexpected unreachable media condition (${rule_name})`,
 	)
 })

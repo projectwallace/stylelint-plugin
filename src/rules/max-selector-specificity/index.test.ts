@@ -164,7 +164,7 @@ test('should error when specificity exceeds the limit', async () => {
 		endColumn: 17, // end of "#foo .bar a", not the whole rule
 		rule: rule_name,
 		severity: 'error',
-		text: 'Specificity of "#foo .bar a" is [1, 1, 1] which is greater than the allowed [0, 4, 0] (projectwallace/max-selector-specificity)',
+		text: 'Expected specificity of no more than [0, 4, 0] but found [1, 1, 1] (projectwallace/max-selector-specificity)',
 	})
 })
 
@@ -193,7 +193,7 @@ test('should error only on the violating selector in a selector list', async () 
 		endColumn: 8, // end of "#foo", not the whole rule
 		rule: rule_name,
 		severity: 'error',
-		text: 'Specificity of "#foo" is [1, 0, 0] which is greater than the allowed [0, 4, 0] (projectwallace/max-selector-specificity)',
+		text: 'Expected specificity of no more than [0, 4, 0] but found [1, 0, 0] (projectwallace/max-selector-specificity)',
 	})
 })
 
@@ -237,7 +237,7 @@ test('should match issue example: [1, 3, 1] violates [0, 4, 0]', async () => {
 	expect(warnings[0]).toMatchObject({
 		rule: rule_name,
 		severity: 'error',
-		text: 'Specificity of "#foo .a .b .c span" is [1, 3, 1] which is greater than the allowed [0, 4, 0] (projectwallace/max-selector-specificity)',
+		text: 'Expected specificity of no more than [0, 4, 0] but found [1, 3, 1] (projectwallace/max-selector-specificity)',
 	})
 })
 

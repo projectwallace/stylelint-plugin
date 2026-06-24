@@ -7,7 +7,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-prefixed-properties'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (property: string) => `Property "${property}" is vendor-prefixed and is not allowed`,
+	rejected: (property: string) => `Unexpected vendor-prefixed property "${property}"`,
 })
 
 const meta = {

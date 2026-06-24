@@ -41,7 +41,7 @@ b { animation-timing-function: linear; }
 c { animation-timing-function: ease-in; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -70,3 +70,8 @@ the following is _not_ considered a violation:
 a { animation-timing-function: ease; }
 b { animation-timing-function: linear; }
 ```
+
+## Prior art
+
+- [StyleStats](https://github.com/humanmade/stylestats) — CSS statistics and complexity analysis tool
+- [Wallace CSS analyzer](https://www.projectwallace.com) — the CSS analysis engine powering this plugin
