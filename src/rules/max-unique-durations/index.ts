@@ -15,7 +15,7 @@ const rule_name = 'projectwallace/max-unique-durations'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique durations which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique durations but found ${actual}`,
 })
 
 const meta = {
@@ -48,11 +48,12 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_durations = new Set<string>()
-		const violating_declarations: Declaration[] = []
+		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(/^(animation|transition)(-duration)?$/, (declaration) => {
 			let parsed = parse_value(declaration.value)
 			const before = unique_durations.size
+			let triggering_duration = declaration.value
 
 			if (declaration.prop === 'animation-duration' || declaration.prop === 'transition-duration') {
 				for (let child of parsed) {
@@ -60,7 +61,11 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 						let duration = child.text
 
 						if (!keywords.has(duration) && !is_allowed(duration, ignore)) {
+							const is_new = !unique_durations.has(duration)
 							unique_durations.add(duration)
+							if (is_new && unique_durations.size > primaryOption) {
+								triggering_duration = duration
+							}
 						}
 					}
 				}
@@ -69,22 +74,27 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (item.type === 'duration') {
 						let duration = item.value.text
 						if (!is_allowed(duration, ignore)) {
+							const is_new = !unique_durations.has(duration)
 							unique_durations.add(duration)
+							if (is_new && unique_durations.size > primaryOption) {
+								triggering_duration = duration
+							}
 						}
 					}
 				})
 			}
 
 			if (unique_durations.size > before && unique_durations.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({ declaration, word: triggering_duration })
 			}
 		})
 
 		const actual = unique_durations.size
-		for (const declaration of violating_declarations) {
+		for (const { declaration, word } of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				word,
 				result,
 				ruleName: rule_name,
 			})

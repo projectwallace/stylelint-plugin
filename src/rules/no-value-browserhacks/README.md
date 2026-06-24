@@ -46,3 +46,7 @@ The following patterns are _not_ considered violations:
 	color: blue;
 }
 ```
+
+## Prior art
+
+- [browserhacks.com](http://browserhacks.com) — catalogue of browser-specific CSS hacks

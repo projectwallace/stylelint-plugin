@@ -29,7 +29,7 @@ a { color: red !important; font-size: 1em !important; }
 b { color: blue; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -41,3 +41,7 @@ b { color: blue; font-size: 1em; }
 ```css
 a { color: red; }
 ```
+
+## Prior art
+
+- stylelint's [`declaration-no-important`](https://stylelint.io/user-guide/rules/declaration-no-important) rule — stricter variant that disallows all `!important`

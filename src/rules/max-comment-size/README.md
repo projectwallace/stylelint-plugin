@@ -29,7 +29,7 @@ the following are considered violations:
 a { color: red; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -52,10 +52,14 @@ Given:
 
 `[10, { ignoreCopyrightComments: true }]`
 
-The following patterns is _not_ considered a violation:
+The following patterns is _not_ considered a problem:
 
 <!-- prettier-ignore -->
 ```css
 /*! Copyright 2024 My Company. All rights reserved. */
 a { color: red; }
 ```
+
+## Prior art
+
+- ESLint's [`max-lines`](https://eslint.org/docs/latest/rules/max-lines) rule — same concept applied to JavaScript files

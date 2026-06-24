@@ -55,3 +55,7 @@ The following patterns are _not_ considered problems:
 ```css
 @import url(test.css) layer(mobile) supports(display: grid);
 ```
+
+## Prior art
+
+- [CSS Cascade 5 spec](https://www.w3.org/TR/css-cascade-5/#layer-ordering) — `@layer` ordering and naming

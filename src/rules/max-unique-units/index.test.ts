@@ -100,7 +100,7 @@ test('should error when unique units exceed the limit', async () => {
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('Found 3 unique CSS units which is greater than the allowed 2')
+	expect(warnings[0].text).toContain('Expected no more than 2 unique units but found 3')
 })
 
 test('should treat units case-insensitively', async () => {
@@ -162,4 +162,28 @@ c { padding: 10%; }
 
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].line).toBe(4)
+})
+
+// ---------------------------------------------------------------------------
+// Error position
+// ---------------------------------------------------------------------------
+
+test('should report the position of the triggering dimension token', async () => {
+	// a { font-size: 1rem; } b { font-size: 2px; }
+	// Second decl `font-size` starts at col 28; `2px` at offset 11 (9 + 2)
+	// => column 39, endColumn 42 (2px = 3 chars)
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `a { font-size: 1rem; } b { font-size: 2px; }`,
+		config: {
+			plugins: [plugin],
+			rules: { [rule_name]: 1 },
+		},
+	})
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(1)
+	expect(warnings[0].column).toBe(39)
+	expect(warnings[0].endLine).toBe(1)
+	expect(warnings[0].endColumn).toBe(42)
 })

@@ -53,3 +53,7 @@ a::before {
 	content: "";
 }
 ```
+
+## Prior art
+
+- [CSS Selectors 4 spec](https://www.w3.org/TR/selectors-4/#typedef-forgiving-selector-list) — forgiving selector lists exclude pseudo-elements

@@ -10,7 +10,7 @@ export const rule_name = 'projectwallace/max-spacing-resets'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} spacing resets which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} spacing resets but found ${actual}`,
 })
 
 const meta = {
@@ -48,6 +48,7 @@ const ruleFunction = (primaryOption: number) => {
 			utils.report({
 				message: messages.rejected(reset_count, primaryOption),
 				node: declaration,
+				word: declaration.value,
 				result,
 				ruleName: rule_name,
 			})

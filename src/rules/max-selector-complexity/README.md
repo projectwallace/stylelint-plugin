@@ -36,7 +36,7 @@ a b c d {}
 :-moz-any(a > b, c + d) {}
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -52,3 +52,7 @@ a b {}
 ```css
 :-moz-any(a) {}
 ```
+
+## Prior art
+
+- stylelint's [`selector-max-compound-selectors`](https://stylelint.io/user-guide/rules/selector-max-compound-selectors) rule

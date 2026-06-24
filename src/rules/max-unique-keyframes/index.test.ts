@@ -33,8 +33,7 @@ test('should error when 0 is configured and any keyframe is used', async () => {
 	const { warnings, errored } = await lint(`@keyframes foo {}`, 0)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toContain('Found 1 unique keyframes')
-	expect(warnings[0].text).toContain('exceeds the maximum of 0')
+	expect(warnings[0].text).toContain('Expected no more than 0 unique keyframes but found 1')
 	expect(warnings[0].column).toBe(12) // points to "foo", not the whole @keyframes rule
 	expect(warnings[0].endColumn).toBe(15)
 })
@@ -90,8 +89,7 @@ test('should error when unique keyframes exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique keyframes')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toContain('Expected no more than 2 unique keyframes but found 3')
 	expect(warnings[0].column).toBe(48) // points to "baz", not the whole @keyframes rule
 	expect(warnings[0].endColumn).toBe(51)
 })
@@ -113,7 +111,7 @@ test('should error at the at-rule prelude level', async () => {
 test('should treat different keyframe names as different unique entries', async () => {
 	const { warnings, errored } = await lint(`@keyframes foo {} @keyframes FOO {}`, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique keyframes')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique keyframes but found 2')
 })
 
 // ---------------------------------------------------------------------------
@@ -160,7 +158,7 @@ test('should only count unprefixed keyframes when both are present', async () =>
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique keyframes')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique keyframes but found 2')
 })
 
 // ---------------------------------------------------------------------------
@@ -174,5 +172,5 @@ test('should error when non-ignored values exceed the limit', async () => {
 		{ ignore: ['foo'] },
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique keyframes')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique keyframes but found 2')
 })

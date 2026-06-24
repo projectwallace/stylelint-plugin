@@ -12,7 +12,7 @@ const rule_name = 'projectwallace/max-unique-media-queries'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique media queries which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique media queries but found ${actual}`,
 })
 
 const meta = {

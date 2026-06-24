@@ -14,7 +14,7 @@ const rule_name = 'projectwallace/max-unique-font-sizes'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique font sizes which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique font sizes but found ${actual}`,
 })
 
 const meta = {
@@ -47,7 +47,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_sizes = new Set<string>()
-		const violating_declarations: Declaration[] = []
+		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls('font-size', (declaration) => {
 			const before = unique_sizes.size
@@ -55,7 +55,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				unique_sizes.add(declaration.value)
 			}
 			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({ declaration, word: declaration.value })
 			}
 		})
 
@@ -67,15 +67,19 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				unique_sizes.add(destructured.font_size)
 			}
 			if (unique_sizes.size > before && unique_sizes.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({
+					declaration,
+					word: destructured?.font_size ?? declaration.value,
+				})
 			}
 		})
 
 		const actual = unique_sizes.size
-		for (const declaration of violating_declarations) {
+		for (const { declaration, word } of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				word,
 				result,
 				ruleName: rule_name,
 			})

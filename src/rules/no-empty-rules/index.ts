@@ -6,7 +6,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-empty-rules'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: () => `Empty rules are not allowed`,
+	rejected: () => `Unexpected empty rule`,
 })
 
 const meta = {

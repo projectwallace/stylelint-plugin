@@ -32,7 +32,7 @@ the following are considered violations:
 @keyframes slide-in { }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -63,7 +63,7 @@ Given:
 
 `[2, { "ignore": ["fade-in"] }]`
 
-the following are _not_ considered violations:
+the following are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css

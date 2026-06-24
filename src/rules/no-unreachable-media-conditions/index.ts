@@ -36,9 +36,9 @@ const rule_name = 'projectwallace/no-unreachable-media-conditions'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (feature: string, lower: string, upper: string) =>
-		`Media feature "${feature}" creates an unreachable condition: lower bound (${lower}) exceeds upper bound (${upper})`,
+		`Unexpected unreachable media condition`,
 	rejected_nested: (feature: string, lower: string, upper: string) =>
-		`Media feature "${feature}" creates an unreachable condition across nested @media rules: lower bound (${lower}) exceeds upper bound (${upper})`,
+		`Unexpected unreachable media condition`,
 })
 
 const meta = {

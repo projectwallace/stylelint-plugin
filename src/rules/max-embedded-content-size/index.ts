@@ -12,7 +12,7 @@ const rule_name = 'projectwallace/max-embedded-content-size'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Embedded content size is ${format_filesize(actual)} which is ${format_filesize(actual - expected)} greater than the allowed ${format_filesize(expected)}`,
+		`Expected an embedded content size of no more than ${expected} bytes but found ${actual}`,
 })
 
 const meta = {

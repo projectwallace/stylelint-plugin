@@ -7,7 +7,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-prefixed-selectors'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (selector: string) => `Selector "${selector}" is vendor-prefixed and is not allowed`,
+	rejected: (selector: string) => `Unexpected vendor-prefixed selector "${selector}"`,
 })
 
 const meta = {

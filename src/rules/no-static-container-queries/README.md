@@ -40,3 +40,7 @@ The following patterns are not considered problems:
 	}
 }
 ```
+
+## Prior art
+
+- [Media Queries spec](https://www.w3.org/TR/mediaqueries-5/) — rationale for dynamic conditions

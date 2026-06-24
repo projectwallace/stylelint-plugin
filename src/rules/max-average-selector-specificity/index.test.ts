@@ -143,7 +143,7 @@ test('should error when average specificity exceeds the limit', async () => {
 		severity: 'error',
 	})
 	expect(warnings[0].text).toBe(
-		'Average specificity is [0, 0, 1] which is greater than the allowed [0, 0, 0] (projectwallace/max-average-selector-specificity)',
+		'Expected average specificity of no more than [0, 0, 0] but found [0, 0, 1] (projectwallace/max-average-selector-specificity)',
 	)
 })
 

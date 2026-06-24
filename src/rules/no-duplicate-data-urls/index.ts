@@ -9,8 +9,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-duplicate-data-urls'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: () =>
-		`Duplicate data URL found. Store it in a custom property and use var() to reuse it.`,
+	rejected: () => `Unexpected duplicate data URL`,
 })
 
 const meta = {

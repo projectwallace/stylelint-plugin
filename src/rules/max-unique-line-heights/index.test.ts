@@ -33,8 +33,7 @@ test('should error when 0 is configured and any line-height is used', async () =
 	const { warnings, errored } = await lint(`a { line-height: 1.5; }`, 0)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toContain('Found 1 unique line heights')
-	expect(warnings[0].text).toContain('exceeds the maximum of 0')
+	expect(warnings[0].text).toContain('Expected no more than 0 unique line heights but found 1')
 })
 
 test('should not error when 0 is configured and no line-height is used', async () => {
@@ -88,8 +87,7 @@ test('should error when unique values exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique line heights')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toContain('Expected no more than 2 unique line heights but found 3')
 })
 
 test('should error at the declaration level', async () => {
@@ -107,7 +105,7 @@ test('should error at the declaration level', async () => {
 test('should treat different value strings as different unique entries', async () => {
 	const { warnings, errored } = await lint(`a { line-height: 1.5; } b { line-height: 24px; }`, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique line heights')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique line heights but found 2')
 })
 
 // ---------------------------------------------------------------------------
@@ -123,7 +121,7 @@ test('should extract line-height from font shorthand', async () => {
 test('should count heights from font shorthand and line-height together', async () => {
 	const { warnings, errored } = await lint(`a { line-height: 1.5; } b { font: 16px/2 Georgia; }`, 1)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique line heights')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique line heights but found 2')
 })
 
 test('should deduplicate identical line-height values across font and line-height', async () => {
@@ -200,7 +198,7 @@ test('should error when non-ignored values exceed the limit', async () => {
 		{ ignore: ['1'] },
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique line heights')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique line heights but found 2')
 })
 
 // ---------------------------------------------------------------------------
@@ -223,5 +221,5 @@ test('should count design token heights while ignoring keywords mixed in', async
 	)
 	// inherit is a keyword and is not counted → 1.5 + 2 = 2 → exceeds limit of 1
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique line heights')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique line heights but found 2')
 })

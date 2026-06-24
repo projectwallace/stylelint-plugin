@@ -28,7 +28,7 @@ the following are considered violations:
 a { width: 10px; height: 5em; margin: 1rem; padding: 2vh; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css

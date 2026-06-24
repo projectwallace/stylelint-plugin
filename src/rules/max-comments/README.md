@@ -28,7 +28,7 @@ the following are considered violations:
 a { color: red; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -51,7 +51,7 @@ Given:
 
 `[0, { ignoreCopyrightComments: true }]`
 
-The following pattern is _not_ considered a violation:
+The following pattern is _not_ considered a problem:
 
 <!-- prettier-ignore -->
 ```css

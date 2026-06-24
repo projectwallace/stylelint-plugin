@@ -38,7 +38,7 @@ b { box-shadow: 0 4px 8px blue; }
 c { box-shadow: 0 8px 16px green; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css

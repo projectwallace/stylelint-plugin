@@ -80,7 +80,7 @@ test('should error when an anonymous layer block is used', async () => {
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Anonymous @layer is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected anonymous @layer (${rule_name})`)
 })
 
 test('should error for each anonymous layer block', async () => {
@@ -165,7 +165,7 @@ test('should error when @import uses an anonymous layer with a media query', asy
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Anonymous @layer is not allowed (${rule_name})`)
+	expect(text).toBe(`Unexpected anonymous @layer (${rule_name})`)
 })
 
 test('should error when @import uses a bare anonymous layer', async () => {

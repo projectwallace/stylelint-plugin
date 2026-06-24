@@ -8,7 +8,7 @@ const rule_name = 'projectwallace/max-average-declarations-per-rule'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Average declarations per rule is ${actual} which is greater than the allowed ${expected}`,
+		`Expected an average of no more than ${expected} declarations per rule but found ${actual}`,
 })
 
 const meta = {

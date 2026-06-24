@@ -90,3 +90,7 @@ The following patterns are _not_ considered problems:
 ```css
 :root { --ds-color: var(--ds-color); }
 ```
+
+## Prior art
+
+- ESLint's [`no-self-assign`](https://eslint.org/docs/latest/rules/no-self-assign) rule — same concept

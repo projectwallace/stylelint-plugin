@@ -85,7 +85,7 @@ test('should error when unique z-indexes exceed the limit', async () => {
 	const { warnings } = await lint(`a { z-index: 1; } b { z-index: 2; }`, 1)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Found 2 unique z-indexes which exceeds the maximum of 1 (projectwallace/max-unique-z-indexes)`,
+		`Expected no more than 1 unique z-indexes but found 2 (projectwallace/max-unique-z-indexes)`,
 	)
 })
 
@@ -93,7 +93,7 @@ test('should report on the declaration that pushed over the limit', async () => 
 	const { warnings } = await lint(`a { z-index: 1; } b { z-index: 2; } c { z-index: 3; }`, 2)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Found 3 unique z-indexes which exceeds the maximum of 2 (projectwallace/max-unique-z-indexes)`,
+		`Expected no more than 2 unique z-indexes but found 3 (projectwallace/max-unique-z-indexes)`,
 	)
 })
 
@@ -109,8 +109,24 @@ test('should report negative z-index values as unique', async () => {
 	const { warnings } = await lint(`a { z-index: 1; } b { z-index: -1; }`, 1)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		`Found 2 unique z-indexes which exceeds the maximum of 1 (projectwallace/max-unique-z-indexes)`,
+		`Expected no more than 1 unique z-indexes but found 2 (projectwallace/max-unique-z-indexes)`,
 	)
+})
+
+// ---------------------------------------------------------------------------
+// Error position
+// ---------------------------------------------------------------------------
+
+test('should report the position of the triggering z-index number', async () => {
+	// a { z-index: 1; } b { z-index: 2; }
+	// col 23 = start of `z-index` in second decl; `2` starts at offset 9 (7 + 2)
+	// => column 32, endColumn 33
+	const { warnings } = await lint(`a { z-index: 1; } b { z-index: 2; }`, 1)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(1)
+	expect(warnings[0].column).toBe(32)
+	expect(warnings[0].endLine).toBe(1)
+	expect(warnings[0].endColumn).toBe(33)
 })
 
 // ---------------------------------------------------------------------------

@@ -15,7 +15,7 @@ const rule_name = 'projectwallace/max-unique-animation-functions'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique animation-functions which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique animation-functions but found ${actual}`,
 })
 
 const meta = {
@@ -48,11 +48,12 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_functions = new Set<string>()
-		const violating_declarations: Declaration[] = []
+		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(/^(animation|transition)(-timing-function)?$/, (declaration) => {
 			let parsed = parse_value(declaration.value)
 			const before = unique_functions.size
+			let triggering_fn = declaration.value
 
 			if (
 				declaration.prop === 'animation-timing-function' ||
@@ -62,7 +63,11 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (child.type !== OPERATOR) {
 						let fn = child.text
 						if (!is_allowed(fn, ignore)) {
+							const is_new = !unique_functions.has(fn)
 							unique_functions.add(fn)
+							if (is_new && unique_functions.size > primaryOption) {
+								triggering_fn = fn
+							}
 						}
 					}
 				}
@@ -71,22 +76,27 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (item.type === 'fn') {
 						let fn = item.value.text
 						if (!is_allowed(fn, ignore)) {
-							unique_functions.add(item.value.text)
+							const is_new = !unique_functions.has(fn)
+							unique_functions.add(fn)
+							if (is_new && unique_functions.size > primaryOption) {
+								triggering_fn = fn
+							}
 						}
 					}
 				})
 			}
 
 			if (unique_functions.size > before && unique_functions.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({ declaration, word: triggering_fn })
 			}
 		})
 
 		const actual = unique_functions.size
-		for (const declaration of violating_declarations) {
+		for (const { declaration, word } of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				word,
 				result,
 				ruleName: rule_name,
 			})

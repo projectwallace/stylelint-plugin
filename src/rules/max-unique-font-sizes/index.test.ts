@@ -34,7 +34,7 @@ test('should error when 0 is configured and any font-size is used', async () => 
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		'Found 1 unique font sizes which exceeds the maximum of 0 (projectwallace/max-unique-font-sizes)',
+		'Expected no more than 0 unique font sizes but found 1 (projectwallace/max-unique-font-sizes)',
 	)
 })
 
@@ -90,7 +90,7 @@ test('should error when unique values exceed the limit', async () => {
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
 	expect(warnings[0].text).toBe(
-		'Found 3 unique font sizes which exceeds the maximum of 2 (projectwallace/max-unique-font-sizes)',
+		'Expected no more than 2 unique font sizes but found 3 (projectwallace/max-unique-font-sizes)',
 	)
 })
 
@@ -111,7 +111,7 @@ test('should treat different value strings as different unique entries', async (
 	const { warnings, errored } = await lint(`a { font-size: 1rem; } b { font-size: 16px; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique font sizes which exceeds the maximum of 1 (projectwallace/max-unique-font-sizes)',
+		'Expected no more than 1 unique font sizes but found 2 (projectwallace/max-unique-font-sizes)',
 	)
 })
 
@@ -135,7 +135,7 @@ test('should count sizes from font shorthand and font-size together', async () =
 	const { warnings, errored } = await lint(`a { font-size: 16px; } b { font: 24px Georgia; }`, 1)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique font sizes which exceeds the maximum of 1 (projectwallace/max-unique-font-sizes)',
+		'Expected no more than 1 unique font sizes but found 2 (projectwallace/max-unique-font-sizes)',
 	)
 })
 
@@ -212,7 +212,7 @@ test('should error when non-ignoreed values exceed the limit', async () => {
 	// 12px ignored → 16px + 24px = 2 → exceeds limit of 1
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique font sizes which exceeds the maximum of 1 (projectwallace/max-unique-font-sizes)',
+		'Expected no more than 1 unique font sizes but found 2 (projectwallace/max-unique-font-sizes)',
 	)
 })
 
@@ -237,6 +237,6 @@ test('should count design token sizes while ignoring keywords mixed in', async (
 	// inherit is a keyword and is not counted → 16px + 24px = 2 → exceeds limit of 1
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique font sizes which exceeds the maximum of 1 (projectwallace/max-unique-font-sizes)',
+		'Expected no more than 1 unique font sizes but found 2 (projectwallace/max-unique-font-sizes)',
 	)
 })

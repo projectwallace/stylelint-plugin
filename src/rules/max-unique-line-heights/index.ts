@@ -14,7 +14,7 @@ const rule_name = 'projectwallace/max-unique-line-heights'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique line heights which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique line heights but found ${actual}`,
 })
 
 const meta = {
@@ -47,7 +47,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_heights = new Set<string>()
-		const violating_declarations: Declaration[] = []
+		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls('line-height', (declaration) => {
 			const before = unique_heights.size
@@ -55,7 +55,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				unique_heights.add(declaration.value)
 			}
 			if (unique_heights.size > before && unique_heights.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({ declaration, word: declaration.value })
 			}
 		})
 
@@ -67,15 +67,19 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				unique_heights.add(destructured.line_height)
 			}
 			if (unique_heights.size > before && unique_heights.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({
+					declaration,
+					word: destructured?.line_height ?? declaration.value,
+				})
 			}
 		})
 
 		const actual = unique_heights.size
-		for (const declaration of violating_declarations) {
+		for (const { declaration, word } of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				word,
 				result,
 				ruleName: rule_name,
 			})

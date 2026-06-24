@@ -9,7 +9,7 @@ const rule_name = 'projectwallace/max-comment-size'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Comment size is ${format_filesize(actual)} which is ${format_filesize(actual - expected)} greater than the allowed ${format_filesize(expected)}`,
+		`Expected a comment size of no more than ${expected} characters but found ${actual}`,
 })
 
 const meta = {

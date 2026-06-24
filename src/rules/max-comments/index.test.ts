@@ -82,7 +82,7 @@ test('should error when comment count exceeds the limit', async () => {
 		severity: 'error',
 	})
 	expect(warnings[0].text).toBe(
-		'Comment count is 2 which is greater than the allowed 1 (projectwallace/max-comments)',
+		'Expected no more than 1 comments but found 2 (projectwallace/max-comments)',
 	)
 })
 

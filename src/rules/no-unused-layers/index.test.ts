@@ -91,7 +91,7 @@ test('should error when a layer in an ordering list is never used', async () => 
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Layer "utilities" was declared but never used (${rule_name})`)
+	expect(text).toBe(`Unexpected unused layer "utilities" (${rule_name})`)
 })
 
 test('should error when a single-name layer statement is never used', async () => {
@@ -113,7 +113,7 @@ test('should error when a single-name layer statement is never used', async () =
 	expect(warnings.length).toBe(1)
 
 	const [{ text }] = warnings
-	expect(text).toBe(`Layer "utilities" was declared but never used (${rule_name})`)
+	expect(text).toBe(`Unexpected unused layer "utilities" (${rule_name})`)
 })
 
 test('should error for each unused layer in a list', async () => {

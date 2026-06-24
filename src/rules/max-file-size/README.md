@@ -28,7 +28,7 @@ a { color: red; }
 b { color: blue; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -39,3 +39,7 @@ a { color: red; }
 ```css
 a {}
 ```
+
+## Prior art
+
+- ESLint's [`max-lines`](https://eslint.org/docs/latest/rules/max-lines) rule — same concept applied to JavaScript files

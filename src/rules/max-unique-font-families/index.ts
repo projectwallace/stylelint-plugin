@@ -14,7 +14,7 @@ const rule_name = 'projectwallace/max-unique-font-families'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique font families which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique font families but found ${actual}`,
 })
 
 const meta = {
@@ -47,7 +47,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_families = new Set<string>()
-		const violating_declarations: Declaration[] = []
+		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls('font-family', (declaration) => {
 			if (
@@ -61,7 +61,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				unique_families.add(declaration.value)
 			}
 			if (unique_families.size > before && unique_families.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({ declaration, word: declaration.value })
 			}
 		})
 
@@ -73,15 +73,19 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				unique_families.add(destructured.font_family)
 			}
 			if (unique_families.size > before && unique_families.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({
+					declaration,
+					word: destructured?.font_family ?? declaration.value,
+				})
 			}
 		})
 
 		const actual = unique_families.size
-		for (const declaration of violating_declarations) {
+		for (const { declaration, word } of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				word,
 				result,
 				ruleName: rule_name,
 			})

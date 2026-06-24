@@ -63,3 +63,7 @@ the following are _not_ considered violations:
 	width: 8px;
 }
 ```
+
+## Prior art
+
+- [`no-vendor-prefixes` rules in stylelint](https://stylelint.io/user-guide/rules)

@@ -34,7 +34,7 @@ b { font-size: 16px; }
 c { font-size: 24px; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -55,7 +55,7 @@ Given:
 
 `[2, { "ignore": ["16px"] }]`
 
-the following are _not_ considered violations:
+the following are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css

@@ -26,7 +26,7 @@ the following are considered violations:
 a { background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA"); }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -37,3 +37,7 @@ a { background: url("image.png"); }
 ```css
 a { color: red; }
 ```
+
+## Prior art
+
+- ESLint's [`max-lines`](https://eslint.org/docs/latest/rules/max-lines) rule — same concept applied to JavaScript files

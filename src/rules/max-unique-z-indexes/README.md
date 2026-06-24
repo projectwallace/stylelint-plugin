@@ -34,7 +34,7 @@ b { z-index: 2; }
 c { z-index: 3; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css

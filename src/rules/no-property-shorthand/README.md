@@ -116,3 +116,7 @@ a {
 	border-color: red;
 }
 ```
+
+## Prior art
+
+- stylelint's [`shorthand-property-no-redundant-values`](https://stylelint.io/user-guide/rules/shorthand-property-no-redundant-values) rule

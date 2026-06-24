@@ -114,3 +114,7 @@ The following patterns are _not_ considered problems:
 ## Credits
 
 `importFrom` inspired by the same option in [csstools/postcss-custom-properties](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-properties).
+
+## Prior art
+
+- ESLint's [`no-unused-vars`](https://eslint.org/docs/latest/rules/no-unused-vars) rule — same concept applied to CSS

@@ -87,8 +87,7 @@ test('should error when unique gradients exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toContain('Found 3 unique gradients')
-	expect(warnings[0].text).toContain('exceeds the maximum of 2')
+	expect(warnings[0].text).toContain('Expected no more than 2 unique gradients but found 3')
 	expect(warnings[0].line).toBe(4)
 })
 
@@ -196,8 +195,7 @@ test('should treat different gradient expressions as different unique gradients'
 		1,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 2 unique gradients')
-	expect(warnings[0].text).toContain('exceeds the maximum of 1')
+	expect(warnings[0].text).toContain('Expected no more than 1 unique gradients but found 2')
 	expect(warnings[0].line).toBe(3)
 })
 
@@ -211,7 +209,7 @@ test('should count unique gradients across the entire stylesheet', async () => {
 		2,
 	)
 	expect(errored).toBe(true)
-	expect(warnings[0].text).toContain('Found 3 unique gradients')
+	expect(warnings[0].text).toContain('Expected no more than 2 unique gradients but found 3')
 	expect(warnings[0].line).toBe(4)
 })
 
@@ -251,4 +249,24 @@ test('should support RegExp patterns in ignore', async () => {
 	// Only repeating-linear-gradient is not ignored → 1 unique gradient
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
+})
+
+// ---------------------------------------------------------------------------
+// Error position
+// ---------------------------------------------------------------------------
+
+test('should report the position of the triggering gradient function', async () => {
+	// a { background-image: linear-gradient(red, blue); } b { background-image: conic-gradient(red, blue); }
+	// Second decl `background-image` starts at col 57; `conic-gradient(...)` at offset 18 (16 + 2)
+	// conic-gradient(red, blue) = 25 chars => endOffset = 18 + 25 = 43
+	// => column 75, endColumn 100
+	const { warnings } = await lint(
+		`a { background-image: linear-gradient(red, blue); } b { background-image: conic-gradient(red, blue); }`,
+		1,
+	)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(1)
+	expect(warnings[0].column).toBe(75)
+	expect(warnings[0].endLine).toBe(1)
+	expect(warnings[0].endColumn).toBe(100)
 })

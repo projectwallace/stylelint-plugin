@@ -7,7 +7,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-prefixed-values'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (value: string) => `Value "${value}" is vendor-prefixed and is not allowed`,
+	rejected: (value: string) => `Unexpected vendor-prefixed value "${value}"`,
 })
 
 const meta = {

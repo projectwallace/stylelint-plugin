@@ -40,7 +40,7 @@ c { color: green; }
 d { color: yellow; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -63,7 +63,7 @@ Given:
 
 `[2, { "ignore": ["transparent", "currentColor"] }]`
 
-the following are _not_ considered violations:
+the following are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css

@@ -8,7 +8,7 @@ const rule_name = 'projectwallace/max-nesting-depth'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Nesting depth ${actual} exceeds maximum of ${expected}`,
+		`Expected a nesting depth of no more than ${expected} but found ${actual}`,
 })
 
 const meta = {

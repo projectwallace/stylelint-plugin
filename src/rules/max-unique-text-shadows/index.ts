@@ -13,7 +13,7 @@ const rule_name = 'projectwallace/max-unique-text-shadows'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique text shadows which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique text shadows but found ${actual}`,
 })
 
 const meta = {
@@ -66,6 +66,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				word: declaration.value,
 				result,
 				ruleName: rule_name,
 			})

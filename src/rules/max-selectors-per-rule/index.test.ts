@@ -63,7 +63,7 @@ test('should error when selectors per rule exceeds the limit', async () => {
 		severity: 'error',
 	})
 	expect(warnings[0].text).toBe(
-		'Selectors per rule is 3 which is greater than the allowed 2 (projectwallace/max-selectors-per-rule)',
+		'Expected no more than 2 selectors per rule but found 3 (projectwallace/max-selectors-per-rule)',
 	)
 })
 
@@ -105,7 +105,7 @@ test('should report violation on the correct rule node', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		'Selectors per rule is 11 which is greater than the allowed 10 (projectwallace/max-selectors-per-rule)',
+		'Expected no more than 10 selectors per rule but found 11 (projectwallace/max-selectors-per-rule)',
 	)
 })
 

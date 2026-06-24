@@ -8,7 +8,7 @@ const rule_name = 'projectwallace/min-declaration-uniqueness-ratio'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Declaration uniqueness ratio is ${actual} which is less than the required ${expected}`,
+		`Expected a declaration uniqueness ratio of at least ${expected} but got ${actual}`,
 })
 
 const meta = {

@@ -46,7 +46,7 @@ test('should error on self-assignment: --color: var(--color)', async () => {
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--color" is assigned to itself via var(), which has no effect (${rule_name})`,
+		`Unexpected useless custom property assignment for "--color" (${rule_name})`,
 	)
 })
 
@@ -61,7 +61,7 @@ test('should error on fallback self-reference: --color-2: var(--color-1, var(--c
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--color-2" is assigned to itself via var(), which has no effect (${rule_name})`,
+		`Unexpected useless custom property assignment for "--color-2" (${rule_name})`,
 	)
 })
 
@@ -76,7 +76,7 @@ test('should error on deeply nested self-reference', async () => {
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--color" is assigned to itself via var(), which has no effect (${rule_name})`,
+		`Unexpected useless custom property assignment for "--color" (${rule_name})`,
 	)
 })
 
@@ -142,7 +142,7 @@ test('should still error on self-assignment not matched by ignore', async () => 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(
-		`"--bg" is assigned to itself via var(), which has no effect (${rule_name})`,
+		`Unexpected useless custom property assignment for "--bg" (${rule_name})`,
 	)
 })
 

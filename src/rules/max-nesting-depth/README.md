@@ -49,7 +49,7 @@ the following are considered violations:
 }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -68,3 +68,7 @@ The following patterns are _not_ considered violations:
   }
 }
 ```
+
+## Prior art
+
+- stylelint's [`max-nesting-depth`](https://stylelint.io/user-guide/rules/max-nesting-depth) rule

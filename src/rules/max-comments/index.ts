@@ -8,7 +8,7 @@ const rule_name = 'projectwallace/max-comments'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Comment count is ${actual} which is greater than the allowed ${expected}`,
+		`Expected no more than ${expected} comments but found ${actual}`,
 })
 
 const meta = {

@@ -121,7 +121,7 @@ test('should error when uniqueness ratio is below the limit', async () => {
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('less than the required 0.5')
+	expect(warnings[0].text).toContain('at least 0.5 but got')
 })
 
 test('should not error when config is 0', async () => {

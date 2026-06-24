@@ -34,7 +34,7 @@ test('should error when 0 is configured and any media query is used', async () =
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(
-		'Found 1 unique media queries which exceeds the maximum of 0 (projectwallace/max-unique-media-queries)',
+		'Expected no more than 0 unique media queries but found 1 (projectwallace/max-unique-media-queries)',
 	)
 	expect(warnings[0].column).toBe(8) // points to "(max-width: 768px)", not the whole @media rule
 	expect(warnings[0].endColumn).toBe(26)
@@ -98,7 +98,7 @@ test('should error when unique queries exceed the limit', async () => {
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
 	expect(warnings[0].text).toBe(
-		'Found 3 unique media queries which exceeds the maximum of 2 (projectwallace/max-unique-media-queries)',
+		'Expected no more than 2 unique media queries but found 3 (projectwallace/max-unique-media-queries)',
 	)
 	expect(warnings[0].column).toBe(67) // points to "(min-width: 1440px)", not the whole @media rule
 	expect(warnings[0].endColumn).toBe(86)
@@ -125,7 +125,7 @@ test('should treat different query strings as different unique entries', async (
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique media queries which exceeds the maximum of 1 (projectwallace/max-unique-media-queries)',
+		'Expected no more than 1 unique media queries but found 2 (projectwallace/max-unique-media-queries)',
 	)
 })
 
@@ -161,6 +161,6 @@ test('should error when non-ignored values exceed the limit', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toBe(
-		'Found 2 unique media queries which exceeds the maximum of 1 (projectwallace/max-unique-media-queries)',
+		'Expected no more than 1 unique media queries but found 2 (projectwallace/max-unique-media-queries)',
 	)
 })

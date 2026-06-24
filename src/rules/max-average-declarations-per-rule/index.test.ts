@@ -64,7 +64,7 @@ test('should error when average declarations per rule exceeds the limit', async 
 		rule: rule_name,
 		severity: 'error',
 	})
-	expect(warnings[0].text).toContain('greater than the allowed 1')
+	expect(warnings[0].text).toContain('no more than 1 declarations per rule but found')
 })
 
 test('should not count declarations from nested rules', async () => {

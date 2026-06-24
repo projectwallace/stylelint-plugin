@@ -34,7 +34,7 @@ b { line-height: 1.5; }
 c { line-height: 2; }
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -55,7 +55,7 @@ Given:
 
 `[2, { "ignore": ["1.5"] }]`
 
-the following are _not_ considered violations:
+the following are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css

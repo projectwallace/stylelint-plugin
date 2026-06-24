@@ -122,3 +122,7 @@ The following patterns are _not_ considered problems:
 @layer vendor-reset, utilities;
 @layer utilities { .u-flex { display: flex; } }
 ```
+
+## Prior art
+
+- ESLint's [`no-unused-vars`](https://eslint.org/docs/latest/rules/no-unused-vars) rule — same concept applied to CSS

@@ -37,7 +37,7 @@ the following are considered violations:
 a, #bar {}
 ```
 
-The following patterns are _not_ considered violations:
+The following patterns are _not_ considered problems:
 
 <!-- prettier-ignore -->
 ```css
@@ -48,3 +48,8 @@ The following patterns are _not_ considered violations:
 ```css
 a, .foo, .bar {}
 ```
+
+## Prior art
+
+- stylelint's [`selector-max-specificity`](https://stylelint.io/user-guide/rules/selector-max-specificity) rule
+- [`bramus/specificity`](https://github.com/bramus/specificity) — specificity calculation and comparison library

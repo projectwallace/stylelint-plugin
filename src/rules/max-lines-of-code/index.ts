@@ -8,7 +8,7 @@ const rule_name = 'projectwallace/max-lines-of-code'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Counted ${actual} Lines of Code which is greater than the allowed ${expected}`,
+		`Expected no more than ${expected} lines of code but found ${actual}`,
 })
 
 const meta = {

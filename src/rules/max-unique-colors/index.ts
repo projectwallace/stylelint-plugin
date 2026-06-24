@@ -14,7 +14,7 @@ const rule_name = 'projectwallace/max-unique-colors'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
-		`Found ${actual} unique colors which exceeds the maximum of ${expected}`,
+		`Expected no more than ${expected} unique colors but found ${actual}`,
 })
 
 const meta = {
@@ -81,21 +81,31 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			})
 		})
 
-		const violating_declarations: Declaration[] = []
+		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
 			const before = unique_colors.size
-			run_collect(parse_value(declaration.value), true)
+			let triggering_color = declaration.value
+			collect_colors(parse_value(declaration.value), true, color_custom_properties, (color) => {
+				if (!is_allowed(color, ignore)) {
+					const is_new = !unique_colors.has(color)
+					unique_colors.add(color)
+					if (is_new && unique_colors.size > primaryOption) {
+						triggering_color = color
+					}
+				}
+			})
 			if (unique_colors.size > before && unique_colors.size > primaryOption) {
-				violating_declarations.push(declaration)
+				violating_declarations.push({ declaration, word: triggering_color })
 			}
 		})
 
 		const actual = unique_colors.size
-		for (const declaration of violating_declarations) {
+		for (const { declaration, word } of violating_declarations) {
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
+				word,
 				result,
 				ruleName: rule_name,
 			})

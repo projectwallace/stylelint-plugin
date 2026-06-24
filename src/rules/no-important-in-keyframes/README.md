@@ -50,3 +50,7 @@ The following patterns are _not_ considered problems:
 /* !important outside @keyframes is unaffected */
 a { color: red !important; }
 ```
+
+## Prior art
+
+- [CSS Animations spec](https://www.w3.org/TR/css-animations-1/#keyframes): `!important` is ignored in keyframe declarations

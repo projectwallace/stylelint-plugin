@@ -10,7 +10,7 @@ const rule_name = 'projectwallace/max-average-selector-specificity'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: string, expected: string) =>
-		`Average specificity is [${actual}] which is greater than the allowed [${expected}]`,
+		`Expected average specificity of no more than [${expected}] but found [${actual}]`,
 })
 
 const meta = {

@@ -10,7 +10,7 @@ const { createPlugin, utils } = stylelint
 export const rule_name = 'projectwallace/no-unused-layers'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (layer: string) => `Layer "${layer}" was declared but never used`,
+	rejected: (layer: string) => `Unexpected unused layer "${layer}"`,
 })
 
 const meta = {

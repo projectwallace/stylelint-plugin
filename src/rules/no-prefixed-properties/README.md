@@ -70,3 +70,7 @@ a {
 	-webkit-appearance: none;
 }
 ```
+
+## Prior art
+
+- [`no-vendor-prefixes` rules in stylelint](https://stylelint.io/user-guide/rules)

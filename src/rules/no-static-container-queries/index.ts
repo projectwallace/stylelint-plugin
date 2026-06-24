@@ -17,8 +17,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-static-container-queries'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (feature: string, value: string) =>
-		`Container feature "${feature}: ${value}" is a static equality condition that will almost never match any container`,
+	rejected: (feature: string, value: string) => `Unexpected static value in container query`,
 })
 
 const meta = {
