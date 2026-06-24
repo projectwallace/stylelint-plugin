@@ -121,9 +121,7 @@ test('should error when var() uses an undeclared property even if @property exis
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unknown custom property "--undeclared" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unknown custom property "--undeclared" (${rule_name})`)
 })
 
 test('should error on undeclared var() with fallback when allowFallback is not set', async () => {
@@ -143,9 +141,7 @@ test('should error on undeclared var() with fallback when allowFallback is not s
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unknown custom property "--undeclared" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unknown custom property "--undeclared" (${rule_name})`)
 })
 
 test('should not error on undeclared var() with fallback when allowFallback is true', async () => {
@@ -263,9 +259,7 @@ test('should still error on undeclared property not matched by ignore', async ()
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unknown custom property "--undeclared" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unknown custom property "--undeclared" (${rule_name})`)
 })
 
 test('ignores ignore when entries have incorrect types', async () => {

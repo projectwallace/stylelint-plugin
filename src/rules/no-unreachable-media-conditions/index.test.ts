@@ -100,9 +100,7 @@ test('min-width greater than max-width', async () => {
 	const { errored, warnings } = await lint('@media (min-width: 1000px) and (max-width: 500px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 	expect(warnings[0].line).toBe(1)
 	expect(warnings[0].column).toBe(1)
 })
@@ -113,18 +111,14 @@ test('issue example: screen and conflicting min/max', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('range syntax: width > X and width < X (exclusive equal bounds)', async () => {
 	const { errored, warnings } = await lint('@media (width > 1000px) and (width < 1000px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('range syntax: width > X and width < Y where Y < X', async () => {
@@ -151,9 +145,7 @@ test('mix of old and new syntax: double-sided range conflicts with min-width', a
 	)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('issue example: multiple conflicting min/max constraints', async () => {
@@ -176,18 +168,14 @@ test('double-sided range where lower bound exceeds upper bound', async () => {
 	const { errored, warnings } = await lint('@media (500px <= width <= 400px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('height: min > max should error', async () => {
 	const { errored, warnings } = await lint('@media (min-height: 1000px) and (max-height: 500px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('inline-size (logical property): min > max should error', async () => {
@@ -196,9 +184,7 @@ test('inline-size (logical property): min > max should error', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('device-pixel-ratio (unitless): min > max should error', async () => {
@@ -207,9 +193,7 @@ test('device-pixel-ratio (unitless): min > max should error', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('device-pixel-ratio range syntax: conflicting should error', async () => {
@@ -232,9 +216,7 @@ test('@import with contradictory double-sided range should error', async () => {
 	const { errored, warnings } = await lint('@import url(test.css) (400px <= width <= 200px);')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('@import with contradictory min/max should error', async () => {
@@ -260,27 +242,21 @@ test('equality width with conflicting min-width — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 300px) and (min-width: 400px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('equality width with conflicting max-width — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 300px) and (max-width: 200px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('equality width with exclusive range bound at same value — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 300px) and (width > 300px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('equality width alone — no error (not a contradiction)', async () => {
@@ -299,9 +275,7 @@ test('equality height with conflicting min-height — error', async () => {
 	const { errored, warnings } = await lint('@media (height: 300px) and (min-height: 400px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('equality inline-size with conflicting min-inline-size — error', async () => {
@@ -310,27 +284,21 @@ test('equality inline-size with conflicting min-inline-size — error', async ()
 	)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('equality width in em with conflicting min-width in em — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 30em) and (min-width: 40em) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('equality width in em with conflicting max-width in em — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 30em) and (max-width: 20em) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('equality width in em with inclusive min-width at same value — no error', async () => {
@@ -373,9 +341,7 @@ test('nested @media: ancestor has comma-separated queries — reports even when 
 	`)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('nested @media: all comma-separated ancestor branches are contradictory — error', async () => {
@@ -386,9 +352,7 @@ test('nested @media: all comma-separated ancestor branches are contradictory —
 	`)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('nested @media: all comma-separated ancestor branches are satisfiable — no error', async () => {
@@ -420,9 +384,7 @@ test('nested @media: outer min-width > inner max-width', async () => {
 	`)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('nested @media: outer max-width < inner min-width', async () => {
@@ -433,9 +395,7 @@ test('nested @media: outer max-width < inner min-width', async () => {
 	`)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('nested @media: range syntax conflict', async () => {
@@ -446,9 +406,7 @@ test('nested @media: range syntax conflict', async () => {
 	`)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('nested @media: three levels deep conflict', async () => {
@@ -461,9 +419,7 @@ test('nested @media: three levels deep conflict', async () => {
 	`)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
 
 test('nested @media: inner already self-contradictory — no double-report', async () => {
@@ -475,7 +431,5 @@ test('nested @media: inner already self-contradictory — no double-report', asy
 	// The inner rule's own contradiction is reported by the flat check; the nested
 	// check should not add a second warning for the same node.
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unreachable media condition (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })

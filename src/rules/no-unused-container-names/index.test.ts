@@ -66,9 +66,7 @@ test('should error when a container name is declared but never used', async () =
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unused container name "sidebar" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unused container name "sidebar" (${rule_name})`)
 })
 
 test('should error when a container name is declared in shorthand with multiple names but never used', async () => {
@@ -91,9 +89,7 @@ test('should error when a container name is declared in shorthand with multiple 
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unused container name "test" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unused container name "test" (${rule_name})`)
 })
 
 test('should not error when there are no container names', async () => {
@@ -154,9 +150,7 @@ test('should error when container shorthand name is never used', async () => {
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unused container name "sidebar" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unused container name "sidebar" (${rule_name})`)
 })
 
 test('should not error when container-name is none', async () => {
@@ -217,9 +211,7 @@ test('should handle multiple container names declared on one element', async () 
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unused container name "header" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unused container name "header" (${rule_name})`)
 })
 
 test('should not error on anonymous @container queries', async () => {
@@ -300,7 +292,5 @@ test('should still error when ignore does not match the unused container name', 
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unused container name "sidebar" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unused container name "sidebar" (${rule_name})`)
 })

@@ -11,7 +11,8 @@ const INT32_MIN = -2147483648
 const INT32_MAX = 2147483647
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (value: number) => `Unexpected invalid z-index value "${value}": expected a 32-bit integer`,
+	rejected: (value: number) =>
+		`Unexpected invalid z-index value "${value}": expected a 32-bit integer`,
 })
 
 const meta = {

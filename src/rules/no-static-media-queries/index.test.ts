@@ -112,9 +112,7 @@ test('equality width alone — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 300px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 	expect(warnings[0].line).toBe(1)
 	expect(warnings[0].column).toBe(8) // points to "(width: 300px)", not the whole @media rule
 	expect(warnings[0].endColumn).toBe(22)
@@ -124,63 +122,49 @@ test('equality width with conflicting min-width — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 300px) and (min-width: 400px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('equality width with conflicting max-width — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 300px) and (max-width: 200px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('equality width with exclusive range bound at same value — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 300px) and (width > 300px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('equality width with inclusive min-width at same value — still a static condition, error', async () => {
 	const { errored, warnings } = await lint('@media (width: 300px) and (min-width: 300px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('equality height alone — error', async () => {
 	const { errored, warnings } = await lint('@media (height: 300px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('equality height with conflicting min-height — error', async () => {
 	const { errored, warnings } = await lint('@media (height: 300px) and (min-height: 400px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('equality inline-size alone — error', async () => {
 	const { errored, warnings } = await lint('@media (inline-size: 300px) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('equality inline-size with conflicting min-inline-size — error', async () => {
@@ -189,18 +173,14 @@ test('equality inline-size with conflicting min-inline-size — error', async ()
 	)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('@import with equality syntax — error', async () => {
 	const { errored, warnings } = await lint('@import url(test.css) (width: 300px);')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('screen and equality width — error', async () => {
@@ -224,18 +204,14 @@ test('equality width in em — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 30em) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('equality width in rem — error', async () => {
 	const { errored, warnings } = await lint('@media (width: 30rem) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
 
 test('min-width in em — no error', async () => {
@@ -248,7 +224,5 @@ test('equality width in em with conflicting min-width in em — error', async ()
 	const { errored, warnings } = await lint('@media (width: 30em) and (min-width: 40em) {}')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected static value in media query (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })

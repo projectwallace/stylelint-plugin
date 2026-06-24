@@ -35,8 +35,10 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-unreachable-media-conditions'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (feature: string, lower: string, upper: string) => `Unexpected unreachable media condition`,
-	rejected_nested: (feature: string, lower: string, upper: string) => `Unexpected unreachable media condition`,
+	rejected: (feature: string, lower: string, upper: string) =>
+		`Unexpected unreachable media condition`,
+	rejected_nested: (feature: string, lower: string, upper: string) =>
+		`Unexpected unreachable media condition`,
 })
 
 const meta = {

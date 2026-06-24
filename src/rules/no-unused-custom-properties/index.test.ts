@@ -217,9 +217,7 @@ test('should error when a custom property declared via @property is never used',
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unused custom property "--unused-color" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unused custom property "--unused-color" (${rule_name})`)
 })
 
 test('ignores options when options.ignore types are incorrect', async () => {
@@ -331,9 +329,7 @@ test('should still error when a declared property is not used in the current fil
 
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(
-		`Unexpected unused custom property "--never-used" (${rule_name})`,
-	)
+	expect(warnings[0].text).toBe(`Unexpected unused custom property "--never-used" (${rule_name})`)
 })
 
 test('should not error when a declared property is used inside light-dark()', async () => {

@@ -82,7 +82,9 @@ test('should error when nesting exceeds the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({ rule: rule_name, severity: 'error' })
-	expect(warnings[0].text).toBe(`Expected a nesting depth of no more than 1 but found 2 (${rule_name})`)
+	expect(warnings[0].text).toBe(
+		`Expected a nesting depth of no more than 1 but found 2 (${rule_name})`,
+	)
 })
 
 test('should report each violating node separately', async () => {
@@ -97,14 +99,18 @@ test('should error when at-rule nesting exceeds the limit', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(`Expected a nesting depth of no more than 1 but found 2 (${rule_name})`)
+	expect(warnings[0].text).toBe(
+		`Expected a nesting depth of no more than 1 but found 2 (${rule_name})`,
+	)
 })
 
 test('should error when 0 is configured and any nesting is used', async () => {
 	const { warnings, errored } = await lint(`.sidebar { .nav-link { color: blue; } }`, 0)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
-	expect(warnings[0].text).toBe(`Expected a nesting depth of no more than 0 but found 1 (${rule_name})`)
+	expect(warnings[0].text).toBe(
+		`Expected a nesting depth of no more than 0 but found 1 (${rule_name})`,
+	)
 })
 
 test('should report violation at the rule level', async () => {
