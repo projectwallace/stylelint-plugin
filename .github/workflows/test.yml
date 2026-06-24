@@ -37,10 +37,6 @@ jobs:
         if: matrix.stylelint == '16'
         run: pnpm add -D stylelint@16
       - run: pnpm test
-      - uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6
-        if: matrix.node == 24 && matrix.stylelint == '17'
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
 
   typecheck:
     name: Type check
@@ -67,8 +63,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   lint:
     name: Lint
