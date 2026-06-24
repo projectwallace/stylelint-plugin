@@ -34,6 +34,56 @@ a {
 
 ## Options
 
+### `disallow: Array<string | RegExp>`
+
+Restricts the rule to only flag the specified shorthand properties. When set, all other shorthands are permitted. Accepts exact strings, regular expressions, or strings wrapped in `/` delimiters treated as regular expressions.
+
+This is the inverse of `ignore` — instead of listing every shorthand you want to allow, you list only the few you want to forbid.
+
+<!-- prettier-ignore -->
+```json
+[true, { "disallow": ["font", "animation", "transition"] }]
+```
+
+The following are _not_ considered violations when `disallow: ["font", "animation", "transition"]` is set:
+
+<!-- prettier-ignore -->
+```css
+a {
+	background: red;
+}
+```
+
+<!-- prettier-ignore -->
+```css
+a {
+	border: 1px solid red;
+}
+```
+
+The following _are_ still violations:
+
+<!-- prettier-ignore -->
+```css
+a {
+	font: bold 16px/1.5 sans-serif;
+}
+```
+
+<!-- prettier-ignore -->
+```css
+a {
+	animation: foo 1s ease;
+}
+```
+
+`disallow` can be combined with `ignore: ["single-value"]` to additionally exempt single-value declarations from the disallowed set:
+
+<!-- prettier-ignore -->
+```json
+[true, { "disallow": ["font"], "ignore": ["single-value"] }]
+```
+
 ### `ignore: Array<string | RegExp | "single-value">`
 
 Allows specific shorthand properties or patterns to be used. Accepts exact strings, regular expressions, the special keyword `"single-value"`, or strings wrapped in `/` delimiters (e.g. `"/^border/"`) which are treated as regular expressions — enabling regex patterns in JSON config files.
