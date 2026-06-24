@@ -216,6 +216,94 @@ test('should still error on multi-value shorthands when "single-value" is ignore
 	expect(warnings).toHaveLength(1)
 })
 
+test('should only flag properties in the disallow list', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { font: bold 16px sans-serif; animation: foo 1s; background: red }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { disallow: ['font', 'animation'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(2)
+	expect(warnings[0].text).toBe(`Unexpected shorthand property "font" (${rule_name})`)
+	expect(warnings[1].text).toBe(`Unexpected shorthand property "animation" (${rule_name})`)
+})
+
+test('should not flag shorthands not in the disallow list', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { background: red; border: 1px solid blue }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { disallow: ['font'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should support RegExp patterns in disallow', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { border: 1px solid red; border-radius: 4px; background: red }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { disallow: [/^border/] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(2)
+})
+
+test('should combine disallow with ignore single-value', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { font: inherit; font: bold 16px sans-serif }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { disallow: ['font'], ignore: ['single-value'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(`Unexpected shorthand property "font" (${rule_name})`)
+})
+
+test('should not flag a property that is in both disallow and ignore', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { font: bold 16px sans-serif }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { disallow: ['font'], ignore: ['font'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should combine "single-value" with property name ignores', async () => {
 	const {
 		results: [{ warnings, errored }],

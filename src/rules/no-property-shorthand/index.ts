@@ -18,6 +18,7 @@ const meta = {
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
+	disallow?: Array<string | RegExp>
 }
 
 const not_custom_property = /^(?!--)/
@@ -34,7 +35,10 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 			{ actual: primaryOption, possible: [true] },
 			{
 				actual: secondaryOptions,
-				possible: { ignore: [...ignore_option_validators, (v: unknown) => v === 'single-value'] },
+				possible: {
+					ignore: [...ignore_option_validators, (v: unknown) => v === 'single-value'],
+					disallow: ignore_option_validators,
+				},
 				optional: true,
 			},
 		)
@@ -44,6 +48,7 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
+		const disallow = secondaryOptions?.disallow ?? []
 		const ignore_single_value = ignore.includes('single-value')
 		const property_ignore = ignore.filter((x) => x !== 'single-value')
 
@@ -51,17 +56,19 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 			const property = declaration.prop.toLowerCase()
 
 			if (!shorthand_properties.has(property)) {
-				// Not a shorthand property
 				return
 			}
 
 			if (ignore_single_value && is_single_value(declaration.value)) {
-				// Single value and allowed to ignore
+				return
+			}
+
+			if (disallow.length > 0 && !is_allowed(property, disallow)) {
+				// disallow is set but this property is not in it — skip
 				return
 			}
 
 			if (property_ignore.length > 0 && is_allowed(property, property_ignore)) {
-				// This property is ignored
 				return
 			}
 
