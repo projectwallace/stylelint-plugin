@@ -58,8 +58,7 @@ const ruleFunction = (primaryOption: number) => {
 
 		const actual = unique_units.size
 		for (const { declaration, start, end } of violating_declarations) {
-			const value_offset =
-				declaration.prop.length + (declaration.raws.between ?? ': ').length
+			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,

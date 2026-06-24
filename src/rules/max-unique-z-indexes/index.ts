@@ -76,8 +76,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const actual = unique_zindexes.size
 		for (const { declaration, start, end } of violating_declarations) {
-			const value_offset =
-				declaration.prop.length + (declaration.raws.between ?? ': ').length
+			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
