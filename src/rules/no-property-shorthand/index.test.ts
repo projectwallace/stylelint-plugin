@@ -287,6 +287,23 @@ test('should combine disallow with ignore single-value', async () => {
 	expect(warnings[0].text).toBe(`Unexpected shorthand property "font" (${rule_name})`)
 })
 
+test('should not flag a property that is in both disallow and ignore', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { font: bold 16px sans-serif }`,
+		config: {
+			plugins: [plugin],
+			rules: {
+				[rule_name]: [true, { disallow: ['font'], ignore: ['font'] }],
+			},
+		},
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should combine "single-value" with property name ignores', async () => {
 	const {
 		results: [{ warnings, errored }],
