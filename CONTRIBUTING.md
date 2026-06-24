@@ -24,6 +24,10 @@
 6. Only use `@projectwallace/css-parser` methods `parse_value()`, `parse_selector()`, `parse_selector_list()` or `parse_atrule_prelude()`. Other parsing methods SHOULD NOT be necessary.
 7. If the rule should allow users to exclude specific values, add a secondary `ignore` option (see [the `ignore` option pattern](#the-ignore-option-pattern) below).
 
+## Rule conventions
+
+This project follows the [stylelint contributor guide for rules](https://github.com/stylelint/stylelint/blob/main/docs/contributor-guide/rules.md) for message wording, error positioning, README structure, and test conventions. Refer to that guide before inventing new patterns; the sections below document conventions we follow and any project-specific additions.
+
 ## Rule README guidelines
 
 Every rule's `README.md` must follow this structure exactly:
