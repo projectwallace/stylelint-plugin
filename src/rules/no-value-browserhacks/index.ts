@@ -28,11 +28,12 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 			const value = declaration.value.trim()
-			isValueBrowserhack(parse_value(value), function () {
+			isValueBrowserhack(parse_value(value), function (hack) {
 				utils.report({
-					message: messages.rejected(value),
+					message: messages.rejected(hack),
 					node: declaration,
-					word: value,
+					// hacks like `alpha()` are not in the CSS (`alpha(opacity=50)`) so in that case we report the whole value
+					word: value.includes(hack) ? hack : value,
 					result,
 					ruleName: rule_name,
 				})

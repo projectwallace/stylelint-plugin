@@ -17,7 +17,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-static-container-queries'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (feature: string, value: string) => `Unexpected static value in container query`,
+	rejected: () => `Unexpected static value in container query`,
 })
 
 const meta = {
@@ -110,7 +110,7 @@ const ruleFunction = (primaryOption: true) => {
 			if (static_feature !== null) {
 				const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
 				utils.report({
-					message: messages.rejected(static_feature.feature, static_feature.value),
+					message: messages.rejected(),
 					node: at_rule,
 					index: params_offset + static_feature.start,
 					endIndex: params_offset + static_feature.end,
