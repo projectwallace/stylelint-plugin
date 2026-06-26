@@ -190,6 +190,17 @@ test('should error when a keyframe is declared but never used', async () => {
 	expect(warnings[0].text).toBe(`Unexpected unused keyframe "slide-in" (${rule_name})`)
 })
 
+test('should mark the whole atrule node, not just the keyframe name', async () => {
+	const { warnings } = await lint(
+		'@keyframes slide-in { from { opacity: 0; } to { opacity: 1; } } test {}',
+		true,
+	)
+	// column 1 = start of `@keyframes`; if `word` were set to the name,
+	// column would point to `slide-in` (column 12) instead
+	expect(warnings[0].column).toBe(1)
+	expect(warnings[0].endColumn).toBe(64)
+})
+
 test('should error when one of multiple keyframes is unused', async () => {
 	const { warnings, errored } = await lint(
 		`
