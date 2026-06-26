@@ -9,7 +9,7 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/max-selector-complexity'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (selector: string, actual: number, expected: number) =>
+	rejected: (actual: number, expected: number) =>
 		`Expected a selector complexity of no more than ${expected} but found ${actual}`,
 })
 
@@ -37,11 +37,10 @@ const ruleFunction = (primaryOption: number) => {
 
 			for (const selector of selector_list) {
 				const complexity = getComplexity(selector)
-				const stringified = selector.text.replace(/\n/g, '')
 
 				if (complexity > primaryOption) {
 					utils.report({
-						message: messages.rejected(stringified, complexity, primaryOption),
+						message: messages.rejected(complexity, primaryOption),
 						node: rule,
 						index: selector.start,
 						endIndex: selector.end,

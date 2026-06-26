@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { format_filesize } from '../../utils/format-bytes.js'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint

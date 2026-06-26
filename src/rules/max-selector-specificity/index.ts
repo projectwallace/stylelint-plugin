@@ -11,7 +11,7 @@ const rule_name = 'projectwallace/max-selector-specificity'
 type Specificity = [number, number, number]
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (selector: string, actual: string, expected: string) =>
+	rejected: (actual: string, expected: string) =>
 		`Expected specificity of no more than [${expected}] but found [${actual}]`,
 })
 
@@ -49,11 +49,7 @@ const ruleFunction = (primaryOption: Specificity) => {
 				const selector_node = selector_list.children[i]
 				if (compareSpecificity(specificity, primaryOption) > 0) {
 					utils.report({
-						message: messages.rejected(
-							selector_node?.text,
-							specificity.join(', '),
-							primaryOption.join(', '),
-						),
+						message: messages.rejected(specificity.join(', '), primaryOption.join(', ')),
 						node: rule,
 						index: selector_node?.start ?? 0,
 						endIndex: selector_node?.end ?? rule.selector.length,

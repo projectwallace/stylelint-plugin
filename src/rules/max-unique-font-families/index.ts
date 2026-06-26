@@ -25,6 +25,8 @@ interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
 }
 
+function noop() {}
+
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = utils.validateOptions(
@@ -68,7 +70,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		root.walkDecls('font', (declaration) => {
 			const before = unique_families.size
 			const parsed = parse_value(declaration.value)
-			const destructured = destructureFontShorthand(parsed, () => {})
+			const destructured = destructureFontShorthand(parsed, noop)
 			if (destructured?.font_family && !is_allowed(destructured.font_family, ignore)) {
 				unique_families.add(destructured.font_family)
 			}

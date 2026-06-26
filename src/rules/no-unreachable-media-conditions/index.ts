@@ -35,10 +35,8 @@ const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-unreachable-media-conditions'
 
 const messages = utils.ruleMessages(rule_name, {
-	rejected: (feature: string, lower: string, upper: string) =>
-		`Unexpected unreachable media condition`,
-	rejected_nested: (feature: string, lower: string, upper: string) =>
-		`Unexpected unreachable media condition`,
+	rejected: () => `Unexpected unreachable media condition`,
+	rejected_nested: () => `Unexpected unreachable media condition`,
 })
 
 const meta = {
@@ -107,10 +105,8 @@ const ruleFunction = (primaryOption: true) => {
 			const contradictory_feature = find_contradiction_in_prelude(at_rule.name, prelude)
 
 			if (contradictory_feature !== null) {
-				const lower = `${contradictory_feature.lower.value}${contradictory_feature.lower.unit}`
-				const upper = `${contradictory_feature.upper.value}${contradictory_feature.upper.unit}`
 				utils.report({
-					message: messages.rejected(contradictory_feature.feature, lower, upper),
+					message: messages.rejected(),
 					node: at_rule,
 					result,
 					ruleName: rule_name,
@@ -178,10 +174,8 @@ const ruleFunction = (primaryOption: true) => {
 
 			if (nested_contradiction === null) return
 
-			const lower = `${nested_contradiction.lower.value}${nested_contradiction.lower.unit}`
-			const upper = `${nested_contradiction.upper.value}${nested_contradiction.upper.unit}`
 			utils.report({
-				message: messages.rejected_nested(nested_contradiction.feature, lower, upper),
+				message: messages.rejected_nested(),
 				node: atRule,
 				word: '@media',
 				result,

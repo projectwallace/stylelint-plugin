@@ -36,8 +36,8 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 		const ignore = secondaryOptions?.ignore ?? []
 
 		root.walkRules((rule) => {
-			const selector_text = rule.selector
-			if (!selector_text.trim()) return
+			const selector_text = rule.selector.trim()
+			if (!selector_text) return
 
 			const selector_list = parse_selector_list(selector_text)
 
@@ -45,7 +45,7 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 				walk(selector, (node) => {
 					if (node.is_vendor_prefixed && !is_allowed(node.text, ignore)) {
 						utils.report({
-							message: messages.rejected(selector.text),
+							message: messages.rejected(node.text),
 							node: rule,
 							index: node.start,
 							endIndex: node.end,

@@ -3,7 +3,6 @@ import type { Root } from 'postcss'
 import { walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_url } from '@projectwallace/css-parser'
-import { format_filesize } from '../../utils/format-bytes.js'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 
 const { createPlugin, utils } = stylelint

@@ -53,14 +53,22 @@ test('should not error on standard linear-gradient', async () => {
 // ---------------------------------------------------------------------------
 
 test.each([
-	['a { display: -webkit-flex }', 14, 26],
-	['a { background: -webkit-linear-gradient(top, red, blue) }', 17, 56],
-])('should error when value contains vendor prefix', async (code, column, endColumn) => {
+	['a { display: -webkit-flex }', 14, 26, '-webkit-flex'],
+	[
+		'a { background: -webkit-linear-gradient(top, red, blue) }',
+		17,
+		56,
+		'-webkit-linear-gradient(top, red, blue)',
+	],
+])('should error when value contains vendor prefix', async (code, column, endColumn, substring) => {
 	const { warnings, errored } = await lint(code, true)
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].column).toBe(column)
 	expect(warnings[0].endColumn).toBe(endColumn)
+	expect(warnings[0].text).toBe(
+		`Unexpected vendor-prefixed value "${substring}" (projectwallace/no-prefixed-values)`,
+	)
 })
 
 test('should error on custom property', async () => {

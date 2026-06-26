@@ -56,18 +56,21 @@ test('should not error on standard ::selection', async () => {
 // ---------------------------------------------------------------------------
 
 test.each([
-	['input::-webkit-input-placeholder { color: red }', 6, 33],
-	['::-moz-placeholder { color: red }', 1, 19],
-	['::-webkit-scrollbar { width: 8px }', 1, 20],
-	['::-moz-selection { background: blue }', 1, 17],
+	['input::-webkit-input-placeholder { color: red }', 6, 33, '::-webkit-input-placeholder'],
+	['::-moz-placeholder { color: red }', 1, 19, '::-moz-placeholder'],
+	['::-webkit-scrollbar { width: 8px }', 1, 20, '::-webkit-scrollbar'],
+	['::-moz-selection { background: blue }', 1, 17, '::-moz-selection'],
 ])(
 	'should error when selector contains vendor-prefixed pseudo',
-	async (code, column, endColumn) => {
-		const { warnings, errored } = await lint(code, true)
+	async (selector, column, endColumn, substring) => {
+		const { warnings, errored } = await lint(selector, true)
 		expect(errored).toBe(true)
 		expect(warnings).toHaveLength(1)
 		expect(warnings[0].column).toBe(column)
 		expect(warnings[0].endColumn).toBe(endColumn)
+		expect(warnings[0].text).toBe(
+			`Unexpected vendor-prefixed selector "${substring}" (projectwallace/no-prefixed-selectors)`,
+		)
 	},
 )
 
