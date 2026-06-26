@@ -88,7 +88,6 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				ruleName: rule_name,
 				message: messages.rejected(name),
 				node,
-				word: name,
 			})
 		}
 	}
