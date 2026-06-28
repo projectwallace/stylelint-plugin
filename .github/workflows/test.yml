@@ -19,7 +19,7 @@ jobs:
       matrix:
         include:
           - node: 22
-            stylelint: '16'
+            stylelint: '16.26'
           - node: 22
             stylelint: '17.8'
           - node: 22
