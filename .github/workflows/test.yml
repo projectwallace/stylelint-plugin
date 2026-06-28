@@ -23,6 +23,8 @@ jobs:
           - node: 22
             stylelint: '17.0'
           - node: 22
+            stylelint: '17.8'
+          - node: 22
             stylelint: '17'
           - node: 24
             stylelint: '17'
