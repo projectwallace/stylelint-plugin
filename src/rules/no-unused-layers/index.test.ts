@@ -350,10 +350,7 @@ test('should not error when no layer statements exist', async () => {
 test.runIf(supportsReferenceFiles)(
 	'should not error when layer is declared but used as a block layer in a referenceFiles file',
 	async () => {
-		const file = write_fixture(
-			'utilities.css',
-			'@layer utilities { .u-flex { display: flex; } }',
-		)
+		const file = write_fixture('utilities.css', '@layer utilities { .u-flex { display: flex; } }')
 		const {
 			results: [{ warnings, errored }],
 		} = await stylelint.lint({

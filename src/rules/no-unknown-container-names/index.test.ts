@@ -386,8 +386,6 @@ test.runIf(supportsReferenceFiles)(
 		})
 		expect(errored).toBe(true)
 		expect(warnings.length).toBe(1)
-		expect(warnings[0].text).toBe(
-			`Unexpected unknown container name "unknown" (${rule_name})`,
-		)
+		expect(warnings[0].text).toBe(`Unexpected unknown container name "unknown" (${rule_name})`)
 	},
 )

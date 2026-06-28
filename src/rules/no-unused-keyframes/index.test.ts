@@ -278,10 +278,7 @@ test('should still error when ignore does not match the unused keyframe name', a
 test.runIf(supportsReferenceFiles)(
 	'should not error when keyframe is declared but used via animation-name in a referenceFiles file',
 	async () => {
-		const file = write_fixture(
-			'component.css',
-			'a { animation-name: slide-in; }',
-		)
+		const file = write_fixture('component.css', 'a { animation-name: slide-in; }')
 		const {
 			results: [{ warnings, errored }],
 		} = await stylelint.lint({
@@ -300,10 +297,7 @@ test.runIf(supportsReferenceFiles)(
 test.runIf(supportsReferenceFiles)(
 	'should not error when keyframe is declared but used via animation shorthand in a referenceFiles file',
 	async () => {
-		const file = write_fixture(
-			'component.css',
-			'a { animation: slide-in 1s linear; }',
-		)
+		const file = write_fixture('component.css', 'a { animation: slide-in 1s linear; }')
 		const {
 			results: [{ warnings, errored }],
 		} = await stylelint.lint({
