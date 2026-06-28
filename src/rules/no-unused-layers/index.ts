@@ -74,8 +74,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
-		for (const refRoot of referenceRoots) {
-			refRoot.walkAtRules('layer', (atRule) => {
+		for (const referenceRoot of referenceRoots) {
+			referenceRoot.walkAtRules('layer', (atRule) => {
 				if (atRule.nodes !== undefined) {
 					const name = atRule.params.trim()
 					if (name) {
@@ -84,7 +84,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					}
 				}
 			})
-			refRoot.walkAtRules('import', (atRule) => {
+			referenceRoot.walkAtRules('import', (atRule) => {
 				const parsed = parse_atrule_prelude('import', atRule.params)
 				for (const child of parsed) {
 					if (child.type === LAYER_NAME && child.name) {

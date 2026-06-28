@@ -70,8 +70,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
-		for (const refRoot of referenceRoots) {
-			refRoot.walkDecls((decl) => {
+		for (const referenceRoot of referenceRoots) {
+			referenceRoot.walkDecls((decl) => {
 				walk(parse_value(decl.value), (node) => {
 					if (node.type !== FUNCTION || node.name !== 'var') {
 						return

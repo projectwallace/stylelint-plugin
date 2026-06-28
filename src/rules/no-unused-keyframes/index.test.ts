@@ -1,31 +1,9 @@
 import stylelint from 'stylelint'
-import { test, expect, afterEach } from 'vitest'
-import fs from 'node:fs'
-import os from 'node:os'
-import path from 'node:path'
+import { test, expect } from 'vitest'
 import plugin from './index.js'
+import { supportsReferenceFiles, createFixtures } from '../test-utils.js'
 
-import stylelintPkg from 'stylelint/package.json' with { type: 'json' }
-const [major, minor] = stylelintPkg.version.split('.').map(Number)
-const supportsReferenceFiles = major > 17 || (major === 17 && minor >= 9)
-
-let tmp_dir: string
-
-function write_fixture(name: string, content: string): string {
-	if (!tmp_dir) {
-		tmp_dir = fs.mkdtempSync(path.join(os.tmpdir(), 'no-unused-keyframes-test-'))
-	}
-	const file_path = path.join(tmp_dir, name)
-	fs.writeFileSync(file_path, content, 'utf8')
-	return file_path
-}
-
-afterEach(() => {
-	if (tmp_dir) {
-		fs.rmSync(tmp_dir, { recursive: true, force: true })
-		tmp_dir = undefined!
-	}
-})
+const write_fixture = createFixtures('no-unused-keyframes-test-')
 
 const rule_name = 'projectwallace/no-unused-keyframes'
 

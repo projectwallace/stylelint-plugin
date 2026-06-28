@@ -14,10 +14,8 @@ function collect_declared_properties(root: Root, declared: Set<string>): void {
 			declared.add(property_name)
 		}
 	})
-	root.walkDecls((decl) => {
-		if (decl.prop.startsWith('--')) {
-			declared.add(decl.prop)
-		}
+	root.walkDecls(/^--/, (decl) => {
+		declared.add(decl.prop)
 	})
 }
 
@@ -62,8 +60,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
-		for (const refRoot of referenceRoots) {
-			collect_declared_properties(refRoot, declared_properties)
+		for (const referenceRoot of referenceRoots) {
+			collect_declared_properties(referenceRoot, declared_properties)
 		}
 
 		root.walkDecls((decl) => {

@@ -56,8 +56,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
-		for (const refRoot of referenceRoots) {
-			collect_container_names(refRoot, declared_names)
+		for (const referenceRoot of referenceRoots) {
+			collect_container_names(referenceRoot, declared_names)
 		}
 
 		root.walkAtRules('container', (atRule) => {

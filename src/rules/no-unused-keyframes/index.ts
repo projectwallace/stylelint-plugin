@@ -80,8 +80,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
-		for (const refRoot of referenceRoots) {
-			refRoot.walkDecls(/^animation-name$/i, (decl) => {
+		for (const referenceRoot of referenceRoots) {
+			referenceRoot.walkDecls(/^animation-name$/i, (decl) => {
 				const ast = parse_value(decl.value)
 				for (const node of ast) {
 					if (node.type === IDENTIFIER) {
@@ -93,7 +93,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					}
 				}
 			})
-			refRoot.walkDecls(/^animation$/i, (decl) => {
+			referenceRoot.walkDecls(/^animation$/i, (decl) => {
 				const ast = parse_value(decl.value)
 				analyzeAnimation(ast, ({ type, value }) => {
 					if (type === 'name') {
