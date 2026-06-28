@@ -1,9 +1,15 @@
 import stylelint from 'stylelint'
+import { createRequire } from 'node:module'
 import { test, expect, afterEach } from 'vitest'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import plugin from './index.js'
+
+const _require = createRequire(import.meta.url)
+const _stylelintVersion: string = (_require('stylelint/package.json') as { version: string }).version
+const [major, minor] = _stylelintVersion.split('.').map(Number)
+const supportsReferenceFiles = major > 17 || (major === 17 && minor >= 9)
 
 let tmp_dir: string
 
@@ -357,3 +363,42 @@ test('should not error when a declared property is used inside light-dark()', as
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test.skipIf(!supportsReferenceFiles)(
+	'should not error when custom property is declared but used in a referenceFiles file',
+	async () => {
+		const file = write_fixture('component.css', 'a { color: var(--color); }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: ':root { --color: red; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.skipIf(!supportsReferenceFiles)(
+	'should still error when custom property is declared and not used anywhere including referenceFiles',
+	async () => {
+		const file = write_fixture('component.css', 'a { color: var(--other); }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: ':root { --color: red; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unused custom property "--color" (${rule_name})`)
+	},
+)

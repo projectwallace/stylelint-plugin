@@ -21,6 +21,8 @@ jobs:
           - node: 22
             stylelint: '16'
           - node: 22
+            stylelint: '17.0'
+          - node: 22
             stylelint: '17'
           - node: 24
             stylelint: '17'
@@ -34,9 +36,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Override stylelint version
-        if: matrix.stylelint == '16'
-        run: pnpm add -D stylelint@16
+        if: matrix.stylelint != '17'
+        run: pnpm add -D stylelint@${{ matrix.stylelint }}
       - run: pnpm test
+        env:
+          STYLELINT_VERSION: ${{ matrix.stylelint }}
 
   typecheck:
     name: Type check

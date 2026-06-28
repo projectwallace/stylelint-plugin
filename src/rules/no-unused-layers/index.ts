@@ -72,6 +72,29 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			}
 		})
 
+		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
+		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
+		for (const refRoot of referenceRoots) {
+			refRoot.walkAtRules('layer', (atRule) => {
+				if (atRule.nodes !== undefined) {
+					const name = atRule.params.trim()
+					if (name) {
+						tracker.use(name)
+						mark_ancestors_used(name, tracker)
+					}
+				}
+			})
+			refRoot.walkAtRules('import', (atRule) => {
+				const parsed = parse_atrule_prelude('import', atRule.params)
+				for (const child of parsed) {
+					if (child.type === LAYER_NAME && child.name) {
+						tracker.use(child.name)
+						mark_ancestors_used(child.name, tracker)
+					}
+				}
+			})
+		}
+
 		for (const [layer, node] of tracker.unused()) {
 			if (secondaryOptions?.ignore && is_allowed(layer, secondaryOptions.ignore)) {
 				continue

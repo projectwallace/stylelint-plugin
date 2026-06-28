@@ -1,6 +1,33 @@
 import stylelint from 'stylelint'
-import { test, expect } from 'vitest'
+import { createRequire } from 'node:module'
+import { test, expect, afterEach } from 'vitest'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import plugin from './index.js'
+
+const _require = createRequire(import.meta.url)
+const _stylelintVersion: string = (_require('stylelint/package.json') as { version: string }).version
+const [major, minor] = _stylelintVersion.split('.').map(Number)
+const supportsReferenceFiles = major > 17 || (major === 17 && minor >= 9)
+
+let tmp_dir: string
+
+function write_fixture(name: string, content: string): string {
+	if (!tmp_dir) {
+		tmp_dir = fs.mkdtempSync(path.join(os.tmpdir(), 'no-unused-container-names-test-'))
+	}
+	const file_path = path.join(tmp_dir, name)
+	fs.writeFileSync(file_path, content, 'utf8')
+	return file_path
+}
+
+afterEach(() => {
+	if (tmp_dir) {
+		fs.rmSync(tmp_dir, { recursive: true, force: true })
+		tmp_dir = undefined!
+	}
+})
 
 const rule_name = 'projectwallace/no-unused-container-names'
 
@@ -294,3 +321,48 @@ test('should still error when ignore does not match the unused container name', 
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(`Unexpected unused container name "sidebar" (${rule_name})`)
 })
+
+test.skipIf(!supportsReferenceFiles)(
+	'should not error when container name is declared but queried in a referenceFiles file',
+	async () => {
+		const file = write_fixture(
+			'component.css',
+			'@container sidebar (min-width: 700px) { .card { font-size: 1rem; } }',
+		)
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '.sidebar { container-name: sidebar; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.skipIf(!supportsReferenceFiles)(
+	'should still error when container name is declared and not queried anywhere including referenceFiles',
+	async () => {
+		const file = write_fixture(
+			'component.css',
+			'@container other (min-width: 700px) { .card { font-size: 1rem; } }',
+		)
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '.sidebar { container-name: sidebar; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unused container name "sidebar" (${rule_name})`)
+	},
+)

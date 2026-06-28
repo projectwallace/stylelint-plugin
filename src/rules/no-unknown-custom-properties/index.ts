@@ -7,6 +7,20 @@ import { collect_declarations_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
 import { is_allowed } from '../../utils/option-validators.js'
 
+function collect_declared_properties(root: Root, declared: Set<string>): void {
+	root.walkAtRules('property', (atRule) => {
+		const property_name = atRule.params.trim()
+		if (property_name.startsWith('--')) {
+			declared.add(property_name)
+		}
+	})
+	root.walkDecls((decl) => {
+		if (decl.prop.startsWith('--')) {
+			declared.add(decl.prop)
+		}
+	})
+}
+
 const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unknown-custom-properties'
@@ -38,23 +52,18 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const declared_properties = new Set<string>()
 
-		root.walkAtRules('property', (atRule) => {
-			const property_name = atRule.params.trim()
-			if (property_name.startsWith('--')) {
-				declared_properties.add(property_name)
-			}
-		})
-
-		root.walkDecls((decl) => {
-			if (decl.prop.startsWith('--')) {
-				declared_properties.add(decl.prop)
-			}
-		})
+		collect_declared_properties(root, declared_properties)
 
 		if (secondaryOptions?.importFrom?.length) {
 			for (const name of collect_declarations_from_files(secondaryOptions.importFrom)) {
 				declared_properties.add(name)
 			}
+		}
+
+		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
+		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
+		for (const refRoot of referenceRoots) {
+			collect_declared_properties(refRoot, declared_properties)
 		}
 
 		root.walkDecls((decl) => {

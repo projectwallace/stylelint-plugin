@@ -6,6 +6,23 @@ import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-pr
 import { keywords } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
 
+function collect_container_names(root: Root, declared: Set<string>): void {
+	root.walkDecls(/^container(-name)?$/i, (decl) => {
+		if (keywords.has(decl.value.trim())) {
+			return
+		}
+		const ast = parse_value(decl.value)
+		for (const node of ast) {
+			if (node.type === OPERATOR) {
+				break
+			}
+			if (node.type === IDENTIFIER) {
+				declared.add(node.text)
+			}
+		}
+	})
+}
+
 const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unknown-container-names'
@@ -35,20 +52,13 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const declared_names = new Set<string>()
 
-		root.walkDecls(/^container(-name)?$/i, (decl) => {
-			if (keywords.has(decl.value.trim())) {
-				return
-			}
-			const ast = parse_value(decl.value)
-			for (const node of ast) {
-				if (node.type === OPERATOR) {
-					break
-				}
-				if (node.type === IDENTIFIER) {
-					declared_names.add(node.text)
-				}
-			}
-		})
+		collect_container_names(root, declared_names)
+
+		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
+		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
+		for (const refRoot of referenceRoots) {
+			collect_container_names(refRoot, declared_names)
+		}
 
 		root.walkAtRules('container', (atRule) => {
 			const prelude = parse_atrule_prelude('container', atRule.params.trim())

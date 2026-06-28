@@ -1,6 +1,33 @@
 import stylelint from 'stylelint'
-import { test, expect } from 'vitest'
+import { createRequire } from 'node:module'
+import { test, expect, afterEach } from 'vitest'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import plugin from './index.js'
+
+const _require = createRequire(import.meta.url)
+const _stylelintVersion: string = (_require('stylelint/package.json') as { version: string }).version
+const [major, minor] = _stylelintVersion.split('.').map(Number)
+const supportsReferenceFiles = major > 17 || (major === 17 && minor >= 9)
+
+let tmp_dir: string
+
+function write_fixture(name: string, content: string): string {
+	if (!tmp_dir) {
+		tmp_dir = fs.mkdtempSync(path.join(os.tmpdir(), 'no-unused-keyframes-test-'))
+	}
+	const file_path = path.join(tmp_dir, name)
+	fs.writeFileSync(file_path, content, 'utf8')
+	return file_path
+}
+
+afterEach(() => {
+	if (tmp_dir) {
+		fs.rmSync(tmp_dir, { recursive: true, force: true })
+		tmp_dir = undefined!
+	}
+})
 
 const rule_name = 'projectwallace/no-unused-keyframes'
 
@@ -249,3 +276,67 @@ test('should still error when ignore does not match the unused keyframe name', a
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(`Unexpected unused keyframe "slide-in" (${rule_name})`)
 })
+
+test.skipIf(!supportsReferenceFiles)(
+	'should not error when keyframe is declared but used via animation-name in a referenceFiles file',
+	async () => {
+		const file = write_fixture(
+			'component.css',
+			'a { animation-name: slide-in; }',
+		)
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@keyframes slide-in { from { opacity: 0; } to { opacity: 1; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.skipIf(!supportsReferenceFiles)(
+	'should not error when keyframe is declared but used via animation shorthand in a referenceFiles file',
+	async () => {
+		const file = write_fixture(
+			'component.css',
+			'a { animation: slide-in 1s linear; }',
+		)
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@keyframes slide-in { from { opacity: 0; } to { opacity: 1; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.skipIf(!supportsReferenceFiles)(
+	'should still error when keyframe is declared and not used anywhere including referenceFiles',
+	async () => {
+		const file = write_fixture('component.css', 'a { animation-name: other; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@keyframes slide-in { from { opacity: 0; } to { opacity: 1; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unused keyframe "slide-in" (${rule_name})`)
+	},
+)

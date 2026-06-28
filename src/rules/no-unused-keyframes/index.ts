@@ -78,6 +78,36 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			}
 		})
 
+		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
+		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
+		for (const refRoot of referenceRoots) {
+			refRoot.walkDecls(/^animation-name$/i, (decl) => {
+				const ast = parse_value(decl.value)
+				for (const node of ast) {
+					if (node.type === IDENTIFIER) {
+						if (node.text.toLowerCase() !== 'none') {
+							tracker.use(node.text)
+						}
+					} else if (node.type === STRING) {
+						tracker.use(node.text)
+					}
+				}
+			})
+			refRoot.walkDecls(/^animation$/i, (decl) => {
+				const ast = parse_value(decl.value)
+				analyzeAnimation(ast, ({ type, value }) => {
+					if (type === 'name') {
+						tracker.use(value.text)
+					}
+				})
+				for (const node of ast) {
+					if (node.type === STRING) {
+						tracker.use(node.text)
+					}
+				}
+			})
+		}
+
 		for (const [name, node] of tracker.unused()) {
 			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) {
 				continue
