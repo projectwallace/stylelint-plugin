@@ -1,14 +1,12 @@
 import stylelint from 'stylelint'
-import { createRequire } from 'node:module'
 import { test, expect, afterEach } from 'vitest'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import plugin from './index.js'
 
-const _require = createRequire(import.meta.url)
-const _stylelintVersion: string = (_require('stylelint/package.json') as { version: string }).version
-const [major, minor] = _stylelintVersion.split('.').map(Number)
+import stylelintPkg from 'stylelint/package.json' with { type: 'json' }
+const [major, minor] = stylelintPkg.version.split('.').map(Number)
 const supportsReferenceFiles = major > 17 || (major === 17 && minor >= 9)
 
 let tmp_dir: string
@@ -277,7 +275,7 @@ test('should still error when ignore does not match the unused keyframe name', a
 	expect(warnings[0].text).toBe(`Unexpected unused keyframe "slide-in" (${rule_name})`)
 })
 
-test.skipIf(!supportsReferenceFiles)(
+test.runIf(supportsReferenceFiles)(
 	'should not error when keyframe is declared but used via animation-name in a referenceFiles file',
 	async () => {
 		const file = write_fixture(
@@ -299,7 +297,7 @@ test.skipIf(!supportsReferenceFiles)(
 	},
 )
 
-test.skipIf(!supportsReferenceFiles)(
+test.runIf(supportsReferenceFiles)(
 	'should not error when keyframe is declared but used via animation shorthand in a referenceFiles file',
 	async () => {
 		const file = write_fixture(
@@ -321,7 +319,7 @@ test.skipIf(!supportsReferenceFiles)(
 	},
 )
 
-test.skipIf(!supportsReferenceFiles)(
+test.runIf(supportsReferenceFiles)(
 	'should still error when keyframe is declared and not used anywhere including referenceFiles',
 	async () => {
 		const file = write_fixture('component.css', 'a { animation-name: other; }')

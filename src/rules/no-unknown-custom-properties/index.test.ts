@@ -1,14 +1,12 @@
 import stylelint from 'stylelint'
-import { createRequire } from 'node:module'
 import { test, expect, afterEach } from 'vitest'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import plugin from './index.js'
 
-const _require = createRequire(import.meta.url)
-const _stylelintVersion: string = (_require('stylelint/package.json') as { version: string }).version
-const [major, minor] = _stylelintVersion.split('.').map(Number)
+import stylelintPkg from 'stylelint/package.json' with { type: 'json' }
+const [major, minor] = stylelintPkg.version.split('.').map(Number)
 const supportsReferenceFiles = major > 17 || (major === 17 && minor >= 9)
 
 let tmp_dir: string
@@ -398,7 +396,7 @@ test('should still error when var() uses a property not present in any importFro
 	)
 })
 
-test.skipIf(!supportsReferenceFiles)(
+test.runIf(supportsReferenceFiles)(
 	'should not error when var() uses a property declared in a referenceFiles file',
 	async () => {
 		const file = write_fixture('tokens.css', ':root { --token-color: red; }')
@@ -417,7 +415,7 @@ test.skipIf(!supportsReferenceFiles)(
 	},
 )
 
-test.skipIf(!supportsReferenceFiles)(
+test.runIf(supportsReferenceFiles)(
 	'should not error when var() uses a property declared via @property in a referenceFiles file',
 	async () => {
 		const file = write_fixture(
@@ -439,7 +437,7 @@ test.skipIf(!supportsReferenceFiles)(
 	},
 )
 
-test.skipIf(!supportsReferenceFiles)(
+test.runIf(supportsReferenceFiles)(
 	'should still error when var() uses a property not in any referenceFiles file',
 	async () => {
 		const file = write_fixture('tokens.css', ':root { --token-color: red; }')
