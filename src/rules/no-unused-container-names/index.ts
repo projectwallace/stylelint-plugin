@@ -59,6 +59,18 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			}
 		})
 
+		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
+		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
+		for (const referenceRoot of referenceRoots) {
+			referenceRoot.walkAtRules('container', (atRule) => {
+				const prelude = parse_atrule_prelude('container', atRule.params.trim())
+				const first_child = prelude.at(0)?.first_child
+				if (first_child?.type === IDENTIFIER) {
+					tracker.use(first_child.text)
+				}
+			})
+		}
+
 		for (const [name, node] of tracker.unused()) {
 			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) {
 				continue

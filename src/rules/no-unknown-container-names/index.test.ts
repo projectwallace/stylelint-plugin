@@ -1,6 +1,9 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
+import { supportsReferenceFiles, createFixtures } from '../test-utils.js'
+
+const write_fixture = createFixtures('no-unknown-container-names-test-')
 
 const rule_name = 'projectwallace/no-unknown-container-names'
 
@@ -325,3 +328,42 @@ test('should error for each unique unknown container name', async () => {
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(2)
 })
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when @container uses a name declared in a referenceFiles file',
+	async () => {
+		const file = write_fixture('layout.css', '.sidebar { container-name: sidebar; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@container sidebar (min-width: 700px) { .card { font-size: 1rem; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should still error when @container uses a name not in any referenceFiles file',
+	async () => {
+		const file = write_fixture('layout.css', '.sidebar { container-name: sidebar; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@container unknown (min-width: 700px) { .card { font-size: 1rem; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unknown container name "unknown" (${rule_name})`)
+	},
+)

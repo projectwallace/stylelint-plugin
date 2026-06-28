@@ -1,27 +1,9 @@
 import stylelint from 'stylelint'
-import { test, expect, afterEach } from 'vitest'
-import fs from 'node:fs'
-import os from 'node:os'
-import path from 'node:path'
+import { test, expect } from 'vitest'
 import plugin from './index.js'
+import { supportsReferenceFiles, createFixtures } from '../test-utils.js'
 
-let tmp_dir: string
-
-function write_fixture(name: string, content: string): string {
-	if (!tmp_dir) {
-		tmp_dir = fs.mkdtempSync(path.join(os.tmpdir(), 'no-unused-cp-test-'))
-	}
-	const file_path = path.join(tmp_dir, name)
-	fs.writeFileSync(file_path, content, 'utf8')
-	return file_path
-}
-
-afterEach(() => {
-	if (tmp_dir) {
-		fs.rmSync(tmp_dir, { recursive: true, force: true })
-		tmp_dir = undefined!
-	}
-})
+const write_fixture = createFixtures('no-unused-cp-test-')
 
 const rule_name = 'projectwallace/no-unused-custom-properties'
 
@@ -357,3 +339,42 @@ test('should not error when a declared property is used inside light-dark()', as
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when custom property is declared but used in a referenceFiles file',
+	async () => {
+		const file = write_fixture('component.css', 'a { color: var(--color); }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: ':root { --color: red; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should still error when custom property is declared and not used anywhere including referenceFiles',
+	async () => {
+		const file = write_fixture('component.css', 'a { color: var(--other); }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: ':root { --color: red; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unused custom property "--color" (${rule_name})`)
+	},
+)

@@ -1,6 +1,9 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
+import { supportsReferenceFiles, createFixtures } from '../test-utils.js'
+
+const write_fixture = createFixtures('no-unused-keyframes-test-')
 
 const rule_name = 'projectwallace/no-unused-keyframes'
 
@@ -249,3 +252,61 @@ test('should still error when ignore does not match the unused keyframe name', a
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(`Unexpected unused keyframe "slide-in" (${rule_name})`)
 })
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when keyframe is declared but used via animation-name in a referenceFiles file',
+	async () => {
+		const file = write_fixture('component.css', 'a { animation-name: slide-in; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@keyframes slide-in { from { opacity: 0; } to { opacity: 1; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when keyframe is declared but used via animation shorthand in a referenceFiles file',
+	async () => {
+		const file = write_fixture('component.css', 'a { animation: slide-in 1s linear; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@keyframes slide-in { from { opacity: 0; } to { opacity: 1; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should still error when keyframe is declared and not used anywhere including referenceFiles',
+	async () => {
+		const file = write_fixture('component.css', 'a { animation-name: other; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@keyframes slide-in { from { opacity: 0; } to { opacity: 1; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unused keyframe "slide-in" (${rule_name})`)
+	},
+)

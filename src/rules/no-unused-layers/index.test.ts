@@ -1,6 +1,9 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin, { rule_name } from './index.js'
+import { supportsReferenceFiles, createFixtures } from '../test-utils.js'
+
+const write_fixture = createFixtures('no-unused-layers-test-')
 
 test('should not error when a declared layer is defined in a block', async () => {
 	const config = {
@@ -321,3 +324,42 @@ test('should not error when no layer statements exist', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when layer is declared but used as a block layer in a referenceFiles file',
+	async () => {
+		const file = write_fixture('utilities.css', '@layer utilities { .u-flex { display: flex; } }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@layer utilities;',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should still error when layer is declared and not used anywhere including referenceFiles',
+	async () => {
+		const file = write_fixture('utilities.css', '@layer other { .u-flex { display: flex; } }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@layer utilities;',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unused layer "utilities" (${rule_name})`)
+	},
+)

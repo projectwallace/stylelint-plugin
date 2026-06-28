@@ -1,27 +1,9 @@
 import stylelint from 'stylelint'
-import { test, expect, afterEach } from 'vitest'
-import fs from 'node:fs'
-import os from 'node:os'
-import path from 'node:path'
+import { test, expect } from 'vitest'
 import plugin from './index.js'
+import { supportsReferenceFiles, createFixtures } from '../test-utils.js'
 
-let tmp_dir: string
-
-function write_fixture(name: string, content: string): string {
-	if (!tmp_dir) {
-		tmp_dir = fs.mkdtempSync(path.join(os.tmpdir(), 'no-unknown-cp-test-'))
-	}
-	const file_path = path.join(tmp_dir, name)
-	fs.writeFileSync(file_path, content, 'utf8')
-	return file_path
-}
-
-afterEach(() => {
-	if (tmp_dir) {
-		fs.rmSync(tmp_dir, { recursive: true, force: true })
-		tmp_dir = undefined!
-	}
-})
+const write_fixture = createFixtures('no-unknown-cp-test-')
 
 const rule_name = 'projectwallace/no-unknown-custom-properties'
 
@@ -391,6 +373,69 @@ test('should still error when var() uses a property not present in any importFro
 		`Unexpected unknown custom property "--not-in-tokens" (${rule_name})`,
 	)
 })
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when var() uses a property declared in a referenceFiles file',
+	async () => {
+		const file = write_fixture('tokens.css', ':root { --token-color: red; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: 'a { color: var(--token-color); }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when var() uses a property declared via @property in a referenceFiles file',
+	async () => {
+		const file = write_fixture(
+			'tokens.css',
+			`@property --token-color { syntax: '<color>'; initial-value: red; inherits: false; }`,
+		)
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: 'a { color: var(--token-color); }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should still error when var() uses a property not in any referenceFiles file',
+	async () => {
+		const file = write_fixture('tokens.css', ':root { --token-color: red; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: 'a { color: var(--token-color); background: var(--not-in-tokens); }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(
+			`Unexpected unknown custom property "--not-in-tokens" (${rule_name})`,
+		)
+	},
+)
 
 test('should not error when declared properties are used inside light-dark()', async () => {
 	const config = {

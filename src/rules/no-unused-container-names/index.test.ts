@@ -1,6 +1,9 @@
 import stylelint from 'stylelint'
 import { test, expect } from 'vitest'
 import plugin from './index.js'
+import { supportsReferenceFiles, createFixtures } from '../test-utils.js'
+
+const write_fixture = createFixtures('no-unused-container-names-test-')
 
 const rule_name = 'projectwallace/no-unused-container-names'
 
@@ -294,3 +297,48 @@ test('should still error when ignore does not match the unused container name', 
 	expect(warnings.length).toBe(1)
 	expect(warnings[0].text).toBe(`Unexpected unused container name "sidebar" (${rule_name})`)
 })
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when container name is declared but queried in a referenceFiles file',
+	async () => {
+		const file = write_fixture(
+			'component.css',
+			'@container sidebar (min-width: 700px) { .card { font-size: 1rem; } }',
+		)
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '.sidebar { container-name: sidebar; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should still error when container name is declared and not queried anywhere including referenceFiles',
+	async () => {
+		const file = write_fixture(
+			'component.css',
+			'@container other (min-width: 700px) { .card { font-size: 1rem; } }',
+		)
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '.sidebar { container-name: sidebar; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unused container name "sidebar" (${rule_name})`)
+	},
+)
