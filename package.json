@@ -58,7 +58,7 @@
 		"@projectwallace/css-parser": "^0.16.2"
 	},
 	"devDependencies": {
-		"@types/node": "^25.9.1",
+		"@types/node": "^26.0.0",
 		"@vitest/coverage-v8": "^4.1.9",
 		"oxfmt": "^0.56.0",
 		"oxlint": "^1.71.0",
