@@ -36,9 +36,7 @@ test('should not error when multiple distinct keyframe names are used', async ()
 test.each(['none', 'initial', 'inherit', 'unset', 'revert', 'revert-layer'])(
 	'should not error when keyframe name is CSS-wide keyword: %s',
 	async (keyword) => {
-		const { warnings, errored } = await lint(
-			`@keyframes ${keyword} {} @keyframes ${keyword} {}`,
-		)
+		const { warnings, errored } = await lint(`@keyframes ${keyword} {} @keyframes ${keyword} {}`)
 		expect(errored).toBe(false)
 		expect(warnings).toStrictEqual([])
 	},
@@ -207,17 +205,13 @@ test('should not error when an anchor name is used only once', async () => {
 })
 
 test('should not error when multiple distinct anchor names are used', async () => {
-	const { warnings, errored } = await lint(
-		'.a { anchor-name: --foo; } .b { anchor-name: --bar; }',
-	)
+	const { warnings, errored } = await lint('.a { anchor-name: --foo; } .b { anchor-name: --bar; }')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('should not error when anchor-name is none', async () => {
-	const { warnings, errored } = await lint(
-		'.a { anchor-name: none; } .b { anchor-name: none; }',
-	)
+	const { warnings, errored } = await lint('.a { anchor-name: none; } .b { anchor-name: none; }')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
@@ -233,9 +227,7 @@ test('should not error when multiple anchor names on one element are all distinc
 // ---------------------------------------------------------------------------
 
 test('should error when the same anchor name is defined twice', async () => {
-	const { warnings, errored } = await lint(
-		'.a { anchor-name: --foo; } .b { anchor-name: --foo; }',
-	)
+	const { warnings, errored } = await lint('.a { anchor-name: --foo; } .b { anchor-name: --foo; }')
 	expect(errored).toBe(true)
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0]).toMatchObject({
@@ -270,17 +262,13 @@ test('should report on the correct column for a duplicate anchor-name', async ()
 
 test('should not error when the same name is used as both a keyframe and a container name', async () => {
 	// `main` as keyframe name and `main` as container name are different namespaces
-	const { warnings, errored } = await lint(
-		'@keyframes main {} .a { container-name: main; }',
-	)
+	const { warnings, errored } = await lint('@keyframes main {} .a { container-name: main; }')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
 
 test('should not error when the same ident is used as both a keyframe and an anchor name', async () => {
-	const { warnings, errored } = await lint(
-		'@keyframes --foo {} .a { anchor-name: --foo; }',
-	)
+	const { warnings, errored } = await lint('@keyframes --foo {} .a { anchor-name: --foo; }')
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })

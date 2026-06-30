@@ -134,18 +134,18 @@ Rules that require analyzing the full stylesheet rather than individual nodes â€
 
 Rules that affect file size and loading performance.
 
-| Rule                                                                       | Description                                                                     |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [max-comment-size](src/rules/max-comment-size/README.md)                   | Limit the total byte size of comments in a stylesheet                           |
-| [max-comments](src/rules/max-comments/README.md)                           | Prevent the total number of comments from exceeding a predefined limit.         |
-| [max-embedded-content-size](src/rules/max-embedded-content-size/README.md) | Limit the total byte size of embedded content (data URIs) in a stylesheet       |
-| [max-file-size](src/rules/max-file-size/README.md)                         | Limit the total byte size of a stylesheet                                       |
-| [max-lines-of-code](src/rules/max-lines-of-code/README.md)                 | Prevent a stylesheet from exceeding a predefined number of lines of code        |
+| Rule                                                                         | Description                                                                     |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| [max-comment-size](src/rules/max-comment-size/README.md)                     | Limit the total byte size of comments in a stylesheet                           |
+| [max-comments](src/rules/max-comments/README.md)                             | Prevent the total number of comments from exceeding a predefined limit.         |
+| [max-embedded-content-size](src/rules/max-embedded-content-size/README.md)   | Limit the total byte size of embedded content (data URIs) in a stylesheet       |
+| [max-file-size](src/rules/max-file-size/README.md)                           | Limit the total byte size of a stylesheet                                       |
+| [max-lines-of-code](src/rules/max-lines-of-code/README.md)                   | Prevent a stylesheet from exceeding a predefined number of lines of code        |
 | [no-duplicate-custom-idents](src/rules/no-duplicate-custom-idents/README.md) | Disallow duplicate user-defined custom identifiers                              |
-| [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)       | Disallow the same data URL from being used more than once                       |
-| [no-empty-rules](src/rules/no-empty-rules/README.md)                       | Disallow empty rules and at-rules (including those containing only comments)    |
-| [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)             | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
-| [no-unused-layers](src/rules/no-unused-layers/README.md)                   | Disallow `@layer` names that are declared but never implemented                 |
+| [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)         | Disallow the same data URL from being used more than once                       |
+| [no-empty-rules](src/rules/no-empty-rules/README.md)                         | Disallow empty rules and at-rules (including those containing only comments)    |
+| [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)               | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
+| [no-unused-layers](src/rules/no-unused-layers/README.md)                     | Disallow `@layer` names that are declared but never implemented                 |
 
 ### Design Tokens
 
