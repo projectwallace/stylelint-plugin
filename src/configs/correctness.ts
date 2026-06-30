@@ -5,6 +5,7 @@ export default {
 		'projectwallace/no-unknown-container-names': true,
 		'projectwallace/no-unknown-custom-properties': true,
 		'projectwallace/no-unreachable-media-conditions': true,
+		'projectwallace/no-duplicate-custom-idents': true,
 		'projectwallace/no-empty-rules': true,
 		'projectwallace/no-important-in-keyframes': true,
 		'projectwallace/no-useless-custom-property-assignment': true,

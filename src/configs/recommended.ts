@@ -37,6 +37,7 @@ export default {
 		'projectwallace/no-unused-keyframes': true,
 		'projectwallace/no-unused-layers': true,
 		'projectwallace/no-useless-custom-property-assignment': true,
+		'projectwallace/no-duplicate-custom-idents': true,
 		'projectwallace/no-duplicate-data-urls': true,
 		'projectwallace/no-empty-rules': true,
 		'projectwallace/no-important-in-keyframes': true,

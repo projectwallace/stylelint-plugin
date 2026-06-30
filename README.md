@@ -141,6 +141,7 @@ Rules that affect file size and loading performance.
 | [max-embedded-content-size](src/rules/max-embedded-content-size/README.md) | Limit the total byte size of embedded content (data URIs) in a stylesheet       |
 | [max-file-size](src/rules/max-file-size/README.md)                         | Limit the total byte size of a stylesheet                                       |
 | [max-lines-of-code](src/rules/max-lines-of-code/README.md)                 | Prevent a stylesheet from exceeding a predefined number of lines of code        |
+| [no-duplicate-custom-idents](src/rules/no-duplicate-custom-idents/README.md) | Disallow duplicate user-defined custom identifiers                              |
 | [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)       | Disallow the same data URL from being used more than once                       |
 | [no-empty-rules](src/rules/no-empty-rules/README.md)                       | Disallow empty rules and at-rules (including those containing only comments)    |
 | [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)             | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
@@ -181,6 +182,7 @@ Rules to help prevent errors.
 | [no-static-container-queries](src/rules/no-static-container-queries/README.md)                     | Disallow static (exact-match) numeric container feature conditions              |
 | [no-static-media-queries](src/rules/no-static-media-queries/README.md)                             | Disallow static (exact-match) numeric media feature conditions                  |
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match       |
+| [no-duplicate-custom-idents](src/rules/no-duplicate-custom-idents/README.md)                       | Disallow duplicate user-defined custom identifiers                              |
 | [no-empty-rules](src/rules/no-empty-rules/README.md)                                               | Disallow empty rules and at-rules (including those containing only comments)    |
 | [no-important-in-keyframes](src/rules/no-important-in-keyframes/README.md)                         | Disallow `!important` declarations inside `@keyframes` blocks                   |
 | [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                       | Disallow `z-index` values that are not valid 32-bit integers                    |
