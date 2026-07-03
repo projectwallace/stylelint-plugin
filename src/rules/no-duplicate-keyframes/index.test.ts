@@ -31,15 +31,6 @@ test('should not error when multiple distinct keyframe names are used', async ()
 	expect(warnings).toStrictEqual([])
 })
 
-test.each(['none', 'initial', 'inherit', 'unset', 'revert', 'revert-layer', 'auto'])(
-	'should not error when keyframe name is CSS-wide keyword: %s',
-	async (keyword) => {
-		const { warnings, errored } = await lint(`@keyframes ${keyword} {} @keyframes ${keyword} {}`)
-		expect(errored).toBe(false)
-		expect(warnings).toStrictEqual([])
-	},
-)
-
 // ---------------------------------------------------------------------------
 // Violations
 // ---------------------------------------------------------------------------

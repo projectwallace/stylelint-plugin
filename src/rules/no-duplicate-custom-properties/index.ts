@@ -15,26 +15,26 @@ const meta = {
 
 const ruleFunction = (primaryOptions: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(result, rule_name, {
+		const valid_options = utils.validateOptions(result, rule_name, {
 			actual: primaryOptions,
 			possible: [true],
 		})
 
-		if (!validOptions) {
+		if (!valid_options) {
 			return
 		}
 
 		const seen = new Set<string>()
 
-		root.walkDecls(/^--/, (decl) => {
-			const name = decl.prop
+		root.walkDecls(/^--/, (declaration) => {
+			const name = declaration.prop
 
 			if (seen.has(name)) {
 				utils.report({
 					result,
 					ruleName: rule_name,
 					message: messages.rejected(name),
-					node: decl,
+					node: declaration,
 					index: 0,
 					endIndex: name.length,
 				})

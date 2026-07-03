@@ -41,5 +41,12 @@ export default {
 		'projectwallace/no-unused-custom-properties': true,
 		'projectwallace/no-unused-layers': true,
 		'projectwallace/no-unused-container-names': true,
+
+		// Duplicate detection
+		'projectwallace/no-duplicate-anchor-names': true,
+		'projectwallace/no-duplicate-container-names': true,
+		'projectwallace/no-duplicate-custom-properties': true,
+		'projectwallace/no-duplicate-keyframes': true,
+		'projectwallace/no-duplicate-registered-properties': true,
 	},
 }

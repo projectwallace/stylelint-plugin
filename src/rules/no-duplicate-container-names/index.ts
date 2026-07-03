@@ -18,21 +18,23 @@ const meta = {
 
 const ruleFunction = (primaryOptions: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(result, rule_name, {
+		const valid_options = utils.validateOptions(result, rule_name, {
 			actual: primaryOptions,
 			possible: [true],
 		})
 
-		if (!validOptions) {
+		if (!valid_options) {
 			return
 		}
 
 		const seen = new Set<string>()
 
-		root.walkDecls(/^container(-name)?$/i, (decl) => {
-			if (keywords.has(decl.value.trim())) return
-			const ast = parse_value(decl.value)
-			const value_offset = decl.prop.length + (decl.raws.between ?? ': ').length
+		root.walkDecls(/^container(-name)?$/i, (declaration) => {
+			if (keywords.has(declaration.value.trim())) {
+				return
+			}
+			const ast = parse_value(declaration.value)
+			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
 			for (const node of ast) {
 				// The `/` in `container: name / type` is an OPERATOR — stop there
 				if (node.type === OPERATOR) break
@@ -46,7 +48,7 @@ const ruleFunction = (primaryOptions: true) => {
 						result,
 						ruleName: rule_name,
 						message: messages.rejected(name),
-						node: decl,
+						node: declaration,
 						index: value_offset + node.start,
 						endIndex: value_offset + node.end,
 					})

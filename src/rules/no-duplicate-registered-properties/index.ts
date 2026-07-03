@@ -15,30 +15,33 @@ const meta = {
 
 const ruleFunction = (primaryOptions: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(result, rule_name, {
+		const valid_options = utils.validateOptions(result, rule_name, {
 			actual: primaryOptions,
 			possible: [true],
 		})
 
-		if (!validOptions) {
+		if (!valid_options) {
 			return
 		}
 
 		const seen = new Set<string>()
 
-		root.walkAtRules(/^property$/i, (atRule) => {
-			const name = atRule.params.trim()
-			if (!name) return
+		root.walkAtRules(/^property$/i, (at_rule) => {
+			const name = at_rule.params.trim()
+			if (!name) {
+				return
+			}
 
 			if (seen.has(name)) {
-				const params_offset = 1 + atRule.name.length + (atRule.raws.afterName ?? ' ').length
+				const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
+				const name_offset = at_rule.params.indexOf(name)
 				utils.report({
 					result,
 					ruleName: rule_name,
 					message: messages.rejected(name),
-					node: atRule,
-					index: params_offset + atRule.params.indexOf(name),
-					endIndex: params_offset + atRule.params.indexOf(name) + name.length,
+					node: at_rule,
+					index: params_offset + name_offset,
+					endIndex: params_offset + name_offset + name.length,
 				})
 			} else {
 				seen.add(name)

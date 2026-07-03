@@ -36,14 +36,9 @@ The following patterns are _not_ considered violations:
 
 <!-- prettier-ignore -->
 ```css
+/* Each custom property name appears only once. */
 :root {
   --color: red;
   --size: 1rem;
 }
-```
-
-<!-- prettier-ignore -->
-```css
-.a { --color: red; }
-.b { --size: 1rem; }
 ```
