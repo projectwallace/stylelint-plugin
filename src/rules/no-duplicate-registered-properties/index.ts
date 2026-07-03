@@ -31,8 +31,7 @@ const ruleFunction = (primaryOptions: true) => {
 			if (!name) return
 
 			if (seen.has(name)) {
-				const params_offset =
-					1 + atRule.name.length + (atRule.raws.afterName ?? ' ').length
+				const params_offset = 1 + atRule.name.length + (atRule.raws.afterName ?? ' ').length
 				utils.report({
 					result,
 					ruleName: rule_name,
