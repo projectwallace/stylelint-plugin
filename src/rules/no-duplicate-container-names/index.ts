@@ -27,18 +27,19 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		const seen = new Map<string, true>()
+		const seen = new Set<string>()
 
 		root.walkDecls(/^container(-name)?$/i, (decl) => {
-			if (keywords.has(decl.value.trim().toLowerCase())) return
+			if (keywords.has(decl.value.trim())) return
 			const ast = parse_value(decl.value)
+			const value_offset = decl.prop.length + (decl.raws.between ?? ': ').length
 			for (const node of ast) {
 				// The `/` in `container: name / type` is an OPERATOR — stop there
 				if (node.type === OPERATOR) break
 				if (node.type !== IDENTIFIER) continue
 
 				const { text: name } = node
-				if (keywords.has(name.toLowerCase())) continue
+				if (keywords.has(name)) continue
 
 				if (seen.has(name)) {
 					utils.report({
@@ -46,10 +47,11 @@ const ruleFunction = (primaryOptions: true) => {
 						ruleName: rule_name,
 						message: messages.rejected(name),
 						node: decl,
-						word: name,
+						index: value_offset + node.start,
+						endIndex: value_offset + node.end,
 					})
 				} else {
-					seen.set(name, true)
+					seen.add(name)
 				}
 			}
 		})

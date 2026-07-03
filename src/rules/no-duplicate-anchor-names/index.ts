@@ -30,15 +30,16 @@ const ruleFunction = (primaryOptions: true) => {
 		const seen = new Map<string, true>()
 
 		root.walkDecls(/^anchor-name$/i, (decl) => {
-			if (keywords.has(decl.value.trim().toLowerCase())) return
+			if (keywords.has(decl.value.trim())) return
 			const ast = parse_value(decl.value)
+			const value_offset = decl.prop.length + (decl.raws.between ?? ': ').length
 			for (const node of ast) {
 				// anchor-name values are comma-separated dashed-idents; commas are
 				// OPERATOR nodes — skip them and keep iterating
 				if (node.type !== IDENTIFIER) continue
 
 				const { text: name } = node
-				if (keywords.has(name.toLowerCase())) continue
+				if (keywords.has(name)) continue
 
 				if (seen.has(name)) {
 					utils.report({
@@ -46,7 +47,8 @@ const ruleFunction = (primaryOptions: true) => {
 						ruleName: rule_name,
 						message: messages.rejected(name),
 						node: decl,
-						word: name,
+						index: value_offset + node.start,
+						endIndex: value_offset + node.end,
 					})
 				} else {
 					seen.set(name, true)
