@@ -27,7 +27,7 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		const seen = new Map<string, true>()
+		const seen = new Set<string>()
 
 		root.walkDecls(/^anchor-name$/i, (decl) => {
 			if (keywords.has(decl.value.trim())) return
@@ -51,7 +51,7 @@ const ruleFunction = (primaryOptions: true) => {
 						endIndex: value_offset + node.end,
 					})
 				} else {
-					seen.set(name, true)
+					seen.add(name)
 				}
 			}
 		})

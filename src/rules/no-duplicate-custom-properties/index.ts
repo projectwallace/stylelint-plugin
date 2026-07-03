@@ -24,7 +24,7 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		const seen = new Map<string, true>()
+		const seen = new Set<string>()
 
 		root.walkDecls(/^--/, (decl) => {
 			const name = decl.prop
@@ -35,10 +35,11 @@ const ruleFunction = (primaryOptions: true) => {
 					ruleName: rule_name,
 					message: messages.rejected(name),
 					node: decl,
-					word: name,
+					index: 0,
+					endIndex: name.length,
 				})
 			} else {
-				seen.set(name, true)
+				seen.add(name)
 			}
 		})
 	}

@@ -25,22 +25,25 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		const seen = new Map<string, true>()
+		const seen = new Set<string>()
 
 		root.walkAtRules(/^keyframes$/i, (atRule) => {
 			const name = atRule.params.trim()
-			if (!name || keywords.has(name.toLowerCase())) return
+			if (!name || keywords.has(name)) return
 
 			if (seen.has(name)) {
+				const params_offset =
+					1 + atRule.name.length + (atRule.raws.afterName ?? ' ').length
 				utils.report({
 					result,
 					ruleName: rule_name,
 					message: messages.rejected(name),
 					node: atRule,
-					word: name,
+					index: params_offset + atRule.params.indexOf(name),
+					endIndex: params_offset + atRule.params.indexOf(name) + name.length,
 				})
 			} else {
-				seen.set(name, true)
+				seen.add(name)
 			}
 		})
 	}
