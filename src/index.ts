@@ -40,6 +40,7 @@ import no_anonymous_layers from './rules/no-anonymous-layers/index.js'
 import no_atrule_browserhacks from './rules/no-atrule-browserhacks/index.js'
 import no_duplicate_anchor_names from './rules/no-duplicate-anchor-names/index.js'
 import no_duplicate_container_names from './rules/no-duplicate-container-names/index.js'
+import no_duplicate_custom_properties from './rules/no-duplicate-custom-properties/index.js'
 import no_duplicate_data_urls from './rules/no-duplicate-data-urls/index.js'
 import no_duplicate_keyframes from './rules/no-duplicate-keyframes/index.js'
 import no_duplicate_registered_properties from './rules/no-duplicate-registered-properties/index.js'
@@ -108,6 +109,7 @@ const plugins: stylelint.Plugin[] = [
 	no_atrule_browserhacks,
 	no_duplicate_anchor_names,
 	no_duplicate_container_names,
+	no_duplicate_custom_properties,
 	no_duplicate_data_urls,
 	no_duplicate_keyframes,
 	no_duplicate_registered_properties,

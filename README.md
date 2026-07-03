@@ -143,6 +143,7 @@ Rules that affect file size and loading performance.
 | [max-lines-of-code](src/rules/max-lines-of-code/README.md)                                   | Prevent a stylesheet from exceeding a predefined number of lines of code        |
 | [no-duplicate-anchor-names](src/rules/no-duplicate-anchor-names/README.md)                   | Disallow duplicate `anchor-name` values                                         |
 | [no-duplicate-container-names](src/rules/no-duplicate-container-names/README.md)             | Disallow duplicate container names                                              |
+| [no-duplicate-custom-properties](src/rules/no-duplicate-custom-properties/README.md)         | Disallow duplicate custom property declarations                                 |
 | [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)                         | Disallow the same data URL from being used more than once                       |
 | [no-duplicate-keyframes](src/rules/no-duplicate-keyframes/README.md)                         | Disallow duplicate `@keyframes` names                                           |
 | [no-duplicate-registered-properties](src/rules/no-duplicate-registered-properties/README.md) | Disallow duplicate `@property` registrations                                    |
@@ -187,6 +188,7 @@ Rules to help prevent errors.
 | [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)             | Disallow media queries with contradictory conditions that can never match       |
 | [no-duplicate-anchor-names](src/rules/no-duplicate-anchor-names/README.md)                         | Disallow duplicate `anchor-name` values                                         |
 | [no-duplicate-container-names](src/rules/no-duplicate-container-names/README.md)                   | Disallow duplicate container names                                              |
+| [no-duplicate-custom-properties](src/rules/no-duplicate-custom-properties/README.md)               | Disallow duplicate custom property declarations                                 |
 | [no-duplicate-keyframes](src/rules/no-duplicate-keyframes/README.md)                               | Disallow duplicate `@keyframes` names                                           |
 | [no-duplicate-registered-properties](src/rules/no-duplicate-registered-properties/README.md)       | Disallow duplicate `@property` registrations                                    |
 | [no-empty-rules](src/rules/no-empty-rules/README.md)                                               | Disallow empty rules and at-rules (including those containing only comments)    |
