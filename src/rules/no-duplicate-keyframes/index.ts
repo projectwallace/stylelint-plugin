@@ -1,0 +1,57 @@
+import stylelint from 'stylelint'
+import type { Root } from 'postcss'
+import { keywords } from '@projectwallace/css-analyzer/values'
+
+const { createPlugin, utils } = stylelint
+
+const rule_name = 'projectwallace/no-duplicate-keyframes'
+
+const messages = utils.ruleMessages(rule_name, {
+	rejected: (name: string) => `Unexpected duplicate @keyframes name "${name}"`,
+})
+
+const meta = {
+	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-duplicate-keyframes/README.md',
+}
+
+const ruleFunction = (primaryOptions: true) => {
+	return (root: Root, result: stylelint.PostcssResult) => {
+		const valid_options = utils.validateOptions(result, rule_name, {
+			actual: primaryOptions,
+			possible: [true],
+		})
+
+		if (!valid_options) {
+			return
+		}
+
+		const seen = new Set<string>()
+
+		root.walkAtRules(/^keyframes$/i, (at_rule) => {
+			const name = at_rule.params.trim()
+			if (!name || keywords.has(name)) {
+				return
+			}
+
+			if (seen.has(name)) {
+				const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
+				utils.report({
+					result,
+					ruleName: rule_name,
+					message: messages.rejected(name),
+					node: at_rule,
+					index: params_offset + at_rule.params.indexOf(name),
+					endIndex: params_offset + at_rule.params.indexOf(name) + name.length,
+				})
+			} else {
+				seen.add(name)
+			}
+		})
+	}
+}
+
+ruleFunction.ruleName = rule_name
+ruleFunction.messages = messages
+ruleFunction.meta = meta
+
+export default createPlugin(rule_name, ruleFunction)
