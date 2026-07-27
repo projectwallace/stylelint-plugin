@@ -54,27 +54,24 @@
 		"build": "tsdown"
 	},
 	"dependencies": {
-		"@projectwallace/css-analyzer": "^9.9.0",
-		"@projectwallace/css-parser": "^0.16.2"
+		"@projectwallace/css-analyzer": "^9.9.1",
+		"@projectwallace/css-parser": "~0.18.1"
 	},
 	"devDependencies": {
-		"@types/node": "^26.0.0",
-		"@vitest/coverage-v8": "^4.1.9",
-		"oxfmt": "^0.56.0",
-		"oxlint": "^1.71.0",
-		"postcss": "^8.5.15",
-		"publint": "^0.3.21",
-		"stylelint": "~17.13.0",
-		"tsdown": "^0.22.3",
-		"typescript": "^6.0.3",
-		"vite": "^8.1.0",
-		"vitest": "^4.1.9"
+		"@types/node": "^26.1.1",
+		"@vitest/coverage-v8": "^4.1.10",
+		"oxfmt": "^0.60.0",
+		"oxlint": "^1.75.0",
+		"postcss": "^8.5.23",
+		"publint": "^0.3.22",
+		"stylelint": "^17.14.1",
+		"tsdown": "^0.22.14",
+		"typescript": "^7.0.2",
+		"vite": "^8.1.5",
+		"vitest": "^4.1.10"
 	},
 	"peerDependencies": {
 		"stylelint": "^16.0.0 || ^17.0.0"
-	},
-	"overrides": {
-		"@projectwallace/css-parser": "$@projectwallace/css-parser"
 	},
 	"engines": {
 		"node": ">=18"
