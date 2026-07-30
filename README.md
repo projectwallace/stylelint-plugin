@@ -7,7 +7,7 @@ A stylelint plugin that checks the complexity, design tokens, maintainability an
 
 <!-- BREAK -->
 
-- 📏 Over 60 rules to keep your CSS in check
+- 📏 Over 50 rules to keep your CSS in check
 - ⚙️ 5 configuration presets for different concerns
 - 🌲 Fully tree-shakeable — only pay for what you use
 - ⚡ Powered by `@projectwallace/css-parser` for fast parsing of selectors, values and at-rule preludes
@@ -147,7 +147,6 @@ Rules that affect file size and loading performance.
 | [no-duplicate-data-urls](src/rules/no-duplicate-data-urls/README.md)                         | Disallow the same data URL from being used more than once                       |
 | [no-duplicate-keyframes](src/rules/no-duplicate-keyframes/README.md)                         | Disallow duplicate `@keyframes` names                                           |
 | [no-duplicate-registered-properties](src/rules/no-duplicate-registered-properties/README.md) | Disallow duplicate `@property` registrations                                    |
-| [no-empty-rules](src/rules/no-empty-rules/README.md)                                         | Disallow empty rules and at-rules (including those containing only comments)    |
 | [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)                               | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                     | Disallow `@layer` names that are declared but never implemented                 |
 
@@ -178,7 +177,6 @@ Rules to help prevent errors.
 | Rule                                                                                               | Description                                                                     |
 | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | [no-unknown-container-names](src/rules/no-unknown-container-names/README.md)                       | Disallow container names in `@container` that were never declared               |
-| [no-unknown-custom-properties](src/rules/no-unknown-custom-properties/README.md)                   | Disallow the use of undeclared custom properties in a `var()`                   |
 | [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md) | Disallow custom property assignments that reference themselves via `var()`      |
 | [no-unused-container-names](src/rules/no-unused-container-names/README.md)                         | Disallow container names that are declared but never queried                    |
 | [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)                     | Disallow custom properties that are never used in a `var()`                     |
@@ -191,8 +189,6 @@ Rules to help prevent errors.
 | [no-duplicate-custom-properties](src/rules/no-duplicate-custom-properties/README.md)               | Disallow duplicate custom property declarations                                 |
 | [no-duplicate-keyframes](src/rules/no-duplicate-keyframes/README.md)                               | Disallow duplicate `@keyframes` names                                           |
 | [no-duplicate-registered-properties](src/rules/no-duplicate-registered-properties/README.md)       | Disallow duplicate `@property` registrations                                    |
-| [no-empty-rules](src/rules/no-empty-rules/README.md)                                               | Disallow empty rules and at-rules (including those containing only comments)    |
-| [no-important-in-keyframes](src/rules/no-important-in-keyframes/README.md)                         | Disallow `!important` declarations inside `@keyframes` blocks                   |
 | [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                       | Disallow `z-index` values that are not valid 32-bit integers                    |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                           | Disallow `@layer` names that are declared but never implemented                 |
 
@@ -211,10 +207,8 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [max-declarations](src/rules/max-declarations/README.md)                                   | Limit the total number of declarations in a stylesheet                       |
 | [max-declarations-per-rule](src/rules/max-declarations-per-rule/README.md)                 | Limit the number of declarations in a single rule                            |
 | [max-important-ratio](src/rules/max-important-ratio/README.md)                             | Limit the ratio of `!important` declarations relative to all declarations    |
-| [max-nesting-depth](src/rules/max-nesting-depth/README.md)                                 | Limit the maximum nesting depth of CSS rules and at-rules.                   |
 | [max-rules](src/rules/max-rules/README.md)                                                 | Limit the total number of rules in a stylesheet                              |
 | [max-selector-complexity](src/rules/max-selector-complexity/README.md)                     | Prevent selector complexity from going over a predefined maximum             |
-| [max-selector-specificity](src/rules/max-selector-specificity/README.md)                   | Prevent individual selector specificity from exceeding a predefined maximum  |
 | [max-selectors](src/rules/max-selectors/README.md)                                         | Limit the total number of selectors in a stylesheet                          |
 | [max-selectors-per-rule](src/rules/max-selectors-per-rule/README.md)                       | Limit the number of selectors in a single rule                               |
 | [max-spacing-resets](src/rules/max-spacing-resets/README.md)                               | Limit the number of spacing reset declarations across the stylesheet         |
@@ -227,10 +221,6 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [min-selector-uniqueness-ratio](src/rules/min-selector-uniqueness-ratio/README.md)         | Enforce a minimum ratio of unique selectors across the stylesheet            |
 | [no-anonymous-layers](src/rules/no-anonymous-layers/README.md)                             | Disallow anonymous (unnamed) `@layer` blocks                                 |
 | [no-atrule-browserhacks](src/rules/no-atrule-browserhacks/README.md)                       | Disallow the use of known browser hacks in at-rule preludes                  |
-| [no-prefixed-atrules](src/rules/no-prefixed-atrules/README.md)                             | Disallow vendor-prefixed at-rules                                            |
-| [no-prefixed-properties](src/rules/no-prefixed-properties/README.md)                       | Disallow vendor-prefixed CSS properties                                      |
-| [no-prefixed-selectors](src/rules/no-prefixed-selectors/README.md)                         | Disallow vendor-prefixed pseudo-classes and pseudo-elements in selectors     |
-| [no-prefixed-values](src/rules/no-prefixed-values/README.md)                               | Disallow vendor-prefixed CSS values                                          |
 | [no-property-browserhacks](src/rules/no-property-browserhacks/README.md)                   | Prevent the use of known browserhacks for properties                         |
 | [no-property-shorthand](src/rules/no-property-shorthand/README.md)                         | Disallow the use of shorthand properties                                     |
 | [no-pseudo-elements-in-is-where](src/rules/no-pseudo-elements-in-is-where/README.md)       | Disallow pseudo-elements inside `:is()` and `:where()`                       |
@@ -312,4 +302,5 @@ stylelint "src/**/*.css" "dist/**/*.css"
 
 - [Daniel Yuschick's](https://github.com/yuschick) [stylelint-plugin-defensive-css](https://github.com/yuschick/stylelint-plugin-defensive-css) has been a great learning resource while building this package and you should definitely include it in your stylelint config as well.
 - The `no-static-media-queries` plugin was [an idea](https://bsky.app/profile/andydavies.me/post/3lgvt5gjyxc2e) from [Andy Davies](https://github.com/andydavies).
-- Some of the rules (like `no-empty-rules`, `no-unused-custom-properties`, etc.) also exist in other plugins. Our rule are new implementations based on `@projectwallace/css-parser` for performance and correctness. It also helps reduce the amount of plugins needed to install.
+- Some of the rules (like `no-unused-custom-properties`, `no-duplicate-custom-properties`, etc.) also exist in other plugins. Our rule are new implementations based on `@projectwallace/css-parser` for performance and correctness. It also helps reduce the amount of plugins needed to install.
+- A handful of rules that duplicated stylelint's own built-in checks (e.g. `max-nesting-depth`, `selector-max-specificity`, `block-no-empty`, `no-*-vendor-prefix`) were removed in favor of using stylelint core directly — no need to maintain a second implementation of something stylelint already does.

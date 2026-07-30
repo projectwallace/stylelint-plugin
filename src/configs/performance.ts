@@ -5,7 +5,6 @@ export default {
 		'projectwallace/no-unused-keyframes': true,
 		'projectwallace/no-unused-layers': true,
 		'projectwallace/no-duplicate-data-urls': true,
-		'projectwallace/no-empty-rules': true,
 		'projectwallace/max-file-size': 200_000,
 		'projectwallace/max-embedded-content-size': 10_000,
 		'projectwallace/max-comment-size': [
