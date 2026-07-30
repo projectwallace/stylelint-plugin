@@ -24,7 +24,24 @@ test('recommended config contains exactly all exported rules', () => {
 		})
 		.sort()
 
-	const configRuleNames = Object.keys(recommended.rules).sort()
+	// Some checks are covered by stylelint's own built-in rules instead of a
+	// projectwallace/* rule, to avoid maintaining a second implementation of
+	// something stylelint already does.
+	const coreRuleNames = new Set([
+		'at-rule-no-vendor-prefix',
+		'block-no-empty',
+		'keyframe-declaration-no-important',
+		'max-nesting-depth',
+		'no-unknown-custom-properties',
+		'property-no-vendor-prefix',
+		'selector-max-specificity',
+		'selector-no-vendor-prefix',
+		'value-no-vendor-prefix',
+	])
+
+	const configRuleNames = Object.keys(recommended.rules)
+		.filter((name) => !coreRuleNames.has(name))
+		.sort()
 
 	expect(configRuleNames).toStrictEqual(exportedRuleNames)
 })
