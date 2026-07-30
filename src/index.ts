@@ -12,10 +12,8 @@ import max_embedded_content_size from './rules/max-embedded-content-size/index.j
 import max_file_size from './rules/max-file-size/index.js'
 import max_important_ratio from './rules/max-important-ratio/index.js'
 import max_lines_of_code from './rules/max-lines-of-code/index.js'
-import max_nesting_depth from './rules/max-nesting-depth/index.js'
 import max_rules from './rules/max-rules/index.js'
 import max_selector_complexity from './rules/max-selector-complexity/index.js'
-import max_selector_specificity from './rules/max-selector-specificity/index.js'
 import max_selectors from './rules/max-selectors/index.js'
 import max_selectors_per_rule from './rules/max-selectors-per-rule/index.js'
 import max_spacing_resets from './rules/max-spacing-resets/index.js'
@@ -44,13 +42,7 @@ import no_duplicate_custom_properties from './rules/no-duplicate-custom-properti
 import no_duplicate_data_urls from './rules/no-duplicate-data-urls/index.js'
 import no_duplicate_keyframes from './rules/no-duplicate-keyframes/index.js'
 import no_duplicate_registered_properties from './rules/no-duplicate-registered-properties/index.js'
-import no_empty_rules from './rules/no-empty-rules/index.js'
-import no_important_in_keyframes from './rules/no-important-in-keyframes/index.js'
 import no_invalid_z_index from './rules/no-invalid-z-index/index.js'
-import no_prefixed_atrules from './rules/no-prefixed-atrules/index.js'
-import no_prefixed_properties from './rules/no-prefixed-properties/index.js'
-import no_prefixed_selectors from './rules/no-prefixed-selectors/index.js'
-import no_prefixed_values from './rules/no-prefixed-values/index.js'
 import no_pseudo_elements_in_is_where from './rules/no-pseudo-elements-in-is-where/index.js'
 import no_property_browserhacks from './rules/no-property-browserhacks/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
@@ -58,7 +50,6 @@ import no_value_browserhacks from './rules/no-value-browserhacks/index.js'
 import no_static_container_queries from './rules/no-static-container-queries/index.js'
 import no_static_media_queries from './rules/no-static-media-queries/index.js'
 import no_unknown_container_names from './rules/no-unknown-container-names/index.js'
-import no_unknown_custom_properties from './rules/no-unknown-custom-properties/index.js'
 import no_unreachable_media_conditions from './rules/no-unreachable-media-conditions/index.js'
 import no_unused_container_names from './rules/no-unused-container-names/index.js'
 import no_unused_custom_properties from './rules/no-unused-custom-properties/index.js'
@@ -81,10 +72,8 @@ const plugins: stylelint.Plugin[] = [
 	max_file_size,
 	max_important_ratio,
 	max_lines_of_code,
-	max_nesting_depth,
 	max_rules,
 	max_selector_complexity,
-	max_selector_specificity,
 	max_selectors,
 	max_selectors_per_rule,
 	max_spacing_resets,
@@ -113,20 +102,13 @@ const plugins: stylelint.Plugin[] = [
 	no_duplicate_data_urls,
 	no_duplicate_keyframes,
 	no_duplicate_registered_properties,
-	no_empty_rules,
-	no_important_in_keyframes,
 	no_invalid_z_index,
-	no_prefixed_atrules,
-	no_prefixed_properties,
-	no_prefixed_selectors,
-	no_prefixed_values,
 	no_property_browserhacks,
 	no_property_shorthand,
 	no_pseudo_elements_in_is_where,
 	no_static_container_queries,
 	no_static_media_queries,
 	no_unknown_container_names,
-	no_unknown_custom_properties,
 	no_unreachable_media_conditions,
 	no_unused_container_names,
 	no_unused_custom_properties,
