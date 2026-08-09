@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
@@ -7,8 +8,6 @@ import {
 	ignore_option_validators,
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-line-heights'
 

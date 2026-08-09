@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk } from '@projectwallace/css-parser/walker'
@@ -8,8 +9,6 @@ import {
 	is_valid_positive_integer,
 } from '../../utils/option-validators.js'
 import { is_function } from '@projectwallace/css-parser'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-gradients'
 

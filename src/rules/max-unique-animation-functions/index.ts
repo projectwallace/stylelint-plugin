@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import {
 	is_allowed,
@@ -8,8 +9,6 @@ import {
 import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-animation-functions'
 

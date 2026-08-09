@@ -1,12 +1,11 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
 import { IDENTIFIER, STRING } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unused-keyframes'
 
