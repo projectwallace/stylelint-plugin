@@ -5,8 +5,11 @@ Require every `if()` function to include an `else` condition.
 <!-- prettier-ignore -->
 ```css
 a {
-  color: if(style(--dark): white; style(--light): black);
-/*      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
+  color: if(
+    style(--dark): white;
+    style(--light): black
+/*  ^^^^^^^^^^^^^^^^^^^^^ */
+  );
 }
 ```
 
@@ -21,11 +24,16 @@ The following are considered problems:
 <!-- prettier-ignore -->
 ```css
 a {
-  color: if(style(--dark): white; style(--light): black);
+  color: if(
+    style(--dark): white;
+    style(--light): black
+  );
 }
 
 a {
-  width: if(media(width > 600px): 50%);
+  width: if(
+    media(width > 600px): 50%
+  );
 }
 ```
 
@@ -34,11 +42,17 @@ The following patterns are _not_ considered problems:
 <!-- prettier-ignore -->
 ```css
 a {
-  color: if(style(--dark): white; else: black);
+  color: if(
+    style(--dark): white;
+    else: black
+  );
 }
 
 a {
-  width: if(media(width > 600px): 50%; else: 100%);
+  width: if(
+    media(width > 600px): 50%;
+    else: 100%
+  );
 }
 ```
 

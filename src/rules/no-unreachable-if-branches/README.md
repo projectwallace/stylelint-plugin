@@ -5,8 +5,11 @@ Require the `else` branch of an `if()` function to always be the last branch.
 <!-- prettier-ignore -->
 ```css
 a {
-  color: if(else: black; style(--dark): white);
-/*        ^^^^^^^^^^^^^ */
+  color: if(
+    else: black;
+/*  ^^^^^^^^^^^ */
+    style(--dark): white
+  );
 }
 ```
 
@@ -21,12 +24,19 @@ The following are considered problems:
 <!-- prettier-ignore -->
 ```css
 a {
-  color: if(else: black; style(--dark): white);
+  color: if(
+    else: black;
+    style(--dark): white
+  );
 }
 
 a {
   /* the first "else" is not last, so it is flagged */
-  color: if(style(--dark): white; else: black; else: red);
+  color: if(
+    style(--dark): white;
+    else: black;
+    else: red
+  );
 }
 ```
 
@@ -35,19 +45,25 @@ The following patterns are _not_ considered problems:
 <!-- prettier-ignore -->
 ```css
 a {
-  color: if(style(--dark): white; else: black);
+  color: if(
+    style(--dark): white;
+    else: black
+  );
 }
 
 a {
-  color: if(style(--dark): white; style(--light): black; else: gray);
+  color: if(
+    style(--dark): white;
+    style(--light): black;
+    else: gray
+  );
 }
 
 a {
   /* if() without an else is not this rule's concern */
-  color: if(style(--dark): white; style(--light): black);
+  color: if(
+    style(--dark): white;
+    style(--light): black
+  );
 }
 ```
-
-## Prior art
-
-- [CSS Values and Units Module Level 5: the `if()` function](https://drafts.csswg.org/css-values-5/#if-notation)
