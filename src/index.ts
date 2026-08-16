@@ -43,6 +43,7 @@ import no_duplicate_data_urls from './rules/no-duplicate-data-urls/index.js'
 import no_duplicate_keyframes from './rules/no-duplicate-keyframes/index.js'
 import no_duplicate_registered_properties from './rules/no-duplicate-registered-properties/index.js'
 import no_invalid_z_index from './rules/no-invalid-z-index/index.js'
+import no_missing_if_else from './rules/no-missing-if-else/index.js'
 import no_pseudo_elements_in_is_where from './rules/no-pseudo-elements-in-is-where/index.js'
 import no_property_browserhacks from './rules/no-property-browserhacks/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
@@ -50,12 +51,14 @@ import no_value_browserhacks from './rules/no-value-browserhacks/index.js'
 import no_static_container_queries from './rules/no-static-container-queries/index.js'
 import no_static_media_queries from './rules/no-static-media-queries/index.js'
 import no_unknown_container_names from './rules/no-unknown-container-names/index.js'
+import no_unreachable_if_branches from './rules/no-unreachable-if-branches/index.js'
 import no_unreachable_media_conditions from './rules/no-unreachable-media-conditions/index.js'
 import no_unused_container_names from './rules/no-unused-container-names/index.js'
 import no_unused_custom_properties from './rules/no-unused-custom-properties/index.js'
 import no_unused_keyframes from './rules/no-unused-keyframes/index.js'
 import no_unused_layers from './rules/no-unused-layers/index.js'
 import no_useless_custom_property_assignment from './rules/no-useless-custom-property-assignment/index.js'
+import no_useless_if from './rules/no-useless-if/index.js'
 
 // Alphabetically ordered list of all plugins
 const plugins: stylelint.Plugin[] = [
@@ -103,18 +106,21 @@ const plugins: stylelint.Plugin[] = [
 	no_duplicate_keyframes,
 	no_duplicate_registered_properties,
 	no_invalid_z_index,
+	no_missing_if_else,
 	no_property_browserhacks,
 	no_property_shorthand,
 	no_pseudo_elements_in_is_where,
 	no_static_container_queries,
 	no_static_media_queries,
 	no_unknown_container_names,
+	no_unreachable_if_branches,
 	no_unreachable_media_conditions,
 	no_unused_container_names,
 	no_unused_custom_properties,
 	no_unused_keyframes,
 	no_unused_layers,
 	no_useless_custom_property_assignment,
+	no_useless_if,
 	no_value_browserhacks,
 ]
 
