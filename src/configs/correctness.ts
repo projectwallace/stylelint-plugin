@@ -4,6 +4,8 @@ export default {
 		'projectwallace/no-invalid-z-index': true,
 		'projectwallace/no-unknown-container-names': true,
 		'no-unknown-custom-properties': true,
+		'projectwallace/no-missing-if-else': true,
+		'projectwallace/no-unreachable-if-branches': true,
 		'projectwallace/no-unreachable-media-conditions': true,
 		'projectwallace/no-duplicate-anchor-names': true,
 		'projectwallace/no-duplicate-container-names': true,
