@@ -51,6 +51,18 @@ test('should not error when if() has no else condition at all', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
+test('should not error when else is the only branch', async () => {
+	const {
+		results: [{ warnings, errored }],
+	} = await stylelint.lint({
+		code: `a { color: if(else: black); }`,
+		config,
+	})
+
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
 test('should not error when there is no if() function', async () => {
 	const {
 		results: [{ warnings, errored }],
