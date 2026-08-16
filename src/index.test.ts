@@ -66,6 +66,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-unused-keyframes',
 		'projectwallace/no-unused-layers',
 		'projectwallace/no-useless-custom-property-assignment',
+		'projectwallace/no-useless-if',
 		'projectwallace/no-value-browserhacks',
 	])
 })

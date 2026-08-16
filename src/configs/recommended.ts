@@ -33,6 +33,7 @@ export default {
 		'no-unknown-custom-properties': true,
 		'projectwallace/no-missing-if-else': true,
 		'projectwallace/no-unreachable-if-branches': true,
+		'projectwallace/no-useless-if': true,
 		'projectwallace/no-unreachable-media-conditions': true,
 		'projectwallace/no-unused-container-names': true,
 		'projectwallace/no-unused-custom-properties': true,

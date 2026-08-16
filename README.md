@@ -194,6 +194,7 @@ Rules to help prevent errors.
 | [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                                                    | Disallow `z-index` values that are not valid 32-bit integers                    |
 | [no-missing-if-else](src/rules/no-missing-if-else/README.md)                                                                    | Require every `if()` function to include an `else` condition                    |
 | [no-unreachable-if-branches](src/rules/no-unreachable-if-branches/README.md)                                                    | Require the `else` branch of an `if()` function to always be the last branch    |
+| [no-useless-if](src/rules/no-useless-if/README.md)                                                                              | Disallow `if()` functions whose only branch is `else`                           |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                                                        | Disallow `@layer` names that are declared but never implemented                 |
 | [block-no-empty](https://stylelint.io/user-guide/rules/block-no-empty) _(stylelint core)_                                       | Disallow empty rules and at-rules (including those containing only comments)    |
 | [keyframe-declaration-no-important](https://stylelint.io/user-guide/rules/keyframe-declaration-no-important) _(stylelint core)_ | Disallow `!important` declarations inside `@keyframes` blocks                   |

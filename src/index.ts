@@ -58,6 +58,7 @@ import no_unused_custom_properties from './rules/no-unused-custom-properties/ind
 import no_unused_keyframes from './rules/no-unused-keyframes/index.js'
 import no_unused_layers from './rules/no-unused-layers/index.js'
 import no_useless_custom_property_assignment from './rules/no-useless-custom-property-assignment/index.js'
+import no_useless_if from './rules/no-useless-if/index.js'
 
 // Alphabetically ordered list of all plugins
 const plugins: stylelint.Plugin[] = [
@@ -119,6 +120,7 @@ const plugins: stylelint.Plugin[] = [
 	no_unused_keyframes,
 	no_unused_layers,
 	no_useless_custom_property_assignment,
+	no_useless_if,
 	no_value_browserhacks,
 ]
 
