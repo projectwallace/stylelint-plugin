@@ -33,7 +33,13 @@ const ruleFunction = (primaryOption: true) => {
 			walk(parsed, (node) => {
 				if (!is_function(node) || node.name.toLowerCase() !== 'if') return
 
-				const has_else = node.children.some((child) => is_if_branch(child) && child.is_else)
+				let has_else = false
+				for (const child of node) {
+					if (is_if_branch(child) && child.is_else) {
+						has_else = true
+						break
+					}
+				}
 
 				if (!has_else) {
 					utils.report({

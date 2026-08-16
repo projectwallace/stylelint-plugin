@@ -33,11 +33,8 @@ const ruleFunction = (primaryOption: true) => {
 			walk(parsed, (node) => {
 				if (!is_function(node) || node.name.toLowerCase() !== 'if') return
 
-				const branches = node.children.filter(is_if_branch)
-				const last_index = branches.length - 1
-
-				branches.forEach((branch, index) => {
-					if (branch.is_else && index !== last_index) {
+				for (const branch of node) {
+					if (is_if_branch(branch) && branch.is_else && branch.has_next) {
 						utils.report({
 							result,
 							ruleName: rule_name,
@@ -46,7 +43,7 @@ const ruleFunction = (primaryOption: true) => {
 							word: branch.text,
 						})
 					}
-				})
+				}
 			})
 		})
 	}
