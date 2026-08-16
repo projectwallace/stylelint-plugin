@@ -13,7 +13,7 @@ a {
 }
 ```
 
-`if()` evaluates its branches in source order and returns the value of the first one whose condition matches. Since `else` always matches, any branch that comes after it can never be reached — it's dead code, and usually a sign that the branches were meant to be in a different order.
+`if()` evaluates its branches in source order and returns the value of the first one whose condition matches. Since `else` always matches, any branch that comes after it can never be reached — it's dead code, and usually a sign that the branches were meant to be in a different order, or a leftover from debugging.
 
 ## Options
 
