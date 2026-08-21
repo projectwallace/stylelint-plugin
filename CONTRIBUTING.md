@@ -19,6 +19,7 @@
    - `README.md` — documentation (see [Rule README guidelines](#rule-readme-guidelines))
 2. Register the rule in `src/index.ts` (import + plugins array) at the correct alphabetical position and update `src/index.test.ts` (expected names array) accordingly
 3. Add the rule to **all applicable** configuration presets in `src/configs/` — the `src/configs/recommended.test.ts` asserts that every exported rule appears in `recommended.ts`, so omitting it will fail the test suite
+   - If the rule is not a correctness rule (i.e. it does not detect an outright bug, such as `no-invalid-z-index` or `no-duplicate-*`), set `{ severity: 'warning' }` as a secondary option in every preset it's added to. Correctness rules keep the default `error` severity — don't set `severity` for those.
 4. Add the rule to the corresponding preset configuration rules list in root `README.md`
 5. Use PostCSS API's as much as possible. Only if goals cannot be achieved reach for `@projectwallace/css-parser`
 6. Only use `@projectwallace/css-parser` methods `parse_value()`, `parse_selector()`, `parse_selector_list()` or `parse_atrule_prelude()`. Other parsing methods SHOULD NOT be necessary.
