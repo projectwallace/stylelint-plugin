@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
 import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
@@ -7,8 +8,6 @@ import { is_allowed } from '../../utils/option-validators.js'
 import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unused-custom-properties'
 

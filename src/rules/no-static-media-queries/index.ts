@@ -1,11 +1,10 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { MEDIA_QUERY, MEDIA_FEATURE, PRELUDE_OPERATOR } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { walk, BREAK } from '@projectwallace/css-parser/walker'
 import { is_dimension, is_number } from '@projectwallace/css-parser'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-static-media-queries'
 
