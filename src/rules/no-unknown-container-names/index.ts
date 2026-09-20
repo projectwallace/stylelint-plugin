@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { IDENTIFIER, OPERATOR } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
@@ -22,8 +23,6 @@ function collect_container_names(root: Root, declared: Set<string>): void {
 		}
 	})
 }
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unknown-container-names'
 

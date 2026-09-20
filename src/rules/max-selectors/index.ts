@@ -1,9 +1,8 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Rule } from 'postcss'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
 import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-selectors'
 

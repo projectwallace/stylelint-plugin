@@ -1,10 +1,9 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { getSpecificity, compareSpecificity } from '@projectwallace/css-analyzer/selectors'
 import type { Specificity } from '@projectwallace/css-analyzer'
 import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-average-selector-specificity'
 

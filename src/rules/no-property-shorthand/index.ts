@@ -1,10 +1,9 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser'
 import { shorthand_properties } from '@projectwallace/css-analyzer/properties'
 import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
-
-const { createPlugin, utils } = stylelint
 
 export const rule_name = 'projectwallace/no-property-shorthand'
 

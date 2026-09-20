@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { IDENTIFIER, OPERATOR } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
@@ -6,8 +7,6 @@ import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-pr
 import { keywords } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unused-container-names'
 

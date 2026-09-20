@@ -1,10 +1,9 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { keywords } from '@projectwallace/css-analyzer/values'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-duplicate-anchor-names'
 

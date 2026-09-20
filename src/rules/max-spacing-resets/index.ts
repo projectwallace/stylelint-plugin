@@ -1,10 +1,9 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { isValueReset } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
-
-const { createPlugin, utils } = stylelint
 
 export const rule_name = 'projectwallace/max-spacing-resets'
 

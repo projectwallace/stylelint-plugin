@@ -1,8 +1,7 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-declarations'
 
