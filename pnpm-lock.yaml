@@ -16,7 +16,7 @@ importers:
         version: 9.9.3
       '@projectwallace/css-parser':
         specifier: ~0.18.6
-        version: 0.18.6
+        version: 0.18.7
     devDependencies:
       '@types/node':
         specifier: ^26.1.1
@@ -429,8 +429,8 @@ packages:
     resolution: {integrity: sha512-qyoW3eRPHgQvJGhLCCaypG/YuCPF+lrCIHtCjRxwG6HNWk+BMvFJ7qzTicBIkehfSJFQXrT+T4mvBpZmUgzlDg==}
     engines: {node: '>=18.0.0', pnpm: '>=11.0.0'}
 
-  '@projectwallace/css-parser@0.18.6':
-    resolution: {integrity: sha512-o/3Q5YHs28nq5APCR73w/nUC9hr67nU229cbo611T1U72QeCBti11xkLwk7aMmUTzpSKnqqZib1o4bq7QEgapw==}
+  '@projectwallace/css-parser@0.18.7':
+    resolution: {integrity: sha512-2facNVEKoWyC9+B7h/hZhQpyfk+b3TaoB4Cu3u2qUiRXiGqqId9t5mmc0m9v4MDfw9vLSB7mDTSWh5VxNVJ4Vg==}
     engines: {pnpm: '>=11.0.0'}
 
   '@publint/pack@0.1.7':
@@ -2020,9 +2020,9 @@ snapshots:
 
   '@projectwallace/css-analyzer@9.9.3':
     dependencies:
-      '@projectwallace/css-parser': 0.18.6
+      '@projectwallace/css-parser': 0.18.7
 
-  '@projectwallace/css-parser@0.18.6': {}
+  '@projectwallace/css-parser@0.18.7': {}
 
   '@publint/pack@0.1.7':
     dependencies:
