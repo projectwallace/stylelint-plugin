@@ -51,7 +51,8 @@
 		"test": "vitest --coverage",
 		"check": "tsc --noEmit",
 		"lint": "oxlint -D perf && oxfmt --check",
-		"build": "tsdown"
+		"build": "tsdown",
+		"knip": "knip"
 	},
 	"dependencies": {
 		"@projectwallace/css-analyzer": "^9.9.4",
@@ -61,6 +62,7 @@
 		"@projectwallace/preset-oxlint": "^0.0.11",
 		"@types/node": "^26.6.4",
 		"@vitest/coverage-v8": "^5.0.3",
+		"knip": "^6.39.0",
 		"oxfmt": "^0.72.0",
 		"oxlint": "^1.87.0",
 		"postcss": "^8.5.29",
