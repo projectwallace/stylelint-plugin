@@ -75,7 +75,7 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 			const child = media_feature.value
 			if (child !== null && (is_dimension(child) || is_number(child))) {
 				const { value } = child
-				if (value != null && !Number.isNaN(value)) {
+				if (value !== null && !Number.isNaN(value)) {
 					static_feature = {
 						feature: property,
 						value: child.text,

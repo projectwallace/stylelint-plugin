@@ -7,6 +7,7 @@ import {
 } from '../../utils/option-validators.js'
 import { parse_value } from '@projectwallace/css-parser'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
+import { unquote } from '../../utils/unquote.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -68,7 +69,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 			atRule.walkDecls('syntax', (decl) => {
 				// syntax values may be quoted: '"<color>"' or "'<color>'"
-				const syntax = decl.value.trim().replace(/^['"]|['"]$/g, '')
+				const syntax = unquote(decl.value.trim())
 				if (syntax === '<color>') {
 					color_custom_properties.add(prop_name)
 				}
