@@ -54,8 +54,8 @@
 		"build": "tsdown"
 	},
 	"dependencies": {
-		"@projectwallace/css-analyzer": "^9.9.1",
-		"@projectwallace/css-parser": "~0.18.6"
+		"@projectwallace/css-analyzer": "^9.9.4",
+		"@projectwallace/css-parser": "~0.18.9"
 	},
 	"devDependencies": {
 		"@types/node": "^26.1.1",
