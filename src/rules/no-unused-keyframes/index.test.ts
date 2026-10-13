@@ -12,7 +12,7 @@ async function lint(code: string, primaryOption: unknown, secondaryOptions?: unk
 		plugins: [plugin],
 		rules: {
 			[rule_name]:
-				secondaryOptions !== undefined ? [primaryOption, secondaryOptions] : primaryOption,
+				secondaryOptions === undefined ? primaryOption : [primaryOption, secondaryOptions],
 		},
 	}
 	const {

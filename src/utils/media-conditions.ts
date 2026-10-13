@@ -51,7 +51,7 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
 	if (child !== null && (is_dimension(child) || is_number(child))) {
 		const value = child.value
 		const unit = is_dimension(child) ? child.unit : ''
-		if (value == null || Number.isNaN(value)) return []
+		if (value === null || Number.isNaN(value)) return []
 		if (direction === 'both') {
 			return [
 				{ feature, value, unit, inclusive: true, direction: 'lower' },
@@ -95,7 +95,7 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 		const dimension = child1
 		const value = dimension.value
 		const unit = is_dimension(dimension) ? dimension.unit : ''
-		if (value != null && !Number.isNaN(value)) {
+		if (value !== null && !Number.isNaN(value)) {
 			const bound = operator_to_bound(operator, value, unit, 'feature_left')
 			if (bound) bounds.push({ ...bound, feature })
 		}
@@ -119,12 +119,12 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 		const unit2 = is_dimension(dimension2) ? dimension2.unit : ''
 
 		// dimension1 OP1 feature → feature is on the right side of OP1
-		if (value1 != null && !Number.isNaN(value1)) {
+		if (value1 !== null && !Number.isNaN(value1)) {
 			const bound = operator_to_bound(operator1, value1, unit1, 'feature_right')
 			if (bound) bounds.push({ ...bound, feature })
 		}
 		// feature OP2 dimension2 → feature is on the left side of OP2
-		if (value2 != null && !Number.isNaN(value2)) {
+		if (value2 !== null && !Number.isNaN(value2)) {
 			const bound = operator_to_bound(operator2, value2, unit2, 'feature_left')
 			if (bound) bounds.push({ ...bound, feature })
 		}

@@ -42,14 +42,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const tracker = new DefinedUsed<AtRule>()
 
 		root.walkAtRules('layer', (atRule) => {
-			if (atRule.nodes !== undefined) {
-				// Block rule: @layer name { ... }
-				const name = atRule.params.trim()
-				if (name) {
-					tracker.use(name)
-					mark_ancestors_used(name, tracker)
-				}
-			} else {
+			if (atRule.nodes === undefined) {
 				// Statement: @layer name; or @layer a, b, c;
 				const names = atRule.params
 					.split(',')
@@ -57,6 +50,13 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					.filter(Boolean)
 				for (const name of names) {
 					tracker.define(name, atRule)
+				}
+			} else {
+				// Block rule: @layer name { ... }
+				const name = atRule.params.trim()
+				if (name) {
+					tracker.use(name)
+					mark_ancestors_used(name, tracker)
 				}
 			}
 		})

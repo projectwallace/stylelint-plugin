@@ -3,6 +3,7 @@ import type { Root, Declaration } from 'postcss'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { parse_value } from '@projectwallace/css-parser'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
+import { unquote } from '../../utils/unquote.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -39,7 +40,7 @@ const ruleFunction = (primaryOption: number) => {
 			if (!prop_name.startsWith('--')) return
 
 			atRule.walkDecls('syntax', (decl) => {
-				const syntax = decl.value.trim().replace(/^['"]|['"]$/g, '')
+				const syntax = unquote(decl.value.trim())
 				if (syntax === '<color>') {
 					color_custom_properties.add(prop_name)
 				}

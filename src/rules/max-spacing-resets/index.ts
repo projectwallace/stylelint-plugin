@@ -29,7 +29,7 @@ const ruleFunction = (primaryOption: number) => {
 
 		if (!validOptions) return
 
-		// TODO: at some point we could have a setting to ignore resets in a reset/normalize layer,
+		// At some point we could have a setting to ignore resets in a reset/normalize layer,
 		// e.g. `ignoreLayers: ['reset', 'normalize']`
 		// Then any reset in `@layer reset {}` would be ignored.
 		let reset_count = 0
