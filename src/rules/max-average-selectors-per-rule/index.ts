@@ -1,10 +1,9 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-average-selectors-per-rule'
 

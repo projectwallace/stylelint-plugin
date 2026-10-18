@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import {
 	MEDIA_QUERY,
@@ -29,8 +30,6 @@ function cartesian<T>(arrays: T[][]): T[][] {
 	}
 	return result
 }
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-unreachable-media-conditions'
 

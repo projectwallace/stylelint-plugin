@@ -1,7 +1,6 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-duplicate-registered-properties'
 

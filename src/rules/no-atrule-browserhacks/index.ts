@@ -1,9 +1,9 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { isSupportsBrowserhack, isMediaBrowserhack } from '@projectwallace/css-analyzer/atrules'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 
-const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-atrule-browserhacks'
 
 const messages = utils.ruleMessages(rule_name, {

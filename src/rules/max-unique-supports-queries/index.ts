@@ -1,12 +1,11 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import {
 	is_allowed,
 	ignore_option_validators,
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-supports-queries'
 

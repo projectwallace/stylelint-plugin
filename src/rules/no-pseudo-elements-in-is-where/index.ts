@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import {
 	walk,
@@ -8,7 +9,6 @@ import {
 	is_pseudo_element_selector,
 } from '@projectwallace/css-parser'
 
-const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-pseudo-elements-in-is-where'
 
 const messages = utils.ruleMessages(rule_name, {
