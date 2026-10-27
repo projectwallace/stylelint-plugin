@@ -174,3 +174,12 @@ test('should error when non-ignored values exceed the limit', async () => {
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Expected no more than 1 unique keyframes but found 2')
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match at-rules case-insensitively', async () => {
+	const { warnings } = await lint(`@KEYFRAMES a { from {} } @Keyframes b { from {} }`, 1)
+	expect(warnings).toHaveLength(1)
+})

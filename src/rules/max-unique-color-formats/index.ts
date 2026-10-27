@@ -4,6 +4,7 @@ import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { parse_value } from '@projectwallace/css-parser'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 import { unquote } from '../../utils/unquote.js'
+import { is_custom } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -35,11 +36,11 @@ const ruleFunction = (primaryOption: number) => {
 			})
 		}
 
-		root.walkAtRules('property', (atRule) => {
+		root.walkAtRules(/^property$/i, (atRule) => {
 			const prop_name = atRule.params.trim()
-			if (!prop_name.startsWith('--')) return
+			if (!is_custom(prop_name)) return
 
-			atRule.walkDecls('syntax', (decl) => {
+			atRule.walkDecls(/^syntax$/i, (decl) => {
 				const syntax = unquote(decl.value.trim())
 				if (syntax === '<color>') {
 					color_custom_properties.add(prop_name)
@@ -48,7 +49,7 @@ const ruleFunction = (primaryOption: number) => {
 
 			if (!color_custom_properties.has(prop_name)) return
 
-			atRule.walkDecls('initial-value', (decl) => {
+			atRule.walkDecls(/^initial-value$/i, (decl) => {
 				run_collect(parse_value(decl.value), false)
 			})
 		})

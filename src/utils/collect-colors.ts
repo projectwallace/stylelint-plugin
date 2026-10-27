@@ -7,6 +7,7 @@ import {
 	is_hash,
 	is_identifier,
 } from '@projectwallace/css-parser'
+import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 /**
  * CSS properties whose declaration values may contain color values.
@@ -58,7 +59,7 @@ export function collect_colors(
 				return SKIP
 			}
 
-			if (resolve_var && fn_name_lower === 'var') {
+			if (resolve_var && str_equals('var', fn_name)) {
 				// var() referencing a custom property declared as <color> via @property.
 				// Do NOT skip children so fallback color values are still evaluated.
 				const first = node.first_child

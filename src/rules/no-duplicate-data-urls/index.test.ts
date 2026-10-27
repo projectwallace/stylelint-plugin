@@ -107,3 +107,17 @@ b { background: url("data:image/png;base64,abc"); }`,
 
 	expect(warnings[0].line).toBe(2)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match data: URLs case-insensitively', async () => {
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `a { mask-image: url(DATA:image/svg+xml,abc); } b { mask-image: url(DATA:image/svg+xml,abc); }`,
+		config,
+	})
+	expect(warnings).toHaveLength(1)
+})

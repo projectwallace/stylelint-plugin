@@ -51,7 +51,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			}
 		})
 
-		root.walkAtRules('container', (atRule) => {
+		root.walkAtRules(/^container$/i, (atRule) => {
 			const prelude = parse_atrule_prelude('container', atRule.params.trim())
 			const first_child = prelude.at(0)?.first_child
 			if (first_child?.type === IDENTIFIER) {
@@ -62,7 +62,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
 		for (const referenceRoot of referenceRoots) {
-			referenceRoot.walkAtRules('container', (atRule) => {
+			referenceRoot.walkAtRules(/^container$/i, (atRule) => {
 				const prelude = parse_atrule_prelude('container', atRule.params.trim())
 				const first_child = prelude.at(0)?.first_child
 				if (first_child?.type === IDENTIFIER) {

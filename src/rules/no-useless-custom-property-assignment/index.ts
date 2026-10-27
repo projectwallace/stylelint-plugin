@@ -4,6 +4,7 @@ import { is_allowed } from '../../utils/option-validators.js'
 import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -43,7 +44,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 			walk(parsed, (child) => {
 				if (reported) return BREAK
-				if (child.type !== FUNCTION || child.name !== 'var') return
+				if (child.type !== FUNCTION || !str_equals('var', child.name)) return
 
 				for (const grandchild of child) {
 					if (grandchild.type === IDENTIFIER && grandchild.text === property) {
@@ -57,7 +58,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 						reported = true
 						return BREAK
 					}
-					if (grandchild.type === IDENTIFIER && grandchild.text.startsWith('--')) {
+					if (grandchild.type === IDENTIFIER && is_custom(grandchild.text)) {
 						break
 					}
 				}

@@ -5,6 +5,7 @@ import { IDENTIFIER, STRING } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
+import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -50,7 +51,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			const ast = parse_value(decl.value)
 			for (const node of ast) {
 				if (node.type === IDENTIFIER) {
-					if (node.text.toLowerCase() !== 'none') {
+					if (!str_equals('none', node.text)) {
 						tracker.use(node.text)
 					}
 				} else if (node.type === STRING) {
@@ -85,7 +86,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				const ast = parse_value(decl.value)
 				for (const node of ast) {
 					if (node.type === IDENTIFIER) {
-						if (node.text.toLowerCase() !== 'none') {
+						if (!str_equals('none', node.text)) {
 							tracker.use(node.text)
 						}
 					} else if (node.type === STRING) {

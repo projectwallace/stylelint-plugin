@@ -342,3 +342,24 @@ test.runIf(supportsReferenceFiles)(
 		expect(warnings[0].text).toBe(`Unexpected unused container name "sidebar" (${rule_name})`)
 	},
 )
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match @container case-insensitively', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `.a { container-name: sidebar; } @CONTAINER sidebar (min-width: 1px) { a {} }`,
+		config,
+	})
+	expect(warnings).toHaveLength(0)
+})

@@ -626,3 +626,15 @@ test('should count each same color expression only once across declarations', as
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should read @property initial-value case-insensitively', async () => {
+	const { warnings } = await lint(
+		`@PROPERTY --c { SYNTAX: '<color>'; inherits: false; INITIAL-VALUE: red; } a { color: blue; }`,
+		1,
+	)
+	expect(warnings).toHaveLength(1)
+})

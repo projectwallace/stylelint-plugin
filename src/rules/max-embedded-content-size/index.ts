@@ -4,6 +4,7 @@ import { walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_url } from '@projectwallace/css-parser'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
+import { str_index_of } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -35,7 +36,7 @@ const ruleFunction = (primaryOption: number) => {
 			walk(parsed, (node) => {
 				if (!is_url(node)) return
 				const url = node.text
-				if (url.includes('data:')) {
+				if (str_index_of('data:', url) !== -1) {
 					total_size += url.length
 				}
 			})

@@ -10,6 +10,7 @@ import {
 } from '@projectwallace/css-parser'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
+import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
 
 export type Bound = {
 	feature: string
@@ -36,10 +37,10 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
 	let direction: 'lower' | 'upper' | 'both'
 	let feature: string
 
-	if (property.startsWith('min-')) {
+	if (str_starts_with('min-', property)) {
 		direction = 'lower'
 		feature = property.slice(4)
-	} else if (property.startsWith('max-')) {
+	} else if (str_starts_with('max-', property)) {
 		direction = 'upper'
 		feature = property.slice(4)
 	} else {
@@ -201,8 +202,8 @@ export function collect_bounds_from_prelude(
 		let skip = false
 		walk(node, (child) => {
 			if (is_prelude_operator(child)) {
-				const operator = child.text.trim().toLowerCase()
-				if (operator === 'not' || operator === 'or') {
+				const operator = child.text.trim()
+				if (str_equals('not', operator) || str_equals('or', operator)) {
 					skip = true
 					return BREAK
 				}
@@ -235,12 +236,13 @@ export function collect_bounds_from_prelude(
  * Returns info about the first contradictory feature, or null if no contradiction found.
  */
 export function find_contradictory_feature(bounds: Bound[]): ContradictionInfo | null {
-	// Group bounds by feature name
+	// Group bounds by feature name (case-insensitive: `WIDTH` and `width` are the same feature)
 	const by_feature = new Map<string, Bound[]>()
 	for (const bound of bounds) {
-		const existing = by_feature.get(bound.feature) ?? []
+		const key = bound.feature.toLowerCase()
+		const existing = by_feature.get(key) ?? []
 		existing.push(bound)
-		by_feature.set(bound.feature, existing)
+		by_feature.set(key, existing)
 	}
 
 	for (const [feature, feature_bounds] of by_feature) {
@@ -249,14 +251,14 @@ export function find_contradictory_feature(bounds: Bound[]): ContradictionInfo |
 
 		if (lower_bounds.length === 0 || upper_bounds.length === 0) continue
 
-		// Only compare bounds with the same unit
-		const lower_units = new Set(lower_bounds.map((b) => b.unit))
+		// Only compare bounds with the same unit (case-insensitive: `PX` and `px` are the same unit)
+		const lower_units = new Set(lower_bounds.map((b) => b.unit.toLowerCase()))
 
 		for (const unit of lower_units) {
-			const uppers_same_unit = upper_bounds.filter((b) => b.unit === unit)
+			const uppers_same_unit = upper_bounds.filter((b) => str_equals(unit, b.unit))
 			if (uppers_same_unit.length === 0) continue
 
-			const lowers_same_unit = lower_bounds.filter((b) => b.unit === unit)
+			const lowers_same_unit = lower_bounds.filter((b) => str_equals(unit, b.unit))
 
 			// Most restrictive lower = highest value; tie-break: exclusive > inclusive
 			const max_lower = lowers_same_unit.reduce((a, b) => {

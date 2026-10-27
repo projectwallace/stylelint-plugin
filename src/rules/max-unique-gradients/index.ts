@@ -52,7 +52,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const violating_declarations: Array<{ declaration: Declaration; start: number; end: number }> =
 			[]
 
-		root.walkDecls(/^(?:background(?:-image))$/, (declaration) => {
+		root.walkDecls(/^background(-image)?$/i, (declaration) => {
 			const before = unique_gradients.size
 			const ast = parse_value(declaration.value)
 			let trigger_start = 0
@@ -60,7 +60,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 			walk(ast, (node) => {
 				if (is_function(node)) {
-					if (/^(repeating-)?(linear|conic|radial)-gradient$/.test(node.name)) {
+					if (/^(repeating-)?(linear|conic|radial)-gradient$/i.test(node.name)) {
 						const gradient = node.text
 						if (!is_allowed(gradient, ignore)) {
 							const is_new = !unique_gradients.has(gradient)

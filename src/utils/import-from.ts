@@ -8,6 +8,7 @@ import {
 } from '@projectwallace/css-parser/nodes'
 import { parse } from '@projectwallace/css-parser/parse'
 import { SKIP, walk } from '@projectwallace/css-parser/walker'
+import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 
 export type ImportFrom = string | { filePath: string }
 
@@ -32,13 +33,13 @@ export function collect_declarations_from_files(importFrom: ImportFrom[]): Set<s
 		walk(ast, (node) => {
 			if (node.type === DECLARATION) {
 				const property = node.property
-				if (typeof property === 'string' && property.startsWith('--')) {
+				if (typeof property === 'string' && is_custom(property)) {
 					result.add(property)
 					return SKIP
 				}
-			} else if (node.type === AT_RULE && node.name === 'property' && node.prelude) {
+			} else if (node.type === AT_RULE && str_equals('property', node.name) && node.prelude) {
 				walk(node.prelude, (child) => {
-					if (child.type === IDENTIFIER && child.text.startsWith('--')) {
+					if (child.type === IDENTIFIER && is_custom(child.text)) {
 						result.add(child.text)
 						return SKIP
 					}
@@ -64,9 +65,9 @@ export function collect_usages_from_files(importFrom: ImportFrom[]): Set<string>
 			parse_selectors: false,
 		})
 		walk(ast, (node) => {
-			if (node.type === FUNCTION && node.name === 'var') {
+			if (node.type === FUNCTION && str_equals('var', node.name)) {
 				for (const child of node) {
-					if (child.type === IDENTIFIER && child.text.startsWith('--')) {
+					if (child.type === IDENTIFIER && is_custom(child.text)) {
 						result.add(child.text)
 						break
 					}

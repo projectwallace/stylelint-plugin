@@ -297,3 +297,17 @@ test('should count design token families while ignoring keywords mixed in', asyn
 		'Expected no more than 1 unique font families but found 2 (projectwallace/max-unique-font-families)',
 	)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match properties case-insensitively', async () => {
+	const { warnings } = await lint(`a { FONT-FAMILY: Arial; } b { Font: 12px Helvetica; }`, 1)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should skip @font-face case-insensitively', async () => {
+	const { warnings } = await lint(`@FONT-FACE { font-family: Foo; } a { font-family: Arial; }`, 1)
+	expect(warnings).toHaveLength(0)
+})

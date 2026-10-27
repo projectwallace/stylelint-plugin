@@ -48,7 +48,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_shadows = new Set<string>()
 		const violating_declarations: Declaration[] = []
 
-		root.walkDecls('box-shadow', (declaration) => {
+		root.walkDecls(/^box-shadow$/i, (declaration) => {
 			const before = unique_shadows.size
 			const value = declaration.value
 

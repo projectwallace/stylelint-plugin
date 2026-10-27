@@ -226,3 +226,20 @@ test('equality width in em with conflicting min-width in em — error', async ()
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(`Unexpected static value in media query (${rule_name})`)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match at-rules case-insensitively', async () => {
+	const { warnings } = await lint(`@MEDIA (width: 100px) { a {} }`)
+	expect(warnings).toHaveLength(1)
+})
+
+test.each([
+	['min-/max- features', `@media (MIN-WIDTH: 100px) and (Max-Width: 200px) { a {} }`],
+	['viewport-segments features', `@media (HORIZONTAL-VIEWPORT-SEGMENTS: 2) { a {} }`],
+])('should not error on uppercase %s', async (_, code) => {
+	const { warnings } = await lint(code)
+	expect(warnings).toHaveLength(0)
+})

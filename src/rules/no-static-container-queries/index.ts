@@ -11,6 +11,7 @@ import {
 	is_prelude_operator,
 	type MediaFeature,
 } from '@projectwallace/css-parser'
+import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -49,8 +50,8 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 		let skip = false
 		walk(query_node, (node) => {
 			if (is_prelude_operator(node)) {
-				const operator = node.text.trim().toLowerCase()
-				if (operator === 'not' || operator === 'or') {
+				const operator = node.text.trim()
+				if (str_equals('not', operator) || str_equals('or', operator)) {
 					skip = true
 					return BREAK
 				}
@@ -69,7 +70,7 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 			if (!property) return
 
 			// Only check unprefixed features — min-/max- are range features
-			if (property.startsWith('min-') || property.startsWith('max-')) return
+			if (str_starts_with('min-', property) || str_starts_with('max-', property)) return
 
 			// A numeric value makes this an equality (static) condition
 			const child = media_feature.value
@@ -101,7 +102,7 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
-		root.walkAtRules('container', (at_rule) => {
+		root.walkAtRules(/^container$/i, (at_rule) => {
 			const prelude = at_rule.params
 			if (!prelude) return
 

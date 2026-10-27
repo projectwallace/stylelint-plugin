@@ -223,3 +223,12 @@ test('should count design token heights while ignoring keywords mixed in', async
 	expect(errored).toBe(true)
 	expect(warnings[0].text).toContain('Expected no more than 1 unique line heights but found 2')
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match properties case-insensitively', async () => {
+	const { warnings } = await lint(`a { LINE-HEIGHT: 1; } b { Font: 12px/2 Arial; }`, 1)
+	expect(warnings).toHaveLength(1)
+})

@@ -3,6 +3,7 @@ import type { Root } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk } from '@projectwallace/css-parser/walker'
 import { is_function, is_if_branch } from '@projectwallace/css-parser'
+import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -31,7 +32,7 @@ const ruleFunction = (primaryOption: true) => {
 			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
-				if (!is_function(node) || node.name.toLowerCase() !== 'if') return
+				if (!is_function(node) || !str_equals('if', node.name)) return
 
 				let has_else = false
 				for (const child of node) {

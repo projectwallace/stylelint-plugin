@@ -60,7 +60,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			collect_container_names(referenceRoot, declared_names)
 		}
 
-		root.walkAtRules('container', (atRule) => {
+		root.walkAtRules(/^container$/i, (atRule) => {
 			const prelude = parse_atrule_prelude('container', atRule.params.trim())
 			const first_child = prelude.at(0)?.first_child
 			if (first_child?.type !== IDENTIFIER) {

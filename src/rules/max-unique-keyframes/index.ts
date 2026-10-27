@@ -47,7 +47,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_keyframes = new Set<string>()
 		const violating_at_rules: AtRule[] = []
 
-		root.walkAtRules('keyframes', (atRule) => {
+		root.walkAtRules(/^keyframes$/i, (atRule) => {
 			const before = unique_keyframes.size
 			if (!is_allowed(atRule.params, ignore)) {
 				unique_keyframes.add(atRule.params)

@@ -164,3 +164,15 @@ test('should error when non-ignored values exceed the limit', async () => {
 		'Expected no more than 1 unique media queries but found 2 (projectwallace/max-unique-media-queries)',
 	)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match at-rules case-insensitively', async () => {
+	const { warnings } = await lint(
+		`@MEDIA (min-width: 100px) { a {} } @Media (min-width: 200px) { a {} }`,
+		1,
+	)
+	expect(warnings).toHaveLength(1)
+})

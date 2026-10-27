@@ -323,3 +323,15 @@ test('should not count non-color properties', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should read @property initial-value case-insensitively', async () => {
+	const { warnings } = await lint(
+		`@PROPERTY --c { SYNTAX: '<color>'; inherits: false; INITIAL-VALUE: red; } a { color: #000; }`,
+		1,
+	)
+	expect(warnings).toHaveLength(1)
+})

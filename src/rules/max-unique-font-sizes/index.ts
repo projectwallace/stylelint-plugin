@@ -49,7 +49,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_sizes = new Set<string>()
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
-		root.walkDecls('font-size', (declaration) => {
+		root.walkDecls(/^font-size$/i, (declaration) => {
 			const before = unique_sizes.size
 			if (!keywords.has(declaration.value) && !is_allowed(declaration.value, ignore)) {
 				unique_sizes.add(declaration.value)
@@ -59,7 +59,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			}
 		})
 
-		root.walkDecls('font', (declaration) => {
+		root.walkDecls(/^font$/i, (declaration) => {
 			const before = unique_sizes.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})

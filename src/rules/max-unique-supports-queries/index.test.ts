@@ -158,3 +158,15 @@ test('should error when non-ignored values exceed the limit', async () => {
 		'Expected no more than 1 unique supports queries but found 2 (projectwallace/max-unique-supports-queries)',
 	)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match at-rules case-insensitively', async () => {
+	const { warnings } = await lint(
+		`@SUPPORTS (display: grid) { a {} } @Supports (display: flex) { a {} }`,
+		1,
+	)
+	expect(warnings).toHaveLength(1)
+})

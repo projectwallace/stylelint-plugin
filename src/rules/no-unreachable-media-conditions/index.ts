@@ -15,6 +15,7 @@ import {
 	find_contradictory_feature,
 } from '../../utils/media-conditions.js'
 import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
+import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 /** Cartesian product of an array of arrays. */
 function cartesian<T>(arrays: T[][]): T[][] {
@@ -60,8 +61,8 @@ function find_contradiction_in_prelude(
 		let skip = false
 		walk(query_node, (node) => {
 			if (node.type === PRELUDE_OPERATOR) {
-				const operator = node.text.trim().toLowerCase()
-				if (operator === 'not' || operator === 'or') {
+				const operator = node.text.trim()
+				if (str_equals('not', operator) || str_equals('or', operator)) {
 					skip = true
 					return BREAK
 				}
@@ -132,7 +133,7 @@ const ruleFunction = (primaryOption: true) => {
 			let node = atRule.parent
 
 			while (node) {
-				if (node.type === 'atrule' && (node as AtRule).name.toLowerCase() === 'media') {
+				if (node.type === 'atrule' && str_equals('media', (node as AtRule).name)) {
 					const ancestor = node as AtRule
 					const alternatives = collect_bounds_from_prelude('media', ancestor.params)
 					if (alternatives.length === 0) return // empty prelude — bail out

@@ -2,6 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { isValueBrowserhack } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { is_custom } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 const rule_name = 'projectwallace/no-value-browserhacks'
@@ -24,7 +25,7 @@ const ruleFunction = (primaryOption: true) => {
 		if (!validOptions) return
 
 		root.walkDecls((declaration) => {
-			if (declaration.prop.startsWith('--')) {
+			if (is_custom(declaration.prop)) {
 				return
 			}
 			const value = declaration.value.trim()
