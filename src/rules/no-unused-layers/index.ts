@@ -2,6 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
 
@@ -32,7 +33,9 @@ function mark_import_layer_used(atRule: AtRule, tracker: DefinedUsed<AtRule>) {
 	const parsed = parse_atrule_prelude('import', atRule.params)
 	for (const child of parsed) {
 		// `layer(name)` is a Function node wrapping a LayerName child
-		if (child.type !== FUNCTION || child.name.toLowerCase() !== 'layer') continue
+		if (child.type !== FUNCTION || !str_equals('layer', child.name)) {
+			continue
+		}
 		const layer = child.first_child
 		if (layer?.type === LAYER_NAME && layer.name) {
 			tracker.use(layer.name)
