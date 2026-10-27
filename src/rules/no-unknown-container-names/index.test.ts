@@ -368,6 +368,25 @@ test.runIf(supportsReferenceFiles)(
 	},
 )
 
+test.runIf(supportsReferenceFiles)(
+	'should not error when @container uses a name declared via container shorthand in a referenceFiles file',
+	async () => {
+		const file = write_fixture('reference.css', '.sidebar { container: sidebar / inline-size; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@container sidebar (min-width: 700px) { .card { font-size: 1rem; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
 // ---------------------------------------------------------------------------
 // Case insensitivity
 // ---------------------------------------------------------------------------

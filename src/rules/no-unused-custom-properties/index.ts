@@ -39,12 +39,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const tracker = new DefinedUsed<Declaration | AtRule>()
 
-		// Declarations are visited first so they take precedence over @property
-		// when both exist for the same name — also collects var() usages in one pass
-		root.walkDecls((decl) => {
-			if (is_custom(decl.prop)) {
-				tracker.define(decl.prop, decl)
-			}
+		function collect_var_usages(decl: Declaration) {
 			walk(parse_value(decl.value), (node) => {
 				if (node.type !== FUNCTION || !str_equals('var', node.name)) {
 					return
@@ -54,6 +49,15 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					tracker.use(first.text)
 				}
 			})
+		}
+
+		// Declarations are visited first so they take precedence over @property
+		// when both exist for the same name — also collects var() usages in one pass
+		root.walkDecls((decl) => {
+			if (is_custom(decl.prop)) {
+				tracker.define(decl.prop, decl)
+			}
+			collect_var_usages(decl)
 		})
 
 		root.walkAtRules(/^property$/i, (atRule) => {
@@ -72,17 +76,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
 		for (const referenceRoot of referenceRoots) {
-			referenceRoot.walkDecls((decl) => {
-				walk(parse_value(decl.value), (node) => {
-					if (node.type !== FUNCTION || !str_equals('var', node.name)) {
-						return
-					}
-					const first = node.first_child
-					if (first !== null && first.type === IDENTIFIER && is_custom(first.text)) {
-						tracker.use(first.text)
-					}
-				})
-			})
+			referenceRoot.walkDecls(collect_var_usages)
 		}
 
 		for (const [prop, node] of tracker.unused()) {

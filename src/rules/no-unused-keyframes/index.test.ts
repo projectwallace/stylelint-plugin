@@ -310,3 +310,22 @@ test.runIf(supportsReferenceFiles)(
 		expect(warnings[0].text).toBe(`Unexpected unused keyframe "slide-in" (${rule_name})`)
 	},
 )
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when keyframe is declared but used via quoted animation-name in a referenceFiles file',
+	async () => {
+		const file = write_fixture('reference.css', 'a { animation-name: "slide in"; }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@keyframes "slide in" { from { opacity: 0; } to { opacity: 1; } }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)

@@ -364,6 +364,64 @@ test.runIf(supportsReferenceFiles)(
 	},
 )
 
+test.runIf(supportsReferenceFiles)(
+	'should not error when layer is declared but used via @import layer() in a referenceFiles file',
+	async () => {
+		const file = write_fixture('reference.css', '@import url("utilities.css") layer(utilities);')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@layer utilities;',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should not error when parent layer is declared and a nested block layer is used in a referenceFiles file',
+	async () => {
+		const file = write_fixture('reference.css', '@layer core.reset { a { color: red; } }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@layer core;',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
+test.runIf(supportsReferenceFiles)(
+	'should still error when layer is only declared as a statement in a referenceFiles file',
+	async () => {
+		const file = write_fixture('reference.css', '@layer utilities;')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: '@layer utilities;',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(true)
+		expect(warnings.length).toBe(1)
+		expect(warnings[0].text).toBe(`Unexpected unused layer "utilities" (${rule_name})`)
+	},
+)
+
 // ---------------------------------------------------------------------------
 // Case insensitivity
 // ---------------------------------------------------------------------------

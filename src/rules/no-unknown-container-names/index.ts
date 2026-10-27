@@ -52,12 +52,10 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const declared_names = new Set<string>()
 
-		collect_container_names(root, declared_names)
-
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
-		for (const referenceRoot of referenceRoots) {
-			collect_container_names(referenceRoot, declared_names)
+		for (const root_node of [root, ...referenceRoots]) {
+			collect_container_names(root_node, declared_names)
 		}
 
 		root.walkAtRules(/^container$/i, (atRule) => {
