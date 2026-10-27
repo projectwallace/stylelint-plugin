@@ -77,13 +77,16 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			}
 		})
 
-		// @import url() layer(name) counts as usage of both `name` and all ancestor layers
-		root.walkAtRules(/^import$/i, (atRule) => {
-			mark_import_layer_used(atRule, tracker)
-		})
-
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
+
+		// @import url() layer(name) counts as usage of both `name` and all ancestor layers
+		for (const root_node of [root, ...referenceRoots]) {
+			root_node.walkAtRules(/^import$/i, (atRule) => {
+				mark_import_layer_used(atRule, tracker)
+			})
+		}
+
 		for (const referenceRoot of referenceRoots) {
 			referenceRoot.walkAtRules(/^layer$/i, (atRule) => {
 				if (atRule.nodes !== undefined) {
@@ -93,9 +96,6 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 						mark_ancestors_used(name, tracker)
 					}
 				}
-			})
-			referenceRoot.walkAtRules(/^import$/i, (atRule) => {
-				mark_import_layer_used(atRule, tracker)
 			})
 		}
 

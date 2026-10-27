@@ -379,6 +379,25 @@ test.runIf(supportsReferenceFiles)(
 	},
 )
 
+test.runIf(supportsReferenceFiles)(
+	'should not error when custom property is used in a var() fallback in a referenceFiles file',
+	async () => {
+		const file = write_fixture('reference.css', 'a { color: var(--other, var(--color)); }')
+		const {
+			results: [{ warnings, errored }],
+		} = await stylelint.lint({
+			code: ':root { --color: red; }',
+			config: {
+				plugins: [plugin],
+				rules: { [rule_name]: true },
+				referenceFiles: [file],
+			},
+		})
+		expect(errored).toBe(false)
+		expect(warnings).toStrictEqual([])
+	},
+)
+
 // ---------------------------------------------------------------------------
 // Case insensitivity
 // ---------------------------------------------------------------------------
