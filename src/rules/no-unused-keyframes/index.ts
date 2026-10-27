@@ -1,11 +1,9 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
-import { IDENTIFIER, STRING } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
-import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -47,65 +45,16 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		root.walkDecls(/^animation-name$/i, (decl) => {
-			const ast = parse_value(decl.value)
-			for (const node of ast) {
-				if (node.type === IDENTIFIER) {
-					if (!str_equals('none', node.text)) {
-						tracker.use(node.text)
-					}
-				} else if (node.type === STRING) {
-					// Suprisingly: keyframe names MAY be quoted
-					tracker.use(node.text)
-				}
-			}
-		})
-
-		root.walkDecls(/^animation$/i, (decl) => {
-			const ast = parse_value(decl.value)
-			analyzeAnimation(ast, ({ type, value }) => {
-				if (type === 'name') {
-					tracker.use(value.text)
-				}
-			})
-			// analyzeAnimation doesn't handle <string> nodes; quoted names are valid
-			// per spec (<keyframes-name> = <custom-ident> | <string>) but the
-			// function silently skips them — work around it here until that's fixed
-			for (const node of ast) {
-				if (node.type === STRING) {
-					// Suprisingly: keyframe names MAY be quoted
-					tracker.use(node.text)
-				}
-			}
-		})
-
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
-		for (const referenceRoot of referenceRoots) {
-			referenceRoot.walkDecls(/^animation-name$/i, (decl) => {
-				const ast = parse_value(decl.value)
-				for (const node of ast) {
-					if (node.type === IDENTIFIER) {
-						if (!str_equals('none', node.text)) {
-							tracker.use(node.text)
-						}
-					} else if (node.type === STRING) {
-						tracker.use(node.text)
-					}
-				}
-			})
-			referenceRoot.walkDecls(/^animation$/i, (decl) => {
+		for (const root_node of [root, ...referenceRoots]) {
+			root_node.walkDecls(/^animation(-name)?$/i, (decl) => {
 				const ast = parse_value(decl.value)
 				analyzeAnimation(ast, ({ type, value }) => {
 					if (type === 'name') {
 						tracker.use(value.text)
 					}
 				})
-				for (const node of ast) {
-					if (node.type === STRING) {
-						tracker.use(node.text)
-					}
-				}
 			})
 		}
 
