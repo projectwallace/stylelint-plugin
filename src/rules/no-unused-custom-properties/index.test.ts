@@ -378,3 +378,41 @@ test.runIf(supportsReferenceFiles)(
 		expect(warnings[0].text).toBe(`Unexpected unused custom property "--color" (${rule_name})`)
 	},
 )
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match var() case-insensitively', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `a { --used: 1; color: VAR(--used); }`,
+		config,
+	})
+	expect(warnings).toHaveLength(0)
+})
+
+test('should match @property case-insensitively', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `@PROPERTY --unused { syntax: '*'; inherits: false; }`,
+		config,
+	})
+	expect(warnings).toHaveLength(1)
+})

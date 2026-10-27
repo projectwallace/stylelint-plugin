@@ -239,3 +239,15 @@ test('should count design token shadows while ignoring keywords mixed in', async
 		'Expected no more than 1 unique box shadows but found 2 (projectwallace/max-unique-box-shadows)',
 	)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match properties case-insensitively', async () => {
+	const { warnings } = await lint(
+		`a { BOX-SHADOW: 0 0 1px red; } b { Box-Shadow: 0 0 2px red; }`,
+		1,
+	)
+	expect(warnings).toHaveLength(1)
+})

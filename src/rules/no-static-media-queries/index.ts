@@ -4,6 +4,7 @@ import { MEDIA_QUERY, MEDIA_FEATURE, PRELUDE_OPERATOR } from '@projectwallace/cs
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { walk, BREAK } from '@projectwallace/css-parser/walker'
 import { is_dimension, is_number } from '@projectwallace/css-parser'
+import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -45,8 +46,8 @@ function find_static_feature_in_prelude(
 		let skip = false
 		walk(query_node, (node) => {
 			if (node.type === PRELUDE_OPERATOR) {
-				const operator = node.text.trim().toLowerCase()
-				if (operator === 'not' || operator === 'or') {
+				const operator = node.text.trim()
+				if (str_equals('not', operator) || str_equals('or', operator)) {
 					skip = true
 					return BREAK
 				}
@@ -64,10 +65,13 @@ function find_static_feature_in_prelude(
 			if (!property) return
 
 			// Only check unprefixed features — min-/max- are range features
-			if (property.startsWith('min-') || property.startsWith('max-')) return
+			if (str_starts_with('min-', property) || str_starts_with('max-', property)) return
 
 			// These features intentionally take an integer count, not a length
-			if (property === 'horizontal-viewport-segments' || property === 'vertical-viewport-segments')
+			if (
+				str_equals('horizontal-viewport-segments', property) ||
+				str_equals('vertical-viewport-segments', property)
+			)
 				return
 
 			// A numeric value makes this an equality (static) condition
@@ -101,7 +105,7 @@ const ruleFunction = (primaryOption: true) => {
 
 		if (!validOptions) return
 
-		root.walkAtRules(/^(media|import)$/, (at_rule) => {
+		root.walkAtRules(/^(media|import)$/i, (at_rule) => {
 			const prelude = at_rule.params
 			if (!prelude) return
 

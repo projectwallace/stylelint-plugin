@@ -15,7 +15,7 @@ export default {
 		'property-no-vendor-prefix': [true, { ignoreProperties: ['-webkit-text-fill-color'] }],
 		'selector-no-vendor-prefix': [
 			true,
-			{ ignoreSelectors: [/^::-webkit-scrollbar/, ':-webkit-autofill'] },
+			{ ignoreSelectors: [/^::-webkit-scrollbar/i, ':-webkit-autofill'] },
 		],
 		'value-no-vendor-prefix': true,
 		'projectwallace/no-property-browserhacks': true,

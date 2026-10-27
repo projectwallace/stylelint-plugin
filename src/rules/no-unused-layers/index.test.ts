@@ -363,3 +363,41 @@ test.runIf(supportsReferenceFiles)(
 		expect(warnings[0].text).toBe(`Unexpected unused layer "utilities" (${rule_name})`)
 	},
 )
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match @layer case-insensitively', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `@LAYER reset; @LAYER reset { a {} } @Layer unused;`,
+		config,
+	})
+	expect(warnings).toHaveLength(1)
+})
+
+test('should match @import case-insensitively', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `@IMPORT url('reset.css') layer(reset); @layer reset;`,
+		config,
+	})
+	expect(warnings).toHaveLength(0)
+})

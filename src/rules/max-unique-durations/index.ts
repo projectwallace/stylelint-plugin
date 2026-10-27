@@ -8,6 +8,7 @@ import {
 import { analyzeAnimation, keywords } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
+import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -50,12 +51,15 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_durations = new Set<string>()
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
-		root.walkDecls(/^(animation|transition)(-duration)?$/, (declaration) => {
+		root.walkDecls(/^(animation|transition)(-duration)?$/i, (declaration) => {
 			let parsed = parse_value(declaration.value)
 			const before = unique_durations.size
 			let triggering_duration = declaration.value
 
-			if (declaration.prop === 'animation-duration' || declaration.prop === 'transition-duration') {
+			if (
+				str_equals('animation-duration', declaration.prop) ||
+				str_equals('transition-duration', declaration.prop)
+			) {
 				for (let child of parsed) {
 					if (child.type !== OPERATOR) {
 						let duration = child.text

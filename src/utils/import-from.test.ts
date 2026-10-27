@@ -155,3 +155,15 @@ test('collect_usages_from_files: returns empty set when given empty array', () =
 	const result = collect_usages_from_files([])
 	expect(result.size).toBe(0)
 })
+
+test('collect_declarations_from_files: matches @property case-insensitively', () => {
+	const file = write_fixture('vars.css', "@PROPERTY --color { syntax: '*'; inherits: false; }")
+	const result = collect_declarations_from_files([file])
+	expect(result.has('--color')).toBe(true)
+})
+
+test('collect_usages_from_files: matches var() case-insensitively', () => {
+	const file = write_fixture('usage.css', 'a { color: VAR(--color); }')
+	const result = collect_usages_from_files([file])
+	expect(result.has('--color')).toBe(true)
+})

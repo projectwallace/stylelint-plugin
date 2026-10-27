@@ -240,3 +240,12 @@ test('should count design token sizes while ignoring keywords mixed in', async (
 		'Expected no more than 1 unique font sizes but found 2 (projectwallace/max-unique-font-sizes)',
 	)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match properties case-insensitively', async () => {
+	const { warnings } = await lint(`a { FONT-SIZE: 1rem; } b { Font: 2rem Arial; }`, 1)
+	expect(warnings).toHaveLength(1)
+})

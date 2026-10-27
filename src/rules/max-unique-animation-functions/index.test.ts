@@ -246,3 +246,15 @@ test('should support RegExp patterns in ignore', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test.each([
+	['longhand', `a { ANIMATION-TIMING-FUNCTION: ease; } b { Transition-Timing-Function: linear; }`],
+	['shorthand', `a { ANIMATION: x 1s ease; } b { Transition: opacity 1s linear; }`],
+])('should match %s properties case-insensitively', async (_, code) => {
+	const { warnings } = await lint(code, 1)
+	expect(warnings).toHaveLength(1)
+})

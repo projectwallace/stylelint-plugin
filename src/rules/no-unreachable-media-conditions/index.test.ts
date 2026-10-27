@@ -433,3 +433,20 @@ test('nested @media: inner already self-contradictory — no double-report', asy
 	expect(warnings).toHaveLength(1)
 	expect(warnings[0].text).toBe(`Unexpected unreachable media condition (${rule_name})`)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test.each([
+	['feature names', `@media (MIN-WIDTH: 1000px) and (max-width: 500px) { a {} }`],
+	['units', `@media (min-width: 1000PX) and (max-width: 500px) { a {} }`],
+])('should compare %s case-insensitively', async (_, code) => {
+	const { warnings } = await lint(code)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should skip uppercase `OR` operators', async () => {
+	const { warnings } = await lint(`@media (min-width: 1000px) OR (max-width: 500px) { a {} }`)
+	expect(warnings).toHaveLength(0)
+})

@@ -166,3 +166,17 @@ test('min-width in em — no error', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match at-rules case-insensitively', async () => {
+	const { warnings } = await lint(`@CONTAINER (width: 100px) { a {} }`)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should not error on uppercase min-/max- features', async () => {
+	const { warnings } = await lint(`@container (MIN-WIDTH: 100px) { a {} }`)
+	expect(warnings).toHaveLength(0)
+})

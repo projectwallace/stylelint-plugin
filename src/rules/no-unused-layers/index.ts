@@ -57,7 +57,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const tracker = new DefinedUsed<AtRule>()
 
-		root.walkAtRules('layer', (atRule) => {
+		root.walkAtRules(/^layer$/i, (atRule) => {
 			if (atRule.nodes === undefined) {
 				// Statement: @layer name; or @layer a, b, c;
 				const names = atRule.params
@@ -78,14 +78,14 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		})
 
 		// @import url() layer(name) counts as usage of both `name` and all ancestor layers
-		root.walkAtRules('import', (atRule) => {
+		root.walkAtRules(/^import$/i, (atRule) => {
 			mark_import_layer_used(atRule, tracker)
 		})
 
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
 		for (const referenceRoot of referenceRoots) {
-			referenceRoot.walkAtRules('layer', (atRule) => {
+			referenceRoot.walkAtRules(/^layer$/i, (atRule) => {
 				if (atRule.nodes !== undefined) {
 					const name = atRule.params.trim()
 					if (name) {
@@ -94,7 +94,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					}
 				}
 			})
-			referenceRoot.walkAtRules('import', (atRule) => {
+			referenceRoot.walkAtRules(/^import$/i, (atRule) => {
 				mark_import_layer_used(atRule, tracker)
 			})
 		}

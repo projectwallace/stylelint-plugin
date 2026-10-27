@@ -157,3 +157,17 @@ test('should not error on regular var() usage in non-custom properties', async (
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match var() case-insensitively', async () => {
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `:root { --color: VAR(--color); }`,
+		config,
+	})
+	expect(warnings).toHaveLength(1)
+})

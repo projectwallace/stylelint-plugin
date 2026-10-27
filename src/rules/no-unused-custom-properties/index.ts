@@ -7,6 +7,7 @@ import { is_allowed } from '../../utils/option-validators.js'
 import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
+import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -41,23 +42,23 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		// Declarations are visited first so they take precedence over @property
 		// when both exist for the same name — also collects var() usages in one pass
 		root.walkDecls((decl) => {
-			if (decl.prop.startsWith('--')) {
+			if (is_custom(decl.prop)) {
 				tracker.define(decl.prop, decl)
 			}
 			walk(parse_value(decl.value), (node) => {
-				if (node.type !== FUNCTION || node.name !== 'var') {
+				if (node.type !== FUNCTION || !str_equals('var', node.name)) {
 					return
 				}
 				const first = node.first_child
-				if (first !== null && first.type === IDENTIFIER && first.text.startsWith('--')) {
+				if (first !== null && first.type === IDENTIFIER && is_custom(first.text)) {
 					tracker.use(first.text)
 				}
 			})
 		})
 
-		root.walkAtRules('property', (atRule) => {
+		root.walkAtRules(/^property$/i, (atRule) => {
 			const property_name = atRule.params.trim()
-			if (property_name.startsWith('--')) {
+			if (is_custom(property_name)) {
 				tracker.define(property_name, atRule)
 			}
 		})
@@ -73,11 +74,11 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		for (const referenceRoot of referenceRoots) {
 			referenceRoot.walkDecls((decl) => {
 				walk(parse_value(decl.value), (node) => {
-					if (node.type !== FUNCTION || node.name !== 'var') {
+					if (node.type !== FUNCTION || !str_equals('var', node.name)) {
 						return
 					}
 					const first = node.first_child
-					if (first !== null && first.type === IDENTIFIER && first.text.startsWith('--')) {
+					if (first !== null && first.type === IDENTIFIER && is_custom(first.text)) {
 						tracker.use(first.text)
 					}
 				})

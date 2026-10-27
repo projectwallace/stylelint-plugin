@@ -47,7 +47,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_queries = new Set<string>()
 		const violating_at_rules: AtRule[] = []
 
-		root.walkAtRules('media', (atRule) => {
+		root.walkAtRules(/^media$/i, (atRule) => {
 			const before = unique_queries.size
 			if (!is_allowed(atRule.params, ignore)) {
 				unique_queries.add(atRule.params)

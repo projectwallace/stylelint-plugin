@@ -3,6 +3,7 @@ import type { Root } from 'postcss'
 import { URL as CSS_URL } from '@projectwallace/css-parser/nodes'
 import { walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { str_index_of } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -35,7 +36,7 @@ const ruleFunction = (primaryOptions: true) => {
 			walk(parsed, (node) => {
 				if (node.type !== CSS_URL) return
 				const { text: url } = node
-				if (!url.includes('data:')) return
+				if (str_index_of('data:', url) === -1) return
 
 				if (seen.has(url)) {
 					utils.report({

@@ -270,3 +270,21 @@ test('should report the position of the triggering gradient function', async () 
 	expect(warnings[0].endLine).toBe(1)
 	expect(warnings[0].endColumn).toBe(100)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test.each([
+	[
+		'lowercase background shorthand',
+		`a { background: linear-gradient(red, blue); } b { background: radial-gradient(red, blue); }`,
+	],
+	[
+		'mixed-case properties and functions',
+		`a { BACKGROUND-IMAGE: LINEAR-GRADIENT(red, blue); } b { Background: Radial-Gradient(red, blue); }`,
+	],
+])('should detect gradients in %s', async (_, code) => {
+	const { warnings } = await lint(code, 1)
+	expect(warnings).toHaveLength(1)
+})

@@ -367,3 +367,24 @@ test.runIf(supportsReferenceFiles)(
 		expect(warnings[0].text).toBe(`Unexpected unknown container name "unknown" (${rule_name})`)
 	},
 )
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match @container case-insensitively', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: true,
+		},
+	}
+
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `@CONTAINER unknown (min-width: 1px) { a {} }`,
+		config,
+	})
+	expect(warnings).toHaveLength(1)
+})

@@ -271,3 +271,15 @@ test('should count design token durations while ignoring keywords mixed in', asy
 		'Expected no more than 1 unique durations but found 2 (projectwallace/max-unique-durations)',
 	)
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test.each([
+	['longhand', `a { ANIMATION-DURATION: 1s; } b { Transition-Duration: 2s; }`],
+	['shorthand', `a { ANIMATION: x 1s; } b { Transition: opacity 2s; }`],
+])('should match %s properties case-insensitively', async (_, code) => {
+	const { warnings } = await lint(code, 1)
+	expect(warnings).toHaveLength(1)
+})

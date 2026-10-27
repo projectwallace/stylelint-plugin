@@ -83,3 +83,24 @@ test('should error when embedded content size exceeds the limit', async () => {
 	})
 	expect(warnings[0].text).toContain('no more than 1 bytes but found')
 })
+
+// ---------------------------------------------------------------------------
+// Case insensitivity
+// ---------------------------------------------------------------------------
+
+test('should match data: URLs case-insensitively', async () => {
+	const config = {
+		plugins: [plugin],
+		rules: {
+			[rule_name]: 1,
+		},
+	}
+
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: `a { background: url("DATA:image/png;base64,abc123"); }`,
+		config,
+	})
+	expect(warnings).toHaveLength(1)
+})

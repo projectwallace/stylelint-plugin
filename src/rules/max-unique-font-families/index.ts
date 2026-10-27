@@ -7,6 +7,7 @@ import {
 	ignore_option_validators,
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
+import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -51,10 +52,10 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_families = new Set<string>()
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
-		root.walkDecls('font-family', (declaration) => {
+		root.walkDecls(/^font-family$/i, (declaration) => {
 			if (
 				declaration.parent?.type === 'atrule' &&
-				(declaration.parent as AtRule).name === 'font-face'
+				str_equals('font-face', (declaration.parent as AtRule).name)
 			) {
 				return
 			}
@@ -67,7 +68,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			}
 		})
 
-		root.walkDecls('font', (declaration) => {
+		root.walkDecls(/^font$/i, (declaration) => {
 			const before = unique_families.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, noop)
