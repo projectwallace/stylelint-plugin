@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import { LAYER_NAME } from '@projectwallace/css-parser/nodes'
+import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
@@ -25,6 +25,19 @@ function mark_ancestors_used(name: string, tracker: DefinedUsed<AtRule>) {
 	const parts = name.split('.')
 	for (let i = 1; i < parts.length; i++) {
 		tracker.use(parts.slice(0, i).join('.'))
+	}
+}
+
+function mark_import_layer_used(atRule: AtRule, tracker: DefinedUsed<AtRule>) {
+	const parsed = parse_atrule_prelude('import', atRule.params)
+	for (const child of parsed) {
+		// `layer(name)` is a Function node wrapping a LayerName child
+		if (child.type !== FUNCTION || child.name.toLowerCase() !== 'layer') continue
+		const layer = child.first_child
+		if (layer?.type === LAYER_NAME && layer.name) {
+			tracker.use(layer.name)
+			mark_ancestors_used(layer.name, tracker)
+		}
 	}
 }
 
@@ -63,13 +76,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		// @import url() layer(name) counts as usage of both `name` and all ancestor layers
 		root.walkAtRules('import', (atRule) => {
-			const parsed = parse_atrule_prelude('import', atRule.params)
-			for (const child of parsed) {
-				if (child.type === LAYER_NAME && child.name) {
-					tracker.use(child.name)
-					mark_ancestors_used(child.name, tracker)
-				}
-			}
+			mark_import_layer_used(atRule, tracker)
 		})
 
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
@@ -85,13 +92,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				}
 			})
 			referenceRoot.walkAtRules('import', (atRule) => {
-				const parsed = parse_atrule_prelude('import', atRule.params)
-				for (const child of parsed) {
-					if (child.type === LAYER_NAME && child.name) {
-						tracker.use(child.name)
-						mark_ancestors_used(child.name, tracker)
-					}
-				}
+				mark_import_layer_used(atRule, tracker)
 			})
 		}
 

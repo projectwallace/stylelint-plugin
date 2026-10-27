@@ -1,7 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { LAYER_NAME } from '@projectwallace/css-parser/nodes'
+import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 const { createPlugin, utils } = stylelint
 
@@ -27,7 +28,7 @@ const ruleFunction = (primaryOptions: true) => {
 		}
 
 		root.walkAtRules(/^(layer|import)$/i, (at_rule) => {
-			if (at_rule.name === 'layer') {
+			if (str_equals('layer', at_rule.name)) {
 				// Anonymous layer: has a block but no name (empty/missing params)
 				if (at_rule.nodes !== undefined && !at_rule.params.trim()) {
 					utils.report({
@@ -41,7 +42,11 @@ const ruleFunction = (primaryOptions: true) => {
 				// Check @import for anonymous layer syntax
 				const parsed = parse_atrule_prelude('import', at_rule.params)
 				for (const child of parsed) {
-					if (child.type === LAYER_NAME && !child.name) {
+					// Bare `layer` is a LayerName without a name, `layer()` is a Function without children
+					const is_bare_layer = child.type === LAYER_NAME && !child.name
+					const is_empty_layer_fn =
+						child.type === FUNCTION && str_equals('layer', child.name) && !child.first_child
+					if (is_bare_layer || is_empty_layer_fn) {
 						utils.report({
 							result,
 							ruleName: rule_name,
