@@ -30,6 +30,7 @@ export default {
 		'projectwallace/no-static-container-queries': true,
 		'projectwallace/no-static-media-queries': true,
 		'projectwallace/no-unknown-container-names': true,
+		'projectwallace/no-invalid-container-features': true,
 		'no-unknown-custom-properties': true,
 		'projectwallace/no-missing-if-else': true,
 		'projectwallace/no-unreachable-if-branches': true,
