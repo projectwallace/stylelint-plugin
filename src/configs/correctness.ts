@@ -3,6 +3,7 @@ export default {
 	rules: {
 		'projectwallace/no-invalid-z-index': true,
 		'projectwallace/no-unknown-container-names': true,
+		'projectwallace/no-invalid-container-features': true,
 		'no-unknown-custom-properties': true,
 		'projectwallace/no-missing-if-else': true,
 		'projectwallace/no-unreachable-if-branches': true,

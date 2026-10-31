@@ -178,6 +178,7 @@ Rules to help prevent errors.
 | Rule                                                                                                                            | Description                                                                     |
 | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | [no-unknown-container-names](src/rules/no-unknown-container-names/README.md)                                                    | Disallow container names in `@container` that were never declared               |
+| [no-invalid-container-features](src/rules/no-invalid-container-features/README.md)                                              | Disallow `@container` features the named container can't be queried for         |
 | [no-unknown-custom-properties](https://stylelint.io/user-guide/rules/no-unknown-custom-properties) _(stylelint core)_           | Disallow the use of undeclared custom properties in a `var()`                   |
 | [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md)                              | Disallow custom property assignments that reference themselves via `var()`      |
 | [no-unused-container-names](src/rules/no-unused-container-names/README.md)                                                      | Disallow container names that are declared but never queried                    |
