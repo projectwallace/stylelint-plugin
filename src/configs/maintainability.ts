@@ -1,4 +1,6 @@
-export default {
+import type { PresetConfig } from '../utils/preset-config.js'
+
+const config: PresetConfig = {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
 		'projectwallace/max-atrules': [250, { severity: 'warning' }],
@@ -44,3 +46,5 @@ export default {
 		'projectwallace/max-spacing-resets': [16, { severity: 'warning' }],
 	},
 }
+
+export default config

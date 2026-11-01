@@ -1,4 +1,6 @@
-export default {
+import type { PresetConfig } from '../utils/preset-config.js'
+
+const config: PresetConfig = {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
 		'projectwallace/max-lines-of-code': [10_000, { severity: 'warning' }],
@@ -24,3 +26,5 @@ export default {
 		],
 	},
 }
+
+export default config

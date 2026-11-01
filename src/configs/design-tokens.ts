@@ -1,4 +1,6 @@
-export default {
+import type { PresetConfig } from '../utils/preset-config.js'
+
+const config: PresetConfig = {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
 		'projectwallace/max-unique-animation-functions': [4, { severity: 'warning' }],
@@ -14,3 +16,5 @@ export default {
 		'projectwallace/max-unique-gradients': [8, { severity: 'warning' }],
 	},
 }
+
+export default config

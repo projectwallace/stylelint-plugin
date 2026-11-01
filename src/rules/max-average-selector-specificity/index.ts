@@ -73,4 +73,6 @@ ruleFunction.messages = messages
 ruleFunction.meta = meta
 ruleFunction.primaryOptionArray = true
 
-export default createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+
+export default plugin
