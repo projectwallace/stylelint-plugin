@@ -40,7 +40,7 @@ jobs:
       - name: Override stylelint version
         if: matrix.stylelint != '17'
         # Installing other stylelint versions outside the lockfile is the point of this matrix
-        run: pnpm add -D stylelint@${{ matrix.stylelint }}  # zizmor: ignore[adhoc-packages]
+        run: pnpm add -D stylelint@${{ matrix.stylelint }} # zizmor: ignore[adhoc-packages]
       - run: pnpm test
         env:
           STYLELINT_VERSION: ${{ matrix.stylelint }}
