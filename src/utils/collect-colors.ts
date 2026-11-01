@@ -13,7 +13,7 @@ import { str_equals } from '@projectwallace/css-parser/string-utils'
  * CSS properties whose declaration values may contain color values.
  * Used to filter walkDecls so only relevant declarations are visited.
  */
-export const COLOR_PROPERTIES =
+export const COLOR_PROPERTIES: RegExp =
 	/^(?:color|background(?:-color|-image)?|border(?:-color|-top(?:-color)?|-right(?:-color)?|-bottom(?:-color)?|-left(?:-color)?|-block(?:-color|-start(?:-color)?|-end(?:-color)?)?|-inline(?:-color|-start(?:-color)?|-end(?:-color)?)?)?|outline(?:-color)?|text-decoration(?:-color)?|column-rule(?:-color)?|caret-color|fill|stroke|stop-color|flood-color|lighting-color|text-emphasis(?:-color)?|scrollbar-color|accent-color|box-shadow|text-shadow|filter|-webkit-text-fill-color|-webkit-tap-highlight-color|-webkit-text-stroke(?:-color)?|--.+)$/i
 
 export type ColorCallback = (color: string, format: string) => void

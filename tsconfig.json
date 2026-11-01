@@ -5,7 +5,9 @@
 		"moduleResolution": "bundler",
 		"strict": true,
 		"skipLibCheck": true,
-		"verbatimModuleSyntax": true
+		"verbatimModuleSyntax": true,
+		"declaration": true,
+		"isolatedDeclarations": true
 	},
 	"include": ["src", "tsdown.config.ts"],
 	"exclude": ["node_modules", "dist"]

@@ -5,7 +5,7 @@ import path from 'node:path'
 import stylelintPkg from 'stylelint/package.json' with { type: 'json' }
 
 const [major, minor] = stylelintPkg.version.split('.').map(Number)
-export const supportsReferenceFiles = major > 17 || (major === 17 && minor >= 9)
+export const supportsReferenceFiles: boolean = major > 17 || (major === 17 && minor >= 9)
 
 export function createFixtures(prefix: string): (name: string, content: string) => string {
 	let tmp_dir: string | undefined

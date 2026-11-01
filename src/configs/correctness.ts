@@ -1,4 +1,6 @@
-export default {
+import type { PresetConfig } from '../utils/preset-config.js'
+
+const config: PresetConfig = {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
 		'projectwallace/no-invalid-z-index': true,
@@ -25,3 +27,5 @@ export default {
 		'projectwallace/no-pseudo-elements-in-is-where': true,
 	},
 }
+
+export default config

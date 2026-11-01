@@ -1,4 +1,6 @@
-export default {
+import type { PresetConfig } from '../utils/preset-config.js'
+
+const config: PresetConfig = {
 	plugins: ['@projectwallace/stylelint-plugin'],
 	rules: {
 		// Global count rules
@@ -50,3 +52,5 @@ export default {
 		'projectwallace/no-duplicate-registered-properties': true,
 	},
 }
+
+export default config
