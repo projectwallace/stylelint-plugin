@@ -56,7 +56,7 @@
 	},
 	"dependencies": {
 		"@projectwallace/css-analyzer": "^9.9.5",
-		"@projectwallace/css-parser": "~0.19.3"
+		"@projectwallace/css-parser": "catalog:"
 	},
 	"devDependencies": {
 		"@projectwallace/preset-oxlint": "^0.0.11",
