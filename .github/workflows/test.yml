@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [22, 24, 26]
-        stylelint: ['16.26', '17', '18.0.0']
+        stylelint: ['16.26', '17', '18']
         include:
           # Last version before 17.9, to test the code path without the referenceRoots API
           - node: 22
