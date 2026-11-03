@@ -1,5 +1,8 @@
+catalog:
+  '@projectwallace/css-parser': ~0.19.3
+
 overrides:
-  '@projectwallace/css-parser': '$@projectwallace/css-parser'
+  '@projectwallace/css-parser': 'catalog:'
 
 # Block dependencies from using non-registry sources (git repos, tarballs)
 blockExoticSubdeps: true
