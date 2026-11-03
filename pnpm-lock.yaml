@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@projectwallace/css-parser': ~0.19.1
+  '@projectwallace/css-parser': ~0.19.3
 
 importers:
 
@@ -15,8 +15,8 @@ importers:
         specifier: ^9.9.5
         version: 9.9.5
       '@projectwallace/css-parser':
-        specifier: ~0.19.1
-        version: 0.19.1
+        specifier: ~0.19.3
+        version: 0.19.3
     devDependencies:
       '@projectwallace/preset-oxlint':
         specifier: ^0.0.11
@@ -658,8 +658,8 @@ packages:
     resolution: {integrity: sha512-HtEWI5G/flzuoptALwvx66N4Vkq+SR2W019VI1R5RIX7MOuEOjuIIx2OKC3S9NAZAKbiopKp88ZLqy5ymmaAIg==}
     engines: {node: '>=18.0.0', pnpm: '>=11.0.0'}
 
-  '@projectwallace/css-parser@0.19.1':
-    resolution: {integrity: sha512-Qtr51nlLcfE0nfR6fBtNvzdl/P+FI8hxrkOQ5xzVyb52ewoyYkDEX3zDyGYuZh5dnIZbdO0pG0I5CMiW2Y3mjg==}
+  '@projectwallace/css-parser@0.19.3':
+    resolution: {integrity: sha512-bK6pbuWMXGbrUru4a/nu9h/6SrSPPtUg5VU0bXYqG7hnp4+8d8PeF21T3gU+Lf5I8+jVakDggBoZHxeSRx2HjQ==}
     engines: {pnpm: '>=11.0.0'}
 
   '@projectwallace/preset-oxlint@0.0.11':
@@ -2210,9 +2210,9 @@ snapshots:
 
   '@projectwallace/css-analyzer@9.9.5':
     dependencies:
-      '@projectwallace/css-parser': 0.19.1
+      '@projectwallace/css-parser': 0.19.3
 
-  '@projectwallace/css-parser@0.19.1': {}
+  '@projectwallace/css-parser@0.19.3': {}
 
   '@projectwallace/preset-oxlint@0.0.11(oxlint@1.89.0)':
     dependencies:

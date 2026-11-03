@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Test
 
 on:
   push:
@@ -17,15 +17,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        node: [22, 24, 26]
+        stylelint: ['16.26', '17', '18']
         include:
-          - node: 22
-            stylelint: '16.26'
+          # Last version before 17.9, to test the code path without the referenceRoots API
           - node: 22
             stylelint: '17.8'
-          - node: 22
-            stylelint: '17'
-          - node: 24
-            stylelint: '17'
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -35,6 +32,8 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ matrix.node }}
+          # stylelint 18 needs ^22.22.2 / ^24.15.0; don't trust a stale runner tool cache
+          check-latest: true
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Override stylelint version
@@ -42,8 +41,6 @@ jobs:
         # Installing other stylelint versions outside the lockfile is the point of this matrix
         run: pnpm add -D stylelint@${{ matrix.stylelint }} # zizmor: ignore[adhoc-packages]
       - run: pnpm test
-        env:
-          STYLELINT_VERSION: ${{ matrix.stylelint }}
 
   typecheck:
     name: Type check

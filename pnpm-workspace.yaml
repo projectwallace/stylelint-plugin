@@ -9,6 +9,7 @@ blockExoticSubdeps: true
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - '@projectwallace/*'
+  - 'stylelint@18.0.0'
 
 # Prevent trust level downgrades compared to previously installed packages
 trustPolicy: no-downgrade
