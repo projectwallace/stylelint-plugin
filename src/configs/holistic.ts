@@ -47,6 +47,7 @@ const config: PresetConfig = {
 		// Duplicate detection
 		'projectwallace/no-duplicate-anchor-names': true,
 		'projectwallace/no-duplicate-container-names': true,
+		'projectwallace/no-invalid-container-features': true,
 		'projectwallace/no-duplicate-custom-properties': true,
 		'projectwallace/no-duplicate-keyframes': true,
 		'projectwallace/no-duplicate-registered-properties': true,

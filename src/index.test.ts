@@ -51,6 +51,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-duplicate-data-urls',
 		'projectwallace/no-duplicate-keyframes',
 		'projectwallace/no-duplicate-registered-properties',
+		'projectwallace/no-invalid-container-features',
 		'projectwallace/no-invalid-z-index',
 		'projectwallace/no-missing-if-else',
 		'projectwallace/no-property-browserhacks',
