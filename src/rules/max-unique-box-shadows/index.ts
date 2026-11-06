@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { keywords } from '@projectwallace/css-analyzer/values'
 import {
@@ -6,8 +7,6 @@ import {
 	ignore_option_validators,
 	is_valid_positive_integer,
 } from '../../utils/option-validators.js'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-box-shadows'
 

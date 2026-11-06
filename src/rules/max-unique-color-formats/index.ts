@@ -1,12 +1,11 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { parse_value } from '@projectwallace/css-parser'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 import { unquote } from '../../utils/unquote.js'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-color-formats'
 

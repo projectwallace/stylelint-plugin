@@ -1,10 +1,9 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-anonymous-layers'
 

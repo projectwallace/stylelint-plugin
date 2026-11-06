@@ -1,12 +1,11 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_url } from '@projectwallace/css-parser'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { str_index_of } from '@projectwallace/css-parser/string-utils'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-embedded-content-size'
 

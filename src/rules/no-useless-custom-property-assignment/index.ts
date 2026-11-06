@@ -1,12 +1,11 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { is_allowed } from '../../utils/option-validators.js'
 import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-useless-custom-property-assignment'
 

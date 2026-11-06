@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import {
 	parse_atrule_prelude,
@@ -12,8 +13,6 @@ import {
 	type MediaFeature,
 } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/no-static-container-queries'
 

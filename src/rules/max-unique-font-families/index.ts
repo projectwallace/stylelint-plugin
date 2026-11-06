@@ -1,4 +1,5 @@
-import stylelint from 'stylelint'
+import { createPlugin, utils } from '../../utils/stylelint.js'
+import type stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
@@ -8,8 +9,6 @@ import {
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
-
-const { createPlugin, utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-font-families'
 
