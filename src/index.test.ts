@@ -59,6 +59,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-static-container-queries',
 		'projectwallace/no-static-media-queries',
 		'projectwallace/no-unknown-container-names',
+		'projectwallace/no-unknown-layers',
 		'projectwallace/no-unreachable-if-branches',
 		'projectwallace/no-unreachable-media-conditions',
 		'projectwallace/no-unused-container-names',

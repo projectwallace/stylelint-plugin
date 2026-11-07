@@ -47,6 +47,7 @@ import no_missing_if_else from './rules/no-missing-if-else/index.js'
 import no_pseudo_elements_in_is_where from './rules/no-pseudo-elements-in-is-where/index.js'
 import no_property_browserhacks from './rules/no-property-browserhacks/index.js'
 import no_property_shorthand from './rules/no-property-shorthand/index.js'
+import no_unknown_layers from './rules/no-unknown-layers/index.js'
 import no_value_browserhacks from './rules/no-value-browserhacks/index.js'
 import no_static_container_queries from './rules/no-static-container-queries/index.js'
 import no_static_media_queries from './rules/no-static-media-queries/index.js'
@@ -113,6 +114,7 @@ const plugins: stylelint.Plugin[] = [
 	no_static_container_queries,
 	no_static_media_queries,
 	no_unknown_container_names,
+	no_unknown_layers,
 	no_unreachable_if_branches,
 	no_unreachable_media_conditions,
 	no_unused_container_names,
