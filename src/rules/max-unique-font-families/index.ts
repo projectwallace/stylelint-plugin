@@ -4,10 +4,11 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_non_negative_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -30,20 +31,12 @@ function noop() {}
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_non_negative_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_non_negative_integer],
 		)
 
 		if (!validOptions) {
@@ -51,7 +44,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_families = new Set<string>()
+		const unique_families = new UniqueTracker(primaryOption)
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(/^font-family$/i, (declaration) => {
@@ -61,23 +54,23 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			) {
 				return
 			}
-			const before = unique_families.size
+			unique_families.begin()
 			if (!keywords.has(declaration.value) && !is_allowed(declaration.value, ignore)) {
 				unique_families.add(declaration.value)
 			}
-			if (unique_families.size > before && unique_families.size > primaryOption) {
+			if (unique_families.exceeded()) {
 				violating_declarations.push({ declaration, word: declaration.value })
 			}
 		})
 
 		root.walkDecls(/^font$/i, (declaration) => {
-			const before = unique_families.size
+			unique_families.begin()
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, noop)
 			if (destructured?.font_family && !is_allowed(destructured.font_family, ignore)) {
 				unique_families.add(destructured.font_family)
 			}
-			if (unique_families.size > before && unique_families.size > primaryOption) {
+			if (unique_families.exceeded()) {
 				violating_declarations.push({
 					declaration,
 					word: destructured?.font_family ?? declaration.value,

@@ -4,11 +4,12 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk } from '@projectwallace/css-parser/walker'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_positive_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { is_function } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 function is_gradient_name(name: string): boolean {
 	const base = str_starts_with('repeating-', name) ? name.slice('repeating-'.length) : name
@@ -38,20 +39,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_positive_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_positive_integer],
 		)
 
 		if (!validOptions) {
@@ -60,12 +53,12 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 
-		const unique_gradients = new Set<string>()
+		const unique_gradients = new UniqueTracker(primaryOption)
 		const violating_declarations: Array<{ declaration: Declaration; start: number; end: number }> =
 			[]
 
 		root.walkDecls(/^background(-image)?$/i, (declaration) => {
-			const before = unique_gradients.size
+			unique_gradients.begin()
 			const ast = parse_value(declaration.value)
 			let trigger_start = 0
 			let trigger_end = declaration.value.length
@@ -75,9 +68,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (is_gradient_name(node.name)) {
 						const gradient = node.text
 						if (!is_allowed(gradient, ignore)) {
-							const is_new = !unique_gradients.has(gradient)
-							unique_gradients.add(gradient)
-							if (is_new && unique_gradients.size > primaryOption) {
+							if (unique_gradients.add(gradient)) {
 								trigger_start = node.start
 								trigger_end = node.end
 							}
@@ -86,7 +77,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				}
 			})
 
-			if (unique_gradients.size > before && unique_gradients.size > primaryOption) {
+			if (unique_gradients.exceeded()) {
 				violating_declarations.push({ declaration, start: trigger_start, end: trigger_end })
 			}
 		})

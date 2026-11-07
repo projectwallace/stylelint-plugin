@@ -4,9 +4,10 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk, NUMBER } from '@projectwallace/css-parser'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_non_negative_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -27,20 +28,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_non_negative_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_non_negative_integer],
 		)
 
 		if (!validOptions) {
@@ -48,12 +41,12 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_zindexes = new Set<string>()
+		const unique_zindexes = new UniqueTracker(primaryOption)
 		const violating_declarations: Array<{ declaration: Declaration; start: number; end: number }> =
 			[]
 
 		root.walkDecls(/^z-index$/i, (declaration) => {
-			const before = unique_zindexes.size
+			unique_zindexes.begin()
 			const parsed = parse_value(declaration.value)
 			let trigger_start = 0
 			let trigger_end = declaration.value.length
@@ -64,16 +57,14 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				}
 				const text = node.text
 				if (!is_allowed(text, ignore)) {
-					const is_new = !unique_zindexes.has(text)
-					unique_zindexes.add(text)
-					if (is_new && unique_zindexes.size > primaryOption) {
+					if (unique_zindexes.add(text)) {
 						trigger_start = node.start
 						trigger_end = node.end
 					}
 				}
 			})
 
-			if (unique_zindexes.size > before && unique_zindexes.size > primaryOption) {
+			if (unique_zindexes.exceeded()) {
 				violating_declarations.push({ declaration, start: trigger_start, end: trigger_end })
 			}
 		})

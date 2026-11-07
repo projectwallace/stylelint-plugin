@@ -2,13 +2,14 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_positive_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -29,20 +30,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_positive_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_positive_integer],
 		)
 
 		if (!validOptions) {
@@ -50,12 +43,12 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_functions = new Set<string>()
+		const unique_functions = new UniqueTracker(primaryOption)
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(/^(animation|transition)(-timing-function)?$/i, (declaration) => {
 			let parsed = parse_value(declaration.value)
-			const before = unique_functions.size
+			unique_functions.begin()
 			let triggering_fn = declaration.value
 
 			if (
@@ -66,9 +59,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (child.type !== OPERATOR) {
 						let fn = child.text
 						if (!is_allowed(fn, ignore)) {
-							const is_new = !unique_functions.has(fn)
-							unique_functions.add(fn)
-							if (is_new && unique_functions.size > primaryOption) {
+							if (unique_functions.add(fn)) {
 								triggering_fn = fn
 							}
 						}
@@ -79,9 +70,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (item.type === 'fn') {
 						let fn = item.value.text
 						if (!is_allowed(fn, ignore)) {
-							const is_new = !unique_functions.has(fn)
-							unique_functions.add(fn)
-							if (is_new && unique_functions.size > primaryOption) {
+							if (unique_functions.add(fn)) {
 								triggering_fn = fn
 							}
 						}
@@ -89,7 +78,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				})
 			}
 
-			if (unique_functions.size > before && unique_functions.size > primaryOption) {
+			if (unique_functions.exceeded()) {
 				violating_declarations.push({ declaration, word: triggering_fn })
 			}
 		})
