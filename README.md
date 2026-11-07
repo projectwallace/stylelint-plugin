@@ -131,6 +131,7 @@ Rules that require analyzing the full stylesheet rather than individual nodes â€
 | [no-unused-container-names](src/rules/no-unused-container-names/README.md)                 | Disallow container names that are declared but never queried                    |
 | [no-unused-font-faces](src/rules/no-unused-font-faces/README.md)                           | Disallow `@font-face` rules whose family is never used                          |
 | [max-unique-border-radiuses](src/rules/max-unique-border-radiuses/README.md)               | Limit the number of unique border-radius values                                 |
+| [max-unique-custom-properties](src/rules/max-unique-custom-properties/README.md)           | Limit the number of unique custom properties                                    |
 
 ### Performance
 
@@ -175,6 +176,7 @@ Rules that encourage the use of design tokens in your CSS.
 | [max-unique-supports-queries](src/rules/max-unique-supports-queries/README.md)       | Limit the number of unique supports queries           |
 | [max-unique-text-shadows](src/rules/max-unique-text-shadows/README.md)               | Limit the number of unique text-shadow values         |
 | [max-unique-border-radiuses](src/rules/max-unique-border-radiuses/README.md)         | Limit the number of unique border-radius values       |
+| [max-unique-custom-properties](src/rules/max-unique-custom-properties/README.md)     | Limit the number of unique custom properties          |
 
 ### Correctness
 

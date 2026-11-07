@@ -20,6 +20,7 @@ import max_spacing_resets from './rules/max-spacing-resets/index.js'
 import max_unique_animation_functions from './rules/max-unique-animation-functions/index.js'
 import max_unique_border_radiuses from './rules/max-unique-border-radiuses/index.js'
 import max_unique_box_shadows from './rules/max-unique-box-shadows/index.js'
+import max_unique_custom_properties from './rules/max-unique-custom-properties/index.js'
 import max_unique_text_shadows from './rules/max-unique-text-shadows/index.js'
 import max_unique_color_formats from './rules/max-unique-color-formats/index.js'
 import max_unique_colors from './rules/max-unique-colors/index.js'
@@ -89,6 +90,7 @@ const plugins: stylelint.Plugin[] = [
 	max_unique_box_shadows,
 	max_unique_color_formats,
 	max_unique_colors,
+	max_unique_custom_properties,
 	max_unique_durations,
 	max_unique_font_families,
 	max_unique_font_sizes,
