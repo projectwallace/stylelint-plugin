@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { keywords } from '@projectwallace/css-analyzer/values'
+import { get_params_offset } from '../../utils/offsets.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -34,7 +35,7 @@ const ruleFunction = (primaryOptions: true) => {
 			}
 
 			if (seen.has(name)) {
-				const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
+				const params_offset = get_params_offset(at_rule)
 				utils.report({
 					result,
 					ruleName: rule_name,

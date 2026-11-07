@@ -3,6 +3,7 @@ import type { Root, Declaration } from 'postcss'
 import { walk, DIMENSION } from '@projectwallace/css-parser'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
+import { get_value_offset } from '../../utils/offsets.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -60,7 +61,7 @@ const ruleFunction = (primaryOption: number) => {
 
 		const actual = unique_units.size
 		for (const { declaration, start, end } of violating_declarations) {
-			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
+			const value_offset = get_value_offset(declaration)
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
