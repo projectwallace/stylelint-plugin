@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
-import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { str_equals, str_index_of, is_custom } from '@projectwallace/css-parser/string-utils'
 import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
 import { split_font_families } from '../../utils/font-families.js'
 
@@ -104,7 +104,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 				// A family can be hidden in a custom property or behind a var() fallback.
 				// We can't resolve those, so treat every name mentioned there as used.
-				if (prop.startsWith('--') || decl.value.includes('var(')) {
+				if (is_custom(prop) || str_index_of('var(', decl.value) !== -1) {
 					for (const family of split_font_families(decl.value, true)) {
 						use(family)
 					}

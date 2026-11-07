@@ -10,6 +10,7 @@ import {
 	is_string,
 	str_equals,
 	str_index_of,
+	is_custom,
 	type CSSNode,
 } from '@projectwallace/css-parser'
 import { unquote } from '../../utils/unquote.js'
@@ -165,7 +166,7 @@ const ruleFunction = (primaryOptions: true) => {
 				utils.report({ result, ruleName: rule_name, message, node })
 			}
 
-			if (!name.startsWith('--')) {
+			if (!is_custom(name)) {
 				report(messages.invalid_name(name))
 			}
 

@@ -29,6 +29,23 @@
 
 This project follows the [stylelint contributor guide for rules](https://github.com/stylelint/stylelint/blob/main/docs/contributor-guide/rules.md) for message wording, error positioning, README structure, and test conventions. Refer to that guide before inventing new patterns; the sections below document conventions we follow and any project-specific additions.
 
+## String matching
+
+Avoid regexes and temporary strings (`toLowerCase()`, `startsWith()`, `includes()`, `replace()`, `slice()` just to compare) when checking CSS names and values. Use the helpers from `@projectwallace/css-parser/string-utils` instead; they are case-insensitive and don't allocate:
+
+- `str_equals(lowercase_literal, value)` instead of `value.toLowerCase() === 'x'`
+- `str_starts_with(lowercase_prefix, value)` instead of `startsWith()` or `/^x/i`
+- `str_index_of(lowercase_needle, value)` instead of `includes()`, `indexOf()` or `/x/i.test()`
+- `is_custom(name)` instead of `name.startsWith('--')`
+- `is_vendor_prefixed(name)` / `strip_vendor_prefix(name)` instead of matching `-webkit-`, `-moz-` etc. by hand
+
+Watch out for two things that string checks and regexes routinely get wrong:
+
+- **Custom idents and custom properties** (`--foo`, `@property --foo`, `var(--foo)`, `@container name`, `@layer name`): these are case-sensitive and user-defined, so don't lowercase or compare them against keywords. Use `is_custom()` to detect `--` names.
+- **Vendor-prefixed names** (`-webkit-keyframes`, `-moz-appearance`, `-webkit-linear-gradient`): a loose regex like `/keyframes/i` also matches unrelated names, and an exact match misses the prefixed variants. Use `strip_vendor_prefix()` first, then compare.
+
+Note that the literal passed to `str_equals`, `str_starts_with` and `str_index_of` MUST be lowercase, and that they are ASCII-only. Keep `toLowerCase()` for case-insensitive lookups in a `Set`/`Map` and for non-keyword text such as font-family names.
+
 ## Rule README guidelines
 
 Every rule's `README.md` must follow this structure exactly:
