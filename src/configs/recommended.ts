@@ -84,6 +84,7 @@ const config: PresetConfig = {
 		'projectwallace/max-selectors-per-rule': [10, { severity: 'warning' }],
 		'projectwallace/max-declarations-per-rule': [15, { severity: 'warning' }],
 		'projectwallace/max-spacing-resets': [16, { severity: 'warning' }],
+		'projectwallace/no-invalid-property-registration': true,
 		'projectwallace/no-unused-font-faces': true,
 		'projectwallace/no-duplicate-font-faces': true,
 	},
