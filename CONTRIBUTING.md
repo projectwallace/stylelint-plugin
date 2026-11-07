@@ -281,7 +281,7 @@ utils.report({ node: at_rule, word: at_rule.name /* ... */ })
 Nodes returned by `parse_atrule_prelude` have `.start`/`.end` relative to `at_rule.params`. To convert to an offset within the AtRule node source (which starts at `@`), add the params prefix length:
 
 ```ts
-const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
+const params_offset = get_params_offset(at_rule) // from src/utils/offsets.ts
 utils.report({
 	node: at_rule,
 	index: params_offset + parsed_node.start,

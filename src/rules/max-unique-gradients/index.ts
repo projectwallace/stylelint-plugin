@@ -10,6 +10,7 @@ import {
 import { is_function } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
 import { walk_decls } from '../../utils/walk.js'
+import { get_value_offset } from '../../utils/offsets.js'
 
 function is_gradient_name(name: string): boolean {
 	const base = str_starts_with('repeating-', name) ? name.slice('repeating-'.length) : name
@@ -94,7 +95,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const actual = unique_gradients.size
 		for (const { declaration, start, end } of violating_declarations) {
-			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
+			const value_offset = get_value_offset(declaration)
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,

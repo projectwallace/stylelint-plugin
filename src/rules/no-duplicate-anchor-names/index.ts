@@ -4,6 +4,7 @@ import { IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { keywords } from '@projectwallace/css-analyzer/values'
 import { walk_decls } from '../../utils/walk.js'
+import { get_value_offset } from '../../utils/offsets.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -35,7 +36,7 @@ const ruleFunction = (primaryOptions: true) => {
 				return
 			}
 			const ast = parse_value(declaration.value)
-			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
+			const value_offset = get_value_offset(declaration)
 			for (const node of ast) {
 				// anchor-name values are comma-separated dashed-idents; commas are
 				// OPERATOR nodes — skip them and keep iterating

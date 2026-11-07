@@ -6,6 +6,7 @@ import { walk, BREAK } from '@projectwallace/css-parser/walker'
 import { is_dimension, is_number } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
 import { walk_atrules } from '../../utils/walk.js'
+import { get_params_offset } from '../../utils/offsets.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -132,7 +133,7 @@ const ruleFunction = (primaryOption: true) => {
 			const static_feature = find_static_feature_in_prelude(at_rule.name, prelude)
 
 			if (static_feature !== null) {
-				const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
+				const params_offset = get_params_offset(at_rule)
 				utils.report({
 					message: messages.rejected(),
 					node: at_rule,
