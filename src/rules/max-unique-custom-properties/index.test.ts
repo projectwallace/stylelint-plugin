@@ -138,3 +138,81 @@ test('should not count regular properties or var() usages', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+// ---------------------------------------------------------------------------
+// @property registrations
+// ---------------------------------------------------------------------------
+
+const registration = (name: string) =>
+	`@property ${name} { syntax: "<length>"; inherits: false; initial-value: 0px; }`
+
+test('should count custom properties registered with @property', async () => {
+	const { warnings, errored } = await lint(
+		`${registration('--a')}\n${registration('--b')}\n${registration('--c')}`,
+		2,
+	)
+	expect(errored).toBe(true)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Expected no more than 2 unique custom properties but found 3 (${rule_name})`,
+	)
+	expect(warnings[0].line).toBe(3)
+})
+
+test('should not error when @property registrations are within the limit', async () => {
+	const { warnings, errored } = await lint(`${registration('--a')}\n${registration('--b')}`, 2)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should count a property that is both registered and declared once', async () => {
+	const { warnings, errored } = await lint(`${registration('--a')}\n:root { --a: 1px; }`, 1)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should count registered and declared properties together', async () => {
+	const { warnings } = await lint(`${registration('--a')}\n:root { --b: 1px; --c: 2px; }`, 2)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toContain('but found 3')
+})
+
+test('should report the first node in source order that crosses the limit', async () => {
+	const { warnings } = await lint(
+		`:root { --a: 1px; }\n${registration('--b')}\n:root { --c: 1px; }`,
+		2,
+	)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(3)
+})
+
+test('should report on the @property rule', async () => {
+	const { warnings } = await lint(`:root { --a: 1px; }\n${registration('--b')}`, 1)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(2)
+})
+
+test('should treat @property names as case-sensitive', async () => {
+	const { warnings } = await lint(`${registration('--a')}\n${registration('--A')}`, 1)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should not count an @property whose name is not a custom property', async () => {
+	const { warnings, errored } = await lint(registration('size'), 0)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should not count an @property without a name', async () => {
+	const { warnings, errored } = await lint(`@property { syntax: "*"; inherits: false; }`, 0)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should not count an @property that is ignored', async () => {
+	const { warnings, errored } = await lint(`${registration('--a')}\n${registration('--b')}`, 1, {
+		ignore: ['--a'],
+	})
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

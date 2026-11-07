@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
-import type { Root, Declaration } from 'postcss'
+import type { Root, Declaration, AtRule } from 'postcss'
+import { is_custom, str_equals } from '@projectwallace/css-parser'
 import {
 	is_allowed,
 	ignore_option_validators,
@@ -47,9 +48,9 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique = new Set<string>()
-		const violations: Array<{ node: Declaration; word: string }> = []
+		const violations: Array<{ node: Declaration | AtRule; word: string }> = []
 
-		function add(value: string, node: Declaration, word: string) {
+		function add(value: string, node: Declaration | AtRule, word: string) {
 			if (unique.has(value) || is_allowed(value, ignore)) {
 				return
 			}
@@ -59,8 +60,17 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			}
 		}
 
-		root.walkDecls(/^--/, (declaration) => {
-			add(declaration.prop, declaration, declaration.prop)
+		// Walk in source order so the reported node is the first one that crosses the limit
+		root.walk((node) => {
+			if (node.type === 'decl' && is_custom(node.prop)) {
+				add(node.prop, node, node.prop)
+			} else if (node.type === 'atrule' && str_equals('property', node.name)) {
+				// @property --my-prop { … } registers a custom property
+				const name = node.params.trim()
+				if (is_custom(name)) {
+					add(name, node, name)
+				}
+			}
 		})
 
 		const actual = unique.size

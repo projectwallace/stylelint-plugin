@@ -9,7 +9,7 @@ Limit the number of unique custom properties declared across the stylesheet.
 *   counts as one of the unique custom properties */
 ```
 
-A unique custom property is counted by its name, which is case-sensitive. Declaring the same custom property multiple times (for example for a dark theme or inside a media query) counts once. Only declarations are counted, not usages in `var()` or `@property` registrations.
+A unique custom property is counted by its name, which is case-sensitive. Declaring the same custom property multiple times (for example for a dark theme or inside a media query) counts once. Custom properties registered with `@property --my-prop { … }` count as well, and a property that is both registered and declared counts once. Usages in `var()` are not counted.
 
 A very large number of custom properties can slow down style recalculation and makes a design system harder to understand. This rule helps keep the set of tokens manageable.
 
