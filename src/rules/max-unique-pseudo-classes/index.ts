@@ -46,14 +46,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			},
 		)
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique = new Set<string>()
 		const violations: Array<{ node: Rule; word: string }> = []
 
 		function add(value: string, node: Rule, word: string) {
-			if (unique.has(value) || is_allowed(value, ignore)) return
+			if (unique.has(value) || is_allowed(value, ignore)) {
+				return
+			}
 			unique.add(value)
 			if (unique.size > primaryOption) {
 				violations.push({ node, word })
@@ -61,12 +65,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		root.walkRules((rule) => {
-			if (is_keyframe_rule(rule) || !rule.selector.trim()) return
+			if (is_keyframe_rule(rule) || !rule.selector.trim()) {
+				return
+			}
 
 			walk(parse_selector_list(rule.selector), (node) => {
-				if (!is_pseudo_class_selector(node)) return
+				if (!is_pseudo_class_selector(node)) {
+					return
+				}
 				const name = node.name.toLowerCase()
-				if (LEGACY_PSEUDO_ELEMENTS.has(name)) return
+				if (LEGACY_PSEUDO_ELEMENTS.has(name)) {
+					return
+				}
 				add(`:${name}`, rule, `:${node.name}`)
 			})
 		})
