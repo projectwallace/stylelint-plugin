@@ -56,6 +56,7 @@
 	},
 	"dependencies": {
 		"@projectwallace/css-analyzer": "^9.9.6",
+		"@projectwallace/css-layer-tree": "^2.2.0",
 		"@projectwallace/css-parser": "catalog:"
 	},
 	"devDependencies": {

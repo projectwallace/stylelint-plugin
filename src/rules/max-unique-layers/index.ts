@@ -1,8 +1,6 @@
 import stylelint from 'stylelint'
-import type { Root, Container, AtRule } from 'postcss'
-import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
-import { str_equals } from '@projectwallace/css-parser/string-utils'
+import type { Root } from 'postcss'
+import { layer_tree, type Location, type TreeNode } from '@projectwallace/css-layer-tree'
 import {
 	is_allowed,
 	ignore_option_validators,
@@ -26,20 +24,29 @@ interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
 }
 
-function qualified_scope(at_rule: AtRule): string | undefined {
-	const names: string[] = []
-	let parent = at_rule.parent as Container | undefined
-	while (parent && parent.type !== 'root') {
-		if (parent.type === 'atrule' && str_equals('layer', (parent as AtRule).name)) {
-			const name = (parent as AtRule).params.trim()
-			if (!name) {
-				return undefined
-			}
-			names.unshift(name)
+interface FoundLayer {
+	name: string
+	location: Location
+}
+
+/** The first place a layer shows up. Implicit parents (`@layer a.b`) fall back to their children. */
+function first_location(node: TreeNode): Location | undefined {
+	return node.locations[0] ?? node.children.map(first_location).find(Boolean)
+}
+
+/** Flattens the tree into fully qualified layer names. Anonymous layers can't be referenced, so they are skipped. */
+function collect(nodes: TreeNode[], scope: string, found: FoundLayer[]) {
+	for (const node of nodes) {
+		if (node.is_anonymous) {
+			continue
 		}
-		parent = parent.parent as Container | undefined
+		const name = scope ? `${scope}.${node.name}` : node.name
+		const location = first_location(node)
+		if (location) {
+			found.push({ name, location })
+		}
+		collect(node.children, name, found)
 	}
-	return names.join('.')
 }
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
@@ -65,51 +72,20 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique = new Set<string>()
-		const violations: Array<{ node: AtRule; word: string }> = []
+		const found: FoundLayer[] = []
+		collect(layer_tree(root.toString()), '', found)
 
-		function add(value: string, node: AtRule, word: string) {
-			if (unique.has(value) || is_allowed(value, ignore)) {
-				return
-			}
-			unique.add(value)
-			if (unique.size > primaryOption) {
-				violations.push({ node, word })
-			}
-		}
+		// In source order, so the reported layers are the ones that cross the limit first
+		const layers = found
+			.filter(({ name }) => !is_allowed(name, ignore))
+			.sort((a, b) => a.location.start - b.location.start)
 
-		root.walkAtRules(/^layer$/i, (at_rule) => {
-			const scope = qualified_scope(at_rule)
-			if (scope === undefined) {
-				return
-			}
-			for (const raw of at_rule.params.split(',')) {
-				const name = raw.trim()
-				if (!name) {
-					continue
-				}
-				add(scope ? `${scope}.${name}` : name, at_rule, name)
-			}
-		})
-
-		root.walkAtRules(/^import$/i, (at_rule) => {
-			for (const child of parse_atrule_prelude('import', at_rule.params)) {
-				if (child.type !== FUNCTION || !str_equals('layer', child.name)) {
-					continue
-				}
-				const layer = child.first_child
-				if (layer?.type === LAYER_NAME && layer.name) {
-					add(layer.name, at_rule, layer.name)
-				}
-			}
-		})
-
-		const actual = unique.size
-		for (const { node, word } of violations) {
+		for (const { location } of layers.slice(primaryOption)) {
 			utils.report({
-				message: messages.rejected(actual, primaryOption),
-				node,
-				word,
+				message: messages.rejected(layers.length, primaryOption),
+				node: root,
+				index: location.start,
+				endIndex: location.end,
 				result,
 				ruleName: rule_name,
 			})

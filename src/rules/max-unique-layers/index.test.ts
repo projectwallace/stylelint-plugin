@@ -148,3 +148,33 @@ test('should not count anonymous layers', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test('should count the implicit parent of a dotted layer name', async () => {
+	// `a` and `a.b` are two layers
+	const { warnings } = await lint(`@layer a.b { x { color: red; } }`, 1)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toContain('but found 2')
+})
+
+test('should not count a dotted layer twice when its parent is also declared', async () => {
+	const { warnings, errored } = await lint(`@layer a; @layer a.b { x { color: red; } }`, 2)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should report the layers that cross the limit in source order', async () => {
+	const { warnings } = await lint(`@layer a;\n@layer b;\n@layer c;\n@layer d;`, 2)
+	expect(warnings.map((w) => w.line)).toStrictEqual([3, 4])
+})
+
+test('should report the first appearance of a layer that is declared more than once', async () => {
+	const { warnings } = await lint(`@layer a;\n@layer b;\n@layer b { x { color: red; } }`, 1)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(2)
+})
+
+test('should apply ignore to qualified names of nested layers', async () => {
+	const { warnings, errored } = await lint(`@layer a { @layer x {} }`, 1, { ignore: ['a.x'] })
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

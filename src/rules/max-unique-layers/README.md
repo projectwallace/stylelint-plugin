@@ -9,7 +9,7 @@ Limit the number of unique `@layer` names used across the stylesheet.
 *   counts as one of the unique layers */
 ```
 
-A unique layer is counted by its fully qualified name, so `@layer a { @layer b {} }` declares `a` and `a.b`. Layers declared in an order statement (`@layer a, b;`), as a block (`@layer a { … }`) or via `@import url() layer(a)` all count, and the same layer is only counted once. Anonymous layers are not counted.
+A unique layer is counted by its fully qualified name, so `@layer a { @layer b {} }` declares `a` and `a.b`, and `@layer a.b {}` declares both `a` and `a.b`. Layers declared in an order statement (`@layer a, b;`), as a block (`@layer a { … }`) or via `@import url() layer(a)` all count, and the same layer is only counted once. Anonymous layers are not counted.
 
 A large number of layers makes the cascade harder to reason about. This rule helps keep the layer structure small and understandable.
 
