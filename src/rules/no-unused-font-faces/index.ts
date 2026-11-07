@@ -5,19 +5,16 @@ import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
 import { str_equals, str_index_of, is_custom } from '@projectwallace/css-parser/string-utils'
 import { is_allowed, validate_options_with_ignore } from '../../utils/option-validators.js'
 import { split_font_families } from '../../utils/font-families.js'
+import { define_rule } from '../../utils/define-rule.js'
 import { walk_atrules, walk_decls } from '../../utils/walk.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-unused-font-faces'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (family: string) => `Unexpected unused @font-face "${family}"`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unused-font-faces/README.md',
-}
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
@@ -131,10 +128,6 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

@@ -3,8 +3,9 @@ import type { Root } from 'postcss'
 import { getSpecificity, compareSpecificity } from '@projectwallace/css-analyzer/selectors'
 import type { Specificity } from '@projectwallace/css-analyzer'
 import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/max-average-selector-specificity'
 
@@ -12,10 +13,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: string, expected: string) =>
 		`Expected average specificity of no more than [${expected}] but found [${actual}]`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-average-selector-specificity/README.md',
-}
 
 function is_valid_specificity(v: unknown): boolean {
 	return (
@@ -74,11 +71,8 @@ const ruleFunction = (primaryOption: Specificity) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-ruleFunction.primaryOptionArray = true
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages, {
+	primaryOptionArray: true,
+})
 
 export default plugin

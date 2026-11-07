@@ -7,9 +7,10 @@ import {
 	is_valid_positive_integer,
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
+import { define_rule } from '../../utils/define-rule.js'
 import { walk_decls } from '../../utils/walk.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-border-radiuses'
 
@@ -17,10 +18,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
 		`Expected no more than ${expected} unique border radiuses but found ${actual}`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-border-radiuses/README.md',
-}
 
 /**
  * Normalizes the whitespace of a border-radius value so that equivalent notations
@@ -97,10 +94,6 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

@@ -9,10 +9,11 @@ import { analyzeAnimation, keywords } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { define_rule } from '../../utils/define-rule.js'
 import { UniqueTracker } from '../../utils/unique-tracker.js'
 import { walk_decls } from '../../utils/walk.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-durations'
 
@@ -20,10 +21,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
 		`Expected no more than ${expected} unique durations but found ${actual}`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-durations/README.md',
-}
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
@@ -102,10 +99,6 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

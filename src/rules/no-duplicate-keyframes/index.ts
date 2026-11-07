@@ -1,20 +1,17 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { keywords } from '@projectwallace/css-analyzer/values'
-import { walk_atrules } from '../../utils/walk.js'
+import { define_rule } from '../../utils/define-rule.js'
 import { get_params_offset } from '../../utils/offsets.js'
+import { walk_atrules } from '../../utils/walk.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-duplicate-keyframes'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (name: string) => `Unexpected duplicate @keyframes name "${name}"`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-duplicate-keyframes/README.md',
-}
 
 const ruleFunction = (primaryOptions: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -52,10 +49,6 @@ const ruleFunction = (primaryOptions: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

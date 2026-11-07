@@ -9,6 +9,7 @@ import {
 } from '../../utils/option-validators.js'
 import { is_function } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
+import { define_rule } from '../../utils/define-rule.js'
 import { UniqueTracker } from '../../utils/unique-tracker.js'
 import { get_value_offset } from '../../utils/offsets.js'
 import { walk_decls } from '../../utils/walk.js'
@@ -22,7 +23,7 @@ function is_gradient_name(name: string): boolean {
 	)
 }
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-gradients'
 
@@ -30,10 +31,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
 		`Expected no more than ${expected} unique gradients but found ${actual}`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-gradients/README.md',
-}
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
@@ -99,10 +96,6 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

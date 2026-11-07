@@ -7,18 +7,15 @@ import {
 	is_pseudo_class_selector,
 	is_pseudo_element_selector,
 } from '@projectwallace/css-parser'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 const rule_name = 'projectwallace/no-pseudo-elements-in-is-where'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (pseudo_element: string, pseudo_function: string) =>
 		`Unexpected pseudo-element "${pseudo_element}" inside ":${pseudo_function}()"`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-pseudo-elements-in-is-where/README.md',
-}
 
 const ruleFunction = (primaryOption: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -71,10 +68,6 @@ const ruleFunction = (primaryOption: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

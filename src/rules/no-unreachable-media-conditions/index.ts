@@ -16,6 +16,7 @@ import {
 } from '../../utils/media-conditions.js'
 import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { define_rule } from '../../utils/define-rule.js'
 import { walk_atrules } from '../../utils/walk.js'
 
 /** Cartesian product of an array of arrays. */
@@ -34,7 +35,7 @@ function cartesian<T>(arrays: T[][]): T[][] {
 	return result
 }
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-unreachable-media-conditions'
 
@@ -42,10 +43,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: () => `Unexpected unreachable media condition`,
 	rejected_nested: () => `Unexpected unreachable media condition`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unreachable-media-conditions/README.md',
-}
 
 /**
  * Parse an at-rule prelude and return info about the first contradictory feature,
@@ -213,10 +210,6 @@ const ruleFunction = (primaryOption: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

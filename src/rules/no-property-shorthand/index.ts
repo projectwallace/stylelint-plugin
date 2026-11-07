@@ -3,18 +3,15 @@ import type { Root } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser'
 import { shorthand_properties } from '@projectwallace/css-analyzer/properties'
 import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 export const rule_name = 'projectwallace/no-property-shorthand'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (property: string) => `Unexpected shorthand property "${property}"`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-property-shorthand/README.md',
-}
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
@@ -81,10 +78,6 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin
