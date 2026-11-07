@@ -29,9 +29,13 @@ const ruleFunction = (primaryOption: number) => {
 		}
 
 		root.walkRules((rule) => {
-			if (is_keyframe_rule(rule)) return
+			if (is_keyframe_rule(rule)) {
+				return
+			}
 			const selector_text = rule.selector
-			if (!selector_text.trim()) return
+			if (!selector_text.trim()) {
+				return
+			}
 
 			const selector_list = parse_selector_list(selector_text)
 

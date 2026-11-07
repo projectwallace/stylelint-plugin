@@ -22,7 +22,9 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_positive_integer],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		let total_declarations = 0
 		let rule_count = 0
@@ -30,11 +32,15 @@ const ruleFunction = (primaryOption: number) => {
 		root.walkRules((rule) => {
 			rule_count++
 			rule.each((node) => {
-				if (node.type === 'decl') total_declarations++
+				if (node.type === 'decl') {
+					total_declarations++
+				}
 			})
 		})
 
-		if (rule_count === 0) return
+		if (rule_count === 0) {
+			return
+		}
 
 		const actual = total_declarations / rule_count
 

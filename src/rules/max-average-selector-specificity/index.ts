@@ -32,13 +32,17 @@ const ruleFunction = (primaryOption: Specificity) => {
 			possible: is_valid_specificity,
 		})
 
-		if (!validOptions || !is_valid_specificity(primaryOption)) return
+		if (!validOptions || !is_valid_specificity(primaryOption)) {
+			return
+		}
 
 		const sum: Specificity = [0, 0, 0]
 		let selector_count = 0
 
 		root.walkRules((rule) => {
-			if (is_keyframe_rule(rule)) return
+			if (is_keyframe_rule(rule)) {
+				return
+			}
 			const specificities = getSpecificity(rule.selector)
 			for (const specificity of specificities) {
 				sum[0] += specificity[0]
@@ -48,7 +52,9 @@ const ruleFunction = (primaryOption: Specificity) => {
 			}
 		})
 
-		if (selector_count === 0) return
+		if (selector_count === 0) {
+			return
+		}
 
 		const average: Specificity = [
 			sum[0] / selector_count,

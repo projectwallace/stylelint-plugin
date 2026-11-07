@@ -40,7 +40,9 @@ function find_static_feature_in_prelude(
 	const parsed = parse_atrule_prelude(at_rule_name, prelude)
 
 	for (const query_node of parsed) {
-		if (query_node.type !== MEDIA_QUERY) continue
+		if (query_node.type !== MEDIA_QUERY) {
+			continue
+		}
 
 		// Skip queries that contain `not` or `or` — too complex to analyse safely
 		let skip = false
@@ -53,26 +55,37 @@ function find_static_feature_in_prelude(
 				}
 			}
 		})
-		if (skip) continue
+		if (skip) {
+			continue
+		}
 
 		let static_feature: StaticFeatureInfo | null = null
 
 		walk(query_node, (node) => {
-			if (static_feature !== null) return
-			if (node.type !== MEDIA_FEATURE) return
+			if (static_feature !== null) {
+				return
+			}
+			if (node.type !== MEDIA_FEATURE) {
+				return
+			}
 
 			const property = node.property
-			if (!property) return
+			if (!property) {
+				return
+			}
 
 			// Only check unprefixed features — min-/max- are range features
-			if (str_starts_with('min-', property) || str_starts_with('max-', property)) return
+			if (str_starts_with('min-', property) || str_starts_with('max-', property)) {
+				return
+			}
 
 			// These features intentionally take an integer count, not a length
 			if (
 				str_equals('horizontal-viewport-segments', property) ||
 				str_equals('vertical-viewport-segments', property)
-			)
+			) {
 				return
+			}
 
 			// A numeric value makes this an equality (static) condition
 			const child = node.value
@@ -90,7 +103,9 @@ function find_static_feature_in_prelude(
 			}
 		})
 
-		if (static_feature !== null) return static_feature
+		if (static_feature !== null) {
+			return static_feature
+		}
 	}
 
 	return null
@@ -103,11 +118,15 @@ const ruleFunction = (primaryOption: true) => {
 			possible: [true],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		root.walkAtRules(/^(media|import)$/i, (at_rule) => {
 			const prelude = at_rule.params
-			if (!prelude) return
+			if (!prelude) {
+				return
+			}
 
 			const static_feature = find_static_feature_in_prelude(at_rule.name, prelude)
 

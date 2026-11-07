@@ -37,12 +37,16 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			},
 		)
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		let total_size = 0
 
 		root.walkComments((comment) => {
-			if (secondaryOptions?.ignoreCopyrightComments && comment.text.startsWith('!')) return
+			if (secondaryOptions?.ignoreCopyrightComments && comment.text.startsWith('!')) {
+				return
+			}
 			total_size += comment.source!.end!.offset - comment.source!.start!.offset
 		})
 

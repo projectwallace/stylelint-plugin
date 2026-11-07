@@ -27,23 +27,33 @@ const ruleFunction = (primaryOption: true) => {
 			possible: [true],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		root.walkRules((rule) => {
 			const selector_text = rule.selector
-			if (!selector_text.trim()) return
+			if (!selector_text.trim()) {
+				return
+			}
 
 			const selector_list = parse_selector_list(selector_text)
 
 			walk(selector_list, (node) => {
-				if (!is_pseudo_class_selector(node)) return
+				if (!is_pseudo_class_selector(node)) {
+					return
+				}
 
 				const name = node.name.toLowerCase()
-				if (name !== 'is' && name !== 'where') return SKIP
+				if (name !== 'is' && name !== 'where') {
+					return SKIP
+				}
 
 				// We're inside :is() or :where() - check for pseudo-elements
 				walk(node, (child) => {
-					if (child === node) return
+					if (child === node) {
+						return
+					}
 					if (is_pseudo_element_selector(child)) {
 						utils.report({
 							message: messages.rejected(`::${child.name}`, name),
