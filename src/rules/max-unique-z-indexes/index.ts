@@ -8,6 +8,7 @@ import {
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
+import { get_value_offset } from '../../utils/offsets.js'
 
 const { utils } = stylelint
 
@@ -77,7 +78,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const actual = unique_zindexes.size
 		for (const { declaration, start, end } of violating_declarations) {
-			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
+			const value_offset = get_value_offset(declaration)
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,

@@ -4,6 +4,7 @@ import { IDENTIFIER, OPERATOR } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { keywords } from '@projectwallace/css-analyzer/values'
 import { define_rule } from '../../utils/define-rule.js'
+import { get_value_offset } from '../../utils/offsets.js'
 
 const { utils } = stylelint
 
@@ -31,7 +32,7 @@ const ruleFunction = (primaryOptions: true) => {
 				return
 			}
 			const ast = parse_value(declaration.value)
-			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
+			const value_offset = get_value_offset(declaration)
 			for (const node of ast) {
 				// The `/` in `container: name / type` is an OPERATOR — stop there
 				if (node.type === OPERATOR) {

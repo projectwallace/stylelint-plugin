@@ -13,6 +13,7 @@ import {
 } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
+import { get_params_offset } from '../../utils/offsets.js'
 
 const { utils } = stylelint
 
@@ -124,7 +125,7 @@ const ruleFunction = (primaryOption: true) => {
 			const static_feature = find_static_feature_in_prelude(prelude)
 
 			if (static_feature !== null) {
-				const params_offset = 1 + at_rule.name.length + (at_rule.raws.afterName ?? ' ').length
+				const params_offset = get_params_offset(at_rule)
 				utils.report({
 					message: messages.rejected(),
 					node: at_rule,

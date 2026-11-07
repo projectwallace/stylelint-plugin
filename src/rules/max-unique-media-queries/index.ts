@@ -6,6 +6,7 @@ import {
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
+import { get_params_offset } from '../../utils/offsets.js'
 
 const { utils } = stylelint
 
@@ -58,7 +59,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const actual = unique_queries.size
 		for (const atRule of violating_at_rules) {
-			const params_offset = 1 + atRule.name.length + (atRule.raws.afterName ?? ' ').length
+			const params_offset = get_params_offset(atRule)
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: atRule,
