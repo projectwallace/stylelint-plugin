@@ -25,13 +25,17 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_positive_integer],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		let total_complexity = 0
 		let selector_count = 0
 
 		root.walkRules((rule) => {
-			if (is_keyframe_rule(rule)) return
+			if (is_keyframe_rule(rule)) {
+				return
+			}
 			const parsed = parse_selector_list(rule.selector)
 
 			for (const selector of parsed) {
@@ -40,7 +44,9 @@ const ruleFunction = (primaryOption: number) => {
 			}
 		})
 
-		if (selector_count === 0) return
+		if (selector_count === 0) {
+			return
+		}
 
 		const actual = total_complexity / selector_count
 

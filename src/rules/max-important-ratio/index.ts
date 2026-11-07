@@ -22,7 +22,9 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_ratio],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		let total_declarations = 0
 		let important_declarations = 0
@@ -34,7 +36,9 @@ const ruleFunction = (primaryOption: number) => {
 			}
 		})
 
-		if (total_declarations === 0) return
+		if (total_declarations === 0) {
+			return
+		}
 
 		const actual = important_declarations / total_declarations
 

@@ -24,10 +24,14 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_positive_integer],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		root.walkRules((rule) => {
-			if (is_keyframe_rule(rule)) return
+			if (is_keyframe_rule(rule)) {
+				return
+			}
 			const parsed = parse_selector_list(rule.selector)
 			const actual = parsed.child_count
 

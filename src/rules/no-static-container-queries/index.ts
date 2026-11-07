@@ -44,7 +44,9 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 	const parsed = parse_atrule_prelude('container', prelude)
 
 	for (const query_node of parsed) {
-		if (!is_container_query(query_node)) continue
+		if (!is_container_query(query_node)) {
+			continue
+		}
 
 		// Skip queries that contain `not` or `or` — too complex to analyse safely
 		let skip = false
@@ -57,20 +59,30 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 				}
 			}
 		})
-		if (skip) continue
+		if (skip) {
+			continue
+		}
 
 		let static_feature: StaticFeatureInfo | null = null
 
 		walk(query_node, (node) => {
-			if (static_feature !== null) return
-			if (!is_media_feature(node)) return
+			if (static_feature !== null) {
+				return
+			}
+			if (!is_media_feature(node)) {
+				return
+			}
 
 			const media_feature = node as MediaFeature
 			const property = media_feature.property
-			if (!property) return
+			if (!property) {
+				return
+			}
 
 			// Only check unprefixed features — min-/max- are range features
-			if (str_starts_with('min-', property) || str_starts_with('max-', property)) return
+			if (str_starts_with('min-', property) || str_starts_with('max-', property)) {
+				return
+			}
 
 			// A numeric value makes this an equality (static) condition
 			const child = media_feature.value
@@ -87,7 +99,9 @@ function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | nu
 			}
 		})
 
-		if (static_feature !== null) return static_feature
+		if (static_feature !== null) {
+			return static_feature
+		}
 	}
 
 	return null
@@ -100,11 +114,15 @@ const ruleFunction = (primaryOption: true) => {
 			possible: [true],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		root.walkAtRules(/^container$/i, (at_rule) => {
 			const prelude = at_rule.params
-			if (!prelude) return
+			if (!prelude) {
+				return
+			}
 
 			const static_feature = find_static_feature_in_prelude(prelude)
 

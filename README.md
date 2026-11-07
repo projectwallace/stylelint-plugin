@@ -151,6 +151,7 @@ Rules that affect file size and loading performance.
 | [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)                               | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                     | Disallow `@layer` names that are declared but never implemented                 |
 | [block-no-empty](https://stylelint.io/user-guide/rules/block-no-empty) _(stylelint core)_    | Disallow empty rules and at-rules (including those containing only comments)    |
+| [no-duplicate-font-faces](src/rules/no-duplicate-font-faces/README.md)                       | Disallow multiple `@font-face` rules for the same font face                     |
 
 ### Design Tokens
 
@@ -199,6 +200,7 @@ Rules to help prevent errors.
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                                                        | Disallow `@layer` names that are declared but never implemented                 |
 | [block-no-empty](https://stylelint.io/user-guide/rules/block-no-empty) _(stylelint core)_                                       | Disallow empty rules and at-rules (including those containing only comments)    |
 | [keyframe-declaration-no-important](https://stylelint.io/user-guide/rules/keyframe-declaration-no-important) _(stylelint core)_ | Disallow `!important` declarations inside `@keyframes` blocks                   |
+| [no-duplicate-font-faces](src/rules/no-duplicate-font-faces/README.md)                                                          | Disallow multiple `@font-face` rules for the same font face                     |
 
 ### Maintainability
 

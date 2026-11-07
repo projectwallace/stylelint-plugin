@@ -22,7 +22,9 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_non_negative_integer],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		let actual = 0
 		root.walkRules(() => {
