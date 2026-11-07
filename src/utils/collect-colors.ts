@@ -48,7 +48,9 @@ export function collect_colors(
 			}
 		} else if (is_function(node)) {
 			const fn_name = node.name
-			if (fn_name === undefined) return
+			if (fn_name === undefined) {
+				return
+			}
 			const fn = node.text
 			const fn_name_lower = fn_name.toLowerCase()
 

@@ -37,11 +37,17 @@ const ruleFunction = (primaryOptions: true) => {
 			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
 			for (const node of ast) {
 				// The `/` in `container: name / type` is an OPERATOR — stop there
-				if (node.type === OPERATOR) break
-				if (node.type !== IDENTIFIER) continue
+				if (node.type === OPERATOR) {
+					break
+				}
+				if (node.type !== IDENTIFIER) {
+					continue
+				}
 
 				const { text: name } = node
-				if (keywords.has(name)) continue
+				if (keywords.has(name)) {
+					continue
+				}
 
 				if (seen.has(name)) {
 					utils.report({
