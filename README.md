@@ -129,6 +129,7 @@ Rules that require analyzing the full stylesheet rather than individual nodes â€
 | [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)             | Disallow custom properties that are never used in a `var()`                     |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                   | Disallow `@layer` names that are declared but never implemented                 |
 | [no-unused-container-names](src/rules/no-unused-container-names/README.md)                 | Disallow container names that are declared but never queried                    |
+| [max-unique-attribute-selectors](src/rules/max-unique-attribute-selectors/README.md)       | Limit the number of unique attribute selectors                                  |
 
 ### Performance
 
@@ -238,6 +239,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [no-property-shorthand](src/rules/no-property-shorthand/README.md)                                              | Disallow the use of shorthand properties                                     |
 | [no-pseudo-elements-in-is-where](src/rules/no-pseudo-elements-in-is-where/README.md)                            | Disallow pseudo-elements inside `:is()` and `:where()`                       |
 | [no-value-browserhacks](src/rules/no-value-browserhacks/README.md)                                              | Disallow the use of known browser hacks in values                            |
+| [max-unique-attribute-selectors](src/rules/max-unique-attribute-selectors/README.md)                            | Limit the number of unique attribute selectors                               |
 
 ## Holistic linting
 

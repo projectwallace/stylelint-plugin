@@ -22,6 +22,7 @@ const config: PresetConfig = {
 		'projectwallace/max-unique-media-queries': [12, { severity: 'warning' }],
 		'projectwallace/max-unique-supports-queries': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-units': [10, { severity: 'warning' }],
+		'projectwallace/max-unique-attribute-selectors': [16, { severity: 'warning' }],
 		'projectwallace/max-unique-z-indexes': [8, { severity: 'warning' }],
 		'projectwallace/min-declaration-uniqueness-ratio': [0.5, { severity: 'warning' }],
 		'projectwallace/min-selector-uniqueness-ratio': [0.66, { severity: 'warning' }],
