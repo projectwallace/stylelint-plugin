@@ -1,5 +1,5 @@
 import stylelint from 'stylelint'
-import type { Root, AtRule, Container } from 'postcss'
+import type { Root } from 'postcss'
 import { unquote } from '../../utils/unquote.js'
 
 const { createPlugin, utils } = stylelint
@@ -20,20 +20,6 @@ const WEIGHT_KEYWORDS: Record<string, string> = { normal: '400', bold: '700' }
 function normalize(value: string | undefined, fallback: string): string {
 	const v = value?.trim().toLowerCase().replaceAll(/\s+/g, ' ')
 	return v || fallback
-}
-
-/** Describes the at-rules (@media, @layer, @supports, …) a node is nested in. */
-function context_of(node: AtRule): string {
-	const parts: string[] = []
-	let parent: Container | undefined = node.parent as Container | undefined
-	while (parent && parent.type !== 'root') {
-		if (parent.type === 'atrule') {
-			const at_rule = parent as AtRule
-			parts.push(`@${at_rule.name.toLowerCase()} ${at_rule.params.trim().toLowerCase()}`)
-		}
-		parent = parent.parent as Container | undefined
-	}
-	return parts.join(' < ')
 }
 
 const ruleFunction = (primaryOptions: true) => {
@@ -71,14 +57,9 @@ const ruleFunction = (primaryOptions: true) => {
 			const normalized_weight = WEIGHT_KEYWORDS[weight] ?? weight
 			const normalized_stretch = stretch === 'normal' ? '100%' : stretch
 
-			const key = [
-				context_of(at_rule),
-				family.toLowerCase(),
-				normalized_weight,
-				style,
-				normalized_stretch,
-				range,
-			].join('|')
+			const key = [family.toLowerCase(), normalized_weight, style, normalized_stretch, range].join(
+				'|',
+			)
 
 			if (seen.has(key)) {
 				utils.report({

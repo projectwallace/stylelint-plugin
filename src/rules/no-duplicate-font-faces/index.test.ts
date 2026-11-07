@@ -103,18 +103,6 @@ test('should not error when families differ', async () => {
 	expect(warnings).toStrictEqual([])
 })
 
-test('should not error when the same face is declared in different at-rule contexts', async () => {
-	const { warnings, errored } = await lint(
-		`
-		@font-face { font-family: Inter; src: url(a.woff2); }
-		@media print { @font-face { font-family: Inter; src: url(print.woff2); } }
-	`,
-		true,
-	)
-	expect(errored).toBe(false)
-	expect(warnings).toStrictEqual([])
-})
-
 test('should not error when @font-face has no font-family', async () => {
 	const { warnings, errored } = await lint(
 		`
@@ -196,19 +184,6 @@ test('should error when unicode-range is identical but formatted differently', a
 		`
 		@font-face { font-family: Inter; unicode-range: U+0000-00FF, U+0131; src: url(a.woff2); }
 		@font-face { font-family: Inter; unicode-range: u+0000-00ff,u+0131; src: url(b.woff2); }
-	`,
-		true,
-	)
-	expect(warnings).toHaveLength(1)
-})
-
-test('should error for duplicates within the same at-rule context', async () => {
-	const { warnings } = await lint(
-		`
-		@media print {
-			@font-face { font-family: Inter; src: url(a.woff2); }
-			@font-face { font-family: Inter; src: url(b.woff2); }
-		}
 	`,
 		true,
 	)

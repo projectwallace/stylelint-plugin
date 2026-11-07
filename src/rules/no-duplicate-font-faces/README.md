@@ -12,7 +12,7 @@ Disallow multiple `@font-face` rules that describe the same font face.
 
 Two `@font-face` rules with the same `font-family`, `font-weight`, `font-style`, `font-stretch` and `unicode-range` compete for the same face. The browser only uses the last one, so the other is dead weight that still adds to the file size and can hide copy-paste mistakes (for example a forgotten `font-weight` on a bold variant).
 
-Omitted descriptors are compared by their default value (`font-weight: 400`, `font-style: normal`, `font-stretch: 100%`), `bold` is treated as `700`, family names are compared case-insensitively and ignoring quotes. Faces declared inside different at-rule contexts (for example `@media print`) are not considered duplicates of each other.
+Omitted descriptors are compared by their default value (`font-weight: 400`, `font-style: normal`, `font-stretch: 100%`), `bold` is treated as `700`, family names are compared case-insensitively and ignoring quotes.
 
 ## Options
 
