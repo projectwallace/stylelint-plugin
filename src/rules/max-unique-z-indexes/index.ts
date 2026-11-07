@@ -43,7 +43,9 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			},
 		)
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_zindexes = new Set<string>()
@@ -57,7 +59,9 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			let trigger_end = declaration.value.length
 
 			walk(parsed, (node) => {
-				if (node.type !== NUMBER) return
+				if (node.type !== NUMBER) {
+					return
+				}
 				const text = node.text
 				if (!is_allowed(text, ignore)) {
 					const is_new = !unique_zindexes.has(text)

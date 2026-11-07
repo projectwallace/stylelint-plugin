@@ -71,7 +71,9 @@ export function collect_usages_from_files(importFrom: ImportFrom[]): Set<string>
 						result.add(child.text)
 						break
 					}
-					if (child.type === OPERATOR) break
+					if (child.type === OPERATOR) {
+						break
+					}
 				}
 			}
 		})

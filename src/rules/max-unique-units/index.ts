@@ -24,7 +24,9 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_positive_integer],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const unique_units = new Set<string>()
 		const violating_declarations: Array<{ declaration: Declaration; start: number; end: number }> =

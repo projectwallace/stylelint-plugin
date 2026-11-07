@@ -45,7 +45,9 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			},
 		)
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const ignore = secondaryOptions?.ignore ?? []
 
@@ -66,7 +68,9 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		root.walkAtRules(/^property$/i, (atRule) => {
 			const prop_name = atRule.params.trim()
-			if (!is_custom(prop_name)) return
+			if (!is_custom(prop_name)) {
+				return
+			}
 
 			atRule.walkDecls(/^syntax$/i, (decl) => {
 				// syntax values may be quoted: '"<color>"' or "'<color>'"
@@ -76,7 +80,9 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				}
 			})
 
-			if (!color_custom_properties.has(prop_name)) return
+			if (!color_custom_properties.has(prop_name)) {
+				return
+			}
 
 			atRule.walkDecls(/^initial-value$/i, (decl) => {
 				run_collect(parse_value(decl.value), false)

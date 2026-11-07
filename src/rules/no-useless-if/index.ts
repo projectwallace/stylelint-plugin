@@ -24,16 +24,24 @@ const ruleFunction = (primaryOption: true) => {
 			possible: [true],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		root.walkDecls((declaration) => {
-			if (!/if\(/i.test(declaration.value)) return
+			if (!/if\(/i.test(declaration.value)) {
+				return
+			}
 
 			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
-				if (!is_function(node) || !str_equals('if', node.name)) return
-				if (node.child_count !== 1) return
+				if (!is_function(node) || !str_equals('if', node.name)) {
+					return
+				}
+				if (node.child_count !== 1) {
+					return
+				}
 
 				const only_branch = node.first_child
 

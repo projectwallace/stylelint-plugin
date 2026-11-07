@@ -27,7 +27,9 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_non_negative_integer],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		// At some point we could have a setting to ignore resets in a reset/normalize layer,
 		// e.g. `ignoreLayers: ['reset', 'normalize']`
@@ -36,7 +38,9 @@ const ruleFunction = (primaryOption: number) => {
 		const violating_declarations: Declaration[] = []
 
 		root.walkDecls(SPACING_RESET_PROPERTIES, (declaration) => {
-			if (!isValueReset(parse_value(declaration.value))) return
+			if (!isValueReset(parse_value(declaration.value))) {
+				return
+			}
 
 			reset_count++
 			if (reset_count > primaryOption) {

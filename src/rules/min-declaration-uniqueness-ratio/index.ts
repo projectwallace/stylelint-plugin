@@ -22,7 +22,9 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_ratio],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const unique_declarations = new Set<string>()
 		let total_count = 0
@@ -32,7 +34,9 @@ const ruleFunction = (primaryOption: number) => {
 			total_count++
 		})
 
-		if (total_count === 0) return
+		if (total_count === 0) {
+			return
+		}
 
 		const actual = unique_declarations.size / total_count
 

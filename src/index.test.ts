@@ -49,6 +49,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/no-duplicate-container-names',
 		'projectwallace/no-duplicate-custom-properties',
 		'projectwallace/no-duplicate-data-urls',
+		'projectwallace/no-duplicate-font-faces',
 		'projectwallace/no-duplicate-keyframes',
 		'projectwallace/no-duplicate-registered-properties',
 		'projectwallace/no-invalid-z-index',

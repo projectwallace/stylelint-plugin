@@ -38,10 +38,14 @@ const ruleFunction = (primaryOptions: true) => {
 			for (const node of ast) {
 				// anchor-name values are comma-separated dashed-idents; commas are
 				// OPERATOR nodes — skip them and keep iterating
-				if (node.type !== IDENTIFIER) continue
+				if (node.type !== IDENTIFIER) {
+					continue
+				}
 
 				const { text: name } = node
-				if (keywords.has(name)) continue
+				if (keywords.has(name)) {
+					continue
+				}
 
 				if (seen.has(name)) {
 					utils.report({

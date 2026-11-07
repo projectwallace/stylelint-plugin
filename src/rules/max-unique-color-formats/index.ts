@@ -25,7 +25,9 @@ const ruleFunction = (primaryOption: number) => {
 			actual: primaryOption,
 			possible: [is_valid_positive_integer],
 		})
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const color_custom_properties = new Set<string>()
 		const unique_formats = new Set<string>()
@@ -38,7 +40,9 @@ const ruleFunction = (primaryOption: number) => {
 
 		root.walkAtRules(/^property$/i, (atRule) => {
 			const prop_name = atRule.params.trim()
-			if (!is_custom(prop_name)) return
+			if (!is_custom(prop_name)) {
+				return
+			}
 
 			atRule.walkDecls(/^syntax$/i, (decl) => {
 				const syntax = unquote(decl.value.trim())
@@ -47,7 +51,9 @@ const ruleFunction = (primaryOption: number) => {
 				}
 			})
 
-			if (!color_custom_properties.has(prop_name)) return
+			if (!color_custom_properties.has(prop_name)) {
+				return
+			}
 
 			atRule.walkDecls(/^initial-value$/i, (decl) => {
 				run_collect(parse_value(decl.value), false)
