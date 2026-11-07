@@ -24,19 +24,25 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_positive_integer],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		let total_selectors = 0
 		let rule_count = 0
 
 		root.walkRules((rule) => {
-			if (is_keyframe_rule(rule)) return
+			if (is_keyframe_rule(rule)) {
+				return
+			}
 			const parsed = parse_selector_list(rule.selector)
 			total_selectors += parsed.child_count
 			rule_count++
 		})
 
-		if (rule_count === 0) return
+		if (rule_count === 0) {
+			return
+		}
 
 		const actual = total_selectors / rule_count
 

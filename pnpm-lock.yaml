@@ -5,22 +5,22 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@projectwallace/css-parser': ~0.19.3
+  '@projectwallace/css-parser': ~0.19.4
 
 importers:
 
   .:
     dependencies:
       '@projectwallace/css-analyzer':
-        specifier: ^9.9.5
-        version: 9.9.5
+        specifier: ^9.9.6
+        version: 9.9.6
       '@projectwallace/css-parser':
-        specifier: ~0.19.3
-        version: 0.19.3
+        specifier: ~0.19.4
+        version: 0.19.4
     devDependencies:
       '@projectwallace/preset-oxlint':
-        specifier: ^0.0.11
-        version: 0.0.11(oxlint@1.89.0)
+        specifier: ^0.0.12
+        version: 0.0.12(oxlint@1.89.0)
       '@types/node':
         specifier: ^26.6.5
         version: 26.6.5
@@ -654,16 +654,16 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@projectwallace/css-analyzer@9.9.5':
-    resolution: {integrity: sha512-HtEWI5G/flzuoptALwvx66N4Vkq+SR2W019VI1R5RIX7MOuEOjuIIx2OKC3S9NAZAKbiopKp88ZLqy5ymmaAIg==}
+  '@projectwallace/css-analyzer@9.9.6':
+    resolution: {integrity: sha512-qankvkxeOhhTziJvz5bK4D/lDoGVPyygzzerhbyXloPxs8M3hWSF+oSnJNA6Iqg+V76etQ+ufn38UA/JKU66Qg==}
     engines: {node: '>=18.0.0', pnpm: '>=11.0.0'}
 
-  '@projectwallace/css-parser@0.19.3':
-    resolution: {integrity: sha512-bK6pbuWMXGbrUru4a/nu9h/6SrSPPtUg5VU0bXYqG7hnp4+8d8PeF21T3gU+Lf5I8+jVakDggBoZHxeSRx2HjQ==}
+  '@projectwallace/css-parser@0.19.4':
+    resolution: {integrity: sha512-Wow4VO1HWUNq5MLMDffTPapW7hu2wXHF8wdgOrcjk6zdU+VYDS/O4b967yiL/8ZjyCO5LWC2HPRYQeqguEP5pQ==}
     engines: {pnpm: '>=11.0.0'}
 
-  '@projectwallace/preset-oxlint@0.0.11':
-    resolution: {integrity: sha512-hdrtBKSD3ctKkrug54PfHCJPl0jPs6Uw7Rdl/ZVGvim52jYUXp0lj2fTjEP9GVO1Hy3K/dyXKAeEvaFF1TlC4w==}
+  '@projectwallace/preset-oxlint@0.0.12':
+    resolution: {integrity: sha512-Amy4yCmGM2ZbPfWauhMRQ+s32w9LEZV4FTdccxGrL/2zr15+giWv27dlhWnfRhtKVYrRhWkEFYQ5tWvdl/DbxA==}
     peerDependencies:
       oxlint: ^1.0.0
 
@@ -2208,13 +2208,13 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.89.0':
     optional: true
 
-  '@projectwallace/css-analyzer@9.9.5':
+  '@projectwallace/css-analyzer@9.9.6':
     dependencies:
-      '@projectwallace/css-parser': 0.19.3
+      '@projectwallace/css-parser': 0.19.4
 
-  '@projectwallace/css-parser@0.19.3': {}
+  '@projectwallace/css-parser@0.19.4': {}
 
-  '@projectwallace/preset-oxlint@0.0.11(oxlint@1.89.0)':
+  '@projectwallace/preset-oxlint@0.0.12(oxlint@1.89.0)':
     dependencies:
       oxlint: 1.89.0
 

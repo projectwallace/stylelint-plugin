@@ -21,11 +21,15 @@ const ruleFunction = (primaryOption: true) => {
 			possible: [true],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		root.walkAtRules((at_rule) => {
 			const name = at_rule.name.toLowerCase()
-			if (name !== 'media' && name !== 'supports') return
+			if (name !== 'media' && name !== 'supports') {
+				return
+			}
 
 			const nodes = parse_atrule_prelude(name, at_rule.params)
 

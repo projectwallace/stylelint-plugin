@@ -34,10 +34,14 @@ const ruleFunction = (primaryOptions: true) => {
 			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
-				if (node.type !== NUMBER) return
+				if (node.type !== NUMBER) {
+					return
+				}
 
 				const num = node.value
-				if (num === null) return
+				if (num === null) {
+					return
+				}
 
 				if (!Number.isInteger(num) || num < INT32_MIN || num > INT32_MAX) {
 					utils.report({
