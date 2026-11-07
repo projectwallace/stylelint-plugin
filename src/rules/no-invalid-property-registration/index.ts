@@ -1,5 +1,16 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule, Declaration } from 'postcss'
+import {
+	parse_value,
+	walk,
+	is_dimension,
+	is_function,
+	is_identifier,
+	is_number,
+	is_string,
+	type CSSNode,
+} from '@projectwallace/css-parser'
+import { unquote } from '../../utils/unquote.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -25,42 +36,101 @@ const meta = {
 	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-invalid-property-registration/README.md',
 }
 
-const NUMBER = String.raw`[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?`
-const NUMBER_RE = new RegExp(`^${NUMBER}$`, 'i')
-const INTEGER_RE = /^[+-]?\d+$/
-const PERCENTAGE_RE = new RegExp(`^${NUMBER}%$`, 'i')
+const LENGTH_UNITS = new Set([
+	'px',
+	'em',
+	'rem',
+	'ex',
+	'rex',
+	'cap',
+	'rcap',
+	'ch',
+	'rch',
+	'ic',
+	'ric',
+	'lh',
+	'rlh',
+	'vw',
+	'vh',
+	'vmin',
+	'vmax',
+	'vi',
+	'vb',
+	'svw',
+	'svh',
+	'svi',
+	'svb',
+	'lvw',
+	'lvh',
+	'lvi',
+	'lvb',
+	'dvw',
+	'dvh',
+	'dvi',
+	'dvb',
+	'cm',
+	'mm',
+	'q',
+	'in',
+	'pt',
+	'pc',
+	'cqw',
+	'cqh',
+	'cqi',
+	'cqb',
+	'cqmin',
+	'cqmax',
+])
+const ANGLE_UNITS = new Set(['deg', 'grad', 'rad', 'turn'])
+const TIME_UNITS = new Set(['s', 'ms'])
+const RESOLUTION_UNITS = new Set(['dpi', 'dpcm', 'dppx', 'x'])
 
-function dimension_re(units: string): RegExp {
-	return new RegExp(`^${NUMBER}(?:${units})$`, 'i')
+function is_dimension_of(node: CSSNode, units: Set<string>): boolean {
+	return is_dimension(node) && units.has(node.unit.toLowerCase())
 }
 
-const LENGTH_RE = dimension_re(
-	'px|em|rem|ex|rex|cap|rcap|ch|rch|ic|ric|lh|rlh|vw|vh|vmin|vmax|vi|vb|svw|svh|svi|svb|lvw|lvh|lvi|lvb|dvw|dvh|dvi|dvb|cm|mm|q|in|pt|pc|cqw|cqh|cqi|cqb|cqmin|cqmax',
-)
-const ANGLE_RE = dimension_re('deg|grad|rad|turn')
-const TIME_RE = dimension_re('s|ms')
-const RESOLUTION_RE = dimension_re('dpi|dpcm|dppx|x')
-const FLEX_RE = dimension_re('fr')
-const ZERO_RE = /^[+-]?0*\.?0+(?:e[+-]?\d+)?$/i
+function is_zero(node: CSSNode): boolean {
+	return is_number(node) && node.value === 0
+}
 
-type Matcher = (value: string) => boolean
+function is_percentage(node: CSSNode): boolean {
+	return is_dimension(node) && node.unit === '%'
+}
+
+function is_length(node: CSSNode): boolean {
+	return is_dimension_of(node, LENGTH_UNITS) || is_zero(node)
+}
+
+type Matcher = (node: CSSNode) => boolean
 
 const MATCHERS: Record<string, Matcher> = {
-	'<number>': (v) => NUMBER_RE.test(v),
-	'<integer>': (v) => INTEGER_RE.test(v),
-	'<percentage>': (v) => PERCENTAGE_RE.test(v),
-	'<length>': (v) => LENGTH_RE.test(v) || ZERO_RE.test(v),
-	'<length-percentage>': (v) => LENGTH_RE.test(v) || PERCENTAGE_RE.test(v) || ZERO_RE.test(v),
-	'<angle>': (v) => ANGLE_RE.test(v) || ZERO_RE.test(v),
-	'<time>': (v) => TIME_RE.test(v),
-	'<resolution>': (v) => RESOLUTION_RE.test(v),
-	'<flex>': (v) => FLEX_RE.test(v),
+	'<number>': (node) => is_number(node),
+	// An <integer> has no decimal point or exponent
+	'<integer>': (node) =>
+		is_number(node) &&
+		Number.isInteger(node.value) &&
+		!node.text.includes('.') &&
+		!node.text.toLowerCase().includes('e'),
+	'<percentage>': is_percentage,
+	'<length>': is_length,
+	'<length-percentage>': (node) => is_length(node) || is_percentage(node),
+	'<angle>': (node) => is_dimension_of(node, ANGLE_UNITS) || is_zero(node),
+	'<time>': (node) => is_dimension_of(node, TIME_UNITS),
+	'<resolution>': (node) => is_dimension_of(node, RESOLUTION_UNITS),
+	'<flex>': (node) => is_dimension_of(node, new Set(['fr'])),
 	// A color is never a bare number, dimension or percentage
-	'<color>': (v) =>
-		!(NUMBER_RE.test(v) || PERCENTAGE_RE.test(v) || /^[+-]?[\d.]+[a-z%]+$/i.test(v)),
+	'<color>': (node) => !(is_number(node) || is_dimension(node)),
 }
 
-const QUOTED_RE = /^(["'])(.*)\1$/s
+function uses_var(value: CSSNode): boolean {
+	let found = false
+	walk(value, (node) => {
+		if (is_function(node) && node.name.toLowerCase() === 'var') {
+			found = true
+		}
+	})
+	return found
+}
 
 function get_descriptor(at_rule: AtRule, name: string): Declaration | undefined {
 	let found: Declaration | undefined
@@ -110,7 +180,13 @@ const ruleFunction = (primaryOptions: true) => {
 
 			if (inherits_decl) {
 				const value = inherits_decl.value.trim()
-				if (!/^(true|false)$/i.test(value)) {
+				const [node, ...rest] = parse_value(value).children
+				const valid =
+					node &&
+					rest.length === 0 &&
+					is_identifier(node) &&
+					['true', 'false'].includes(node.name.toLowerCase())
+				if (!valid) {
 					report(messages.invalid_inherits(name, value), inherits_decl)
 				}
 			}
@@ -118,9 +194,9 @@ const ruleFunction = (primaryOptions: true) => {
 			let syntax: string | undefined
 			if (syntax_decl) {
 				const value = syntax_decl.value.trim()
-				const quoted = QUOTED_RE.exec(value)
-				if (quoted) {
-					syntax = quoted[2].trim()
+				const [node, ...rest] = parse_value(value).children
+				if (node && rest.length === 0 && is_string(node)) {
+					syntax = unquote(node.text).trim()
 				} else {
 					report(messages.invalid_syntax(name, value), syntax_decl)
 				}
@@ -139,14 +215,19 @@ const ruleFunction = (primaryOptions: true) => {
 			}
 
 			const initial_value = initial_decl.value.trim()
-			if (/\bvar\(/i.test(initial_value)) {
+			const parsed_initial_value = parse_value(initial_value)
+			const initial_nodes = [...parsed_initial_value.children]
+			if (uses_var(parsed_initial_value)) {
 				report(messages.dependent_initial_value(name, initial_value), initial_decl)
 				return
 			}
 
 			// Only validate single, non-composite, non-function values against a single data type
 			const matcher = MATCHERS[syntax.toLowerCase()]
-			if (matcher && !initial_value.includes('(') && !matcher(initial_value)) {
+			if (!matcher || initial_nodes.some((node) => is_function(node))) {
+				return
+			}
+			if (initial_nodes.length !== 1 || !matcher(initial_nodes[0])) {
 				report(messages.mismatched_initial_value(name, initial_value, `"${syntax}"`), initial_decl)
 			}
 		})
