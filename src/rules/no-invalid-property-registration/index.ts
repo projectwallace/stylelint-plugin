@@ -8,6 +8,8 @@ import {
 	is_identifier,
 	is_number,
 	is_string,
+	str_equals,
+	str_index_of,
 	type CSSNode,
 } from '@projectwallace/css-parser'
 import { unquote } from '../../utils/unquote.js'
@@ -109,8 +111,8 @@ const MATCHERS: Record<string, Matcher> = {
 	'<integer>': (node) =>
 		is_number(node) &&
 		Number.isInteger(node.value) &&
-		!node.text.includes('.') &&
-		!node.text.toLowerCase().includes('e'),
+		str_index_of('.', node.text) === -1 &&
+		str_index_of('e', node.text) === -1,
 	'<percentage>': is_percentage,
 	'<length>': is_length,
 	'<length-percentage>': (node) => is_length(node) || is_percentage(node),
@@ -125,7 +127,7 @@ const MATCHERS: Record<string, Matcher> = {
 function uses_var(value: CSSNode): boolean {
 	let found = false
 	walk(value, (node) => {
-		if (is_function(node) && node.name.toLowerCase() === 'var') {
+		if (is_function(node) && str_equals('var', node.name)) {
 			found = true
 		}
 	})
@@ -185,7 +187,7 @@ const ruleFunction = (primaryOptions: true) => {
 					node &&
 					rest.length === 0 &&
 					is_identifier(node) &&
-					['true', 'false'].includes(node.name.toLowerCase())
+					(str_equals('true', node.name) || str_equals('false', node.name))
 				if (!valid) {
 					report(messages.invalid_inherits(name, value), inherits_decl)
 				}
