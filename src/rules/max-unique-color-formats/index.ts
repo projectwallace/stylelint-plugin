@@ -6,6 +6,7 @@ import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 import { unquote } from '../../utils/unquote.js'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { utils } = stylelint
 
@@ -27,7 +28,7 @@ const ruleFunction = (primaryOption: number) => {
 		}
 
 		const color_custom_properties = new Set<string>()
-		const unique_formats = new Set<string>()
+		const unique_formats = new UniqueTracker(primaryOption)
 
 		function run_collect(parsed: ReturnType<typeof parse_value>, resolve_var: boolean): void {
 			collect_colors(parsed, resolve_var, color_custom_properties, (_color, format) => {
@@ -60,21 +61,19 @@ const ruleFunction = (primaryOption: number) => {
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
-			const before = unique_formats.size
+			unique_formats.begin()
 			let triggering_color = declaration.value
 			collect_colors(
 				parse_value(declaration.value),
 				true,
 				color_custom_properties,
 				(color, format) => {
-					const is_new = !unique_formats.has(format)
-					unique_formats.add(format)
-					if (is_new && unique_formats.size > primaryOption) {
+					if (unique_formats.add(format)) {
 						triggering_color = color
 					}
 				},
 			)
-			if (unique_formats.size > before && unique_formats.size > primaryOption) {
+			if (unique_formats.exceeded()) {
 				violating_declarations.push({ declaration, word: triggering_color })
 			}
 		})

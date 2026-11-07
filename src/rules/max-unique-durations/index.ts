@@ -2,14 +2,15 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_positive_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { analyzeAnimation, keywords } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { utils } = stylelint
 
@@ -26,20 +27,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_positive_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_positive_integer],
 		)
 
 		if (!validOptions) {
@@ -47,12 +40,12 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_durations = new Set<string>()
+		const unique_durations = new UniqueTracker(primaryOption)
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(/^(animation|transition)(-duration)?$/i, (declaration) => {
 			let parsed = parse_value(declaration.value)
-			const before = unique_durations.size
+			unique_durations.begin()
 			let triggering_duration = declaration.value
 
 			if (
@@ -64,9 +57,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 						let duration = child.text
 
 						if (!keywords.has(duration) && !is_allowed(duration, ignore)) {
-							const is_new = !unique_durations.has(duration)
-							unique_durations.add(duration)
-							if (is_new && unique_durations.size > primaryOption) {
+							if (unique_durations.add(duration)) {
 								triggering_duration = duration
 							}
 						}
@@ -77,9 +68,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					if (item.type === 'duration') {
 						let duration = item.value.text
 						if (!is_allowed(duration, ignore)) {
-							const is_new = !unique_durations.has(duration)
-							unique_durations.add(duration)
-							if (is_new && unique_durations.size > primaryOption) {
+							if (unique_durations.add(duration)) {
 								triggering_duration = duration
 							}
 						}
@@ -87,7 +76,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				})
 			}
 
-			if (unique_durations.size > before && unique_durations.size > primaryOption) {
+			if (unique_durations.exceeded()) {
 				violating_declarations.push({ declaration, word: triggering_duration })
 			}
 		})

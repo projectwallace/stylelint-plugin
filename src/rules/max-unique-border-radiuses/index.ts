@@ -4,8 +4,8 @@ import { keywords } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_positive_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -32,20 +32,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_positive_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_positive_integer],
 		)
 
 		if (!validOptions) {

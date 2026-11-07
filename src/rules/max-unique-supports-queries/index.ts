@@ -2,10 +2,11 @@ import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_non_negative_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { utils } = stylelint
 
@@ -22,20 +23,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_non_negative_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_non_negative_integer],
 		)
 
 		if (!validOptions) {
@@ -43,15 +36,15 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_queries = new Set<string>()
+		const unique_queries = new UniqueTracker(primaryOption)
 		const violating_at_rules: AtRule[] = []
 
 		root.walkAtRules(/^supports$/i, (at_rule) => {
-			const before = unique_queries.size
+			unique_queries.begin()
 			if (!is_allowed(at_rule.params, ignore)) {
 				unique_queries.add(at_rule.params)
 			}
-			if (unique_queries.size > before && unique_queries.size > primaryOption) {
+			if (unique_queries.exceeded()) {
 				violating_at_rules.push(at_rule)
 			}
 		})

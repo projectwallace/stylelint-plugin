@@ -3,7 +3,7 @@ import type { Root, AtRule } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
 import { str_equals, str_index_of, is_custom } from '@projectwallace/css-parser/string-utils'
-import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
+import { is_allowed, validate_options_with_ignore } from '../../utils/option-validators.js'
 import { split_font_families } from '../../utils/font-families.js'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -28,20 +28,12 @@ function is_in_font_face(node: { parent?: unknown }): boolean {
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOptions,
-				possible: [true],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOptions,
+			secondaryOptions,
+			[true],
 		)
 
 		if (!validOptions) {

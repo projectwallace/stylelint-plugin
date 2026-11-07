@@ -4,6 +4,7 @@ import { walk, DIMENSION } from '@projectwallace/css-parser'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 import { get_value_offset } from '../../utils/offsets.js'
 
 const { utils } = stylelint
@@ -26,12 +27,12 @@ const ruleFunction = (primaryOption: number) => {
 			return
 		}
 
-		const unique_units = new Set<string>()
+		const unique_units = new UniqueTracker(primaryOption)
 		const violating_declarations: Array<{ declaration: Declaration; start: number; end: number }> =
 			[]
 
 		root.walkDecls((declaration) => {
-			const before = unique_units.size
+			unique_units.begin()
 			const parsed = parse_value(declaration.value)
 			let trigger_start = 0
 			let trigger_end = declaration.value.length
@@ -41,9 +42,7 @@ const ruleFunction = (primaryOption: number) => {
 					const unit = node.unit
 					if (unit !== undefined) {
 						const normalised = unit.toLowerCase()
-						const is_new = !unique_units.has(normalised)
-						unique_units.add(normalised)
-						if (is_new && unique_units.size > primaryOption) {
+						if (unique_units.add(normalised)) {
 							trigger_start = node.start
 							trigger_end = node.end
 						}
@@ -51,7 +50,7 @@ const ruleFunction = (primaryOption: number) => {
 				}
 			})
 
-			if (unique_units.size > before && unique_units.size > primaryOption) {
+			if (unique_units.exceeded()) {
 				violating_declarations.push({ declaration, start: trigger_start, end: trigger_end })
 			}
 		})

@@ -4,10 +4,11 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_non_negative_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { utils } = stylelint
 
@@ -24,20 +25,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_non_negative_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_non_negative_integer],
 		)
 
 		if (!validOptions) {
@@ -45,27 +38,27 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_heights = new Set<string>()
+		const unique_heights = new UniqueTracker(primaryOption)
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(/^line-height$/i, (declaration) => {
-			const before = unique_heights.size
+			unique_heights.begin()
 			if (!keywords.has(declaration.value) && !is_allowed(declaration.value, ignore)) {
 				unique_heights.add(declaration.value)
 			}
-			if (unique_heights.size > before && unique_heights.size > primaryOption) {
+			if (unique_heights.exceeded()) {
 				violating_declarations.push({ declaration, word: declaration.value })
 			}
 		})
 
 		root.walkDecls(/^font$/i, (declaration) => {
-			const before = unique_heights.size
+			unique_heights.begin()
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})
 			if (destructured?.line_height && !is_allowed(destructured.line_height, ignore)) {
 				unique_heights.add(destructured.line_height)
 			}
-			if (unique_heights.size > before && unique_heights.size > primaryOption) {
+			if (unique_heights.exceeded()) {
 				violating_declarations.push({
 					declaration,
 					word: destructured?.line_height ?? declaration.value,

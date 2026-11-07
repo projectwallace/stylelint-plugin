@@ -2,10 +2,11 @@ import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_non_negative_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 import { get_params_offset } from '../../utils/offsets.js'
 
 const { utils } = stylelint
@@ -23,20 +24,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_non_negative_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_non_negative_integer],
 		)
 
 		if (!validOptions) {
@@ -44,15 +37,15 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_keyframes = new Set<string>()
+		const unique_keyframes = new UniqueTracker(primaryOption)
 		const violating_at_rules: AtRule[] = []
 
 		root.walkAtRules(/^keyframes$/i, (atRule) => {
-			const before = unique_keyframes.size
+			unique_keyframes.begin()
 			if (!is_allowed(atRule.params, ignore)) {
 				unique_keyframes.add(atRule.params)
 			}
-			if (unique_keyframes.size > before && unique_keyframes.size > primaryOption) {
+			if (unique_keyframes.exceeded()) {
 				violating_at_rules.push(atRule)
 			}
 		})

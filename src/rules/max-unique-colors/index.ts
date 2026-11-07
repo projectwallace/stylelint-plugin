@@ -2,14 +2,15 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_positive_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { parse_value } from '@projectwallace/css-parser'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 import { unquote } from '../../utils/unquote.js'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { utils } = stylelint
 
@@ -26,20 +27,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_positive_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_positive_integer],
 		)
 
 		if (!validOptions) {
@@ -53,7 +46,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		 * var() references to these are recognised as color values.
 		 */
 		const color_custom_properties = new Set<string>()
-		const unique_colors = new Set<string>()
+		const unique_colors = new UniqueTracker(primaryOption)
 
 		function run_collect(parsed: ReturnType<typeof parse_value>, resolve_var: boolean): void {
 			collect_colors(parsed, resolve_var, color_custom_properties, (color) => {
@@ -89,18 +82,16 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
-			const before = unique_colors.size
+			unique_colors.begin()
 			let triggering_color = declaration.value
 			collect_colors(parse_value(declaration.value), true, color_custom_properties, (color) => {
 				if (!is_allowed(color, ignore)) {
-					const is_new = !unique_colors.has(color)
-					unique_colors.add(color)
-					if (is_new && unique_colors.size > primaryOption) {
+					if (unique_colors.add(color)) {
 						triggering_color = color
 					}
 				}
 			})
-			if (unique_colors.size > before && unique_colors.size > primaryOption) {
+			if (unique_colors.exceeded()) {
 				violating_declarations.push({ declaration, word: triggering_color })
 			}
 		})
