@@ -23,20 +23,26 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_ratio],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const unique_selectors = new Set<string>()
 		let total_count = 0
 
 		root.walkRules((rule) => {
-			if (is_keyframe_rule(rule)) return
+			if (is_keyframe_rule(rule)) {
+				return
+			}
 			for (const selector of rule.selectors) {
 				unique_selectors.add(selector.trim())
 				total_count++
 			}
 		})
 
-		if (total_count === 0) return
+		if (total_count === 0) {
+			return
+		}
 
 		const actual = unique_selectors.size / total_count
 

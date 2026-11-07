@@ -42,7 +42,9 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			},
 		)
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique_shadows = new Set<string>()

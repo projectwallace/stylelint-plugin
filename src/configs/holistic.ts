@@ -51,6 +51,7 @@ const config: PresetConfig = {
 		'projectwallace/no-duplicate-keyframes': true,
 		'projectwallace/no-duplicate-registered-properties': true,
 		'projectwallace/no-unused-font-faces': true,
+		'projectwallace/no-duplicate-font-faces': true,
 	},
 }
 

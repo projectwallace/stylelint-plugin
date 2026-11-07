@@ -40,6 +40,7 @@ import no_duplicate_anchor_names from './rules/no-duplicate-anchor-names/index.j
 import no_duplicate_container_names from './rules/no-duplicate-container-names/index.js'
 import no_duplicate_custom_properties from './rules/no-duplicate-custom-properties/index.js'
 import no_duplicate_data_urls from './rules/no-duplicate-data-urls/index.js'
+import no_duplicate_font_faces from './rules/no-duplicate-font-faces/index.js'
 import no_duplicate_keyframes from './rules/no-duplicate-keyframes/index.js'
 import no_duplicate_registered_properties from './rules/no-duplicate-registered-properties/index.js'
 import no_invalid_z_index from './rules/no-invalid-z-index/index.js'
@@ -104,6 +105,7 @@ const plugins: stylelint.Plugin[] = [
 	no_duplicate_container_names,
 	no_duplicate_custom_properties,
 	no_duplicate_data_urls,
+	no_duplicate_font_faces,
 	no_duplicate_keyframes,
 	no_duplicate_registered_properties,
 	no_invalid_z_index,

@@ -36,15 +36,21 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		root.walkDecls(/^--/, (decl) => {
 			const property = decl.prop
 
-			if (secondaryOptions?.ignore && is_allowed(property, secondaryOptions.ignore)) return
+			if (secondaryOptions?.ignore && is_allowed(property, secondaryOptions.ignore)) {
+				return
+			}
 
 			const parsed = parse_value(decl.value)
 
 			let reported = false
 
 			walk(parsed, (child) => {
-				if (reported) return BREAK
-				if (child.type !== FUNCTION || !str_equals('var', child.name)) return
+				if (reported) {
+					return BREAK
+				}
+				if (child.type !== FUNCTION || !str_equals('var', child.name)) {
+					return
+				}
 
 				for (const grandchild of child) {
 					if (grandchild.type === IDENTIFIER && grandchild.text === property) {

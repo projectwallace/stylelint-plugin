@@ -26,6 +26,7 @@ const config: PresetConfig = {
 		'projectwallace/no-static-container-queries': true,
 		'projectwallace/no-pseudo-elements-in-is-where': true,
 		'projectwallace/no-unused-font-faces': true,
+		'projectwallace/no-duplicate-font-faces': true,
 	},
 }
 

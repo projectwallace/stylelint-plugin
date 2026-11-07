@@ -19,7 +19,9 @@ import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 /** Cartesian product of an array of arrays. */
 function cartesian<T>(arrays: T[][]): T[][] {
-	if (arrays.length === 0) return [[]]
+	if (arrays.length === 0) {
+		return [[]]
+	}
 	const [first, ...rest] = arrays
 	const rest_product = cartesian(rest)
 	const result: T[][] = []
@@ -55,7 +57,9 @@ function find_contradiction_in_prelude(
 	const parsed = parse_atrule_prelude(at_rule_name, prelude)
 
 	for (const query_node of parsed) {
-		if (query_node.type !== MEDIA_QUERY) continue
+		if (query_node.type !== MEDIA_QUERY) {
+			continue
+		}
 
 		// Skip queries that contain `not` or `or` — too complex to analyse safely
 		let skip = false
@@ -68,7 +72,9 @@ function find_contradiction_in_prelude(
 				}
 			}
 		})
-		if (skip) continue
+		if (skip) {
+			continue
+		}
 
 		// Collect all bounds from this media query
 		const bounds: Bound[] = []
@@ -82,7 +88,9 @@ function find_contradiction_in_prelude(
 		})
 
 		const contradictory_feature = find_contradictory_feature(bounds)
-		if (contradictory_feature !== null) return contradictory_feature
+		if (contradictory_feature !== null) {
+			return contradictory_feature
+		}
 	}
 
 	return null
@@ -95,13 +103,17 @@ const ruleFunction = (primaryOption: true) => {
 			possible: [true],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		// === Detect contradictions within a single @media / @import rule ===
 
 		root.walkAtRules(/^(media|import)$/i, (at_rule) => {
 			const prelude = at_rule.params
-			if (!prelude) return
+			if (!prelude) {
+				return
+			}
 
 			const contradictory_feature = find_contradiction_in_prelude(at_rule.name, prelude)
 
@@ -127,7 +139,9 @@ const ruleFunction = (primaryOption: true) => {
 		root.walkAtRules(/^media$/i, (atRule) => {
 			// Collect alternative bound-sets from the current rule and each ancestor
 			const current_alternatives = collect_bounds_from_prelude('media', atRule.params)
-			if (current_alternatives.length === 0) return
+			if (current_alternatives.length === 0) {
+				return
+			}
 
 			const ancestor_alternative_sets: (Bound[] | null)[][] = []
 			let node = atRule.parent
@@ -136,7 +150,9 @@ const ruleFunction = (primaryOption: true) => {
 				if (node.type === 'atrule' && str_equals('media', (node as AtRule).name)) {
 					const ancestor = node as AtRule
 					const alternatives = collect_bounds_from_prelude('media', ancestor.params)
-					if (alternatives.length === 0) return // empty prelude — bail out
+					if (alternatives.length === 0) {
+						return
+					} // empty prelude — bail out
 					ancestor_alternative_sets.push(alternatives)
 				}
 				// `.parent` is typed as `Document | Container | undefined`; in regular CSS
@@ -144,7 +160,9 @@ const ruleFunction = (primaryOption: true) => {
 				node = node.parent as typeof atRule.parent
 			}
 
-			if (ancestor_alternative_sets.length === 0) return // not nested
+			if (ancestor_alternative_sets.length === 0) {
+				return
+			} // not nested
 
 			// Cartesian product of [current, ancestor1, ancestor2, ...]
 			const all_sets: (Bound[] | null)[][] = [current_alternatives, ...ancestor_alternative_sets]
@@ -153,18 +171,24 @@ const ruleFunction = (primaryOption: true) => {
 
 			for (const combo of cartesian(all_sets)) {
 				// Any unanalyzable branch → conservatively skip this combination
-				if (combo.some((b) => b === null)) continue
+				if (combo.some((b) => b === null)) {
+					continue
+				}
 
 				const bound_sets = combo as Bound[][]
 
 				// If current branch alone is contradictory, the flat check above handles
 				// it — skip this combination to avoid double-reporting
-				if (find_contradictory_feature(bound_sets[0]) !== null) continue
+				if (find_contradictory_feature(bound_sets[0]) !== null) {
+					continue
+				}
 
 				// If the ancestor bounds for this specific combination are already
 				// contradictory amongst themselves, the contradiction belongs to the
 				// ancestor level and will be (or was) reported there — skip to avoid noise
-				if (find_contradictory_feature(bound_sets.slice(1).flat()) !== null) continue
+				if (find_contradictory_feature(bound_sets.slice(1).flat()) !== null) {
+					continue
+				}
 
 				const contradiction = find_contradictory_feature(bound_sets.flat())
 				if (contradiction !== null) {
@@ -173,7 +197,9 @@ const ruleFunction = (primaryOption: true) => {
 				}
 			}
 
-			if (nested_contradiction === null) return
+			if (nested_contradiction === null) {
+				return
+			}
 
 			utils.report({
 				message: messages.rejected_nested(),

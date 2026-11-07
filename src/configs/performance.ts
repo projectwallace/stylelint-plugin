@@ -25,6 +25,7 @@ const config: PresetConfig = {
 			},
 		],
 		'projectwallace/no-unused-font-faces': true,
+		'projectwallace/no-duplicate-font-faces': true,
 	},
 }
 

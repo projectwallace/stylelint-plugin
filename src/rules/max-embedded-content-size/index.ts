@@ -26,7 +26,9 @@ const ruleFunction = (primaryOption: number) => {
 			possible: [is_valid_positive_integer],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		let total_size = 0
 
@@ -34,7 +36,9 @@ const ruleFunction = (primaryOption: number) => {
 			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
-				if (!is_url(node)) return
+				if (!is_url(node)) {
+					return
+				}
 				const url = node.text
 				if (str_index_of('data:', url) !== -1) {
 					total_size += url.length
