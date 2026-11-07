@@ -11,7 +11,9 @@ export function split_font_families(value: string): string[] {
 
 	function flush() {
 		const name = current.trim().replaceAll(/\s+/g, ' ')
-		if (name) families.push(name)
+		if (name) {
+			families.push(name)
+		}
 		current = ''
 	}
 

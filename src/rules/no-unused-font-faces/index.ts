@@ -56,9 +56,13 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		root.walkAtRules(/^font-face$/i, (at_rule) => {
 			at_rule.walkDecls(/^font-family$/i, (decl) => {
-				if (decl.parent !== at_rule) return
+				if (decl.parent !== at_rule) {
+					return
+				}
 				const [family] = split_font_families(decl.value)
-				if (!family) return
+				if (!family) {
+					return
+				}
 				const key = family.toLowerCase()
 				const entry = defined.get(key)
 				if (entry) {
@@ -83,12 +87,18 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				const prop = decl.prop.toLowerCase()
 
 				if (prop === 'font-family') {
-					if (is_in_font_face(decl)) return
-					for (const family of split_font_families(decl.value)) use(family)
+					if (is_in_font_face(decl)) {
+						return
+					}
+					for (const family of split_font_families(decl.value)) {
+						use(family)
+					}
 				} else if (prop === 'font') {
 					const destructured = destructureFontShorthand(parse_value(decl.value), noop)
 					if (destructured?.font_family) {
-						for (const family of split_font_families(destructured.font_family)) use(family)
+						for (const family of split_font_families(destructured.font_family)) {
+							use(family)
+						}
 					}
 				}
 
@@ -96,18 +106,26 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				// We can't resolve those, so treat every name mentioned there as used.
 				if (prop.startsWith('--') || decl.value.includes('var(')) {
 					const loose = decl.value.replaceAll(/[()]/g, ',')
-					for (const family of split_font_families(loose)) use(family)
+					for (const family of split_font_families(loose)) {
+						use(family)
+					}
 				}
 			})
 
 			root_node.walkAtRules(/^font-feature-values$/i, (at_rule) => {
-				for (const family of split_font_families(at_rule.params)) use(family)
+				for (const family of split_font_families(at_rule.params)) {
+					use(family)
+				}
 			})
 		}
 
 		for (const [key, { family, nodes }] of defined) {
-			if (used.has(key)) continue
-			if (secondaryOptions?.ignore && is_allowed(family, secondaryOptions.ignore)) continue
+			if (used.has(key)) {
+				continue
+			}
+			if (secondaryOptions?.ignore && is_allowed(family, secondaryOptions.ignore)) {
+				continue
+			}
 
 			for (const node of nodes) {
 				utils.report({
