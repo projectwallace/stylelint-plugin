@@ -1,3 +1,5 @@
+import stylelint from 'stylelint'
+
 const STRING_REGEX = /^\/(.+)\/(i?)$/
 
 function parse_string_or_regex(pattern: string | RegExp): string | RegExp {
@@ -36,4 +38,27 @@ export function is_valid_non_negative_integer(v: unknown): boolean {
 
 export function is_valid_ratio(v: unknown): boolean {
 	return Number.isFinite(v) && (v as number) >= 0 && (v as number) <= 1
+}
+
+/**
+ * Validate the common option shape: a primary option plus an optional `{ ignore: [...] }` secondary option.
+ * @param primary_possible - the stylelint `possible` list for the primary option, e.g. `[is_valid_positive_integer]`
+ */
+export function validate_options_with_ignore(
+	result: stylelint.PostcssResult,
+	rule_name: string,
+	primary_option: unknown,
+	secondary_options: unknown,
+	primary_possible: stylelint.RuleOptionsPossible[],
+): boolean {
+	return stylelint.utils.validateOptions(
+		result,
+		rule_name,
+		{ actual: primary_option, possible: primary_possible },
+		{
+			actual: secondary_options,
+			possible: { ignore: ignore_option_validators },
+			optional: true,
+		},
+	)
 }

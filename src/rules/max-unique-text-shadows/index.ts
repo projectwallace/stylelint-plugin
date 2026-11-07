@@ -3,9 +3,10 @@ import type { Root, Declaration } from 'postcss'
 import { keywords } from '@projectwallace/css-analyzer/values'
 import {
 	is_allowed,
-	ignore_option_validators,
 	is_valid_positive_integer,
+	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
+import { UniqueTracker } from '../../utils/unique-tracker.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,20 +27,12 @@ interface SecondaryOptions {
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = utils.validateOptions(
+		const validOptions = validate_options_with_ignore(
 			result,
 			rule_name,
-			{
-				actual: primaryOption,
-				possible: [is_valid_positive_integer],
-			},
-			{
-				actual: secondaryOptions,
-				possible: {
-					ignore: ignore_option_validators,
-				},
-				optional: true,
-			},
+			primaryOption,
+			secondaryOptions,
+			[is_valid_positive_integer],
 		)
 
 		if (!validOptions) {
@@ -47,18 +40,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		}
 
 		const ignore = secondaryOptions?.ignore ?? []
-		const unique_shadows = new Set<string>()
+		const unique_shadows = new UniqueTracker(primaryOption)
 		const violating_declarations: Declaration[] = []
 
 		root.walkDecls(/^text-shadow$/i, (declaration) => {
-			const before = unique_shadows.size
+			unique_shadows.begin()
 			const value = declaration.value
 
 			if (!keywords.has(value) && !is_allowed(value, ignore)) {
 				unique_shadows.add(value)
 			}
 
-			if (unique_shadows.size > before && unique_shadows.size > primaryOption) {
+			if (unique_shadows.exceeded()) {
 				violating_declarations.push(declaration)
 			}
 		})
