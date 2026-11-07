@@ -24,6 +24,7 @@ const config: PresetConfig = {
 				severity: 'warning',
 			},
 		],
+		'projectwallace/no-unused-font-faces': true,
 	},
 }
 

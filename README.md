@@ -129,6 +129,7 @@ Rules that require analyzing the full stylesheet rather than individual nodes â€
 | [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)             | Disallow custom properties that are never used in a `var()`                     |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                   | Disallow `@layer` names that are declared but never implemented                 |
 | [no-unused-container-names](src/rules/no-unused-container-names/README.md)                 | Disallow container names that are declared but never queried                    |
+| [no-unused-font-faces](src/rules/no-unused-font-faces/README.md)                           | Disallow `@font-face` rules whose family is never used                          |
 
 ### Performance
 
@@ -150,6 +151,7 @@ Rules that affect file size and loading performance.
 | [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)                               | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                     | Disallow `@layer` names that are declared but never implemented                 |
 | [block-no-empty](https://stylelint.io/user-guide/rules/block-no-empty) _(stylelint core)_    | Disallow empty rules and at-rules (including those containing only comments)    |
+| [no-unused-font-faces](src/rules/no-unused-font-faces/README.md)                             | Disallow `@font-face` rules whose family is never used                          |
 
 ### Design Tokens
 
@@ -198,6 +200,7 @@ Rules to help prevent errors.
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                                                        | Disallow `@layer` names that are declared but never implemented                 |
 | [block-no-empty](https://stylelint.io/user-guide/rules/block-no-empty) _(stylelint core)_                                       | Disallow empty rules and at-rules (including those containing only comments)    |
 | [keyframe-declaration-no-important](https://stylelint.io/user-guide/rules/keyframe-declaration-no-important) _(stylelint core)_ | Disallow `!important` declarations inside `@keyframes` blocks                   |
+| [no-unused-font-faces](src/rules/no-unused-font-faces/README.md)                                                                | Disallow `@font-face` rules whose family is never used                          |
 
 ### Maintainability
 
