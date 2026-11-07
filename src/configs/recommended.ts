@@ -77,6 +77,7 @@ const config: PresetConfig = {
 		'projectwallace/max-unique-keyframes': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-gradients': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-border-radiuses': [8, { severity: 'warning' }],
+		'projectwallace/max-unique-custom-properties': [256, { severity: 'warning' }],
 		'projectwallace/max-unique-supports-queries': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-units': [10, { severity: 'warning' }],
 		'projectwallace/min-selector-uniqueness-ratio': [0.66, { severity: 'warning' }],

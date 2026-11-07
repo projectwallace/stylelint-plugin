@@ -31,6 +31,7 @@ test('exports an array of stylelint rules', () => {
 		'projectwallace/max-unique-box-shadows',
 		'projectwallace/max-unique-color-formats',
 		'projectwallace/max-unique-colors',
+		'projectwallace/max-unique-custom-properties',
 		'projectwallace/max-unique-durations',
 		'projectwallace/max-unique-font-families',
 		'projectwallace/max-unique-font-sizes',
