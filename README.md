@@ -198,6 +198,7 @@ Rules to help prevent errors.
 | [no-unused-layers](src/rules/no-unused-layers/README.md)                                                                        | Disallow `@layer` names that are declared but never implemented                 |
 | [block-no-empty](https://stylelint.io/user-guide/rules/block-no-empty) _(stylelint core)_                                       | Disallow empty rules and at-rules (including those containing only comments)    |
 | [keyframe-declaration-no-important](https://stylelint.io/user-guide/rules/keyframe-declaration-no-important) _(stylelint core)_ | Disallow `!important` declarations inside `@keyframes` blocks                   |
+| [no-invalid-property-registration](src/rules/no-invalid-property-registration/README.md)                                        | Disallow `@property` registrations that browsers will silently ignore           |
 
 ### Maintainability
 
