@@ -38,7 +38,9 @@ function scope_of(node: AtRule): string | undefined {
 	while (parent && parent.type !== 'root') {
 		if (parent.type === 'atrule' && str_equals('layer', (parent as AtRule).name)) {
 			const name = (parent as AtRule).params.trim()
-			if (!name) return undefined
+			if (!name) {
+				return undefined
+			}
 			names.unshift(name)
 		}
 		parent = parent.parent as Container | undefined
@@ -62,7 +64,9 @@ function declared_by_import(at_rule: AtRule): string | undefined {
 	for (const child of parse_atrule_prelude('import', at_rule.params)) {
 		if (child.type === FUNCTION && str_equals('layer', child.name)) {
 			const layer = child.first_child
-			if (layer?.type === LAYER_NAME && layer.name) return layer.name
+			if (layer?.type === LAYER_NAME && layer.name) {
+				return layer.name
+			}
 		}
 	}
 	return undefined
@@ -100,14 +104,20 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			root_node.walkAtRules((at_rule) => {
 				if (str_equals('import', at_rule.name)) {
 					const layer = declared_by_import(at_rule)
-					if (layer) declare(declared, layer)
+					if (layer) {
+						declare(declared, layer)
+					}
 					return
 				}
 
-				if (!str_equals('layer', at_rule.name)) return
+				if (!str_equals('layer', at_rule.name)) {
+					return
+				}
 
 				const scope = scope_of(at_rule)
-				if (scope === undefined) return
+				if (scope === undefined) {
+					return
+				}
 
 				if (at_rule.nodes === undefined) {
 					// Statement: @layer a, b, c;
@@ -118,7 +128,9 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				} else {
 					// Block: @layer a { ... }
 					const name = at_rule.params.trim()
-					if (!name || name.includes(',')) return
+					if (!name || name.includes(',')) {
+						return
+					}
 					const qualified = qualify(scope, name)
 					if (is_current) {
 						blocks.push({ at_rule, qualified, scope, name })
@@ -141,8 +153,12 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		}
 
 		for (const { at_rule, qualified, scope, name } of blocks) {
-			if (!ordered_scopes.has(scope) || declared.has(qualified)) continue
-			if (secondaryOptions?.ignore && is_allowed(qualified, secondaryOptions.ignore)) continue
+			if (!ordered_scopes.has(scope) || declared.has(qualified)) {
+				continue
+			}
+			if (secondaryOptions?.ignore && is_allowed(qualified, secondaryOptions.ignore)) {
+				continue
+			}
 
 			utils.report({
 				result,
