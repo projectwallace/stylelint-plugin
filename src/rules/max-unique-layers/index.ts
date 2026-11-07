@@ -32,7 +32,9 @@ function qualified_scope(at_rule: AtRule): string | undefined {
 	while (parent && parent.type !== 'root') {
 		if (parent.type === 'atrule' && str_equals('layer', (parent as AtRule).name)) {
 			const name = (parent as AtRule).params.trim()
-			if (!name) return undefined
+			if (!name) {
+				return undefined
+			}
 			names.unshift(name)
 		}
 		parent = parent.parent as Container | undefined
@@ -58,14 +60,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			},
 		)
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique = new Set<string>()
 		const violations: Array<{ node: AtRule; word: string }> = []
 
 		function add(value: string, node: AtRule, word: string) {
-			if (unique.has(value) || is_allowed(value, ignore)) return
+			if (unique.has(value) || is_allowed(value, ignore)) {
+				return
+			}
 			unique.add(value)
 			if (unique.size > primaryOption) {
 				violations.push({ node, word })
@@ -74,17 +80,23 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		root.walkAtRules(/^layer$/i, (at_rule) => {
 			const scope = qualified_scope(at_rule)
-			if (scope === undefined) return
+			if (scope === undefined) {
+				return
+			}
 			for (const raw of at_rule.params.split(',')) {
 				const name = raw.trim()
-				if (!name) continue
+				if (!name) {
+					continue
+				}
 				add(scope ? `${scope}.${name}` : name, at_rule, name)
 			}
 		})
 
 		root.walkAtRules(/^import$/i, (at_rule) => {
 			for (const child of parse_atrule_prelude('import', at_rule.params)) {
-				if (child.type !== FUNCTION || !str_equals('layer', child.name)) continue
+				if (child.type !== FUNCTION || !str_equals('layer', child.name)) {
+					continue
+				}
 				const layer = child.first_child
 				if (layer?.type === LAYER_NAME && layer.name) {
 					add(layer.name, at_rule, layer.name)
