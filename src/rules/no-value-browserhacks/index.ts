@@ -22,7 +22,9 @@ const ruleFunction = (primaryOption: true) => {
 			possible: [true],
 		})
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		root.walkDecls((declaration) => {
 			if (is_custom(declaration.prop)) {

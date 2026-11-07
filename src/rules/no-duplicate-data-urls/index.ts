@@ -34,9 +34,13 @@ const ruleFunction = (primaryOptions: true) => {
 			const parsed = parse_value(declaration.value)
 
 			walk(parsed, (node) => {
-				if (node.type !== CSS_URL) return
+				if (node.type !== CSS_URL) {
+					return
+				}
 				const { text: url } = node
-				if (str_index_of('data:', url) === -1) return
+				if (str_index_of('data:', url) === -1) {
+					return
+				}
 
 				if (seen.has(url)) {
 					utils.report({

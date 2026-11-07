@@ -29,10 +29,14 @@ export type Bound = {
  * Returns an empty array if the feature is not a numeric range-style feature.
  */
 export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
-	if (!is_media_feature(node)) return []
+	if (!is_media_feature(node)) {
+		return []
+	}
 
 	const property = node.property
-	if (!property) return []
+	if (!property) {
+		return []
+	}
 
 	let direction: 'lower' | 'upper' | 'both'
 	let feature: string
@@ -52,7 +56,9 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
 	if (child !== null && (is_dimension(child) || is_number(child))) {
 		const value = child.value
 		const unit = is_dimension(child) ? child.unit : ''
-		if (value === null || Number.isNaN(value)) return []
+		if (value === null || Number.isNaN(value)) {
+			return []
+		}
 		if (direction === 'both') {
 			return [
 				{ feature, value, unit, inclusive: true, direction: 'lower' },
@@ -70,13 +76,19 @@ export function collect_bound_from_media_feature(node: CSSNode): Bound[] {
  * Returns an array of bounds (0, 1, or 2 items), each tagged with the feature name.
  */
 export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
-	if (!is_feature_range(node)) return []
+	if (!is_feature_range(node)) {
+		return []
+	}
 
 	const feature = node.name
-	if (!feature) return []
+	if (!feature) {
+		return []
+	}
 
 	const count = node.child_count
-	if (count === 0) return []
+	if (count === 0) {
+		return []
+	}
 
 	const bounds: Bound[] = []
 
@@ -98,7 +110,9 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 		const unit = is_dimension(dimension) ? dimension.unit : ''
 		if (value !== null && !Number.isNaN(value)) {
 			const bound = operator_to_bound(operator, value, unit, 'feature_left')
-			if (bound) bounds.push({ ...bound, feature })
+			if (bound) {
+				bounds.push({ ...bound, feature })
+			}
 		}
 	}
 	// Case B: [VALUE, OPERATOR, OPERATOR, VALUE] → value1 OP1 feature OP2 value2
@@ -122,12 +136,16 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 		// dimension1 OP1 feature → feature is on the right side of OP1
 		if (value1 !== null && !Number.isNaN(value1)) {
 			const bound = operator_to_bound(operator1, value1, unit1, 'feature_right')
-			if (bound) bounds.push({ ...bound, feature })
+			if (bound) {
+				bounds.push({ ...bound, feature })
+			}
 		}
 		// feature OP2 dimension2 → feature is on the left side of OP2
 		if (value2 !== null && !Number.isNaN(value2)) {
 			const bound = operator_to_bound(operator2, value2, unit2, 'feature_left')
-			if (bound) bounds.push({ ...bound, feature })
+			if (bound) {
+				bounds.push({ ...bound, feature })
+			}
 		}
 	}
 
@@ -154,19 +172,35 @@ function operator_to_bound(
 		// feature >= value → lower inclusive
 		// feature < value → upper exclusive  (feature must be below value)
 		// feature <= value → upper inclusive
-		if (operator === '>') return { value, unit, inclusive: false, direction: 'lower' }
-		if (operator === '>=') return { value, unit, inclusive: true, direction: 'lower' }
-		if (operator === '<') return { value, unit, inclusive: false, direction: 'upper' }
-		if (operator === '<=') return { value, unit, inclusive: true, direction: 'upper' }
+		if (operator === '>') {
+			return { value, unit, inclusive: false, direction: 'lower' }
+		}
+		if (operator === '>=') {
+			return { value, unit, inclusive: true, direction: 'lower' }
+		}
+		if (operator === '<') {
+			return { value, unit, inclusive: false, direction: 'upper' }
+		}
+		if (operator === '<=') {
+			return { value, unit, inclusive: true, direction: 'upper' }
+		}
 	} else {
 		// value < feature → lower exclusive  (feature must be above value)
 		// value <= feature → lower inclusive
 		// value > feature → upper exclusive  (feature must be below value)
 		// value >= feature → upper inclusive
-		if (operator === '<') return { value, unit, inclusive: false, direction: 'lower' }
-		if (operator === '<=') return { value, unit, inclusive: true, direction: 'lower' }
-		if (operator === '>') return { value, unit, inclusive: false, direction: 'upper' }
-		if (operator === '>=') return { value, unit, inclusive: true, direction: 'upper' }
+		if (operator === '<') {
+			return { value, unit, inclusive: false, direction: 'lower' }
+		}
+		if (operator === '<=') {
+			return { value, unit, inclusive: true, direction: 'lower' }
+		}
+		if (operator === '>') {
+			return { value, unit, inclusive: false, direction: 'upper' }
+		}
+		if (operator === '>=') {
+			return { value, unit, inclusive: true, direction: 'upper' }
+		}
 	}
 	return null
 }
@@ -196,7 +230,9 @@ export function collect_bounds_from_prelude(
 
 	const result: (Bound[] | null)[] = []
 	for (const node of parsed) {
-		if (!is_media_query(node) && !is_container_query(node)) continue
+		if (!is_media_query(node) && !is_container_query(node)) {
+			continue
+		}
 
 		// Skip branches that contain `not` or `or` — too complex to analyse
 		let skip = false
@@ -249,34 +285,49 @@ export function find_contradictory_feature(bounds: Bound[]): ContradictionInfo |
 		const lower_bounds = feature_bounds.filter((b) => b.direction === 'lower')
 		const upper_bounds = feature_bounds.filter((b) => b.direction === 'upper')
 
-		if (lower_bounds.length === 0 || upper_bounds.length === 0) continue
+		if (lower_bounds.length === 0 || upper_bounds.length === 0) {
+			continue
+		}
 
 		// Only compare bounds with the same unit (case-insensitive: `PX` and `px` are the same unit)
 		const lower_units = new Set(lower_bounds.map((b) => b.unit.toLowerCase()))
 
 		for (const unit of lower_units) {
 			const uppers_same_unit = upper_bounds.filter((b) => str_equals(unit, b.unit))
-			if (uppers_same_unit.length === 0) continue
+			if (uppers_same_unit.length === 0) {
+				continue
+			}
 
 			const lowers_same_unit = lower_bounds.filter((b) => str_equals(unit, b.unit))
 
 			// Most restrictive lower = highest value; tie-break: exclusive > inclusive
 			const max_lower = lowers_same_unit.reduce((a, b) => {
-				if (b.value > a.value) return b
-				if (b.value === a.value && !b.inclusive && a.inclusive) return b
+				if (b.value > a.value) {
+					return b
+				}
+				if (b.value === a.value && !b.inclusive && a.inclusive) {
+					return b
+				}
 				return a
 			})
 
 			// Most restrictive upper = lowest value; tie-break: exclusive > inclusive
 			const min_upper = uppers_same_unit.reduce((a, b) => {
-				if (b.value < a.value) return b
-				if (b.value === a.value && !b.inclusive && a.inclusive) return b
+				if (b.value < a.value) {
+					return b
+				}
+				if (b.value === a.value && !b.inclusive && a.inclusive) {
+					return b
+				}
 				return a
 			})
 
-			if (max_lower.value > min_upper.value) return { feature, lower: max_lower, upper: min_upper }
-			if (max_lower.value === min_upper.value && (!max_lower.inclusive || !min_upper.inclusive))
+			if (max_lower.value > min_upper.value) {
 				return { feature, lower: max_lower, upper: min_upper }
+			}
+			if (max_lower.value === min_upper.value && (!max_lower.inclusive || !min_upper.inclusive)) {
+				return { feature, lower: max_lower, upper: min_upper }
+			}
 		}
 	}
 

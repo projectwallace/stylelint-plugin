@@ -55,11 +55,11 @@
 		"knip": "knip"
 	},
 	"dependencies": {
-		"@projectwallace/css-analyzer": "^9.9.5",
+		"@projectwallace/css-analyzer": "^9.9.6",
 		"@projectwallace/css-parser": "catalog:"
 	},
 	"devDependencies": {
-		"@projectwallace/preset-oxlint": "^0.0.11",
+		"@projectwallace/preset-oxlint": "^0.0.12",
 		"@types/node": "^26.6.5",
 		"@vitest/coverage-v8": "^5.0.5",
 		"knip": "^6.42.1",
