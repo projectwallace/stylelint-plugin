@@ -5,19 +5,16 @@ import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-pr
 import { walk, BREAK } from '@projectwallace/css-parser/walker'
 import { is_dimension, is_number } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
+import { define_rule } from '../../utils/define-rule.js'
 import { get_params_offset } from '../../utils/offsets.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-static-media-queries'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: () => `Unexpected static value in media query`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-static-media-queries/README.md',
-}
 
 type StaticFeatureInfo = {
 	feature: string
@@ -146,10 +143,6 @@ const ruleFunction = (primaryOption: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

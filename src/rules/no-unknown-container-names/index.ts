@@ -5,6 +5,7 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { keywords } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
+import { define_rule } from '../../utils/define-rule.js'
 
 function collect_container_names(root: Root, declared: Set<string>): void {
 	root.walkDecls(/^container(-name)?$/i, (decl) => {
@@ -23,17 +24,13 @@ function collect_container_names(root: Root, declared: Set<string>): void {
 	})
 }
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-unknown-container-names'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (name: string) => `Unexpected unknown container name "${name}"`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unknown-container-names/README.md',
-}
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
@@ -82,10 +79,6 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin
