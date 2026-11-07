@@ -42,14 +42,18 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			},
 		)
 
-		if (!validOptions) return
+		if (!validOptions) {
+			return
+		}
 
 		const ignore = secondaryOptions?.ignore ?? []
 		const unique = new Set<string>()
 		const violations: Array<{ node: Declaration; word: string }> = []
 
 		function add(value: string, node: Declaration, word: string) {
-			if (unique.has(value) || is_allowed(value, ignore)) return
+			if (unique.has(value) || is_allowed(value, ignore)) {
+				return
+			}
 			unique.add(value)
 			if (unique.size > primaryOption) {
 				violations.push({ node, word })
