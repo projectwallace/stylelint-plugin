@@ -3,18 +3,15 @@ import type { Root } from 'postcss'
 import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-anonymous-layers'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: () => `Unexpected anonymous @layer`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-anonymous-layers/README.md',
-}
 
 const ruleFunction = (primaryOptions: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -60,10 +57,6 @@ const ruleFunction = (primaryOptions: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

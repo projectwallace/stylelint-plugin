@@ -1,8 +1,9 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { unquote } from '../../utils/unquote.js'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-duplicate-font-faces'
 
@@ -10,10 +11,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (family: string, weight: string, style: string) =>
 		`Unexpected duplicate @font-face "${family}" (font-weight: ${weight}; font-style: ${style})`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-duplicate-font-faces/README.md',
-}
 
 const WEIGHT_KEYWORDS: Record<string, string> = { normal: '400', bold: '700' }
 
@@ -75,10 +72,6 @@ const ruleFunction = (primaryOptions: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

@@ -14,8 +14,9 @@ import {
 	type CSSNode,
 } from '@projectwallace/css-parser'
 import { unquote } from '../../utils/unquote.js'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-invalid-property-registration'
 
@@ -34,10 +35,6 @@ const messages = utils.ruleMessages(rule_name, {
 	mismatched_initial_value: (name: string, value: string, syntax: string) =>
 		`Expected "initial-value" [${value}] of @property "${name}" to match syntax ${syntax}`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-invalid-property-registration/README.md',
-}
 
 const LENGTH_UNITS = new Set([
 	'px',
@@ -237,10 +234,6 @@ const ruleFunction = (primaryOptions: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

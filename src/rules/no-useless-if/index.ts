@@ -5,18 +5,15 @@ import { walk } from '@projectwallace/css-parser/walker'
 import { is_function, is_if_branch } from '@projectwallace/css-parser'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { has_if_function } from '../../utils/has-if-function.js'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-useless-if'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: () => `Unexpected if() with only an else branch`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-useless-if/README.md',
-}
 
 const ruleFunction = (primaryOption: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -60,10 +57,6 @@ const ruleFunction = (primaryOption: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

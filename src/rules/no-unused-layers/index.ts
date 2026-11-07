@@ -5,18 +5,15 @@ import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-pr
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 export const rule_name = 'projectwallace/no-unused-layers'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (layer: string) => `Unexpected unused layer "${layer}"`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-unused-layers/README.md',
-}
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
@@ -115,10 +112,6 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

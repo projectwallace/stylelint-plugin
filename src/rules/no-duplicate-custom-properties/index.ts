@@ -1,17 +1,14 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/no-duplicate-custom-properties'
 
 const messages = utils.ruleMessages(rule_name, {
 	rejected: (name: string) => `Unexpected duplicate custom property "${name}"`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/no-duplicate-custom-properties/README.md',
-}
 
 const ruleFunction = (primaryOptions: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -45,10 +42,6 @@ const ruleFunction = (primaryOptions: true) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

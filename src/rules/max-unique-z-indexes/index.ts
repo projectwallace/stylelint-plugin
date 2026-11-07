@@ -7,8 +7,9 @@ import {
 	ignore_option_validators,
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 const rule_name = 'projectwallace/max-unique-z-indexes'
 
@@ -16,10 +17,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
 		`Expected no more than ${expected} unique z-indexes but found ${actual}`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-z-indexes/README.md',
-}
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
@@ -93,10 +90,6 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

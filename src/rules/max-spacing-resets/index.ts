@@ -3,8 +3,9 @@ import type { Root, Declaration } from 'postcss'
 import { isValueReset } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
+import { define_rule } from '../../utils/define-rule.js'
 
-const { createPlugin, utils } = stylelint
+const { utils } = stylelint
 
 export const rule_name = 'projectwallace/max-spacing-resets'
 
@@ -12,10 +13,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
 		`Expected no more than ${expected} spacing resets but found ${actual}`,
 })
-
-const meta = {
-	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-spacing-resets/README.md',
-}
 
 const SPACING_RESET_PROPERTIES =
 	/^(?:margin|padding)(?:-(?:block|inline|top|right|bottom|left)(?:-(?:start|end))?)?$/i
@@ -60,10 +57,6 @@ const ruleFunction = (primaryOption: number) => {
 	}
 }
 
-ruleFunction.ruleName = rule_name
-ruleFunction.messages = messages
-ruleFunction.meta = meta
-
-const plugin: stylelint.Plugin = createPlugin(rule_name, ruleFunction)
+const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin
