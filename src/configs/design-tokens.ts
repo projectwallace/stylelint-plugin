@@ -5,6 +5,7 @@ const config: PresetConfig = {
 	rules: {
 		'projectwallace/max-unique-animation-functions': [4, { severity: 'warning' }],
 		'projectwallace/max-unique-box-shadows': [8, { severity: 'warning' }],
+		'projectwallace/max-unique-border-radiuses': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-text-shadows': [4, { severity: 'warning' }],
 		'projectwallace/max-unique-color-formats': [4, { severity: 'warning' }],
 		'projectwallace/max-unique-colors': [128, { severity: 'warning' }],

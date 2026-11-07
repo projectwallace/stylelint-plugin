@@ -32,6 +32,7 @@ const config: PresetConfig = {
 		'projectwallace/max-unique-durations': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-animation-functions': [4, { severity: 'warning' }],
 		'projectwallace/max-unique-gradients': [8, { severity: 'warning' }],
+		'projectwallace/max-unique-border-radiuses': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-box-shadows': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-text-shadows': [4, { severity: 'warning' }],
 		'projectwallace/max-unique-keyframes': [8, { severity: 'warning' }],
