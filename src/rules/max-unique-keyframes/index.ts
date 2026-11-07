@@ -6,6 +6,7 @@ import {
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { UniqueTracker } from '../../utils/unique-tracker.js'
+import { get_params_offset } from '../../utils/offsets.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -54,7 +55,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const actual = unique_keyframes.size
 		for (const atRule of violating_at_rules) {
-			const params_offset = 1 + atRule.name.length + (atRule.raws.afterName ?? ' ').length
+			const params_offset = get_params_offset(atRule)
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: atRule,

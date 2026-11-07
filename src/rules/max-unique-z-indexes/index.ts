@@ -8,6 +8,7 @@ import {
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { UniqueTracker } from '../../utils/unique-tracker.js'
+import { get_value_offset } from '../../utils/offsets.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -71,7 +72,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const actual = unique_zindexes.size
 		for (const { declaration, start, end } of violating_declarations) {
-			const value_offset = declaration.prop.length + (declaration.raws.between ?? ': ').length
+			const value_offset = get_value_offset(declaration)
 			utils.report({
 				message: messages.rejected(actual, primaryOption),
 				node: declaration,
