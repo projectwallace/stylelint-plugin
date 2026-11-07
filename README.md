@@ -132,6 +132,7 @@ Rules that require analyzing the full stylesheet rather than individual nodes â€
 | [no-unused-font-faces](src/rules/no-unused-font-faces/README.md)                           | Disallow `@font-face` rules whose family is never used                          |
 | [max-unique-border-radiuses](src/rules/max-unique-border-radiuses/README.md)               | Limit the number of unique border-radius values                                 |
 | [max-unique-custom-properties](src/rules/max-unique-custom-properties/README.md)           | Limit the number of unique custom properties                                    |
+| [max-unique-layers](src/rules/max-unique-layers/README.md)                                 | Limit the number of unique `@layer` names                                       |
 
 ### Performance
 
@@ -248,6 +249,7 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [no-property-shorthand](src/rules/no-property-shorthand/README.md)                                              | Disallow the use of shorthand properties                                     |
 | [no-pseudo-elements-in-is-where](src/rules/no-pseudo-elements-in-is-where/README.md)                            | Disallow pseudo-elements inside `:is()` and `:where()`                       |
 | [no-value-browserhacks](src/rules/no-value-browserhacks/README.md)                                              | Disallow the use of known browser hacks in values                            |
+| [max-unique-layers](src/rules/max-unique-layers/README.md)                                                      | Limit the number of unique `@layer` names                                    |
 
 ## Holistic linting
 
