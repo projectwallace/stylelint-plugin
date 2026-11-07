@@ -21,8 +21,6 @@ interface SecondaryOptions {
 	disallow?: Array<string | RegExp>
 }
 
-const not_custom_property = /^(?!--)/
-
 function is_single_value(value: string): boolean {
 	return parse_value(value).child_count === 1
 }
@@ -52,7 +50,7 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 		const ignore_single_value = ignore.includes('single-value')
 		const property_ignore = ignore.filter((x) => x !== 'single-value')
 
-		root.walkDecls(not_custom_property, (declaration) => {
+		root.walkDecls((declaration) => {
 			const property = declaration.prop.toLowerCase()
 
 			if (!shorthand_properties.has(property)) {

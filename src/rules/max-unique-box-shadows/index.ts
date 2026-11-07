@@ -6,6 +6,7 @@ import {
 	ignore_option_validators,
 	is_valid_positive_integer,
 } from '../../utils/option-validators.js'
+import { walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -50,7 +51,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_shadows = new Set<string>()
 		const violating_declarations: Declaration[] = []
 
-		root.walkDecls(/^box-shadow$/i, (declaration) => {
+		walk_decls(root, ['box-shadow'], (declaration) => {
 			const before = unique_shadows.size
 			const value = declaration.value
 

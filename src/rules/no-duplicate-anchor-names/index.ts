@@ -3,6 +3,7 @@ import type { Root } from 'postcss'
 import { IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { keywords } from '@projectwallace/css-analyzer/values'
+import { walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -29,7 +30,7 @@ const ruleFunction = (primaryOptions: true) => {
 
 		const seen = new Set<string>()
 
-		root.walkDecls(/^anchor-name$/i, (declaration) => {
+		walk_decls(root, ['anchor-name'], (declaration) => {
 			if (keywords.has(declaration.value.trim())) {
 				return
 			}

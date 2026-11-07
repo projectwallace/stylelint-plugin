@@ -5,6 +5,7 @@ import {
 	ignore_option_validators,
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -49,7 +50,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_queries = new Set<string>()
 		const violating_at_rules: AtRule[] = []
 
-		root.walkAtRules(/^media$/i, (atRule) => {
+		walk_atrules(root, ['media'], (atRule) => {
 			const before = unique_queries.size
 			if (!is_allowed(atRule.params, ignore)) {
 				unique_queries.add(atRule.params)

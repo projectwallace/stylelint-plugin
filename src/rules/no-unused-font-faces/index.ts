@@ -5,6 +5,7 @@ import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
 import { str_equals, str_index_of, is_custom } from '@projectwallace/css-parser/string-utils'
 import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
 import { split_font_families } from '../../utils/font-families.js'
+import { walk_atrules, walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -54,8 +55,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		// lower-cased family name -> [original name, @font-face nodes]
 		const defined = new Map<string, { family: string; nodes: AtRule[] }>()
 
-		root.walkAtRules(/^font-face$/i, (at_rule) => {
-			at_rule.walkDecls(/^font-family$/i, (decl) => {
+		walk_atrules(root, ['font-face'], (at_rule) => {
+			walk_decls(at_rule, ['font-family'], (decl) => {
 				if (decl.parent !== at_rule) {
 					return
 				}
@@ -111,7 +112,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				}
 			})
 
-			root_node.walkAtRules(/^font-feature-values$/i, (at_rule) => {
+			walk_atrules(root_node, ['font-feature-values'], (at_rule) => {
 				for (const family of split_font_families(at_rule.params)) {
 					use(family)
 				}

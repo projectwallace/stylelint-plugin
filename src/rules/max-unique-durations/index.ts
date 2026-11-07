@@ -9,6 +9,7 @@ import { analyzeAnimation, keywords } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -53,47 +54,51 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_durations = new Set<string>()
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
-		root.walkDecls(/^(animation|transition)(-duration)?$/i, (declaration) => {
-			let parsed = parse_value(declaration.value)
-			const before = unique_durations.size
-			let triggering_duration = declaration.value
+		walk_decls(
+			root,
+			['animation-duration', 'animation', 'transition-duration', 'transition'],
+			(declaration) => {
+				let parsed = parse_value(declaration.value)
+				const before = unique_durations.size
+				let triggering_duration = declaration.value
 
-			if (
-				str_equals('animation-duration', declaration.prop) ||
-				str_equals('transition-duration', declaration.prop)
-			) {
-				for (let child of parsed) {
-					if (child.type !== OPERATOR) {
-						let duration = child.text
+				if (
+					str_equals('animation-duration', declaration.prop) ||
+					str_equals('transition-duration', declaration.prop)
+				) {
+					for (let child of parsed) {
+						if (child.type !== OPERATOR) {
+							let duration = child.text
 
-						if (!keywords.has(duration) && !is_allowed(duration, ignore)) {
-							const is_new = !unique_durations.has(duration)
-							unique_durations.add(duration)
-							if (is_new && unique_durations.size > primaryOption) {
-								triggering_duration = duration
+							if (!keywords.has(duration) && !is_allowed(duration, ignore)) {
+								const is_new = !unique_durations.has(duration)
+								unique_durations.add(duration)
+								if (is_new && unique_durations.size > primaryOption) {
+									triggering_duration = duration
+								}
 							}
 						}
 					}
+				} else {
+					analyzeAnimation(parsed, function (item) {
+						if (item.type === 'duration') {
+							let duration = item.value.text
+							if (!is_allowed(duration, ignore)) {
+								const is_new = !unique_durations.has(duration)
+								unique_durations.add(duration)
+								if (is_new && unique_durations.size > primaryOption) {
+									triggering_duration = duration
+								}
+							}
+						}
+					})
 				}
-			} else {
-				analyzeAnimation(parsed, function (item) {
-					if (item.type === 'duration') {
-						let duration = item.value.text
-						if (!is_allowed(duration, ignore)) {
-							const is_new = !unique_durations.has(duration)
-							unique_durations.add(duration)
-							if (is_new && unique_durations.size > primaryOption) {
-								triggering_duration = duration
-							}
-						}
-					}
-				})
-			}
 
-			if (unique_durations.size > before && unique_durations.size > primaryOption) {
-				violating_declarations.push({ declaration, word: triggering_duration })
-			}
-		})
+				if (unique_durations.size > before && unique_durations.size > primaryOption) {
+					violating_declarations.push({ declaration, word: triggering_duration })
+				}
+			},
+		)
 
 		const actual = unique_durations.size
 		for (const { declaration, word } of violating_declarations) {

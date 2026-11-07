@@ -3,6 +3,7 @@ import type { Root } from 'postcss'
 import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -27,7 +28,7 @@ const ruleFunction = (primaryOptions: true) => {
 			return
 		}
 
-		root.walkAtRules(/^(layer|import)$/i, (at_rule) => {
+		walk_atrules(root, ['layer', 'import'], (at_rule) => {
 			if (str_equals('layer', at_rule.name)) {
 				// Anonymous layer: has a block but no name (empty/missing params)
 				if (at_rule.nodes !== undefined && !at_rule.params.trim()) {

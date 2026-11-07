@@ -8,6 +8,7 @@ import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
 import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -60,7 +61,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			collect_var_usages(decl)
 		})
 
-		root.walkAtRules(/^property$/i, (atRule) => {
+		walk_atrules(root, ['property'], (atRule) => {
 			const property_name = atRule.params.trim()
 			if (is_custom(property_name)) {
 				tracker.define(property_name, atRule)

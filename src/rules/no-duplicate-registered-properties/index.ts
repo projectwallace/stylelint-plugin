@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,7 +27,7 @@ const ruleFunction = (primaryOptions: true) => {
 
 		const seen = new Set<string>()
 
-		root.walkAtRules(/^property$/i, (at_rule) => {
+		walk_atrules(root, ['property'], (at_rule) => {
 			const name = at_rule.params.trim()
 			if (!name) {
 				return

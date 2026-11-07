@@ -4,6 +4,7 @@ import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
+import { walk_atrules, walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -34,7 +35,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const tracker = new DefinedUsed<AtRule>()
 
-		root.walkAtRules(/^keyframes$/i, (atRule) => {
+		walk_atrules(root, ['keyframes'], (atRule) => {
 			const name = atRule.params.trim()
 			if (name) {
 				tracker.define(name, atRule)
@@ -48,7 +49,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
 		for (const root_node of [root, ...referenceRoots]) {
-			root_node.walkDecls(/^animation(-name)?$/i, (decl) => {
+			walk_decls(root_node, ['animation-name', 'animation'], (decl) => {
 				const ast = parse_value(decl.value)
 				analyzeAnimation(ast, ({ type, value }) => {
 					if (type === 'name') {

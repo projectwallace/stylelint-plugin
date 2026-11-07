@@ -7,6 +7,7 @@ import {
 	ignore_option_validators,
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
+import { walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -51,7 +52,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const unique_sizes = new Set<string>()
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
-		root.walkDecls(/^font-size$/i, (declaration) => {
+		walk_decls(root, ['font-size'], (declaration) => {
 			const before = unique_sizes.size
 			if (!keywords.has(declaration.value) && !is_allowed(declaration.value, ignore)) {
 				unique_sizes.add(declaration.value)
@@ -61,7 +62,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			}
 		})
 
-		root.walkDecls(/^font$/i, (declaration) => {
+		walk_decls(root, ['font'], (declaration) => {
 			const before = unique_sizes.size
 			const parsed = parse_value(declaration.value)
 			const destructured = destructureFontShorthand(parsed, () => {})

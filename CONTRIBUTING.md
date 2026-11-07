@@ -39,6 +39,8 @@ Avoid regexes and temporary strings (`toLowerCase()`, `startsWith()`, `includes(
 - `is_custom(name)` instead of `name.startsWith('--')`
 - `is_vendor_prefixed(name)` / `strip_vendor_prefix(name)` instead of matching `-webkit-`, `-moz-` etc. by hand
 
+To walk declarations or at-rules by name, use `walk_decls()`, `walk_atrules()` and `walk_custom_decls()` from `src/utils/walk.ts` instead of passing a regex like `/^z-index$/i` to PostCSS's `walkDecls()`/`walkAtRules()`. Pass lowercase names, e.g. `walk_decls(root, ['container', 'container-name'], (decl) => { … })`.
+
 Watch out for two things that string checks and regexes routinely get wrong:
 
 - **Custom idents and custom properties** (`--foo`, `@property --foo`, `var(--foo)`, `@container name`, `@layer name`): these are case-sensitive and user-defined, so don't lowercase or compare them against keywords. Use `is_custom()` to detect `--` names.

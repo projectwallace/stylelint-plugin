@@ -16,6 +16,7 @@ import {
 } from '../../utils/media-conditions.js'
 import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { walk_atrules } from '../../utils/walk.js'
 
 /** Cartesian product of an array of arrays. */
 function cartesian<T>(arrays: T[][]): T[][] {
@@ -109,7 +110,7 @@ const ruleFunction = (primaryOption: true) => {
 
 		// === Detect contradictions within a single @media / @import rule ===
 
-		root.walkAtRules(/^(media|import)$/i, (at_rule) => {
+		walk_atrules(root, ['media', 'import'], (at_rule) => {
 			const prelude = at_rule.params
 			if (!prelude) {
 				return
@@ -136,7 +137,7 @@ const ruleFunction = (primaryOption: true) => {
 		// cartesian product across all nesting levels and report the first combination
 		// that is contradictory.
 
-		root.walkAtRules(/^media$/i, (atRule) => {
+		walk_atrules(root, ['media'], (atRule) => {
 			// Collect alternative bound-sets from the current rule and each ancestor
 			const current_alternatives = collect_bounds_from_prelude('media', atRule.params)
 			if (current_alternatives.length === 0) {

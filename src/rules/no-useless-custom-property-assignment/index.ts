@@ -5,6 +5,7 @@ import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
+import { walk_custom_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -33,7 +34,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			return
 		}
 
-		root.walkDecls(/^--/, (decl) => {
+		walk_custom_decls(root, (decl) => {
 			const property = decl.prop
 
 			if (secondaryOptions?.ignore && is_allowed(property, secondaryOptions.ignore)) {

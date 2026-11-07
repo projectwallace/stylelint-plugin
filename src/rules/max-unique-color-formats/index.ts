@@ -5,6 +5,7 @@ import { parse_value } from '@projectwallace/css-parser'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 import { unquote } from '../../utils/unquote.js'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
+import { walk_atrules, walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -38,13 +39,13 @@ const ruleFunction = (primaryOption: number) => {
 			})
 		}
 
-		root.walkAtRules(/^property$/i, (atRule) => {
+		walk_atrules(root, ['property'], (atRule) => {
 			const prop_name = atRule.params.trim()
 			if (!is_custom(prop_name)) {
 				return
 			}
 
-			atRule.walkDecls(/^syntax$/i, (decl) => {
+			walk_decls(atRule, ['syntax'], (decl) => {
 				const syntax = unquote(decl.value.trim())
 				if (syntax === '<color>') {
 					color_custom_properties.add(prop_name)
@@ -55,7 +56,7 @@ const ruleFunction = (primaryOption: number) => {
 				return
 			}
 
-			atRule.walkDecls(/^initial-value$/i, (decl) => {
+			walk_decls(atRule, ['initial-value'], (decl) => {
 				run_collect(parse_value(decl.value), false)
 			})
 		})

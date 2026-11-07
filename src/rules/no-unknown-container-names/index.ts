@@ -5,9 +5,10 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { keywords } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
+import { walk_atrules, walk_decls } from '../../utils/walk.js'
 
 function collect_container_names(root: Root, declared: Set<string>): void {
-	root.walkDecls(/^container(-name)?$/i, (decl) => {
+	walk_decls(root, ['container-name', 'container'], (decl) => {
 		if (keywords.has(decl.value.trim())) {
 			return
 		}
@@ -58,7 +59,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			collect_container_names(root_node, declared_names)
 		}
 
-		root.walkAtRules(/^container$/i, (atRule) => {
+		walk_atrules(root, ['container'], (atRule) => {
 			const prelude = parse_atrule_prelude('container', atRule.params.trim())
 			const first_child = prelude.at(0)?.first_child
 			if (first_child?.type !== IDENTIFIER) {

@@ -12,6 +12,7 @@ import {
 	type MediaFeature,
 } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -118,7 +119,7 @@ const ruleFunction = (primaryOption: true) => {
 			return
 		}
 
-		root.walkAtRules(/^container$/i, (at_rule) => {
+		walk_atrules(root, ['container'], (at_rule) => {
 			const prelude = at_rule.params
 			if (!prelude) {
 				return

@@ -5,6 +5,7 @@ import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-pr
 import { walk, BREAK } from '@projectwallace/css-parser/walker'
 import { is_dimension, is_number } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -122,7 +123,7 @@ const ruleFunction = (primaryOption: true) => {
 			return
 		}
 
-		root.walkAtRules(/^(media|import)$/i, (at_rule) => {
+		walk_atrules(root, ['media', 'import'], (at_rule) => {
 			const prelude = at_rule.params
 			if (!prelude) {
 				return

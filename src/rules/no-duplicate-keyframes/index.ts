@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { keywords } from '@projectwallace/css-analyzer/values'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -27,7 +28,7 @@ const ruleFunction = (primaryOptions: true) => {
 
 		const seen = new Set<string>()
 
-		root.walkAtRules(/^keyframes$/i, (at_rule) => {
+		walk_atrules(root, ['keyframes'], (at_rule) => {
 			const name = at_rule.params.trim()
 			if (!name || keywords.has(name)) {
 				return

@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { walk_custom_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -26,7 +27,7 @@ const ruleFunction = (primaryOptions: true) => {
 
 		const seen = new Set<string>()
 
-		root.walkDecls(/^--/, (declaration) => {
+		walk_custom_decls(root, (declaration) => {
 			const name = declaration.prop
 
 			if (seen.has(name)) {

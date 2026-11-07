@@ -7,6 +7,7 @@ import {
 	ignore_option_validators,
 	is_valid_positive_integer,
 } from '../../utils/option-validators.js'
+import { walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -69,8 +70,19 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			}
 		}
 
-		root.walkDecls(
-			/^(border-radius|border-(top|bottom)-(left|right)-radius|border-(start|end)-(start|end)-radius)$/i,
+		walk_decls(
+			root,
+			[
+				'border-radius',
+				'border-top-left-radius',
+				'border-top-right-radius',
+				'border-bottom-left-radius',
+				'border-bottom-right-radius',
+				'border-start-start-radius',
+				'border-start-end-radius',
+				'border-end-start-radius',
+				'border-end-end-radius',
+			],
 			(declaration) => {
 				const raw = declaration.value
 				if (keywords.has(raw) || is_allowed(raw, ignore)) {

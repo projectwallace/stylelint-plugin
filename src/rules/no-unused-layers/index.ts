@@ -5,6 +5,7 @@ import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-pr
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -57,7 +58,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const tracker = new DefinedUsed<AtRule>()
 
-		root.walkAtRules(/^layer$/i, (atRule) => {
+		walk_atrules(root, ['layer'], (atRule) => {
 			if (atRule.nodes === undefined) {
 				// Statement: @layer name; or @layer a, b, c;
 				const names = atRule.params
@@ -82,13 +83,13 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		// @import url() layer(name) counts as usage of both `name` and all ancestor layers
 		for (const root_node of [root, ...referenceRoots]) {
-			root_node.walkAtRules(/^import$/i, (atRule) => {
+			walk_atrules(root_node, ['import'], (atRule) => {
 				mark_import_layer_used(atRule, tracker)
 			})
 		}
 
 		for (const referenceRoot of referenceRoots) {
-			referenceRoot.walkAtRules(/^layer$/i, (atRule) => {
+			walk_atrules(referenceRoot, ['layer'], (atRule) => {
 				if (atRule.nodes !== undefined) {
 					const name = atRule.params.trim()
 					if (name) {

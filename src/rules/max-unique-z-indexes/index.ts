@@ -7,6 +7,7 @@ import {
 	ignore_option_validators,
 	is_valid_non_negative_integer,
 } from '../../utils/option-validators.js'
+import { walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -52,7 +53,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const violating_declarations: Array<{ declaration: Declaration; start: number; end: number }> =
 			[]
 
-		root.walkDecls(/^z-index$/i, (declaration) => {
+		walk_decls(root, ['z-index'], (declaration) => {
 			const before = unique_zindexes.size
 			const parsed = parse_value(declaration.value)
 			let trigger_start = 0

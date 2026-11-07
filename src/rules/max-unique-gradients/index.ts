@@ -9,6 +9,7 @@ import {
 } from '../../utils/option-validators.js'
 import { is_function } from '@projectwallace/css-parser'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
+import { walk_decls } from '../../utils/walk.js'
 
 function is_gradient_name(name: string): boolean {
 	const base = str_starts_with('repeating-', name) ? name.slice('repeating-'.length) : name
@@ -64,7 +65,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const violating_declarations: Array<{ declaration: Declaration; start: number; end: number }> =
 			[]
 
-		root.walkDecls(/^background(-image)?$/i, (declaration) => {
+		walk_decls(root, ['background-image', 'background'], (declaration) => {
 			const before = unique_gradients.size
 			const ast = parse_value(declaration.value)
 			let trigger_start = 0

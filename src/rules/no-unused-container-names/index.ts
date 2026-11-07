@@ -6,6 +6,7 @@ import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-pr
 import { keywords } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
+import { walk_atrules, walk_decls } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -36,7 +37,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		const tracker = new DefinedUsed<Declaration>()
 
-		root.walkDecls(/^container(-name)?$/i, (decl) => {
+		walk_decls(root, ['container-name', 'container'], (decl) => {
 			if (keywords.has(decl.value.trim())) {
 				return
 			}
@@ -54,7 +55,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		// referenceRoots is available in stylelint >=17.9.0; undefined in older versions
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
 		for (const root_node of [root, ...referenceRoots]) {
-			root_node.walkAtRules(/^container$/i, (atRule) => {
+			walk_atrules(root_node, ['container'], (atRule) => {
 				const prelude = parse_atrule_prelude('container', atRule.params.trim())
 				const first_child = prelude.at(0)?.first_child
 				if (first_child?.type === IDENTIFIER) {

@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { unquote } from '../../utils/unquote.js'
+import { walk_atrules } from '../../utils/walk.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -35,7 +36,7 @@ const ruleFunction = (primaryOptions: true) => {
 
 		const seen = new Set<string>()
 
-		root.walkAtRules(/^font-face$/i, (at_rule) => {
+		walk_atrules(root, ['font-face'], (at_rule) => {
 			const descriptors = new Map<string, string>()
 			at_rule.each((child) => {
 				if (child.type === 'decl') {
