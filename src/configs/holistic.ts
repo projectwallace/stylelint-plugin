@@ -37,6 +37,7 @@ const config: PresetConfig = {
 		'projectwallace/max-unique-keyframes': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-media-queries': [12, { severity: 'warning' }],
 		'projectwallace/max-unique-supports-queries': [8, { severity: 'warning' }],
+		'projectwallace/max-unique-pseudo-classes': [24, { severity: 'warning' }],
 
 		// Cross-reference rules (defined vs. used)
 		'projectwallace/no-unused-keyframes': true,

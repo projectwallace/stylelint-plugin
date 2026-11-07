@@ -78,6 +78,7 @@ const config: PresetConfig = {
 		'projectwallace/max-unique-gradients': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-supports-queries': [8, { severity: 'warning' }],
 		'projectwallace/max-unique-units': [10, { severity: 'warning' }],
+		'projectwallace/max-unique-pseudo-classes': [24, { severity: 'warning' }],
 		'projectwallace/min-selector-uniqueness-ratio': [0.66, { severity: 'warning' }],
 		'projectwallace/min-declaration-uniqueness-ratio': [0.5, { severity: 'warning' }],
 		'projectwallace/max-average-selector-specificity': [[0.02, 2.5, 1], { severity: 'warning' }],
