@@ -105,8 +105,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				// A family can be hidden in a custom property or behind a var() fallback.
 				// We can't resolve those, so treat every name mentioned there as used.
 				if (prop.startsWith('--') || decl.value.includes('var(')) {
-					const loose = decl.value.replaceAll(/[()]/g, ',')
-					for (const family of split_font_families(loose)) {
+					for (const family of split_font_families(decl.value, true)) {
 						use(family)
 					}
 				}

@@ -24,3 +24,15 @@ test('does not split on commas inside functions', () => {
 test('returns an empty array for an empty value', () => {
 	expect(split_font_families('')).toStrictEqual([])
 })
+
+test('splits the arguments of functions when deep', () => {
+	expect(split_font_families('var(--a, Inter), serif', true)).toStrictEqual([
+		'--a',
+		'Inter',
+		'serif',
+	])
+})
+
+test('joins unquoted multi-word names after splitting deeply', () => {
+	expect(split_font_families('var(--a, Open Sans)', true)).toStrictEqual(['--a', 'Open Sans'])
+})
