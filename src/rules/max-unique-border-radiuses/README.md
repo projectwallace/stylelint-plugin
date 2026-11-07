@@ -9,7 +9,7 @@ a { border-radius: 4px; }
 *   counts as one of the unique border radiuses */
 ```
 
-A unique border radius is counted by its exact string value. Global keywords (`inherit`, `initial`, `unset`, …) are not counted. The following properties are checked:
+A unique border radius is counted by its value, with whitespace normalized: `2px  4px` is the same as `2px 4px`, and `4px/3px` is the same as `4px / 3px`. Values with multiple radii (`2px 4px`) and with a slash for elliptical corners (`4px / 3px`) each count as one unique value, and `2px`, `2px 4px` and `4px / 3px` are three different values. Global keywords (`inherit`, `initial`, `unset`, …) are not counted. The following properties are checked:
 
 - `border-radius`
 - `border-top-left-radius`, `border-top-right-radius`, `border-bottom-left-radius`, `border-bottom-right-radius`

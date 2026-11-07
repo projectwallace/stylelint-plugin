@@ -131,3 +131,76 @@ test('should not count keywords', async () => {
 	const { warnings } = await lint(`a { border-radius: inherit; } b { border-radius: 2px; }`, 1)
 	expect(warnings).toStrictEqual([])
 })
+
+test('should count a two-value radius as a single unique value', async () => {
+	const { warnings, errored } = await lint(
+		`a { border-radius: 2px 4px; } b { border-radius: 2px 4px; }`,
+		1,
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should count a two-value radius as different from a single value', async () => {
+	const { warnings } = await lint(`a { border-radius: 2px; } b { border-radius: 2px 4px; }`, 1)
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].text).toBe(
+		`Expected no more than 1 unique border radiuses but found 2 (${rule_name})`,
+	)
+})
+
+test('should count differently ordered two-value radii separately', async () => {
+	const { warnings } = await lint(`a { border-radius: 2px 4px; } b { border-radius: 4px 2px; }`, 1)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should ignore extra whitespace between values', async () => {
+	const { warnings, errored } = await lint(
+		`a { border-radius: 2px 4px; } b { border-radius: 2px    4px; }`,
+		1,
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should count a radius with a slash as a single unique value', async () => {
+	const { warnings, errored } = await lint(
+		`a { border-radius: 4px / 3px; } b { border-radius: 4px / 3px; }`,
+		1,
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should count a radius with a slash as different from one without', async () => {
+	const { warnings } = await lint(`a { border-radius: 4px; } b { border-radius: 4px / 3px; }`, 1)
+	expect(warnings).toHaveLength(1)
+})
+
+test('should treat spacing around the slash as the same value', async () => {
+	const { warnings, errored } = await lint(
+		`a { border-radius: 4px/3px; } b { border-radius: 4px / 3px; } c { border-radius: 4px /3px; }`,
+		1,
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should count a multi-value radius with a slash as a single unique value', async () => {
+	const { warnings, errored } = await lint(
+		`a { border-radius: 10px 5% / 20px 30px; } b { border-radius: 10px 5%/20px 30px; }`,
+		1,
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})
+
+test('should match ignore against the raw value of a radius with a slash', async () => {
+	const { warnings, errored } = await lint(
+		`a { border-radius: 4px/3px; } b { border-radius: 8px; }`,
+		1,
+		{ ignore: ['4px/3px'] },
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { keywords } from '@projectwallace/css-analyzer/values'
+import { parse_value } from '@projectwallace/css-parser'
 import {
 	is_allowed,
 	ignore_option_validators,
@@ -18,6 +19,14 @@ const messages = utils.ruleMessages(rule_name, {
 
 const meta = {
 	url: 'https://github.com/projectwallace/stylelint-plugin/blob/main/src/rules/max-unique-border-radiuses/README.md',
+}
+
+/**
+ * Normalizes the whitespace of a border-radius value so that equivalent notations
+ * are counted once: `2px  4px` becomes `2px 4px` and `4px/3px` becomes `4px / 3px`.
+ */
+function normalize(value: string): string {
+	return [...parse_value(value).children].map((node) => node.text).join(' ')
 }
 
 interface SecondaryOptions {
@@ -63,9 +72,11 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		root.walkDecls(
 			/^(border-radius|border-(top|bottom)-(left|right)-radius|border-(start|end)-(start|end)-radius)$/i,
 			(declaration) => {
-				if (!keywords.has(declaration.value)) {
-					add(declaration.value, declaration, declaration.value)
+				const raw = declaration.value
+				if (keywords.has(raw) || is_allowed(raw, ignore)) {
+					return
 				}
+				add(normalize(raw), declaration, raw)
 			},
 		)
 
