@@ -4,6 +4,7 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk } from '@projectwallace/css-parser/walker'
 import { is_function, is_if_branch } from '@projectwallace/css-parser'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { has_if_function } from '../../utils/has-if-function.js'
 
 const { createPlugin, utils } = stylelint
 
@@ -29,7 +30,7 @@ const ruleFunction = (primaryOption: true) => {
 		}
 
 		root.walkDecls((declaration) => {
-			if (!/if\(/i.test(declaration.value)) {
+			if (!has_if_function(declaration.value)) {
 				return
 			}
 

@@ -8,6 +8,16 @@ import {
 	is_valid_positive_integer,
 } from '../../utils/option-validators.js'
 import { is_function } from '@projectwallace/css-parser'
+import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
+
+function is_gradient_name(name: string): boolean {
+	const base = str_starts_with('repeating-', name) ? name.slice('repeating-'.length) : name
+	return (
+		str_equals('linear-gradient', base) ||
+		str_equals('conic-gradient', base) ||
+		str_equals('radial-gradient', base)
+	)
+}
 
 const { createPlugin, utils } = stylelint
 
@@ -62,7 +72,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 			walk(ast, (node) => {
 				if (is_function(node)) {
-					if (/^(repeating-)?(linear|conic|radial)-gradient$/i.test(node.name)) {
+					if (is_gradient_name(node.name)) {
 						const gradient = node.text
 						if (!is_allowed(gradient, ignore)) {
 							const is_new = !unique_gradients.has(gradient)
