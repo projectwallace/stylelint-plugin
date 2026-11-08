@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk } from '@projectwallace/css-parser/walker'
+import { walk_values } from '@projectwallace/css-parser/walker'
 import { is_function, is_if_branch } from '@projectwallace/css-parser'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { has_if_function } from '../../utils/has-if-function.js'
@@ -33,7 +33,7 @@ const ruleFunction = (primaryOption: true) => {
 
 			const parsed = parse_value(declaration.value)
 
-			walk(parsed, (node) => {
+			walk_values(parsed, (node) => {
 				if (!is_function(node) || !str_equals('if', node.name)) {
 					return
 				}

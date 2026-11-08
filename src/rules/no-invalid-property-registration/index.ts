@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, AtRule, Declaration } from 'postcss'
 import {
 	parse_value,
-	walk,
+	walk_values,
 	is_dimension,
 	is_function,
 	is_identifier,
@@ -124,7 +124,7 @@ const MATCHERS: Record<string, Matcher> = {
 
 function uses_var(value: CSSNode): boolean {
 	let found = false
-	walk(value, (node) => {
+	walk_values(value, (node) => {
 		if (is_function(node) && str_equals('var', node.name)) {
 			found = true
 		}

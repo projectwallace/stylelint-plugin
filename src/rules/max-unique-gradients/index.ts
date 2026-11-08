@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk } from '@projectwallace/css-parser/walker'
+import { walk_values } from '@projectwallace/css-parser/walker'
 import {
 	is_allowed,
 	is_valid_positive_integer,
@@ -61,7 +61,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			let trigger_start = 0
 			let trigger_end = declaration.value.length
 
-			walk(ast, (node) => {
+			walk_values(ast, (node) => {
 				if (is_function(node)) {
 					if (is_gradient_name(node.name)) {
 						const gradient = node.text
