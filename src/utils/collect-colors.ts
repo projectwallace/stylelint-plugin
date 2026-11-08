@@ -1,7 +1,7 @@
 import { namedColors, colorFunctions, colorKeywords } from '@projectwallace/css-analyzer/values'
 import {
 	parse_value,
-	walk,
+	walk_values,
 	SKIP,
 	is_function,
 	is_hash,
@@ -36,7 +36,7 @@ export function collect_colors(
 	color_custom_properties: Set<string>,
 	callback: ColorCallback,
 ): void {
-	walk(parsed, (node) => {
+	walk_values(parsed, (node) => {
 		if (is_hash(node)) {
 			callback(node.text, 'hex')
 		} else if (is_identifier(node)) {

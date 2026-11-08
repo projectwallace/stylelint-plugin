@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { is_allowed } from '../../utils/option-validators.js'
 import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
-import { BREAK, walk } from '@projectwallace/css-parser/walker'
+import { BREAK, walk_values } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
@@ -41,7 +41,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 			let reported = false
 
-			walk(parsed, (child) => {
+			walk_values(parsed, (child) => {
 				if (reported) {
 					return BREAK
 				}

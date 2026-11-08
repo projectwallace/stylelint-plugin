@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { walk } from '@projectwallace/css-parser/walker'
+import { walk_values } from '@projectwallace/css-parser/walker'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_url } from '@projectwallace/css-parser'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
@@ -32,7 +32,7 @@ const ruleFunction = (primaryOption: number) => {
 		root.walkDecls((declaration) => {
 			const parsed = parse_value(declaration.value)
 
-			walk(parsed, (node) => {
+			walk_values(parsed, (node) => {
 				if (!is_url(node)) {
 					return
 				}

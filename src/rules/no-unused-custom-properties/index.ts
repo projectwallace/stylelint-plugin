@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
 import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk } from '@projectwallace/css-parser/walker'
+import { walk_values } from '@projectwallace/css-parser/walker'
 import { is_allowed } from '../../utils/option-validators.js'
 import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
@@ -37,7 +37,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const tracker = new DefinedUsed<Declaration | AtRule>()
 
 		function collect_var_usages(decl: Declaration) {
-			walk(parse_value(decl.value), (node) => {
+			walk_values(parse_value(decl.value), (node) => {
 				if (node.type !== FUNCTION || !str_equals('var', node.name)) {
 					return
 				}

@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import { walk, DIMENSION } from '@projectwallace/css-parser'
+import { walk_values, DIMENSION } from '@projectwallace/css-parser'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
@@ -37,7 +37,7 @@ const ruleFunction = (primaryOption: number) => {
 			let trigger_start = 0
 			let trigger_end = declaration.value.length
 
-			walk(parsed, (node) => {
+			walk_values(parsed, (node) => {
 				if (node.type === DIMENSION) {
 					const unit = node.unit
 					if (unit !== undefined) {

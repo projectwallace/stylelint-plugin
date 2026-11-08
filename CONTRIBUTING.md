@@ -38,6 +38,8 @@ Avoid regexes and temporary strings (`toLowerCase()`, `startsWith()`, `includes(
 - `str_index_of(lowercase_needle, value)` instead of `includes()`, `indexOf()` or `/x/i.test()`
 - `is_custom(name)` instead of `name.startsWith('--')`
 - `is_vendor_prefixed(name)` / `strip_vendor_prefix(name)` instead of matching `-webkit-`, `-moz-` etc. by hand
+- `property_basename(name)` for a normalized property name (hack and vendor prefix removed, lowercased) and `strip_value_hack(value)` to drop `\9`-style value hacks
+- `walk_values()`, `walk_declarations()` and `walk_selectors()` instead of `walk()` when you only need values, declarations or selectors
 
 Watch out for two things that string checks and regexes routinely get wrong:
 

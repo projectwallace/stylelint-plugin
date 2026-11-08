@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk, NUMBER } from '@projectwallace/css-parser'
+import { walk_values, NUMBER } from '@projectwallace/css-parser'
 import {
 	is_allowed,
 	is_valid_non_negative_integer,
@@ -49,7 +49,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			let trigger_start = 0
 			let trigger_end = declaration.value.length
 
-			walk(parsed, (node) => {
+			walk_values(parsed, (node) => {
 				if (node.type !== NUMBER) {
 					return
 				}

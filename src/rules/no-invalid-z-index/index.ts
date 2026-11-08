@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk, NUMBER } from '@projectwallace/css-parser'
+import { walk_values, NUMBER } from '@projectwallace/css-parser'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -30,7 +30,7 @@ const ruleFunction = (primaryOptions: true) => {
 		root.walkDecls(/^z-index$/i, (declaration) => {
 			const parsed = parse_value(declaration.value)
 
-			walk(parsed, (node) => {
+			walk_values(parsed, (node) => {
 				if (node.type !== NUMBER) {
 					return
 				}
