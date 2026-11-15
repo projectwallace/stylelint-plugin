@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
+import { destructure_font_shorthand } from '@projectwallace/css-analyzer/values'
 import { str_equals, str_index_of, is_custom } from '@projectwallace/css-parser/string-utils'
 import { is_allowed, validate_options_with_ignore } from '../../utils/option-validators.js'
 import { split_font_families } from '../../utils/font-families.js'
@@ -18,8 +18,6 @@ const messages = utils.ruleMessages(rule_name, {
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
 }
-
-function noop() {}
 
 function is_in_font_face(node: { parent?: unknown }): boolean {
 	const parent = node.parent as AtRule | undefined
@@ -83,7 +81,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 						use(family)
 					}
 				} else if (prop === 'font') {
-					const destructured = destructureFontShorthand(parse_value(decl.value), noop)
+					const destructured = destructure_font_shorthand(parse_value(decl.value))
 					if (destructured?.font_family) {
 						for (const family of split_font_families(destructured.font_family)) {
 							use(family)

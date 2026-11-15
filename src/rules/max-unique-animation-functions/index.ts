@@ -5,7 +5,7 @@ import {
 	is_valid_positive_integer,
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
-import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
+import { analyze_animation } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { OPERATOR } from '@projectwallace/css-parser'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
@@ -63,16 +63,11 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					}
 				}
 			} else {
-				analyzeAnimation(parsed, function (item) {
-					if (item.type === 'fn') {
-						let fn = item.value.text
-						if (!is_allowed(fn, ignore)) {
-							if (unique_functions.add(fn)) {
-								triggering_fn = fn
-							}
-						}
+				for (const fn of analyze_animation(parsed).timing_functions) {
+					if (!is_allowed(fn, ignore) && unique_functions.add(fn)) {
+						triggering_fn = fn
 					}
-				})
+				}
 			}
 
 			if (unique_functions.exceeded()) {

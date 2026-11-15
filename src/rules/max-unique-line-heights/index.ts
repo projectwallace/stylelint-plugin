@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
+import { destructure_font_shorthand, keywords } from '@projectwallace/css-analyzer/values'
 import {
 	is_allowed,
 	is_valid_non_negative_integer,
@@ -54,7 +54,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		root.walkDecls(/^font$/i, (declaration) => {
 			unique_heights.begin()
 			const parsed = parse_value(declaration.value)
-			const destructured = destructureFontShorthand(parsed, () => {})
+			const destructured = destructure_font_shorthand(parsed)
 			if (destructured?.line_height && !is_allowed(destructured.line_height, ignore)) {
 				unique_heights.add(destructured.line_height)
 			}

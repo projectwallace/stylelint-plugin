@@ -1,7 +1,9 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { isSupportsBrowserhack, isMediaBrowserhack } from '@projectwallace/css-analyzer/atrules'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import {
+	get_supports_browserhacks,
+	get_media_browserhacks,
+} from '@projectwallace/css-analyzer/atrules'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -28,30 +30,19 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 
-			const nodes = parse_atrule_prelude(name, at_rule.params)
+			const hacks =
+				name === 'media'
+					? get_media_browserhacks(at_rule.params)
+					: get_supports_browserhacks(at_rule.params)
 
-			for (const node of nodes) {
-				if (name === 'media') {
-					isMediaBrowserhack(node, (hack) => {
-						utils.report({
-							message: messages.rejected(hack),
-							node: at_rule,
-							word: hack,
-							result,
-							ruleName: rule_name,
-						})
-					})
-				} else {
-					isSupportsBrowserhack(node, (hack) => {
-						utils.report({
-							message: messages.rejected(hack),
-							node: at_rule,
-							word: hack,
-							result,
-							ruleName: rule_name,
-						})
-					})
-				}
+			for (const hack of hacks) {
+				utils.report({
+					message: messages.rejected(hack),
+					node: at_rule,
+					word: hack,
+					result,
+					ruleName: rule_name,
+				})
 			}
 		})
 	}

@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import { isValueReset } from '@projectwallace/css-analyzer/values'
+import { is_value_reset } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
@@ -35,7 +35,7 @@ const ruleFunction = (primaryOption: number) => {
 		const violating_declarations: Declaration[] = []
 
 		root.walkDecls(SPACING_RESET_PROPERTIES, (declaration) => {
-			if (!isValueReset(parse_value(declaration.value))) {
+			if (!is_value_reset(parse_value(declaration.value))) {
 				return
 			}
 

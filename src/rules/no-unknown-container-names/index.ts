@@ -1,25 +1,14 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { IDENTIFIER, OPERATOR } from '@projectwallace/css-parser/nodes'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
-import { keywords } from '@projectwallace/css-analyzer/values'
+import { get_declared_container_names } from '@projectwallace/css-analyzer/values'
+import { get_container_query_name } from '@projectwallace/css-analyzer/atrules'
 import { is_allowed } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 function collect_container_names(root: Root, declared: Set<string>): void {
 	root.walkDecls(/^container(-name)?$/i, (decl) => {
-		if (keywords.has(decl.value.trim())) {
-			return
-		}
-		const ast = parse_value(decl.value)
-		for (const node of ast) {
-			if (node.type === OPERATOR) {
-				break
-			}
-			if (node.type === IDENTIFIER) {
-				declared.add(node.text)
-			}
+		for (const name of get_declared_container_names(decl.value)) {
+			declared.add(name)
 		}
 	})
 }
@@ -56,12 +45,10 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		}
 
 		root.walkAtRules(/^container$/i, (atRule) => {
-			const prelude = parse_atrule_prelude('container', atRule.params.trim())
-			const first_child = prelude.at(0)?.first_child
-			if (first_child?.type !== IDENTIFIER) {
+			const name = get_container_query_name(atRule.params)
+			if (!name) {
 				return
 			}
-			const name = first_child.text
 			if (declared_names.has(name)) {
 				return
 			}

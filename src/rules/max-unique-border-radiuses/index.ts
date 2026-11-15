@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { keywords } from '@projectwallace/css-analyzer/values'
+import { border_radius_properties } from '@projectwallace/css-analyzer/properties'
 import { parse_value } from '@projectwallace/css-parser'
 import {
 	is_allowed,
@@ -58,16 +59,16 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			}
 		}
 
-		root.walkDecls(
-			/^(border-radius|border-(top|bottom)-(left|right)-radius|border-(start|end)-(start|end)-radius)$/i,
-			(declaration) => {
-				const raw = declaration.value
-				if (keywords.has(raw) || is_allowed(raw, ignore)) {
-					return
-				}
-				add(normalize(raw), declaration, raw)
-			},
-		)
+		root.walkDecls((declaration) => {
+			if (!border_radius_properties.has(declaration.prop)) {
+				return
+			}
+			const raw = declaration.value
+			if (keywords.has(raw) || is_allowed(raw, ignore)) {
+				return
+			}
+			add(normalize(raw), declaration, raw)
+		})
 
 		const actual = unique.size
 		for (const { node, word } of violations) {

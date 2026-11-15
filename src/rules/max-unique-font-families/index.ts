@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { destructureFontShorthand, keywords } from '@projectwallace/css-analyzer/values'
+import { destructure_font_shorthand, keywords } from '@projectwallace/css-analyzer/values'
 import {
 	is_allowed,
 	is_valid_non_negative_integer,
@@ -23,8 +23,6 @@ const messages = utils.ruleMessages(rule_name, {
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
 }
-
-function noop() {}
 
 const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -63,7 +61,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		root.walkDecls(/^font$/i, (declaration) => {
 			unique_families.begin()
 			const parsed = parse_value(declaration.value)
-			const destructured = destructureFontShorthand(parsed, noop)
+			const destructured = destructure_font_shorthand(parsed)
 			if (destructured?.font_family && !is_allowed(destructured.font_family, ignore)) {
 				unique_families.add(destructured.font_family)
 			}

@@ -2,6 +2,7 @@ import {
 	is_container_query,
 	is_dimension,
 	is_feature_range,
+	is_identifier,
 	is_media_feature,
 	is_media_query,
 	is_number,
@@ -85,7 +86,7 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 		return []
 	}
 
-	const count = node.child_count
+	const count = (node.children as CSSNode[]).filter((n) => !is_identifier(n)).length
 	if (count === 0) {
 		return []
 	}
@@ -95,7 +96,8 @@ export function collect_bounds_from_feature_range(node: CSSNode): Bound[] {
 	const is_value_node = (n: CSSNode) => is_dimension(n) || is_number(n)
 	// FeatureRange children are typed as (Dimension | Operator)[] but actually include
 	// PreludeOperator nodes — cast to CSSNode[] to allow proper narrowing
-	const children = node.children as CSSNode[]
+	// Since css-parser 0.20 the feature name itself is also a child (Identifier); skip it
+	const children = (node.children as CSSNode[]).filter((n) => !is_identifier(n))
 
 	const child0 = children[0]
 	const child1 = children[1]

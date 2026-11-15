@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
+import { analyze_animation } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '../../utils/defined-used.js'
@@ -47,11 +47,9 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		for (const root_node of [root, ...referenceRoots]) {
 			root_node.walkDecls(/^animation(-name)?$/i, (decl) => {
 				const ast = parse_value(decl.value)
-				analyzeAnimation(ast, ({ type, value }) => {
-					if (type === 'name') {
-						tracker.use(value.text)
-					}
-				})
+				for (const name of analyze_animation(ast).names) {
+					tracker.use(name)
+				}
 			})
 		}
 

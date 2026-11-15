@@ -1,4 +1,4 @@
-import { namedColors, colorFunctions, colorKeywords } from '@projectwallace/css-analyzer/values'
+import { named_colors, color_functions, color_keywords } from '@projectwallace/css-analyzer/values'
 import {
 	parse_value,
 	walk_values,
@@ -41,9 +41,9 @@ export function collect_colors(
 			callback(node.text, 'hex')
 		} else if (is_identifier(node)) {
 			const ident = node.text
-			if (namedColors.has(ident)) {
+			if (named_colors.has(ident)) {
 				callback(ident, 'named')
-			} else if (colorKeywords.has(ident)) {
+			} else if (color_keywords.has(ident)) {
 				callback(ident, 'system')
 			}
 		} else if (is_function(node)) {
@@ -54,7 +54,7 @@ export function collect_colors(
 			const fn = node.text
 			const fn_name_lower = fn_name.toLowerCase()
 
-			if (colorFunctions.has(fn_name)) {
+			if (color_functions.has(fn_name)) {
 				// Numeric-channel color functions (rgb, hsl, oklch, …).
 				// SKIP children — they are numbers, not color tokens.
 				callback(fn, fn_name_lower)
