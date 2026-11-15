@@ -63,7 +63,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					}
 				}
 			} else {
-				for (const fn of analyze_animation(parsed).timing_functions) {
+				for (const { value: fn } of analyze_animation(parsed).timing_functions) {
 					if (!is_allowed(fn, ignore) && unique_functions.add(fn)) {
 						triggering_fn = fn
 					}

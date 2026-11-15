@@ -55,13 +55,13 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			unique_heights.begin()
 			const parsed = parse_value(declaration.value)
 			const destructured = destructure_font_shorthand(parsed)
-			if (destructured?.line_height && !is_allowed(destructured.line_height, ignore)) {
-				unique_heights.add(destructured.line_height)
+			if (destructured?.line_height && !is_allowed(destructured.line_height.value, ignore)) {
+				unique_heights.add(destructured.line_height.value)
 			}
 			if (unique_heights.exceeded()) {
 				violating_declarations.push({
 					declaration,
-					word: destructured?.line_height ?? declaration.value,
+					word: destructured?.line_height?.value ?? declaration.value,
 				})
 			}
 		})

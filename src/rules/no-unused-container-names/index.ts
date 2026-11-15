@@ -33,7 +33,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 
 		root.walkDecls(/^container(-name)?$/i, (decl) => {
 			for (const name of get_declared_container_names(decl.value)) {
-				tracker.define(name, decl)
+				tracker.define(name.value, decl)
 			}
 		})
 
@@ -43,7 +43,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			root_node.walkAtRules(/^container$/i, (atRule) => {
 				const name = get_container_query_name(atRule.params)
 				if (name) {
-					tracker.use(name)
+					tracker.use(name.value)
 				}
 			})
 		}

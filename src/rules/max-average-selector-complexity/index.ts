@@ -33,7 +33,7 @@ const ruleFunction = (primaryOption: number) => {
 				return
 			}
 			for (const complexity of get_complexity(rule.selector)) {
-				total_complexity += complexity
+				total_complexity += complexity.value
 				selector_count++
 			}
 		})

@@ -64,7 +64,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 					}
 				}
 			} else {
-				for (const duration of analyze_animation(parsed).durations) {
+				for (const { value: duration } of analyze_animation(parsed).durations) {
 					if (!is_allowed(duration, ignore) && unique_durations.add(duration)) {
 						triggering_duration = duration
 					}

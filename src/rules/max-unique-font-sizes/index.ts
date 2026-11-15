@@ -55,13 +55,13 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			unique_sizes.begin()
 			const parsed = parse_value(declaration.value)
 			const destructured = destructure_font_shorthand(parsed)
-			if (destructured?.font_size && !is_allowed(destructured.font_size, ignore)) {
-				unique_sizes.add(destructured.font_size)
+			if (destructured?.font_size && !is_allowed(destructured.font_size.value, ignore)) {
+				unique_sizes.add(destructured.font_size.value)
 			}
 			if (unique_sizes.exceeded()) {
 				violating_declarations.push({
 					declaration,
-					word: destructured?.font_size ?? declaration.value,
+					word: destructured?.font_size?.value ?? declaration.value,
 				})
 			}
 		})

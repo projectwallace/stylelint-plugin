@@ -83,7 +83,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				} else if (prop === 'font') {
 					const destructured = destructure_font_shorthand(parse_value(decl.value))
 					if (destructured?.font_family) {
-						for (const family of split_font_families(destructured.font_family)) {
+						for (const family of split_font_families(destructured.font_family.value)) {
 							use(family)
 						}
 					}

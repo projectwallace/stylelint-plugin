@@ -62,13 +62,13 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			unique_families.begin()
 			const parsed = parse_value(declaration.value)
 			const destructured = destructure_font_shorthand(parsed)
-			if (destructured?.font_family && !is_allowed(destructured.font_family, ignore)) {
-				unique_families.add(destructured.font_family)
+			if (destructured?.font_family && !is_allowed(destructured.font_family.value, ignore)) {
+				unique_families.add(destructured.font_family.value)
 			}
 			if (unique_families.exceeded()) {
 				violating_declarations.push({
 					declaration,
-					word: destructured?.font_family ?? declaration.value,
+					word: destructured?.font_family?.value ?? declaration.value,
 				})
 			}
 		})

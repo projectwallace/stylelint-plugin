@@ -77,7 +77,7 @@ test('should error when quoted keyframe name is never used', async () => {
 	)
 	expect(errored).toBe(true)
 	expect(warnings.length).toBe(1)
-	expect(warnings[0].text).toBe(`Unexpected unused keyframe ""slide in"" (${rule_name})`)
+	expect(warnings[0].text).toBe(`Unexpected unused keyframe "slide in" (${rule_name})`)
 })
 
 test('should not error when keyframe is used in animation shorthand', async () => {

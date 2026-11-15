@@ -1,8 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { IDENTIFIER } from '@projectwallace/css-parser/nodes'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { keywords } from '@projectwallace/css-analyzer/values'
+import { get_anchor_names } from '@projectwallace/css-analyzer/values'
 import { define_rule } from '../../utils/define-rule.js'
 import { get_value_offset } from '../../utils/offsets.js'
 
@@ -28,31 +26,16 @@ const ruleFunction = (primaryOptions: true) => {
 		const seen = new Set<string>()
 
 		root.walkDecls(/^anchor-name$/i, (declaration) => {
-			if (keywords.has(declaration.value.trim())) {
-				return
-			}
-			const ast = parse_value(declaration.value)
 			const value_offset = get_value_offset(declaration)
-			for (const node of ast) {
-				// anchor-name values are comma-separated dashed-idents; commas are
-				// OPERATOR nodes — skip them and keep iterating
-				if (node.type !== IDENTIFIER) {
-					continue
-				}
-
-				const { text: name } = node
-				if (keywords.has(name)) {
-					continue
-				}
-
+			for (const { value: name, offset, length } of get_anchor_names(declaration.value)) {
 				if (seen.has(name)) {
 					utils.report({
 						result,
 						ruleName: rule_name,
 						message: messages.rejected(name),
 						node: declaration,
-						index: value_offset + node.start,
-						endIndex: value_offset + node.end,
+						index: value_offset + offset,
+						endIndex: value_offset + offset + length,
 					})
 				} else {
 					seen.add(name)

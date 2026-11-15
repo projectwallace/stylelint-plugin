@@ -8,7 +8,7 @@ import { define_rule } from '../../utils/define-rule.js'
 function collect_container_names(root: Root, declared: Set<string>): void {
 	root.walkDecls(/^container(-name)?$/i, (decl) => {
 		for (const name of get_declared_container_names(decl.value)) {
-			declared.add(name)
+			declared.add(name.value)
 		}
 	})
 }
@@ -45,10 +45,11 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		}
 
 		root.walkAtRules(/^container$/i, (atRule) => {
-			const name = get_container_query_name(atRule.params)
-			if (!name) {
+			const match = get_container_query_name(atRule.params)
+			if (!match) {
 				return
 			}
+			const name = match.value
 			if (declared_names.has(name)) {
 				return
 			}
