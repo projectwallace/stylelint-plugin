@@ -7,7 +7,7 @@ import {
 	is_valid_positive_integer,
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
-import { is_function } from '@projectwallace/css-parser'
+import { is_function } from '@projectwallace/css-parser/node-types'
 import { is_gradient_function } from '@projectwallace/css-analyzer/values'
 import { define_rule } from '../../utils/define-rule.js'
 import { UniqueTracker } from '../../utils/unique-tracker.js'

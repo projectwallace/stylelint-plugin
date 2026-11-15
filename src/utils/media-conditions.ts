@@ -8,7 +8,7 @@ import {
 	is_number,
 	is_prelude_operator,
 	type CSSNode,
-} from '@projectwallace/css-parser'
+} from '@projectwallace/css-parser/node-types'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { BREAK, walk } from '@projectwallace/css-parser/walker'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'

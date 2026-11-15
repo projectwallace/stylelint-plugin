@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { keywords } from '@projectwallace/css-analyzer/values'
 import { border_radius_properties } from '@projectwallace/css-analyzer/properties'
-import { parse_value } from '@projectwallace/css-parser'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
 import {
 	is_allowed,
 	is_valid_positive_integer,

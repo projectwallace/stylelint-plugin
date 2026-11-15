@@ -5,7 +5,7 @@ import {
 	is_valid_positive_integer,
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
-import { parse_value } from '@projectwallace/css-parser'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 import { unquote } from '../../utils/unquote.js'
 import { is_custom } from '@projectwallace/css-parser/string-utils'

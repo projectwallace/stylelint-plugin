@@ -5,7 +5,7 @@ import {
 	is_operator,
 	is_string,
 	type CSSNode,
-} from '@projectwallace/css-parser'
+} from '@projectwallace/css-parser/node-types'
 import { unquote } from './unquote.js'
 
 function collect(nodes: Iterable<CSSNode>, deep: boolean, families: string[]) {

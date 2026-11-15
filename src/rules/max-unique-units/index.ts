@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import { walk_values, DIMENSION } from '@projectwallace/css-parser'
+import { walk_values } from '@projectwallace/css-parser/walker'
+import { DIMENSION } from '@projectwallace/css-parser/nodes'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'

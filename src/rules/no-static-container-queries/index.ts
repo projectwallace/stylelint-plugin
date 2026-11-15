@@ -1,16 +1,15 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import { walk, BREAK } from '@projectwallace/css-parser/walker'
 import {
-	parse_atrule_prelude,
-	walk,
-	BREAK,
 	is_container_query,
 	is_dimension,
 	is_media_feature,
 	is_number,
 	is_prelude_operator,
 	type MediaFeature,
-} from '@projectwallace/css-parser'
+} from '@projectwallace/css-parser/node-types'
 import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 import { get_params_offset } from '../../utils/offsets.js'

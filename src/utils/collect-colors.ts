@@ -1,12 +1,7 @@
 import { named_colors, color_functions, color_keywords } from '@projectwallace/css-analyzer/values'
-import {
-	parse_value,
-	walk_values,
-	SKIP,
-	is_function,
-	is_hash,
-	is_identifier,
-} from '@projectwallace/css-parser'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { walk_values, SKIP } from '@projectwallace/css-parser/walker'
+import { is_function, is_hash, is_identifier } from '@projectwallace/css-parser/node-types'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 
 /**

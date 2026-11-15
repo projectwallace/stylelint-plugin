@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_value } from '@projectwallace/css-parser'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { shorthand_properties } from '@projectwallace/css-analyzer/properties'
 import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'

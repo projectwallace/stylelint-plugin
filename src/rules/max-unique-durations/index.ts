@@ -7,7 +7,7 @@ import {
 } from '../../utils/option-validators.js'
 import { analyze_animation, keywords } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { OPERATOR } from '@projectwallace/css-parser'
+import { OPERATOR } from '@projectwallace/css-parser/nodes'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 import { UniqueTracker } from '../../utils/unique-tracker.js'

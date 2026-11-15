@@ -1,7 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk_values, NUMBER } from '@projectwallace/css-parser'
+import { walk_values } from '@projectwallace/css-parser/walker'
+import { NUMBER } from '@projectwallace/css-parser/nodes'
 import {
 	is_allowed,
 	is_valid_non_negative_integer,

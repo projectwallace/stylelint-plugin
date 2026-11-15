@@ -1,18 +1,16 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule, Declaration } from 'postcss'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { walk_values } from '@projectwallace/css-parser/walker'
 import {
-	parse_value,
-	walk_values,
 	is_dimension,
 	is_function,
 	is_identifier,
 	is_number,
 	is_string,
-	str_equals,
-	str_index_of,
-	is_custom,
 	type CSSNode,
-} from '@projectwallace/css-parser'
+} from '@projectwallace/css-parser/node-types'
+import { str_equals, str_index_of, is_custom } from '@projectwallace/css-parser/string-utils'
 import { unquote } from '../../utils/unquote.js'
 import { define_rule } from '../../utils/define-rule.js'
 
