@@ -1,16 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import {
-	MEDIA_QUERY,
-	MEDIA_FEATURE,
-	FEATURE_RANGE,
-	PRELUDE_OPERATOR,
-} from '@projectwallace/css-parser/nodes'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
-import { BREAK, walk } from '@projectwallace/css-parser/walker'
-import {
-	collect_bound_from_media_feature,
-	collect_bounds_from_feature_range,
 	collect_bounds_from_prelude,
 	find_contradictory_feature,
 } from '../../utils/media-conditions.js'
@@ -44,46 +34,17 @@ const messages = utils.ruleMessages(rule_name, {
 })
 
 /**
- * Parse an at-rule prelude and return info about the first contradictory feature,
+ * Return info about the first contradictory feature in an at-rule prelude,
  * or null if all media conditions are satisfiable.
  */
 function find_contradiction_in_prelude(
 	at_rule_name: string,
 	prelude: string,
 ): ContradictionInfo | null {
-	const parsed = parse_atrule_prelude(at_rule_name, prelude)
-
-	for (const query_node of parsed) {
-		if (query_node.type !== MEDIA_QUERY) {
+	for (const bounds of collect_bounds_from_prelude(at_rule_name, prelude)) {
+		if (bounds === null) {
 			continue
 		}
-
-		// Skip queries that contain `not` or `or` — too complex to analyse safely
-		let skip = false
-		walk(query_node, (node) => {
-			if (node.type === PRELUDE_OPERATOR) {
-				const operator = node.text.trim()
-				if (str_equals('not', operator) || str_equals('or', operator)) {
-					skip = true
-					return BREAK
-				}
-			}
-		})
-		if (skip) {
-			continue
-		}
-
-		// Collect all bounds from this media query
-		const bounds: Bound[] = []
-
-		walk(query_node, (node) => {
-			if (node.type === MEDIA_FEATURE) {
-				bounds.push(...collect_bound_from_media_feature(node))
-			} else if (node.type === FEATURE_RANGE) {
-				bounds.push(...collect_bounds_from_feature_range(node))
-			}
-		})
-
 		const contradictory_feature = find_contradictory_feature(bounds)
 		if (contradictory_feature !== null) {
 			return contradictory_feature
