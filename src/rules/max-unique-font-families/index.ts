@@ -1,91 +1,14 @@
-import stylelint from 'stylelint'
-import type { Root, Declaration, AtRule } from 'postcss'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { destructure_font_shorthand, keywords } from '@projectwallace/css-analyzer/values'
-import {
-	is_allowed,
-	is_valid_non_negative_integer,
-	validate_options_with_ignore,
-} from '../../utils/option-validators.js'
-import { str_equals } from '@projectwallace/css-parser/string-utils'
-import { define_rule } from '../../utils/define-rule.js'
-import { UniqueTracker } from '../../utils/unique-tracker.js'
+import type stylelint from 'stylelint'
+import { extract_font_families } from '@projectwallace/css-analyzer/extract'
+import { is_in_font_face } from '../../utils/font-face.js'
+import { define_unique_rule } from '../../utils/define-unique-rule.js'
 
-const { utils } = stylelint
-
-const rule_name = 'projectwallace/max-unique-font-families'
-
-const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number) =>
-		`Expected no more than ${expected} unique font families but found ${actual}`,
+const plugin: stylelint.Plugin = define_unique_rule({
+	rule_name: 'projectwallace/max-unique-font-families',
+	label: 'font families',
+	allow_zero: true,
+	extract: (property, value, declaration) =>
+		is_in_font_face(declaration) ? [] : extract_font_families(property, value),
 })
-
-interface SecondaryOptions {
-	ignore?: Array<string | RegExp>
-}
-
-const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
-	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = validate_options_with_ignore(
-			result,
-			rule_name,
-			primaryOption,
-			secondaryOptions,
-			[is_valid_non_negative_integer],
-		)
-
-		if (!validOptions) {
-			return
-		}
-
-		const ignore = secondaryOptions?.ignore ?? []
-		const unique_families = new UniqueTracker(primaryOption)
-		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
-
-		root.walkDecls(/^font-family$/i, (declaration) => {
-			if (
-				declaration.parent?.type === 'atrule' &&
-				str_equals('font-face', (declaration.parent as AtRule).name)
-			) {
-				return
-			}
-			unique_families.begin()
-			if (!keywords.has(declaration.value) && !is_allowed(declaration.value, ignore)) {
-				unique_families.add(declaration.value)
-			}
-			if (unique_families.exceeded()) {
-				violating_declarations.push({ declaration, word: declaration.value })
-			}
-		})
-
-		root.walkDecls(/^font$/i, (declaration) => {
-			unique_families.begin()
-			const parsed = parse_value(declaration.value)
-			const destructured = destructure_font_shorthand(parsed)
-			if (destructured?.font_family && !is_allowed(destructured.font_family.value, ignore)) {
-				unique_families.add(destructured.font_family.value)
-			}
-			if (unique_families.exceeded()) {
-				violating_declarations.push({
-					declaration,
-					word: destructured?.font_family?.value ?? declaration.value,
-				})
-			}
-		})
-
-		const actual = unique_families.size
-		for (const { declaration, word } of violating_declarations) {
-			utils.report({
-				message: messages.rejected(actual, primaryOption),
-				node: declaration,
-				word,
-				result,
-				ruleName: rule_name,
-			})
-		}
-	}
-}
-
-const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

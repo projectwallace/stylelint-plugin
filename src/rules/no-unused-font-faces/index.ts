@@ -4,6 +4,7 @@ import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { destructure_font_shorthand } from '@projectwallace/css-analyzer/values'
 import { str_equals, str_index_of, is_custom } from '@projectwallace/css-parser/string-utils'
 import { is_allowed, validate_options_with_ignore } from '../../utils/option-validators.js'
+import { is_in_font_face } from '../../utils/font-face.js'
 import { split_font_families } from '../../utils/font-families.js'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -17,11 +18,6 @@ const messages = utils.ruleMessages(rule_name, {
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
-}
-
-function is_in_font_face(node: { parent?: unknown }): boolean {
-	const parent = node.parent as AtRule | undefined
-	return parent?.type === 'atrule' && str_equals('font-face', parent.name)
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
