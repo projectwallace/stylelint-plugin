@@ -2,30 +2,11 @@ import { extract_colors } from '@projectwallace/css-analyzer/extract'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk_values } from '@projectwallace/css-parser/walker'
 import { is_function, is_identifier } from '@projectwallace/css-parser/node-types'
-import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
-
-/**
- * CSS properties whose declaration values may contain color values.
- * Used to filter walkDecls so only relevant declarations are visited.
- */
-export const COLOR_PROPERTIES: RegExp =
-	/^(?:color|background(?:-color|-image)?|border(?:-color|-top(?:-color)?|-right(?:-color)?|-bottom(?:-color)?|-left(?:-color)?|-block(?:-color|-start(?:-color)?|-end(?:-color)?)?|-inline(?:-color|-start(?:-color)?|-end(?:-color)?)?)?|outline(?:-color)?|text-decoration(?:-color)?|column-rule(?:-color)?|caret-color|fill|stroke|stop-color|flood-color|lighting-color|text-emphasis(?:-color)?|scrollbar-color|accent-color|box-shadow|text-shadow|filter|-webkit-text-fill-color|-webkit-tap-highlight-color|-webkit-text-stroke(?:-color)?|--.+)$/i
+import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
+import type { Root } from 'postcss'
+import { unquote } from './unquote.js'
 
 export type ColorCallback = (color: string, format: string) => void
-
-/**
- * The analyzer tells hex colors apart by length (`hex3`, `hex6`, ...) and names `transparent` and
- * `currentcolor` after themselves; for counting formats those are 'hex' and 'system'.
- */
-function to_format(format: string): string {
-	if (str_starts_with('hex', format)) {
-		return 'hex'
-	}
-	if (str_equals('transparent', format) || str_equals('currentcolor', format)) {
-		return 'system'
-	}
-	return format
-}
 
 /**
  * Invoke `callback` for each color in a declaration value, passing the color text and its
@@ -48,7 +29,7 @@ export function collect_colors(
 	const found = extract_colors(property, value).map((match) => ({
 		offset: match.offset,
 		color: match.value,
-		format: to_format(match.format),
+		format: match.format,
 	}))
 
 	if (resolve_var && color_custom_properties.size > 0) {
@@ -66,4 +47,25 @@ export function collect_colors(
 	for (const { color, format } of found) {
 		callback(color, format)
 	}
+}
+
+/**
+ * Custom properties registered with `@property { syntax: '<color>' }`: `var()` references to
+ * these are colors.
+ */
+export function collect_registered_colors(root: Root): Set<string> {
+	const names = new Set<string>()
+	root.walkAtRules(/^property$/i, (at_rule) => {
+		const name = at_rule.params.trim()
+		if (!is_custom(name)) {
+			return
+		}
+		at_rule.walkDecls(/^syntax$/i, (decl) => {
+			// syntax values may be quoted: '"<color>"' or "'<color>'"
+			if (unquote(decl.value.trim()) === '<color>') {
+				names.add(name)
+			}
+		})
+	})
+	return names
 }

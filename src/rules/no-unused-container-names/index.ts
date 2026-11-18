@@ -3,7 +3,7 @@ import type { Root, Declaration } from 'postcss'
 import { get_declared_container_names } from '@projectwallace/css-analyzer/values'
 import { get_container_query_name } from '@projectwallace/css-analyzer/atrules'
 import { is_allowed } from '../../utils/option-validators.js'
-import { DefinedUsed } from '../../utils/defined-used.js'
+import { DefinedUsed } from '@projectwallace/css-analyzer/utils/collections'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -48,7 +48,10 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			})
 		}
 
-		for (const [name, node] of tracker.unused()) {
+		for (const [name, node] of tracker.unused_definitions()) {
+			if (!node) {
+				continue
+			}
 			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) {
 				continue
 			}

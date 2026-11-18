@@ -1,10 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import {
-	collect_bounds_from_prelude,
-	find_contradictory_feature,
-} from '../../utils/media-conditions.js'
-import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
+import { find_contradiction, get_query_bounds } from '@projectwallace/css-analyzer/atrules'
+import type { Contradiction, FeatureBound } from '@projectwallace/css-analyzer/atrules'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -40,12 +37,15 @@ const messages = utils.ruleMessages(rule_name, {
 function find_contradiction_in_prelude(
 	at_rule_name: string,
 	prelude: string,
-): ContradictionInfo | null {
-	for (const bounds of collect_bounds_from_prelude(at_rule_name, prelude)) {
+): Contradiction | null {
+	for (const bounds of get_query_bounds(
+		prelude,
+		str_equals('import', at_rule_name) ? 'import' : 'media',
+	)) {
 		if (bounds === null) {
 			continue
 		}
-		const contradictory_feature = find_contradictory_feature(bounds)
+		const contradictory_feature = find_contradiction(bounds)
 		if (contradictory_feature !== null) {
 			return contradictory_feature
 		}
@@ -96,18 +96,18 @@ const ruleFunction = (primaryOption: true) => {
 
 		root.walkAtRules(/^media$/i, (atRule) => {
 			// Collect alternative bound-sets from the current rule and each ancestor
-			const current_alternatives = collect_bounds_from_prelude('media', atRule.params)
+			const current_alternatives = get_query_bounds(atRule.params)
 			if (current_alternatives.length === 0) {
 				return
 			}
 
-			const ancestor_alternative_sets: (Bound[] | null)[][] = []
+			const ancestor_alternative_sets: (FeatureBound[] | null)[][] = []
 			let node = atRule.parent
 
 			while (node) {
 				if (node.type === 'atrule' && str_equals('media', (node as AtRule).name)) {
 					const ancestor = node as AtRule
-					const alternatives = collect_bounds_from_prelude('media', ancestor.params)
+					const alternatives = get_query_bounds(ancestor.params)
 					if (alternatives.length === 0) {
 						return
 					} // empty prelude — bail out
@@ -123,9 +123,12 @@ const ruleFunction = (primaryOption: true) => {
 			} // not nested
 
 			// Cartesian product of [current, ancestor1, ancestor2, ...]
-			const all_sets: (Bound[] | null)[][] = [current_alternatives, ...ancestor_alternative_sets]
+			const all_sets: (FeatureBound[] | null)[][] = [
+				current_alternatives,
+				...ancestor_alternative_sets,
+			]
 
-			let nested_contradiction: ContradictionInfo | null = null
+			let nested_contradiction: Contradiction | null = null
 
 			for (const combo of cartesian(all_sets)) {
 				// Any unanalyzable branch → conservatively skip this combination
@@ -133,22 +136,22 @@ const ruleFunction = (primaryOption: true) => {
 					continue
 				}
 
-				const bound_sets = combo as Bound[][]
+				const bound_sets = combo as FeatureBound[][]
 
 				// If current branch alone is contradictory, the flat check above handles
 				// it — skip this combination to avoid double-reporting
-				if (find_contradictory_feature(bound_sets[0]) !== null) {
+				if (find_contradiction(bound_sets[0]) !== null) {
 					continue
 				}
 
 				// If the ancestor bounds for this specific combination are already
 				// contradictory amongst themselves, the contradiction belongs to the
 				// ancestor level and will be (or was) reported there — skip to avoid noise
-				if (find_contradictory_feature(bound_sets.slice(1).flat()) !== null) {
+				if (find_contradiction(bound_sets.slice(1).flat()) !== null) {
 					continue
 				}
 
-				const contradiction = find_contradictory_feature(bound_sets.flat())
+				const contradiction = find_contradiction(bound_sets.flat())
 				if (contradiction !== null) {
 					nested_contradiction = contradiction
 					break

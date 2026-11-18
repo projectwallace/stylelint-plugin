@@ -5,9 +5,7 @@ import {
 	is_valid_positive_integer,
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
-import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
-import { unquote } from '../../utils/unquote.js'
-import { is_custom } from '@projectwallace/css-parser/string-utils'
+import { collect_colors, collect_registered_colors } from '../../utils/collect-colors.js'
 import { define_rule } from '../../utils/define-rule.js'
 import { UniqueTracker } from '../../utils/unique-tracker.js'
 
@@ -40,47 +38,13 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 
 		const ignore = secondaryOptions?.ignore ?? []
 
-		/**
-		 * Collect custom properties declared as @property { syntax: '<color>' }.
-		 * var() references to these are recognised as color values.
-		 */
-		const color_custom_properties = new Set<string>()
 		const unique_colors = new UniqueTracker(primaryOption)
 
-		function run_collect(value: string, resolve_var: boolean): void {
-			collect_colors('color', value, resolve_var, color_custom_properties, (color) => {
-				if (!is_allowed(color, ignore)) {
-					unique_colors.add(color)
-				}
-			})
-		}
-
-		root.walkAtRules(/^property$/i, (atRule) => {
-			const prop_name = atRule.params.trim()
-			if (!is_custom(prop_name)) {
-				return
-			}
-
-			atRule.walkDecls(/^syntax$/i, (decl) => {
-				// syntax values may be quoted: '"<color>"' or "'<color>'"
-				const syntax = unquote(decl.value.trim())
-				if (syntax === '<color>') {
-					color_custom_properties.add(prop_name)
-				}
-			})
-
-			if (!color_custom_properties.has(prop_name)) {
-				return
-			}
-
-			atRule.walkDecls(/^initial-value$/i, (decl) => {
-				run_collect(decl.value, false)
-			})
-		})
+		const color_custom_properties = collect_registered_colors(root)
 
 		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
 
-		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
+		root.walkDecls((declaration) => {
 			unique_colors.begin()
 			let triggering_color = declaration.value
 			collect_colors(
