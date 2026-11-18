@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       '@projectwallace/css-analyzer':
-        specifier: link:../css-analyzer
-        version: link:../css-analyzer
+        specifier: https://pkg.pr.new/@projectwallace/css-analyzer@4120b16
+        version: https://pkg.pr.new/@projectwallace/css-analyzer@4120b16
       '@projectwallace/css-layer-tree':
         specifier: ^2.2.0
         version: 2.2.0
@@ -656,6 +656,11 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [win32]
+
+  '@projectwallace/css-analyzer@https://pkg.pr.new/@projectwallace/css-analyzer@4120b16':
+    resolution: {integrity: sha512-SA05lW/w2VNQWdk6Z0xOoTV40uooCEkfUgJoQmrRrCnLaBxOd4ZpMBWOTvavG0NDOE9DeO5PbQlyW9a0HMhGoA==, tarball: https://pkg.pr.new/@projectwallace/css-analyzer@4120b16}
+    version: 9.9.9
+    engines: {node: '>=22.18.0', pnpm: '>=11.0.0'}
 
   '@projectwallace/css-layer-tree@2.2.0':
     resolution: {integrity: sha512-npcxXAEhKbAt6UgeX1erNifTaHsJL1i9u8PRyaeXavV79W9yECbvHd/ZS9pdXDiGqUu1ISl4/2sdCKhkplYXHg==}
@@ -2210,6 +2215,10 @@ snapshots:
 
   '@oxlint/binding-win32-x64-msvc@1.89.0':
     optional: true
+
+  '@projectwallace/css-analyzer@https://pkg.pr.new/@projectwallace/css-analyzer@4120b16':
+    dependencies:
+      '@projectwallace/css-parser': 0.20.0
 
   '@projectwallace/css-layer-tree@2.2.0':
     dependencies:
