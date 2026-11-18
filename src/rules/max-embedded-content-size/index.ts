@@ -1,10 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { walk_values } from '@projectwallace/css-parser/walker'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { is_url } from '@projectwallace/css-parser/node-types'
+import { get_data_urls } from '@projectwallace/css-analyzer/values'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
-import { str_index_of } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -30,17 +27,9 @@ const ruleFunction = (primaryOption: number) => {
 		let total_size = 0
 
 		root.walkDecls((declaration) => {
-			const parsed = parse_value(declaration.value)
-
-			walk_values(parsed, (node) => {
-				if (!is_url(node)) {
-					return
-				}
-				const url = node.text
-				if (str_index_of('data:', url) !== -1) {
-					total_size += url.length
-				}
-			})
+			for (const { value } of get_data_urls(declaration.value)) {
+				total_size += value.length
+			}
 		})
 
 		if (total_size > primaryOption) {

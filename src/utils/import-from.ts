@@ -1,11 +1,6 @@
 import fs from 'node:fs'
-import {
-	DECLARATION,
-	AT_RULE,
-	FUNCTION,
-	IDENTIFIER,
-	OPERATOR,
-} from '@projectwallace/css-parser/nodes'
+import { get_var_references } from '@projectwallace/css-analyzer/values'
+import { DECLARATION, AT_RULE, IDENTIFIER } from '@projectwallace/css-parser/nodes'
 import { parse } from '@projectwallace/css-parser/parse'
 import { SKIP, walk } from '@projectwallace/css-parser/walker'
 import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
@@ -65,15 +60,9 @@ export function collect_usages_from_files(importFrom: ImportFrom[]): Set<string>
 			parse_selectors: false,
 		})
 		walk(ast, (node) => {
-			if (node.type === FUNCTION && str_equals('var', node.name)) {
-				for (const child of node) {
-					if (child.type === IDENTIFIER && is_custom(child.text)) {
-						result.add(child.text)
-						break
-					}
-					if (child.type === OPERATOR) {
-						break
-					}
+			if (node.type === DECLARATION && node.value) {
+				for (const { value } of get_var_references(node.value.text)) {
+					result.add(value)
 				}
 			}
 		})

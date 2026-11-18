@@ -1,9 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk_values } from '@projectwallace/css-parser/walker'
-import { is_function, is_if_branch } from '@projectwallace/css-parser/node-types'
-import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { get_if_functions } from '@projectwallace/css-analyzer/values'
 import { has_if_function } from '../../utils/has-if-function.js'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -31,25 +28,17 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 
-			const parsed = parse_value(declaration.value)
-
-			walk_values(parsed, (node) => {
-				if (!is_function(node) || !str_equals('if', node.name)) {
-					return
+			for (const { misplaced_else } of get_if_functions(declaration.value)) {
+				for (const { value } of misplaced_else) {
+					utils.report({
+						result,
+						ruleName: rule_name,
+						message: messages.rejected(),
+						node: declaration,
+						word: value,
+					})
 				}
-
-				for (const branch of node) {
-					if (is_if_branch(branch) && branch.is_else && branch.has_next) {
-						utils.report({
-							result,
-							ruleName: rule_name,
-							message: messages.rejected(),
-							node: declaration,
-							word: branch.text,
-						})
-					}
-				}
-			})
+			}
 		})
 	}
 }
