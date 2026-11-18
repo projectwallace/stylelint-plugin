@@ -1,8 +1,8 @@
-import { named_colors, color_functions, color_keywords } from '@projectwallace/css-analyzer/values'
+import { extract_colors } from '@projectwallace/css-analyzer/extract'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk_values, SKIP } from '@projectwallace/css-parser/walker'
-import { is_function, is_hash, is_identifier } from '@projectwallace/css-parser/node-types'
-import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { walk_values } from '@projectwallace/css-parser/walker'
+import { is_function, is_identifier } from '@projectwallace/css-parser/node-types'
+import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
 
 /**
  * CSS properties whose declaration values may contain color values.
@@ -14,58 +14,56 @@ export const COLOR_PROPERTIES: RegExp =
 export type ColorCallback = (color: string, format: string) => void
 
 /**
- * Walk a parsed CSS value and invoke `callback` for each detected color token,
- * passing the full color string and its format ('hex', 'named', 'system', or a
- * function name like 'rgb'/'hsl'/'oklch'/'color').
+ * The analyzer tells hex colors apart by length (`hex3`, `hex6`, ...) and names `transparent` and
+ * `currentcolor` after themselves; for counting formats those are 'hex' and 'system'.
+ */
+function to_format(format: string): string {
+	if (str_starts_with('hex', format)) {
+		return 'hex'
+	}
+	if (str_equals('transparent', format) || str_equals('currentcolor', format)) {
+		return 'system'
+	}
+	return format
+}
+
+/**
+ * Invoke `callback` for each color in a declaration value, passing the color text and its
+ * format ('hex', 'named', 'system', or a function name like 'rgb'/'hsl'/'oklch'/'color').
  *
  * Composing functions such as color-mix() and light-dark() are transparent:
- * the walker descends into their arguments so inner color tokens are reported.
+ * the colors inside their arguments are reported.
  *
  * When `resolve_var` is true, var() references to known @property <color>
  * custom properties are also reported as format 'var'. CSS does not allow
  * var() in @property initial-value, so pass false when scanning initial-value.
  */
 export function collect_colors(
-	parsed: ReturnType<typeof parse_value>,
+	property: string,
+	value: string,
 	resolve_var: boolean,
 	color_custom_properties: Set<string>,
 	callback: ColorCallback,
 ): void {
-	walk_values(parsed, (node) => {
-		if (is_hash(node)) {
-			callback(node.text, 'hex')
-		} else if (is_identifier(node)) {
-			const ident = node.text
-			if (named_colors.has(ident)) {
-				callback(ident, 'named')
-			} else if (color_keywords.has(ident)) {
-				callback(ident, 'system')
-			}
-		} else if (is_function(node)) {
-			const fn_name = node.name
-			if (fn_name === undefined) {
-				return
-			}
-			const fn = node.text
-			const fn_name_lower = fn_name.toLowerCase()
+	const found = extract_colors(property, value).map((match) => ({
+		offset: match.offset,
+		color: match.value,
+		format: to_format(match.format),
+	}))
 
-			if (color_functions.has(fn_name)) {
-				// Numeric-channel color functions (rgb, hsl, oklch, …).
-				// SKIP children — they are numbers, not color tokens.
-				callback(fn, fn_name_lower)
-				return SKIP
-			}
-
-			if (resolve_var && str_equals('var', fn_name)) {
-				// var() referencing a custom property declared as <color> via @property.
-				// Do NOT skip children so fallback color values are still evaluated.
+	if (resolve_var && color_custom_properties.size > 0) {
+		walk_values(parse_value(value), (node) => {
+			if (is_function(node) && str_equals('var', node.name ?? '')) {
 				const first = node.first_child
 				if (first !== null && is_identifier(first) && color_custom_properties.has(first.text)) {
-					callback(fn, 'var')
+					found.push({ offset: node.start, color: node.text, format: 'var' })
 				}
 			}
-			// All other functions (color-mix, light-dark, gradients, …) are
-			// transparent: the walker descends naturally into their arguments.
-		}
-	})
+		})
+		found.sort((a, b) => a.offset - b.offset)
+	}
+
+	for (const { color, format } of found) {
+		callback(color, format)
+	}
 }

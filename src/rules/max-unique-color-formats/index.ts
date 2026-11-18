@@ -1,7 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 import { unquote } from '../../utils/unquote.js'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
@@ -30,8 +29,8 @@ const ruleFunction = (primaryOption: number) => {
 		const color_custom_properties = new Set<string>()
 		const unique_formats = new UniqueTracker(primaryOption)
 
-		function run_collect(parsed: ReturnType<typeof parse_value>, resolve_var: boolean): void {
-			collect_colors(parsed, resolve_var, color_custom_properties, (_color, format) => {
+		function run_collect(value: string, resolve_var: boolean): void {
+			collect_colors('color', value, resolve_var, color_custom_properties, (_color, format) => {
 				unique_formats.add(format)
 			})
 		}
@@ -54,7 +53,7 @@ const ruleFunction = (primaryOption: number) => {
 			}
 
 			atRule.walkDecls(/^initial-value$/i, (decl) => {
-				run_collect(parse_value(decl.value), false)
+				run_collect(decl.value, false)
 			})
 		})
 
@@ -64,7 +63,8 @@ const ruleFunction = (primaryOption: number) => {
 			unique_formats.begin()
 			let triggering_color = declaration.value
 			collect_colors(
-				parse_value(declaration.value),
+				declaration.prop,
+				declaration.value,
 				true,
 				color_custom_properties,
 				(color, format) => {

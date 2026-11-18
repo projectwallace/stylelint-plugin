@@ -5,7 +5,6 @@ import {
 	is_valid_positive_integer,
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { collect_colors, COLOR_PROPERTIES } from '../../utils/collect-colors.js'
 import { unquote } from '../../utils/unquote.js'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
@@ -48,8 +47,8 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		const color_custom_properties = new Set<string>()
 		const unique_colors = new UniqueTracker(primaryOption)
 
-		function run_collect(parsed: ReturnType<typeof parse_value>, resolve_var: boolean): void {
-			collect_colors(parsed, resolve_var, color_custom_properties, (color) => {
+		function run_collect(value: string, resolve_var: boolean): void {
+			collect_colors('color', value, resolve_var, color_custom_properties, (color) => {
 				if (!is_allowed(color, ignore)) {
 					unique_colors.add(color)
 				}
@@ -75,7 +74,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			}
 
 			atRule.walkDecls(/^initial-value$/i, (decl) => {
-				run_collect(parse_value(decl.value), false)
+				run_collect(decl.value, false)
 			})
 		})
 
@@ -84,13 +83,19 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 		root.walkDecls(COLOR_PROPERTIES, (declaration) => {
 			unique_colors.begin()
 			let triggering_color = declaration.value
-			collect_colors(parse_value(declaration.value), true, color_custom_properties, (color) => {
-				if (!is_allowed(color, ignore)) {
-					if (unique_colors.add(color)) {
-						triggering_color = color
+			collect_colors(
+				declaration.prop,
+				declaration.value,
+				true,
+				color_custom_properties,
+				(color) => {
+					if (!is_allowed(color, ignore)) {
+						if (unique_colors.add(color)) {
+							triggering_color = color
+						}
 					}
-				}
-			})
+				},
+			)
 			if (unique_colors.exceeded()) {
 				violating_declarations.push({ declaration, word: triggering_color })
 			}
