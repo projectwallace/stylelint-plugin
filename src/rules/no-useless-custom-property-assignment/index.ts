@@ -1,7 +1,10 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { get_var_references } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
+import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
+import { BREAK, walk_values } from '@projectwallace/css-parser/walker'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -34,15 +37,35 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				return
 			}
 
-			if (get_var_references(decl.value).some((reference) => reference.value === property)) {
-				utils.report({
-					result,
-					ruleName: rule_name,
-					message: messages.rejected(property),
-					node: decl,
-					word: property,
-				})
-			}
+			const parsed = parse_value(decl.value)
+
+			let reported = false
+
+			walk_values(parsed, (child) => {
+				if (reported) {
+					return BREAK
+				}
+				if (child.type !== FUNCTION || !str_equals('var', child.name)) {
+					return
+				}
+
+				for (const grandchild of child) {
+					if (grandchild.type === IDENTIFIER && grandchild.text === property) {
+						utils.report({
+							result,
+							ruleName: rule_name,
+							message: messages.rejected(property),
+							node: decl,
+							word: property,
+						})
+						reported = true
+						return BREAK
+					}
+					if (grandchild.type === IDENTIFIER && is_custom(grandchild.text)) {
+						break
+					}
+				}
+			})
 		})
 	}
 }

@@ -1,6 +1,5 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
-import { get_property_name } from '@projectwallace/css-analyzer/atrules'
 import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 import {
 	is_allowed,
@@ -56,8 +55,8 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 				add(node.prop, node, node.prop)
 			} else if (node.type === 'atrule' && str_equals('property', node.name)) {
 				// @property --my-prop { … } registers a custom property
-				const name = get_property_name(node.params)?.value
-				if (name && is_custom(name)) {
+				const name = node.params.trim()
+				if (is_custom(name)) {
 					add(name, node, name)
 				}
 			}

@@ -1,7 +1,8 @@
 import { extract_colors } from '@projectwallace/css-analyzer/extract'
-import { get_property_name } from '@projectwallace/css-analyzer/atrules'
-import { get_var_references } from '@projectwallace/css-analyzer/values'
-import { is_custom } from '@projectwallace/css-parser/string-utils'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { walk_values } from '@projectwallace/css-parser/walker'
+import { is_function, is_identifier } from '@projectwallace/css-parser/node-types'
+import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 import type { Root } from 'postcss'
 import { unquote } from './unquote.js'
 
@@ -32,11 +33,14 @@ export function collect_colors(
 	}))
 
 	if (resolve_var && color_custom_properties.size > 0) {
-		for (const { value: name, offset } of get_var_references(value)) {
-			if (color_custom_properties.has(name)) {
-				found.push({ offset, color: `var(${name})`, format: 'var' })
+		walk_values(parse_value(value), (node) => {
+			if (is_function(node) && str_equals('var', node.name ?? '')) {
+				const first = node.first_child
+				if (first !== null && is_identifier(first) && color_custom_properties.has(first.text)) {
+					found.push({ offset: node.start, color: node.text, format: 'var' })
+				}
 			}
-		}
+		})
 		found.sort((a, b) => a.offset - b.offset)
 	}
 
@@ -52,8 +56,8 @@ export function collect_colors(
 export function collect_registered_colors(root: Root): Set<string> {
 	const names = new Set<string>()
 	root.walkAtRules(/^property$/i, (at_rule) => {
-		const name = get_property_name(at_rule.params)?.value
-		if (!name || !is_custom(name)) {
+		const name = at_rule.params.trim()
+		if (!is_custom(name)) {
 			return
 		}
 		at_rule.walkDecls(/^syntax$/i, (decl) => {

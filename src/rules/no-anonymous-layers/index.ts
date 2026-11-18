@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { get_import_layer } from '@projectwallace/css-analyzer/atrules'
+import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
+import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -35,14 +36,21 @@ const ruleFunction = (primaryOptions: true) => {
 					})
 				}
 			} else {
-				// An @import with a bare `layer` or `layer()` is anonymous
-				if (get_import_layer(at_rule.params)?.value === '') {
-					utils.report({
-						result,
-						ruleName: rule_name,
-						message: messages.rejected(),
-						node: at_rule,
-					})
+				// Check @import for anonymous layer syntax
+				const parsed = parse_atrule_prelude('import', at_rule.params)
+				for (const child of parsed) {
+					// Bare `layer` is a LayerName without a name, `layer()` is a Function without children
+					const is_bare_layer = child.type === LAYER_NAME && !child.name
+					const is_empty_layer_fn =
+						child.type === FUNCTION && str_equals('layer', child.name) && !child.first_child
+					if (is_bare_layer || is_empty_layer_fn) {
+						utils.report({
+							result,
+							ruleName: rule_name,
+							message: messages.rejected(),
+							node: at_rule,
+						})
+					}
 				}
 			}
 		})

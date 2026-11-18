@@ -29,7 +29,7 @@ const ruleFunction = (primaryOptions: true) => {
 			const descriptors: Record<string, string> = {}
 			at_rule.each((child) => {
 				if (child.type === 'decl') {
-					descriptors[child.prop] = child.value
+					descriptors[child.prop.toLowerCase()] = child.value
 				}
 			})
 

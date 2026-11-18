@@ -1,9 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule, Declaration } from 'postcss'
-import {
-	get_property_name,
-	validate_property_registration,
-} from '@projectwallace/css-analyzer/atrules'
+import { validate_property_registration } from '@projectwallace/css-analyzer/atrules'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -38,7 +35,7 @@ const ruleFunction = (primaryOptions: true) => {
 		}
 
 		root.walkAtRules(/^property$/i, (at_rule) => {
-			const name = get_property_name(at_rule.params)?.value
+			const name = at_rule.params.trim()
 			if (!name) {
 				return
 			}

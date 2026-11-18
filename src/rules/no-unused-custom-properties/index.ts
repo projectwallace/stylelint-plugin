@@ -1,7 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
-import { get_property_name } from '@projectwallace/css-analyzer/atrules'
-import { get_var_references } from '@projectwallace/css-analyzer/values'
+import { get_var_names } from '../../utils/import-from.js'
 import { is_allowed } from '../../utils/option-validators.js'
 import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
@@ -36,8 +35,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const tracker = new DefinedUsed<Declaration | AtRule>()
 
 		function collect_var_usages(decl: Declaration) {
-			for (const { value } of get_var_references(decl.value)) {
-				tracker.use(value)
+			for (const name of get_var_names(decl.value)) {
+				tracker.use(name)
 			}
 		}
 
@@ -51,8 +50,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		})
 
 		root.walkAtRules(/^property$/i, (atRule) => {
-			const property_name = get_property_name(atRule.params)?.value
-			if (property_name && is_custom(property_name)) {
+			const property_name = atRule.params.trim()
+			if (is_custom(property_name)) {
 				tracker.define(property_name, atRule)
 			}
 		})

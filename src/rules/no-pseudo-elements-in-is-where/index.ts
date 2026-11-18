@@ -1,6 +1,11 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { get_pseudo_elements_in_is_where } from '@projectwallace/css-analyzer/selectors'
+import { walk, SKIP } from '@projectwallace/css-parser/walker'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
+import {
+	is_pseudo_class_selector,
+	is_pseudo_element_selector,
+} from '@projectwallace/css-parser/node-types'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -28,15 +33,36 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 
-			for (const { value, pseudo_class } of get_pseudo_elements_in_is_where(selector_text)) {
-				utils.report({
-					message: messages.rejected(value, pseudo_class),
-					node: rule,
-					result,
-					ruleName: rule_name,
-					word: value,
+			const selector_list = parse_selector_list(selector_text)
+
+			walk(selector_list, (node) => {
+				if (!is_pseudo_class_selector(node)) {
+					return
+				}
+
+				const name = node.name.toLowerCase()
+				if (name !== 'is' && name !== 'where') {
+					return SKIP
+				}
+
+				// We're inside :is() or :where() - check for pseudo-elements
+				walk(node, (child) => {
+					if (child === node) {
+						return
+					}
+					if (is_pseudo_element_selector(child)) {
+						utils.report({
+							message: messages.rejected(`::${child.name}`, name),
+							node: rule,
+							result,
+							ruleName: rule_name,
+							word: `::${child.name}`,
+						})
+					}
 				})
-			}
+
+				return SKIP
+			})
 		})
 	}
 }
