@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
 import { get_import_layer } from '@projectwallace/css-analyzer/atrules'
 import { is_allowed } from '../../utils/option-validators.js'
-import { DefinedUsed } from '../../utils/defined-used.js'
+import { DefinedUsed } from '@projectwallace/css-analyzer/utils/collections'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -87,7 +87,10 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			})
 		}
 
-		for (const [layer, node] of tracker.unused()) {
+		for (const [layer, node] of tracker.unused_definitions()) {
+			if (!node) {
+				continue
+			}
 			if (secondaryOptions?.ignore && is_allowed(layer, secondaryOptions.ignore)) {
 				continue
 			}

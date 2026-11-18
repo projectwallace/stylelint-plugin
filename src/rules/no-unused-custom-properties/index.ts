@@ -5,7 +5,7 @@ import { get_var_references } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
 import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
-import { DefinedUsed } from '../../utils/defined-used.js'
+import { DefinedUsed } from '@projectwallace/css-analyzer/utils/collections'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -69,7 +69,10 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			referenceRoot.walkDecls(collect_var_usages)
 		}
 
-		for (const [prop, node] of tracker.unused()) {
+		for (const [prop, node] of tracker.unused_definitions()) {
+			if (!node) {
+				continue
+			}
 			if (secondaryOptions?.ignore && is_allowed(prop, secondaryOptions.ignore)) {
 				continue
 			}
