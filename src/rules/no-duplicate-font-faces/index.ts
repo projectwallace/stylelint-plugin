@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { get_font_face_key } from '@projectwallace/css-analyzer/atrules'
+import { unquote } from '../../utils/unquote.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -11,6 +11,13 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (family: string, weight: string, style: string) =>
 		`Unexpected duplicate @font-face "${family}" (font-weight: ${weight}; font-style: ${style})`,
 })
+
+const WEIGHT_KEYWORDS: Record<string, string> = { normal: '400', bold: '700' }
+
+function normalize(value: string | undefined, fallback: string): string {
+	const v = value?.trim().toLowerCase().replaceAll(/\s+/g, ' ')
+	return v || fallback
+}
 
 const ruleFunction = (primaryOptions: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -26,27 +33,40 @@ const ruleFunction = (primaryOptions: true) => {
 		const seen = new Set<string>()
 
 		root.walkAtRules(/^font-face$/i, (at_rule) => {
-			const descriptors: Record<string, string> = {}
+			const descriptors = new Map<string, string>()
 			at_rule.each((child) => {
 				if (child.type === 'decl') {
-					descriptors[child.prop.toLowerCase()] = child.value
+					descriptors.set(child.prop.toLowerCase(), child.value)
 				}
 			})
 
-			const face = get_font_face_key(descriptors)
-			if (!face) {
+			const raw_family = descriptors.get('font-family')
+			if (!raw_family) {
 				return
 			}
 
-			if (seen.has(face.key)) {
+			const family = unquote(raw_family.trim())
+			const weight = normalize(descriptors.get('font-weight'), '400')
+			const style = normalize(descriptors.get('font-style'), 'normal')
+			const stretch = normalize(descriptors.get('font-stretch'), '100%')
+			const range = normalize(descriptors.get('unicode-range'), '').replaceAll(/\s+/g, '')
+
+			const normalized_weight = WEIGHT_KEYWORDS[weight] ?? weight
+			const normalized_stretch = stretch === 'normal' ? '100%' : stretch
+
+			const key = [family.toLowerCase(), normalized_weight, style, normalized_stretch, range].join(
+				'|',
+			)
+
+			if (seen.has(key)) {
 				utils.report({
 					result,
 					ruleName: rule_name,
-					message: messages.rejected(face.family, face.weight, face.style),
+					message: messages.rejected(family, normalized_weight, style),
 					node: at_rule,
 				})
 			} else {
-				seen.add(face.key)
+				seen.add(key)
 			}
 		})
 	}
