@@ -1,7 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import { get_animation_names } from '@projectwallace/css-analyzer/values'
-import { get_keyframes_name } from '@projectwallace/css-analyzer/atrules'
+import { analyze_animation } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '@projectwallace/css-analyzer/utils/collections'
 import { define_rule } from '../../utils/define-rule.js'
@@ -32,9 +31,9 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const tracker = new DefinedUsed<AtRule>()
 
 		root.walkAtRules(/^keyframes$/i, (atRule) => {
-			const name = get_keyframes_name(atRule.params)
+			const name = atRule.params.trim()
 			if (name) {
-				tracker.define(name.value, atRule)
+				tracker.define(name, atRule)
 			}
 		})
 
@@ -46,7 +45,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
 		for (const root_node of [root, ...referenceRoots]) {
 			root_node.walkDecls(/^animation(-name)?$/i, (decl) => {
-				for (const name of get_animation_names(decl.value)) {
+				for (const name of analyze_animation(decl.value).names) {
 					tracker.use(name.value)
 				}
 			})

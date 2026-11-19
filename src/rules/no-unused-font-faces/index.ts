@@ -18,6 +18,11 @@ interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
 }
 
+// Names of several words are the same family whatever the whitespace between the words
+function normalize_family(name: string): string {
+	return name.replaceAll(/\s+/g, ' ')
+}
+
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
 		const validOptions = validate_options_with_ignore(
@@ -40,10 +45,11 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				if (decl.parent !== at_rule) {
 					return
 				}
-				const family = get_font_families(decl.value)[0]?.value
-				if (!family) {
+				const raw_family = get_font_families(decl.value)[0]?.value
+				if (!raw_family) {
 					return
 				}
+				const family = normalize_family(raw_family)
 				const key = family.toLowerCase()
 				const entry = defined.get(key)
 				if (entry) {
@@ -72,11 +78,11 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 						return
 					}
 					for (const family of get_font_families(decl.value)) {
-						use(family.value)
+						use(normalize_family(family.value))
 					}
 				} else if (prop === 'font') {
 					for (const family of get_font_families(decl.value, 'font')) {
-						use(family.value)
+						use(normalize_family(family.value))
 					}
 				}
 
@@ -84,14 +90,14 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				// We can't resolve those, so treat every name mentioned there as used.
 				if (is_custom(prop) || str_index_of('var(', decl.value) !== -1) {
 					for (const family of get_font_families(decl.value, 'font-family', { deep: true })) {
-						use(family.value)
+						use(normalize_family(family.value))
 					}
 				}
 			})
 
 			root_node.walkAtRules(/^font-feature-values$/i, (at_rule) => {
 				for (const family of get_font_families(at_rule.params)) {
-					use(family.value)
+					use(normalize_family(family.value))
 				}
 			})
 		}
