@@ -1,6 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { get_anchor_names } from '@projectwallace/css-analyzer/values'
+import { parse_value_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 import { get_value_offset } from '../../utils/offsets.js'
 
@@ -27,7 +28,9 @@ const ruleFunction = (primaryOptions: true) => {
 
 		root.walkDecls(/^anchor-name$/i, (declaration) => {
 			const value_offset = get_value_offset(declaration)
-			for (const { value: name, start_offset, end_offset } of get_anchor_names(declaration.value)) {
+			for (const { value: name, start_offset, end_offset } of get_anchor_names(
+				parse_value_of(declaration),
+			)) {
 				if (seen.has(name)) {
 					utils.report({
 						result,

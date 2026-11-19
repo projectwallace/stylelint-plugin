@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
 import { is_spacing_reset_property } from '@projectwallace/css-analyzer/properties'
 import { is_value_reset } from '@projectwallace/css-analyzer/values'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { parse_value_of } from '../../utils/parse.js'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -36,7 +36,7 @@ const ruleFunction = (primaryOption: number) => {
 			if (!is_spacing_reset_property(declaration.prop)) {
 				return
 			}
-			if (!is_value_reset(parse_value(declaration.value))) {
+			if (!is_value_reset(parse_value_of(declaration))) {
 				return
 			}
 

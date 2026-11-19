@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 import { get_complexity } from '@projectwallace/css-analyzer/selectors'
 import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
 import { define_rule } from '../../utils/define-rule.js'
@@ -33,7 +34,9 @@ const ruleFunction = (primaryOption: number) => {
 				return
 			}
 
-			for (const { value: complexity, start_offset, end_offset } of get_complexity(selector_text)) {
+			for (const { value: complexity, start_offset, end_offset } of get_complexity(
+				parse_selector_list(selector_text),
+			)) {
 				if (complexity > primaryOption) {
 					utils.report({
 						message: messages.rejected(complexity, primaryOption),

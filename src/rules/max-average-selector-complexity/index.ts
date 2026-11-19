@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 import { get_complexity } from '@projectwallace/css-analyzer/selectors'
 import { is_valid_positive_integer } from '../../utils/option-validators.js'
 import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
@@ -32,7 +33,7 @@ const ruleFunction = (primaryOption: number) => {
 			if (is_keyframe_rule(rule)) {
 				return
 			}
-			for (const complexity of get_complexity(rule.selector)) {
+			for (const complexity of get_complexity(parse_selector_list(rule.selector))) {
 				total_complexity += complexity.value
 				selector_count++
 			}

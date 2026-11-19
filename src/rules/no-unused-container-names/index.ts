@@ -4,6 +4,7 @@ import { get_declared_container_names } from '@projectwallace/css-analyzer/value
 import { get_container_query_name } from '@projectwallace/css-analyzer/atrules'
 import { is_allowed } from '../../utils/option-validators.js'
 import { DefinedUsed } from '@projectwallace/css-analyzer/utils/collections'
+import { parse_prelude_of, parse_value_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -32,7 +33,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const tracker = new DefinedUsed<Declaration>()
 
 		root.walkDecls(/^container(-name)?$/i, (decl) => {
-			for (const name of get_declared_container_names(decl.value)) {
+			for (const name of get_declared_container_names(parse_value_of(decl))) {
 				tracker.define(name.value, decl)
 			}
 		})
@@ -41,7 +42,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
 		for (const root_node of [root, ...referenceRoots]) {
 			root_node.walkAtRules(/^container$/i, (atRule) => {
-				const name = get_container_query_name(atRule.params)
+				const prelude = parse_prelude_of(atRule)
+				const name = prelude && get_container_query_name(prelude)
 				if (name) {
 					tracker.use(name.value)
 				}

@@ -1,5 +1,5 @@
+import type { Value } from '@projectwallace/css-parser'
 import { extract_colors } from '@projectwallace/css-analyzer/extract'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk_values } from '@projectwallace/css-parser/walker'
 import { is_function, is_identifier } from '@projectwallace/css-parser/node-types'
 import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
@@ -21,7 +21,7 @@ export type ColorCallback = (color: string, format: string) => void
  */
 export function collect_colors(
 	property: string,
-	value: string,
+	value: Value,
 	resolve_var: boolean,
 	color_custom_properties: Set<string>,
 	callback: ColorCallback,
@@ -33,7 +33,7 @@ export function collect_colors(
 	}))
 
 	if (resolve_var && color_custom_properties.size > 0) {
-		walk_values(parse_value(value), (node) => {
+		walk_values(value, (node) => {
 			if (is_function(node) && str_equals('var', node.name ?? '')) {
 				const first = node.first_child
 				if (first !== null && is_identifier(first) && color_custom_properties.has(first.text)) {

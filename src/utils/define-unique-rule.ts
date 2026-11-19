@@ -10,6 +10,9 @@ import {
 import { define_rule } from './define-rule.js'
 import { UniqueTracker } from './unique-tracker.js'
 import { get_value_offset } from './offsets.js'
+import { parse_value_of } from './parse.js'
+import type { Value } from '@projectwallace/css-parser'
+import { property_basename } from '@projectwallace/css-parser/string-utils'
 
 const { utils } = stylelint
 
@@ -26,7 +29,9 @@ interface UniqueRuleOptions {
 	/** What is counted, as used in the message: `unique <label>` */
 	label: string
 	/** The matches of one declaration; must return `[]` for properties it does not care about */
-	extract: (property: string, value: string, declaration: Declaration) => Match[]
+	/** The properties `extract` handles, to skip other declarations without parsing their value */
+	properties?: { has: (property: string) => boolean }
+	extract: (property: string, value: Value, declaration: Declaration) => Match[]
 	/** Allow a limit of 0 (default: the limit must be at least 1) */
 	allow_zero?: boolean
 	/** Make values that are written differently but mean the same count as one */
@@ -38,7 +43,7 @@ interface UniqueRuleOptions {
  * report every declaration that pushes the total over the limit, at the match that did.
  */
 export function define_unique_rule(options: UniqueRuleOptions): stylelint.Plugin {
-	const { rule_name, label, extract, allow_zero = false, normalize } = options
+	const { rule_name, label, properties, extract, allow_zero = false, normalize } = options
 
 	const messages = utils.ruleMessages(rule_name, {
 		rejected: (actual: number, expected: number) =>
@@ -68,7 +73,10 @@ export function define_unique_rule(options: UniqueRuleOptions): stylelint.Plugin
 			}> = []
 
 			root.walkDecls((declaration) => {
-				const matches = extract(declaration.prop, declaration.value, declaration)
+				if (properties && !properties.has(property_basename(declaration.prop))) {
+					return
+				}
+				const matches = extract(declaration.prop, parse_value_of(declaration), declaration)
 				if (matches.length === 0) {
 					return
 				}

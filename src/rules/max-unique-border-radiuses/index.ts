@@ -1,5 +1,8 @@
 import type stylelint from 'stylelint'
-import { extract_border_radiuses } from '@projectwallace/css-analyzer/extract'
+import {
+	extract_border_radiuses,
+	border_radius_properties,
+} from '@projectwallace/css-analyzer/extract'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { define_unique_rule } from '../../utils/define-unique-rule.js'
 
@@ -14,6 +17,7 @@ function normalize(value: string): string {
 const plugin: stylelint.Plugin = define_unique_rule({
 	rule_name: 'projectwallace/max-unique-border-radiuses',
 	label: 'border radiuses',
+	properties: border_radius_properties,
 	extract: extract_border_radiuses,
 	normalize,
 })

@@ -4,6 +4,7 @@ import {
 	get_supports_browserhacks,
 	get_media_browserhacks,
 } from '@projectwallace/css-analyzer/atrules'
+import { parse_prelude_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -30,10 +31,13 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 
+			const prelude = parse_prelude_of(at_rule)
+			if (!prelude) {
+				return
+			}
+
 			const hacks =
-				name === 'media'
-					? get_media_browserhacks(at_rule.params)
-					: get_supports_browserhacks(at_rule.params)
+				name === 'media' ? get_media_browserhacks(prelude) : get_supports_browserhacks(prelude)
 
 			for (const hack of hacks) {
 				utils.report({

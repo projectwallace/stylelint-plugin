@@ -3,11 +3,12 @@ import type { Root } from 'postcss'
 import { get_declared_container_names } from '@projectwallace/css-analyzer/values'
 import { get_container_query_name } from '@projectwallace/css-analyzer/atrules'
 import { is_allowed } from '../../utils/option-validators.js'
+import { parse_prelude_of, parse_value_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 function collect_container_names(root: Root, declared: Set<string>): void {
 	root.walkDecls(/^container(-name)?$/i, (decl) => {
-		for (const name of get_declared_container_names(decl.value)) {
+		for (const name of get_declared_container_names(parse_value_of(decl))) {
 			declared.add(name.value)
 		}
 	})
@@ -45,7 +46,8 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		}
 
 		root.walkAtRules(/^container$/i, (atRule) => {
-			const match = get_container_query_name(atRule.params)
+			const prelude = parse_prelude_of(atRule)
+			const match = prelude && get_container_query_name(prelude)
 			if (!match) {
 				return
 			}

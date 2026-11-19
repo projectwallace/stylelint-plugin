@@ -6,6 +6,7 @@ import {
 	validate_options_with_ignore,
 } from '../../utils/option-validators.js'
 import { collect_colors, collect_registered_colors } from '../../utils/collect-colors.js'
+import { parse_value_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 import { UniqueTracker } from '../../utils/unique-tracker.js'
 
@@ -49,7 +50,7 @@ const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions
 			let triggering_color = declaration.value
 			collect_colors(
 				declaration.prop,
-				declaration.value,
+				parse_value_of(declaration),
 				true,
 				color_custom_properties,
 				(color) => {

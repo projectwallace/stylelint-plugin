@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { get_static_features } from '@projectwallace/css-analyzer/atrules'
 import { define_rule } from '../../utils/define-rule.js'
-import { get_params_offset } from '../../utils/offsets.js'
+import { parse_prelude_of } from '../../utils/parse.js'
 
 const { utils } = stylelint
 
@@ -24,19 +24,18 @@ const ruleFunction = (primaryOption: true) => {
 		}
 
 		root.walkAtRules(/^container$/i, (at_rule) => {
-			const prelude = at_rule.params
+			const prelude = parse_prelude_of(at_rule)
 			if (!prelude) {
 				return
 			}
 
-			const [static_feature] = get_static_features(prelude, 'container')
+			const [static_feature] = get_static_features(prelude)
 			if (static_feature) {
-				const params_offset = get_params_offset(at_rule)
 				utils.report({
 					message: messages.rejected(),
 					node: at_rule,
-					index: params_offset + static_feature.start_offset,
-					endIndex: params_offset + static_feature.end_offset,
+					index: static_feature.start_offset,
+					endIndex: static_feature.end_offset,
 					result,
 					ruleName: rule_name,
 				})

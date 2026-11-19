@@ -1,8 +1,10 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
+import type { AtrulePrelude } from '@projectwallace/css-parser'
 import { find_contradiction, get_query_bounds } from '@projectwallace/css-analyzer/atrules'
 import type { Contradiction, FeatureBound } from '@projectwallace/css-analyzer/atrules'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { parse_prelude_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 /** Cartesian product of an array of arrays. */
@@ -34,14 +36,8 @@ const messages = utils.ruleMessages(rule_name, {
  * Return info about the first contradictory feature in an at-rule prelude,
  * or null if all media conditions are satisfiable.
  */
-function find_contradiction_in_prelude(
-	at_rule_name: string,
-	prelude: string,
-): Contradiction | null {
-	for (const bounds of get_query_bounds(
-		prelude,
-		str_equals('import', at_rule_name) ? 'import' : 'media',
-	)) {
+function find_contradiction_in_prelude(prelude: AtrulePrelude): Contradiction | null {
+	for (const bounds of get_query_bounds(prelude)) {
 		if (bounds === null) {
 			continue
 		}
@@ -68,12 +64,12 @@ const ruleFunction = (primaryOption: true) => {
 		// === Detect contradictions within a single @media / @import rule ===
 
 		root.walkAtRules(/^(media|import)$/i, (at_rule) => {
-			const prelude = at_rule.params
+			const prelude = parse_prelude_of(at_rule)
 			if (!prelude) {
 				return
 			}
 
-			const contradictory_feature = find_contradiction_in_prelude(at_rule.name, prelude)
+			const contradictory_feature = find_contradiction_in_prelude(prelude)
 
 			if (contradictory_feature !== null) {
 				utils.report({
@@ -96,7 +92,11 @@ const ruleFunction = (primaryOption: true) => {
 
 		root.walkAtRules(/^media$/i, (atRule) => {
 			// Collect alternative bound-sets from the current rule and each ancestor
-			const current_alternatives = get_query_bounds(atRule.params)
+			const current_prelude = parse_prelude_of(atRule)
+			if (!current_prelude) {
+				return
+			}
+			const current_alternatives = get_query_bounds(current_prelude)
 			if (current_alternatives.length === 0) {
 				return
 			}
@@ -107,10 +107,14 @@ const ruleFunction = (primaryOption: true) => {
 			while (node) {
 				if (node.type === 'atrule' && str_equals('media', (node as AtRule).name)) {
 					const ancestor = node as AtRule
-					const alternatives = get_query_bounds(ancestor.params)
-					if (alternatives.length === 0) {
+					const ancestor_prelude = parse_prelude_of(ancestor)
+					if (!ancestor_prelude) {
 						return
 					} // empty prelude — bail out
+					const alternatives = get_query_bounds(ancestor_prelude)
+					if (alternatives.length === 0) {
+						return
+					}
 					ancestor_alternative_sets.push(alternatives)
 				}
 				// `.parent` is typed as `Document | Container | undefined`; in regular CSS

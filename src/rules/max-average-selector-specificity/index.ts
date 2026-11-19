@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 import {
 	get_specificity,
 	compare_specificity,
@@ -43,7 +44,7 @@ const ruleFunction = (primaryOption: Specificity) => {
 			if (is_keyframe_rule(rule)) {
 				return
 			}
-			const specificities = get_specificity(rule.selector)
+			const specificities = get_specificity(parse_selector_list(rule.selector))
 			for (const specificity of specificities) {
 				sum[0] += specificity[0]
 				sum[1] += specificity[1]
