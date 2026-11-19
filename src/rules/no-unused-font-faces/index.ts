@@ -1,10 +1,11 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { destructureFontShorthand } from '@projectwallace/css-analyzer/values'
+import { get_font_families } from '@projectwallace/css-analyzer/values'
 import { str_equals, str_index_of, is_custom } from '@projectwallace/css-parser/string-utils'
 import { is_allowed, validate_options_with_ignore } from '../../utils/option-validators.js'
-import { split_font_families } from '../../utils/font-families.js'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { parse_value_of } from '../../utils/parse.js'
+import { is_in_font_face } from '../../utils/font-face.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -19,11 +20,9 @@ interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
 }
 
-function noop() {}
-
-function is_in_font_face(node: { parent?: unknown }): boolean {
-	const parent = node.parent as AtRule | undefined
-	return parent?.type === 'atrule' && str_equals('font-face', parent.name)
+// Names of several words are the same family whatever the whitespace between the words
+function normalize_family(name: string): string {
+	return name.replaceAll(/\s+/g, ' ')
 }
 
 const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions) => {
@@ -48,10 +47,11 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				if (decl.parent !== at_rule) {
 					return
 				}
-				const [family] = split_font_families(decl.value)
-				if (!family) {
+				const raw_family = get_font_families(parse_value_of(decl))[0]?.name
+				if (!raw_family) {
 					return
 				}
+				const family = normalize_family(raw_family)
 				const key = family.toLowerCase()
 				const entry = defined.get(key)
 				if (entry) {
@@ -79,30 +79,29 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					if (is_in_font_face(decl)) {
 						return
 					}
-					for (const family of split_font_families(decl.value)) {
-						use(family)
+					for (const family of get_font_families(parse_value_of(decl))) {
+						use(normalize_family(family.name))
 					}
 				} else if (prop === 'font') {
-					const destructured = destructureFontShorthand(parse_value(decl.value), noop)
-					if (destructured?.font_family) {
-						for (const family of split_font_families(destructured.font_family)) {
-							use(family)
-						}
+					for (const family of get_font_families(parse_value_of(decl), 'font')) {
+						use(normalize_family(family.name))
 					}
 				}
 
 				// A family can be hidden in a custom property or behind a var() fallback.
 				// We can't resolve those, so treat every name mentioned there as used.
 				if (is_custom(prop) || str_index_of('var(', decl.value) !== -1) {
-					for (const family of split_font_families(decl.value, true)) {
-						use(family)
+					for (const family of get_font_families(parse_value_of(decl), 'font-family', {
+						deep: true,
+					})) {
+						use(normalize_family(family.name))
 					}
 				}
 			})
 
 			root_node.walkAtRules(/^font-feature-values$/i, (at_rule) => {
-				for (const family of split_font_families(at_rule.params)) {
-					use(family)
+				for (const family of get_font_families(parse_value(at_rule.params))) {
+					use(normalize_family(family.name))
 				}
 			})
 		}

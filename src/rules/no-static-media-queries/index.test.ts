@@ -243,3 +243,11 @@ test.each([
 	const { warnings } = await lint(code)
 	expect(warnings).toHaveLength(0)
 })
+
+test('points at the feature in an at-rule with unusual whitespace after the name', async () => {
+	const { warnings } = await lint('a {}\n@media\n\t (width: 300px) {}')
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(3)
+	expect(warnings[0].column).toBe(3) // points to "(width: 300px)"
+	expect(warnings[0].endColumn).toBe(17)
+})

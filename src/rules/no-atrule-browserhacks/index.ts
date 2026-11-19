@@ -1,7 +1,10 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { isSupportsBrowserhack, isMediaBrowserhack } from '@projectwallace/css-analyzer/atrules'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
+import {
+	get_supports_browserhacks,
+	get_media_browserhacks,
+} from '@projectwallace/css-analyzer/atrules'
+import { parse_prelude_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -28,30 +31,22 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 
-			const nodes = parse_atrule_prelude(name, at_rule.params)
+			const prelude = parse_prelude_of(at_rule)
+			if (!prelude) {
+				return
+			}
 
-			for (const node of nodes) {
-				if (name === 'media') {
-					isMediaBrowserhack(node, (hack) => {
-						utils.report({
-							message: messages.rejected(hack),
-							node: at_rule,
-							word: hack,
-							result,
-							ruleName: rule_name,
-						})
-					})
-				} else {
-					isSupportsBrowserhack(node, (hack) => {
-						utils.report({
-							message: messages.rejected(hack),
-							node: at_rule,
-							word: hack,
-							result,
-							ruleName: rule_name,
-						})
-					})
-				}
+			const hacks =
+				name === 'media' ? get_media_browserhacks(prelude) : get_supports_browserhacks(prelude)
+
+			for (const hack of hacks) {
+				utils.report({
+					message: messages.rejected(hack.hack),
+					node: at_rule,
+					word: hack.hack,
+					result,
+					ruleName: rule_name,
+				})
 			}
 		})
 	}

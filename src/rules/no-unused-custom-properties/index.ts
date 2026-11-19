@@ -1,13 +1,11 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
-import { FUNCTION, IDENTIFIER } from '@projectwallace/css-parser/nodes'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk_values } from '@projectwallace/css-parser/walker'
+import { get_var_names } from '../../utils/import-from.js'
 import { is_allowed } from '../../utils/option-validators.js'
 import { collect_usages_from_files } from '../../utils/import-from.js'
 import type { ImportFrom } from '../../utils/import-from.js'
-import { DefinedUsed } from '../../utils/defined-used.js'
-import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
+import { DefinedUsed } from '@projectwallace/css-analyzer/utils/collections'
+import { is_custom } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -37,15 +35,9 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const tracker = new DefinedUsed<Declaration | AtRule>()
 
 		function collect_var_usages(decl: Declaration) {
-			walk_values(parse_value(decl.value), (node) => {
-				if (node.type !== FUNCTION || !str_equals('var', node.name)) {
-					return
-				}
-				const first = node.first_child
-				if (first !== null && first.type === IDENTIFIER && is_custom(first.text)) {
-					tracker.use(first.text)
-				}
-			})
+			for (const name of get_var_names(decl.value)) {
+				tracker.use(name)
+			}
 		}
 
 		// Declarations are visited first so they take precedence over @property
@@ -76,7 +68,10 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			referenceRoot.walkDecls(collect_var_usages)
 		}
 
-		for (const [prop, node] of tracker.unused()) {
+		for (const [prop, node] of tracker.unused_definitions()) {
+			if (!node) {
+				continue
+			}
 			if (secondaryOptions?.ignore && is_allowed(prop, secondaryOptions.ignore)) {
 				continue
 			}

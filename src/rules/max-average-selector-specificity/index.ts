@@ -1,7 +1,11 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { getSpecificity, compareSpecificity } from '@projectwallace/css-analyzer/selectors'
-import type { Specificity } from '@projectwallace/css-analyzer'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
+import {
+	get_specificity,
+	compare_specificity,
+	type Specificity,
+} from '@projectwallace/css-analyzer/selectors'
 import { is_keyframe_rule } from '../../utils/is-keyframe-rule.js'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -40,13 +44,13 @@ const ruleFunction = (primaryOption: Specificity) => {
 			if (is_keyframe_rule(rule)) {
 				return
 			}
-			const specificities = getSpecificity(rule.selector)
-			for (const specificity of specificities) {
+			parse_selector_list(rule.selector).for_each((selector) => {
+				const specificity = get_specificity(selector)
 				sum[0] += specificity[0]
 				sum[1] += specificity[1]
 				sum[2] += specificity[2]
 				selector_count++
-			}
+			})
 		})
 
 		if (selector_count === 0) {
@@ -59,8 +63,8 @@ const ruleFunction = (primaryOption: Specificity) => {
 			sum[2] / selector_count,
 		]
 
-		// compareSpecificity returns < 0 when first arg has higher specificity than second
-		if (compareSpecificity(average, primaryOption) > 0) {
+		// compare_specificity returns < 0 when first arg has higher specificity than second
+		if (compare_specificity(average, primaryOption) > 0) {
 			utils.report({
 				message: messages.rejected(average.join(', '), primaryOption.join(', ')),
 				node: root,

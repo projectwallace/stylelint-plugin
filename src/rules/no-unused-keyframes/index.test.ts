@@ -329,3 +329,12 @@ test.runIf(supportsReferenceFiles)(
 		expect(warnings).toStrictEqual([])
 	},
 )
+
+test('should not normalize quotes: a quoted name is not used by an unquoted animation', async () => {
+	const { warnings, errored } = await lint(
+		'@keyframes "foo" { from { opacity: 0; } } a { animation: foo 1s; }',
+		true,
+	)
+	expect(errored).toBe(true)
+	expect(warnings.length).toBe(1)
+})

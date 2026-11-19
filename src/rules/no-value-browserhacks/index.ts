@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { isValueBrowserhack } from '@projectwallace/css-analyzer/values'
+import { get_value_browserhacks } from '@projectwallace/css-analyzer/values'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
@@ -28,16 +28,16 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 			const value = declaration.value.trim()
-			isValueBrowserhack(parse_value(value), function (hack) {
+			for (const hack of get_value_browserhacks(parse_value(value))) {
 				utils.report({
-					message: messages.rejected(hack),
+					message: messages.rejected(hack.hack),
 					node: declaration,
 					// hacks like `alpha()` are not in the CSS (`alpha(opacity=50)`) so in that case we report the whole value
-					word: value.includes(hack) ? hack : value,
+					word: value.includes(hack.hack) ? hack.hack : value,
 					result,
 					ruleName: rule_name,
 				})
-			})
+			}
 		})
 	}
 }

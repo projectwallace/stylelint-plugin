@@ -114,3 +114,16 @@ test('should not run when the rule is disabled', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test('points at the duplicate name in a multi-line value', async () => {
+	const {
+		results: [{ warnings }],
+	} = await stylelint.lint({
+		code: 'a {\n  container-name: foo\n    bar foo;\n}',
+		config: { plugins: [plugin], rules: { [rule_name]: true } },
+	})
+	expect(warnings).toHaveLength(1)
+	expect(warnings[0].line).toBe(3)
+	expect(warnings[0].column).toBe(9)
+	expect(warnings[0].endColumn).toBe(12)
+})

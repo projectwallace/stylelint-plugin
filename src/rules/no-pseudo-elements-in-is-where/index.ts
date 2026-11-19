@@ -1,12 +1,11 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
+import { walk, SKIP } from '@projectwallace/css-parser/walker'
+import { parse_selector_list } from '@projectwallace/css-parser/parse-selector'
 import {
-	walk,
-	SKIP,
-	parse_selector_list,
 	is_pseudo_class_selector,
 	is_pseudo_element_selector,
-} from '@projectwallace/css-parser'
+} from '@projectwallace/css-parser/node-types'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint

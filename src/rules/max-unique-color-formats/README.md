@@ -13,6 +13,8 @@ Limit the number of distinct color formats used across the stylesheet.
 
 When a stylesheet mixes `hex`, `rgb`, `rgba`, `hsl`, `hsla`, `named`, `oklch`, and other formats, it's a signal that there's no agreed-upon color convention. Mixed formats make colors harder to compare visually in code review and harder to grep for.
 
+Formats are the ones the [css-analyzer](https://github.com/projectwallace/css-analyzer) reports: hex colors are told apart by length (`hex3`, `hex6`, `hex8`, ...), `transparent` and `currentcolor` are formats of their own, and colors are found in every declaration, also in custom properties and in properties that are not color properties.
+
 ## Options
 
 `number` (positive integer)

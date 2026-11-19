@@ -242,3 +242,12 @@ test.runIf(supportsReferenceFiles)(
 		expect(warnings).toStrictEqual([])
 	},
 )
+
+test('should not error when whitespace between the words of a family differs', async () => {
+	const { warnings, errored } = await lint(
+		`@font-face { font-family: Foo Bar; } a { font-family: Foo   Bar; }`,
+		true,
+	)
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

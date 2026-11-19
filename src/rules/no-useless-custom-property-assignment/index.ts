@@ -49,7 +49,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					return
 				}
 
-				for (const grandchild of child) {
+				child.for_each((grandchild) => {
 					if (grandchild.type === IDENTIFIER && grandchild.text === property) {
 						utils.report({
 							result,
@@ -59,11 +59,14 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 							word: property,
 						})
 						reported = true
-						return BREAK
+						return false
 					}
 					if (grandchild.type === IDENTIFIER && is_custom(grandchild.text)) {
-						break
+						return false
 					}
+				})
+				if (reported) {
+					return BREAK
 				}
 			})
 		})

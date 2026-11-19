@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import { parse_value } from '@projectwallace/css-parser'
-import { shorthand_properties } from '@projectwallace/css-analyzer/properties'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { is_shorthand_property } from '@projectwallace/css-analyzer/properties'
 import { is_allowed, ignore_option_validators } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -52,7 +52,7 @@ const ruleFunction = (primaryOption: true, secondaryOptions?: SecondaryOptions) 
 		root.walkDecls(not_custom_property, (declaration) => {
 			const property = declaration.prop.toLowerCase()
 
-			if (!shorthand_properties.has(property)) {
+			if (!is_shorthand_property(property)) {
 				return
 			}
 

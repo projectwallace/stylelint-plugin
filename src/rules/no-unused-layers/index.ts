@@ -4,7 +4,7 @@ import { FUNCTION, LAYER_NAME } from '@projectwallace/css-parser/nodes'
 import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { is_allowed } from '../../utils/option-validators.js'
-import { DefinedUsed } from '../../utils/defined-used.js'
+import { DefinedUsed } from '@projectwallace/css-analyzer/utils/collections'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -96,7 +96,10 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 			})
 		}
 
-		for (const [layer, node] of tracker.unused()) {
+		for (const [layer, node] of tracker.unused_definitions()) {
+			if (!node) {
+				continue
+			}
 			if (secondaryOptions?.ignore && is_allowed(layer, secondaryOptions.ignore)) {
 				continue
 			}
