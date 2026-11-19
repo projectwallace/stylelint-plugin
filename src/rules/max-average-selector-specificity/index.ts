@@ -44,13 +44,13 @@ const ruleFunction = (primaryOption: Specificity) => {
 			if (is_keyframe_rule(rule)) {
 				return
 			}
-			const specificities = get_specificity(parse_selector_list(rule.selector))
-			for (const specificity of specificities) {
+			parse_selector_list(rule.selector).for_each((selector) => {
+				const specificity = get_specificity(selector)
 				sum[0] += specificity[0]
 				sum[1] += specificity[1]
 				sum[2] += specificity[2]
 				selector_count++
-			}
+			})
 		})
 
 		if (selector_count === 0) {

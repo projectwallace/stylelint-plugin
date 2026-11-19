@@ -33,10 +33,10 @@ const ruleFunction = (primaryOption: number) => {
 			if (is_keyframe_rule(rule)) {
 				return
 			}
-			for (const complexity of get_complexity(parse_selector_list(rule.selector))) {
-				total_complexity += complexity.value
+			parse_selector_list(rule.selector).for_each((selector) => {
+				total_complexity += get_complexity(selector).value
 				selector_count++
-			}
+			})
 		})
 
 		if (selector_count === 0) {

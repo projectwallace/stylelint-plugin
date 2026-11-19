@@ -39,12 +39,12 @@ const ruleFunction = (primaryOption: true) => {
 				}
 
 				let has_else = false
-				for (const child of node) {
+				node.for_each((child) => {
 					if (is_if_branch(child) && child.is_else) {
 						has_else = true
-						break
+						return false
 					}
-				}
+				})
 
 				if (!has_else) {
 					utils.report({

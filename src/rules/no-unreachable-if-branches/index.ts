@@ -38,7 +38,7 @@ const ruleFunction = (primaryOption: true) => {
 					return
 				}
 
-				for (const branch of node) {
+				node.for_each((branch) => {
 					if (is_if_branch(branch) && branch.is_else && branch.has_next) {
 						utils.report({
 							result,
@@ -48,7 +48,7 @@ const ruleFunction = (primaryOption: true) => {
 							word: branch.text,
 						})
 					}
-				}
+				})
 			})
 		})
 	}

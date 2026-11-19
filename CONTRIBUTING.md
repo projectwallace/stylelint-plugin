@@ -46,6 +46,8 @@ Watch out for two things that string checks and regexes routinely get wrong:
 - **Custom idents and custom properties** (`--foo`, `@property --foo`, `var(--foo)`, `@container name`, `@layer name`): these are case-sensitive and user-defined, so don't lowercase or compare them against keywords. Use `is_custom()` to detect `--` names.
 - **Vendor-prefixed names** (`-webkit-keyframes`, `-moz-appearance`, `-webkit-linear-gradient`): a loose regex like `/keyframes/i` also matches unrelated names, and an exact match misses the prefixed variants. Use `strip_vendor_prefix()` first, then compare.
 
+- Iterate the children of a css-parser node with `node.for_each((child) => { ... })`, never `for...of`: the node iterator is a generator and slow. Inside the callback `return` skips to the next child and `return false` stops.
+
 Note that the literal passed to `str_equals`, `str_starts_with` and `str_index_of` MUST be lowercase, and that they are ASCII-only. Keep `toLowerCase()` for case-insensitive lookups in a `Set`/`Map` and for non-keyword text such as font-family names.
 
 ## Rule README guidelines

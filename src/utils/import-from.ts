@@ -67,15 +67,15 @@ export function collect_usages_from_files(importFrom: ImportFrom[]): Set<string>
 		})
 		walk(ast, (node) => {
 			if (node.type === FUNCTION && str_equals('var', node.name)) {
-				for (const child of node) {
+				node.for_each((child) => {
 					if (child.type === IDENTIFIER && is_custom(child.text)) {
 						result.add(child.text)
-						break
+						return false
 					}
 					if (child.type === OPERATOR) {
-						break
+						return false
 					}
-				}
+				})
 			}
 		})
 	}
