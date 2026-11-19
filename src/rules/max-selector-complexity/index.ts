@@ -35,13 +35,13 @@ const ruleFunction = (primaryOption: number) => {
 			}
 
 			parse_selector_list(selector_text).for_each((selector) => {
-				const { value: complexity, start_offset, end_offset } = get_complexity(selector)
+				const complexity = get_complexity(selector)
 				if (complexity > primaryOption) {
 					utils.report({
 						message: messages.rejected(complexity, primaryOption),
 						node: rule,
-						index: start_offset,
-						endIndex: end_offset,
+						index: selector.start,
+						endIndex: selector.end,
 						result,
 						ruleName: rule_name,
 					})

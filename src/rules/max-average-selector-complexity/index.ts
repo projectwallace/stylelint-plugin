@@ -34,7 +34,7 @@ const ruleFunction = (primaryOption: number) => {
 				return
 			}
 			parse_selector_list(rule.selector).for_each((selector) => {
-				total_complexity += get_complexity(selector).value
+				total_complexity += get_complexity(selector)
 				selector_count++
 			})
 		})
