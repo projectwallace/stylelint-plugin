@@ -8,6 +8,7 @@ const plugin: stylelint.Plugin = define_unique_rule({
 	allow_zero: true,
 	properties: font_size_properties,
 	extract: extract_font_sizes,
+	count_by: (match) => match.text,
 })
 
 export default plugin

@@ -32,12 +32,17 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected_nested: () => `Unexpected unreachable media condition`,
 })
 
+/** The bounds per query; `null` for a query with `not` or `or`, which is too complex to analyse safely */
+function get_interpretable_bounds(prelude: AtrulePrelude): (FeatureBound[] | null)[] {
+	return get_query_bounds(prelude).map((query) => (query.complex ? null : query.bounds))
+}
+
 /**
  * Return info about the first contradictory feature in an at-rule prelude,
  * or null if all media conditions are satisfiable.
  */
 function find_contradiction_in_prelude(prelude: AtrulePrelude): Contradiction | null {
-	for (const bounds of get_query_bounds(prelude)) {
+	for (const bounds of get_interpretable_bounds(prelude)) {
 		if (bounds === null) {
 			continue
 		}
@@ -96,7 +101,7 @@ const ruleFunction = (primaryOption: true) => {
 			if (!current_prelude) {
 				return
 			}
-			const current_alternatives = get_query_bounds(current_prelude)
+			const current_alternatives = get_interpretable_bounds(current_prelude)
 			if (current_alternatives.length === 0) {
 				return
 			}
@@ -111,7 +116,7 @@ const ruleFunction = (primaryOption: true) => {
 					if (!ancestor_prelude) {
 						return
 					} // empty prelude — bail out
-					const alternatives = get_query_bounds(ancestor_prelude)
+					const alternatives = get_interpretable_bounds(ancestor_prelude)
 					if (alternatives.length === 0) {
 						return
 					}

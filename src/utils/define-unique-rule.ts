@@ -23,7 +23,7 @@ interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
 }
 
-interface UniqueRuleOptions {
+interface UniqueRuleOptions<M extends Match> {
 	/** Fully qualified rule name, e.g. `projectwallace/max-unique-font-sizes` */
 	rule_name: string
 	/** What is counted, as used in the message: `unique <label>` */
@@ -31,7 +31,9 @@ interface UniqueRuleOptions {
 	/** The matches of one declaration; must return `[]` for properties it does not care about */
 	/** The properties `extract` handles, to skip other declarations without parsing their value */
 	properties?: { has: (property: string) => boolean }
-	extract: (property: string, value: Value, declaration: Declaration) => Match[]
+	extract: (property: string, value: Value, declaration: Declaration) => M[]
+	/** What identifies a match when counting (default: its `value`, the source text) */
+	count_by?: (match: M) => string
 	/** Allow a limit of 0 (default: the limit must be at least 1) */
 	allow_zero?: boolean
 	/** Make values that are written differently but mean the same count as one */
@@ -42,8 +44,10 @@ interface UniqueRuleOptions {
  * Create a `max-unique-*` rule: count the unique matches that `extract` finds per declaration and
  * report every declaration that pushes the total over the limit, at the match that did.
  */
-export function define_unique_rule(options: UniqueRuleOptions): stylelint.Plugin {
-	const { rule_name, label, properties, extract, allow_zero = false, normalize } = options
+export function define_unique_rule<M extends Match>(
+	options: UniqueRuleOptions<M>,
+): stylelint.Plugin {
+	const { rule_name, label, properties, extract, count_by, allow_zero = false, normalize } = options
 
 	const messages = utils.ruleMessages(rule_name, {
 		rejected: (actual: number, expected: number) =>
@@ -84,12 +88,13 @@ export function define_unique_rule(options: UniqueRuleOptions): stylelint.Plugin
 				unique.begin()
 				let trigger = { start_offset: 0, end_offset: declaration.value.length }
 
-				for (const { value, start_offset, end_offset } of matches) {
-					if (keywords.has(value) || is_allowed(value, ignore)) {
+				for (const match of matches) {
+					const text = count_by ? count_by(match) : match.value
+					if (keywords.has(text) || is_allowed(text, ignore)) {
 						continue
 					}
-					if (unique.add(normalize ? normalize(value) : value)) {
-						trigger = { start_offset, end_offset }
+					if (unique.add(normalize ? normalize(text) : text)) {
+						trigger = { start_offset: match.start_offset, end_offset: match.end_offset }
 					}
 				}
 

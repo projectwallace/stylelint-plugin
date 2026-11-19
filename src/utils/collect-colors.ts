@@ -28,7 +28,7 @@ export function collect_colors(
 ): void {
 	const found = extract_colors(property, value).map((match) => ({
 		offset: match.start_offset,
-		color: match.value,
+		color: match.text,
 		format: match.format,
 	}))
 

@@ -9,8 +9,9 @@ const plugin: stylelint.Plugin = define_unique_rule({
 	allow_zero: true,
 	properties: z_index_properties,
 	// the analyzer also returns functions like `var(--z)`; only plain numbers count
-	extract: (property, value) =>
-		extract_z_indexes(property, value).filter((match) => str_index_of('(', match.value) === -1),
+	extract: (_property, value) =>
+		extract_z_indexes(value).filter((match) => str_index_of('(', match.text) === -1),
+	count_by: (match) => match.text,
 })
 
 export default plugin

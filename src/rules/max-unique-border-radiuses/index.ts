@@ -18,7 +18,8 @@ const plugin: stylelint.Plugin = define_unique_rule({
 	rule_name: 'projectwallace/max-unique-border-radiuses',
 	label: 'border radiuses',
 	properties: border_radius_properties,
-	extract: extract_border_radiuses,
+	extract: (_property, value) => extract_border_radiuses(value),
+	count_by: (match) => match.text,
 	normalize,
 })
 

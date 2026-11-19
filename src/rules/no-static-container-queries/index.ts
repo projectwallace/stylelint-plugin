@@ -29,7 +29,8 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 
-			const [static_feature] = get_static_features(prelude)
+			// Features in a query with `not` or `or` are too complex to judge
+			const static_feature = get_static_features(prelude).find((feature) => !feature.complex)
 			if (static_feature) {
 				utils.report({
 					message: messages.rejected(),

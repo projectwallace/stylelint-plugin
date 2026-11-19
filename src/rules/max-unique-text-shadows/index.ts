@@ -6,7 +6,8 @@ const plugin: stylelint.Plugin = define_unique_rule({
 	rule_name: 'projectwallace/max-unique-text-shadows',
 	label: 'text shadows',
 	properties: text_shadow_properties,
-	extract: extract_text_shadows,
+	extract: (_property, value) => extract_text_shadows(value),
+	count_by: (match) => match.text,
 })
 
 export default plugin

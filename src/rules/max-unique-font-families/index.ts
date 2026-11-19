@@ -10,6 +10,7 @@ const plugin: stylelint.Plugin = define_unique_rule({
 	properties: font_family_properties,
 	extract: (property, value, declaration) =>
 		is_in_font_face(declaration) ? [] : extract_font_families(property, value),
+	count_by: (match) => match.text,
 })
 
 export default plugin

@@ -41,9 +41,9 @@ const ruleFunction = (primaryOption: true) => {
 
 			for (const hack of hacks) {
 				utils.report({
-					message: messages.rejected(hack.value),
+					message: messages.rejected(hack.hack),
 					node: at_rule,
-					word: hack.value,
+					word: hack.hack,
 					result,
 					ruleName: rule_name,
 				})

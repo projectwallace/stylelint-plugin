@@ -6,6 +6,7 @@ const plugin: stylelint.Plugin = define_unique_rule({
 	rule_name: 'projectwallace/max-unique-units',
 	label: 'units',
 	extract: extract_units,
+	count_by: (match) => match.unit,
 	normalize: (unit) => unit.toLowerCase(),
 })
 

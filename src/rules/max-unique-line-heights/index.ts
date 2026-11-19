@@ -8,6 +8,7 @@ const plugin: stylelint.Plugin = define_unique_rule({
 	allow_zero: true,
 	properties: line_height_properties,
 	extract: extract_line_heights,
+	count_by: (match) => match.text,
 })
 
 export default plugin

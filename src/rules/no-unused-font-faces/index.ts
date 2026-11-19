@@ -47,7 +47,7 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 				if (decl.parent !== at_rule) {
 					return
 				}
-				const raw_family = get_font_families(parse_value_of(decl))[0]?.value
+				const raw_family = get_font_families(parse_value_of(decl))[0]?.name
 				if (!raw_family) {
 					return
 				}
@@ -80,11 +80,11 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 						return
 					}
 					for (const family of get_font_families(parse_value_of(decl))) {
-						use(normalize_family(family.value))
+						use(normalize_family(family.name))
 					}
 				} else if (prop === 'font') {
 					for (const family of get_font_families(parse_value_of(decl), 'font')) {
-						use(normalize_family(family.value))
+						use(normalize_family(family.name))
 					}
 				}
 
@@ -94,14 +94,14 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 					for (const family of get_font_families(parse_value_of(decl), 'font-family', {
 						deep: true,
 					})) {
-						use(normalize_family(family.value))
+						use(normalize_family(family.name))
 					}
 				}
 			})
 
 			root_node.walkAtRules(/^font-feature-values$/i, (at_rule) => {
 				for (const family of get_font_families(parse_value(at_rule.params))) {
-					use(normalize_family(family.value))
+					use(normalize_family(family.name))
 				}
 			})
 		}

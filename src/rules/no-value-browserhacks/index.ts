@@ -30,10 +30,10 @@ const ruleFunction = (primaryOption: true) => {
 			const value = declaration.value.trim()
 			for (const hack of get_value_browserhacks(parse_value(value))) {
 				utils.report({
-					message: messages.rejected(hack.value),
+					message: messages.rejected(hack.hack),
 					node: declaration,
 					// hacks like `alpha()` are not in the CSS (`alpha(opacity=50)`) so in that case we report the whole value
-					word: value.includes(hack.value) ? hack.value : value,
+					word: value.includes(hack.hack) ? hack.hack : value,
 					result,
 					ruleName: rule_name,
 				})
