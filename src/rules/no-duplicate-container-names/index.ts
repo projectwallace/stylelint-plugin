@@ -27,7 +27,7 @@ const ruleFunction = (primaryOptions: true) => {
 
 		root.walkDecls(/^container(-name)?$/i, (declaration) => {
 			const value_offset = get_value_offset(declaration)
-			for (const { value: name, offset, length } of get_declared_container_names(
+			for (const { value: name, start_offset, end_offset } of get_declared_container_names(
 				declaration.value,
 			)) {
 				if (seen.has(name)) {
@@ -36,8 +36,8 @@ const ruleFunction = (primaryOptions: true) => {
 						ruleName: rule_name,
 						message: messages.rejected(name),
 						node: declaration,
-						index: value_offset + offset,
-						endIndex: value_offset + offset + length,
+						index: value_offset + start_offset,
+						endIndex: value_offset + end_offset,
 					})
 				} else {
 					seen.add(name)

@@ -39,8 +39,8 @@ const ruleFunction = (primaryOption: true) => {
 				utils.report({
 					message: messages.rejected(),
 					node: at_rule,
-					index: params_offset + static_feature.offset,
-					endIndex: params_offset + static_feature.offset + static_feature.length,
+					index: params_offset + static_feature.start_offset,
+					endIndex: params_offset + static_feature.end_offset,
 					result,
 					ruleName: rule_name,
 				})

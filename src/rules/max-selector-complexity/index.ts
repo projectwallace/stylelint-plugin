@@ -33,13 +33,13 @@ const ruleFunction = (primaryOption: number) => {
 				return
 			}
 
-			for (const { value: complexity, offset, length } of get_complexity(selector_text)) {
+			for (const { value: complexity, start_offset, end_offset } of get_complexity(selector_text)) {
 				if (complexity > primaryOption) {
 					utils.report({
 						message: messages.rejected(complexity, primaryOption),
 						node: rule,
-						index: offset,
-						endIndex: offset + length,
+						index: start_offset,
+						endIndex: end_offset,
 						result,
 						ruleName: rule_name,
 					})

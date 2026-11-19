@@ -27,15 +27,15 @@ const ruleFunction = (primaryOptions: true) => {
 
 		root.walkDecls(/^anchor-name$/i, (declaration) => {
 			const value_offset = get_value_offset(declaration)
-			for (const { value: name, offset, length } of get_anchor_names(declaration.value)) {
+			for (const { value: name, start_offset, end_offset } of get_anchor_names(declaration.value)) {
 				if (seen.has(name)) {
 					utils.report({
 						result,
 						ruleName: rule_name,
 						message: messages.rejected(name),
 						node: declaration,
-						index: value_offset + offset,
-						endIndex: value_offset + offset + length,
+						index: value_offset + start_offset,
+						endIndex: value_offset + end_offset,
 					})
 				} else {
 					seen.add(name)

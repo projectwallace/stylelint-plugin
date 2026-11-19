@@ -14,7 +14,7 @@ import { get_value_offset } from './offsets.js'
 const { utils } = stylelint
 
 /** What an analyzer util found, and where in the value */
-type Match = { value: string; offset: number; length: number }
+type Match = { value: string; start_offset: number; end_offset: number }
 
 interface SecondaryOptions {
 	ignore?: Array<string | RegExp>
@@ -61,7 +61,11 @@ export function define_unique_rule(options: UniqueRuleOptions): stylelint.Plugin
 
 			const ignore = secondaryOptions?.ignore ?? []
 			const unique = new UniqueTracker(primaryOption)
-			const violations: Array<{ declaration: Declaration; offset: number; length: number }> = []
+			const violations: Array<{
+				declaration: Declaration
+				start_offset: number
+				end_offset: number
+			}> = []
 
 			root.walkDecls((declaration) => {
 				const matches = extract(declaration.prop, declaration.value, declaration)
@@ -70,14 +74,14 @@ export function define_unique_rule(options: UniqueRuleOptions): stylelint.Plugin
 				}
 
 				unique.begin()
-				let trigger = { offset: 0, length: declaration.value.length }
+				let trigger = { start_offset: 0, end_offset: declaration.value.length }
 
-				for (const { value, offset, length } of matches) {
+				for (const { value, start_offset, end_offset } of matches) {
 					if (keywords.has(value) || is_allowed(value, ignore)) {
 						continue
 					}
 					if (unique.add(normalize ? normalize(value) : value)) {
-						trigger = { offset, length }
+						trigger = { start_offset, end_offset }
 					}
 				}
 
@@ -87,13 +91,13 @@ export function define_unique_rule(options: UniqueRuleOptions): stylelint.Plugin
 			})
 
 			const actual = unique.size
-			for (const { declaration, offset, length } of violations) {
-				const index = get_value_offset(declaration) + offset
+			for (const { declaration, start_offset, end_offset } of violations) {
+				const value_offset = get_value_offset(declaration)
 				utils.report({
 					message: messages.rejected(actual, primaryOption),
 					node: declaration,
-					index,
-					endIndex: index + length,
+					index: value_offset + start_offset,
+					endIndex: value_offset + end_offset,
 					result,
 					ruleName: rule_name,
 				})

@@ -40,8 +40,8 @@ const ruleFunction = (primaryOptions: true) => {
 					ruleName: rule_name,
 					message: messages.rejected(name),
 					node: at_rule,
-					index: params_offset + match.offset,
-					endIndex: params_offset + match.offset + match.length,
+					index: params_offset + match.start_offset,
+					endIndex: params_offset + match.end_offset,
 				})
 			} else {
 				seen.add(name)

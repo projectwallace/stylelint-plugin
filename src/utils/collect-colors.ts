@@ -27,7 +27,7 @@ export function collect_colors(
 	callback: ColorCallback,
 ): void {
 	const found = extract_colors(property, value).map((match) => ({
-		offset: match.offset,
+		offset: match.start_offset,
 		color: match.value,
 		format: match.format,
 	}))
