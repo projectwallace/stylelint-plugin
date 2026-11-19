@@ -40,8 +40,9 @@ const ruleFunction = (primaryOptions: true) => {
 				return
 			}
 
-			const descriptors: Record<string, string> = {}
-			const nodes: Record<string, Declaration> = {}
+			// No prototype, so a descriptor named `__proto__` or `constructor` can't clash with Object.prototype
+			const descriptors: Record<string, string> = Object.create(null)
+			const nodes: Record<string, Declaration> = Object.create(null)
 			at_rule.each((child) => {
 				if (child.type === 'decl') {
 					const prop = child.prop.toLowerCase()
