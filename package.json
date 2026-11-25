@@ -55,7 +55,7 @@
 		"knip": "knip"
 	},
 	"dependencies": {
-		"@projectwallace/css-analyzer": "https://pkg.pr.new/@projectwallace/css-analyzer@7a5ca6e",
+		"@projectwallace/css-analyzer": "https://pkg.pr.new/@projectwallace/css-analyzer@e0c555b",
 		"@projectwallace/css-layer-tree": "^2.2.0",
 		"@projectwallace/css-parser": "catalog:"
 	},
