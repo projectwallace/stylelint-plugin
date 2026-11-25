@@ -32,9 +32,15 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected_nested: () => `Unexpected unreachable media condition`,
 })
 
-/** The bounds per query; `null` for a query with `not` or `or`, which is too complex to analyse safely */
-function get_interpretable_bounds(prelude: AtrulePrelude): (FeatureBound[] | null)[] {
-	return get_query_bounds(prelude).map((query) => (query.complex ? null : query.bounds))
+/** The bounds per query, without the queries with `not` or `or`: those are too complex to analyse safely */
+function get_interpretable_bounds(prelude: AtrulePrelude): FeatureBound[][] {
+	const bounds: FeatureBound[][] = []
+	for (const query of get_query_bounds(prelude)) {
+		if (!query.complex) {
+			bounds.push(query.bounds)
+		}
+	}
+	return bounds
 }
 
 /**
@@ -43,9 +49,6 @@ function get_interpretable_bounds(prelude: AtrulePrelude): (FeatureBound[] | nul
  */
 function find_contradiction_in_prelude(prelude: AtrulePrelude): Contradiction | null {
 	for (const bounds of get_interpretable_bounds(prelude)) {
-		if (bounds === null) {
-			continue
-		}
 		const contradictory_feature = find_contradiction(bounds)
 		if (contradictory_feature !== null) {
 			return contradictory_feature
@@ -106,7 +109,7 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 
-			const ancestor_alternative_sets: (FeatureBound[] | null)[][] = []
+			const ancestor_alternative_sets: FeatureBound[][][] = []
 			let node = atRule.parent
 
 			while (node) {
@@ -132,20 +135,12 @@ const ruleFunction = (primaryOption: true) => {
 			} // not nested
 
 			// Cartesian product of [current, ancestor1, ancestor2, ...]
-			const all_sets: (FeatureBound[] | null)[][] = [
-				current_alternatives,
-				...ancestor_alternative_sets,
-			]
+			const all_sets: FeatureBound[][][] = [current_alternatives, ...ancestor_alternative_sets]
 
 			let nested_contradiction: Contradiction | null = null
 
 			for (const combo of cartesian(all_sets)) {
-				// Any unanalyzable branch → conservatively skip this combination
-				if (combo.some((b) => b === null)) {
-					continue
-				}
-
-				const bound_sets = combo as FeatureBound[][]
+				const bound_sets = combo
 
 				// If current branch alone is contradictory, the flat check above handles
 				// it — skip this combination to avoid double-reporting

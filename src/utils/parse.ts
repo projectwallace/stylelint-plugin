@@ -13,7 +13,8 @@ const values = new WeakMap<Declaration, Value>()
 export function parse_value_of(declaration: Declaration): Value {
 	let value = values.get(declaration)
 	if (!value) {
-		value = parse_value(declaration.value)
+		// postcss can keep a trailing space (`red\\9 }`), which hides what the value ends with
+		value = parse_value(declaration.value.trim())
 		values.set(declaration, value)
 	}
 	return value

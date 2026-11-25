@@ -1,7 +1,7 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { get_value_browserhacks } from '@projectwallace/css-analyzer/values'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { parse_value_of } from '../../utils/parse.js'
 import { is_custom } from '@projectwallace/css-parser/string-utils'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -28,7 +28,7 @@ const ruleFunction = (primaryOption: true) => {
 				return
 			}
 			const value = declaration.value.trim()
-			for (const hack of get_value_browserhacks(parse_value(value))) {
+			for (const hack of get_value_browserhacks(parse_value_of(declaration))) {
 				utils.report({
 					message: messages.rejected(hack.hack),
 					node: declaration,
