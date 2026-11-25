@@ -1,99 +1,12 @@
-import stylelint from 'stylelint'
-import type { Root, Declaration } from 'postcss'
-import {
-	is_allowed,
-	is_valid_positive_integer,
-	validate_options_with_ignore,
-} from '../../utils/option-validators.js'
-import { analyzeAnimation, keywords } from '@projectwallace/css-analyzer/values'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { OPERATOR } from '@projectwallace/css-parser'
-import { str_equals } from '@projectwallace/css-parser/string-utils'
-import { define_rule } from '../../utils/define-rule.js'
-import { UniqueTracker } from '../../utils/unique-tracker.js'
+import type stylelint from 'stylelint'
+import { extract_durations, duration_properties } from '@projectwallace/css-analyzer/extract'
+import { define_unique_rule } from '../../utils/define-unique-rule.js'
 
-const { utils } = stylelint
-
-const rule_name = 'projectwallace/max-unique-durations'
-
-const messages = utils.ruleMessages(rule_name, {
-	rejected: (actual: number, expected: number) =>
-		`Expected no more than ${expected} unique durations but found ${actual}`,
+const plugin: stylelint.Plugin = define_unique_rule({
+	rule_name: 'projectwallace/max-unique-durations',
+	label: 'durations',
+	properties: duration_properties,
+	extract: extract_durations,
 })
-
-interface SecondaryOptions {
-	ignore?: Array<string | RegExp>
-}
-
-const ruleFunction = (primaryOption: number, secondaryOptions?: SecondaryOptions) => {
-	return (root: Root, result: stylelint.PostcssResult) => {
-		const validOptions = validate_options_with_ignore(
-			result,
-			rule_name,
-			primaryOption,
-			secondaryOptions,
-			[is_valid_positive_integer],
-		)
-
-		if (!validOptions) {
-			return
-		}
-
-		const ignore = secondaryOptions?.ignore ?? []
-		const unique_durations = new UniqueTracker(primaryOption)
-		const violating_declarations: Array<{ declaration: Declaration; word: string }> = []
-
-		root.walkDecls(/^(animation|transition)(-duration)?$/i, (declaration) => {
-			let parsed = parse_value(declaration.value)
-			unique_durations.begin()
-			let triggering_duration = declaration.value
-
-			if (
-				str_equals('animation-duration', declaration.prop) ||
-				str_equals('transition-duration', declaration.prop)
-			) {
-				for (let child of parsed) {
-					if (child.type !== OPERATOR) {
-						let duration = child.text
-
-						if (!keywords.has(duration) && !is_allowed(duration, ignore)) {
-							if (unique_durations.add(duration)) {
-								triggering_duration = duration
-							}
-						}
-					}
-				}
-			} else {
-				analyzeAnimation(parsed, function (item) {
-					if (item.type === 'duration') {
-						let duration = item.value.text
-						if (!is_allowed(duration, ignore)) {
-							if (unique_durations.add(duration)) {
-								triggering_duration = duration
-							}
-						}
-					}
-				})
-			}
-
-			if (unique_durations.exceeded()) {
-				violating_declarations.push({ declaration, word: triggering_duration })
-			}
-		})
-
-		const actual = unique_durations.size
-		for (const { declaration, word } of violating_declarations) {
-			utils.report({
-				message: messages.rejected(actual, primaryOption),
-				node: declaration,
-				word,
-				result,
-				ruleName: rule_name,
-			})
-		}
-	}
-}
-
-const plugin: stylelint.Plugin = define_rule(rule_name, ruleFunction, messages)
 
 export default plugin

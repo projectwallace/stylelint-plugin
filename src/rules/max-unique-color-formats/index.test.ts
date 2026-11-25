@@ -335,3 +335,18 @@ test('should read @property initial-value case-insensitively', async () => {
 	)
 	expect(warnings).toHaveLength(1)
 })
+
+// ---------------------------------------------------------------------------
+// Formats follow the css-analyzer
+// ---------------------------------------------------------------------------
+
+test.each([
+	['hex3 and hex6', `a { color: #f00; background-color: #00ff00; }`],
+	['hex6 and hex8', `a { color: #ff0000; background-color: #00ff0080; }`],
+	['named and transparent', `a { color: red; background-color: transparent; }`],
+	['named and currentcolor', `a { color: red; border-color: currentcolor; }`],
+	['a color in a property that is not a color property', `a { color: red; foo: #fff; }`],
+])('should count %s as 2 formats', async (_label, code) => {
+	const { errored } = await lint(code, 1)
+	expect(errored).toBe(true)
+})

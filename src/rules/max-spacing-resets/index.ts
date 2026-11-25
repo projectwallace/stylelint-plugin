@@ -1,7 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration } from 'postcss'
-import { isValueReset } from '@projectwallace/css-analyzer/values'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { is_spacing_reset_property } from '@projectwallace/css-analyzer/properties'
+import { is_value_reset } from '@projectwallace/css-analyzer/values'
+import { parse_value_of } from '../../utils/parse.js'
 import { is_valid_non_negative_integer } from '../../utils/option-validators.js'
 import { define_rule } from '../../utils/define-rule.js'
 
@@ -13,9 +14,6 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected: (actual: number, expected: number) =>
 		`Expected no more than ${expected} spacing resets but found ${actual}`,
 })
-
-const SPACING_RESET_PROPERTIES =
-	/^(?:margin|padding)(?:-(?:block|inline|top|right|bottom|left)(?:-(?:start|end))?)?$/i
 
 const ruleFunction = (primaryOption: number) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -34,8 +32,11 @@ const ruleFunction = (primaryOption: number) => {
 		let reset_count = 0
 		const violating_declarations: Declaration[] = []
 
-		root.walkDecls(SPACING_RESET_PROPERTIES, (declaration) => {
-			if (!isValueReset(parse_value(declaration.value))) {
+		root.walkDecls((declaration) => {
+			if (!is_spacing_reset_property(declaration.prop)) {
+				return
+			}
+			if (!is_value_reset(parse_value_of(declaration))) {
 				return
 			}
 

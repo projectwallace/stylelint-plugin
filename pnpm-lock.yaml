@@ -5,21 +5,21 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@projectwallace/css-parser': ~0.19.5
+  '@projectwallace/css-parser': ~0.20.0
 
 importers:
 
   .:
     dependencies:
       '@projectwallace/css-analyzer':
-        specifier: ^9.9.6
-        version: 9.9.6
+        specifier: ^10.0.0
+        version: 10.0.0
       '@projectwallace/css-layer-tree':
         specifier: ^2.2.0
         version: 2.2.0
       '@projectwallace/css-parser':
-        specifier: ~0.19.5
-        version: 0.19.5
+        specifier: ~0.20.0
+        version: 0.20.0
     devDependencies:
       '@projectwallace/preset-oxlint':
         specifier: ^0.0.12
@@ -657,16 +657,16 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@projectwallace/css-analyzer@9.9.6':
-    resolution: {integrity: sha512-qankvkxeOhhTziJvz5bK4D/lDoGVPyygzzerhbyXloPxs8M3hWSF+oSnJNA6Iqg+V76etQ+ufn38UA/JKU66Qg==}
-    engines: {node: '>=18.0.0', pnpm: '>=11.0.0'}
+  '@projectwallace/css-analyzer@10.0.0':
+    resolution: {integrity: sha512-xk/hi+dvgyC4FU1ru/jvwA00ztEJWnJwp2D3SMgeqhm7Ws2a97v3Yp4zWZqYEvNWILuDPTnCuHaQmVXpEQCd8Q==}
+    engines: {node: '>=22.18.0', pnpm: '>=11.0.0'}
 
   '@projectwallace/css-layer-tree@2.2.0':
     resolution: {integrity: sha512-npcxXAEhKbAt6UgeX1erNifTaHsJL1i9u8PRyaeXavV79W9yECbvHd/ZS9pdXDiGqUu1ISl4/2sdCKhkplYXHg==}
     engines: {node: '>=18.0.0', pnpm: '>=11.16.0'}
 
-  '@projectwallace/css-parser@0.19.5':
-    resolution: {integrity: sha512-+T87+IbeJjLv1XZmKraFGRkAMZmd+nIabQRDjvsTsMxwceX+kFMPJq0eVqtcgmtUgQxAZraRouVIvYTVakslyg==}
+  '@projectwallace/css-parser@0.20.0':
+    resolution: {integrity: sha512-DACi18aYryfiiEs/orFYB+1aE9uPkq8DmwwOkrKZydbwqPnP0hUl+0xESnIfbld2p2zF23ufJNfBZyV3HQD0/g==}
     engines: {pnpm: '>=11.0.0'}
 
   '@projectwallace/preset-oxlint@0.0.12':
@@ -2215,15 +2215,15 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.89.0':
     optional: true
 
-  '@projectwallace/css-analyzer@9.9.6':
+  '@projectwallace/css-analyzer@10.0.0':
     dependencies:
-      '@projectwallace/css-parser': 0.19.5
+      '@projectwallace/css-parser': 0.20.0
 
   '@projectwallace/css-layer-tree@2.2.0':
     dependencies:
-      '@projectwallace/css-parser': 0.19.5
+      '@projectwallace/css-parser': 0.20.0
 
-  '@projectwallace/css-parser@0.19.5': {}
+  '@projectwallace/css-parser@0.20.0': {}
 
   '@projectwallace/preset-oxlint@0.0.12(oxlint@1.89.0)':
     dependencies:

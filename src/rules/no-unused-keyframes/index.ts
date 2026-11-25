@@ -1,9 +1,9 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import { analyzeAnimation } from '@projectwallace/css-analyzer/values'
-import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { analyze_animation } from '@projectwallace/css-analyzer/values'
 import { is_allowed } from '../../utils/option-validators.js'
-import { DefinedUsed } from '../../utils/defined-used.js'
+import { DefinedUsed } from '@projectwallace/css-analyzer/utils/collections'
+import { parse_value_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint
@@ -46,16 +46,16 @@ const ruleFunction = (primaryOptions: true, secondaryOptions?: SecondaryOptions)
 		const referenceRoots = (result.stylelint.referenceRoots as Root[] | undefined) ?? []
 		for (const root_node of [root, ...referenceRoots]) {
 			root_node.walkDecls(/^animation(-name)?$/i, (decl) => {
-				const ast = parse_value(decl.value)
-				analyzeAnimation(ast, ({ type, value }) => {
-					if (type === 'name') {
-						tracker.use(value.text)
-					}
-				})
+				for (const name of analyze_animation(parse_value_of(decl)).names) {
+					tracker.use(name.value)
+				}
 			})
 		}
 
-		for (const [name, node] of tracker.unused()) {
+		for (const [name, node] of tracker.unused_definitions()) {
+			if (!node) {
+				continue
+			}
 			if (secondaryOptions?.ignore && is_allowed(name, secondaryOptions.ignore)) {
 				continue
 			}

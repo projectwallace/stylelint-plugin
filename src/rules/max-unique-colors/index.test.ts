@@ -638,3 +638,14 @@ test('should read @property initial-value case-insensitively', async () => {
 	)
 	expect(warnings).toHaveLength(1)
 })
+
+test('should count colors in any property, like the css-analyzer does', async () => {
+	const {
+		results: [result],
+	} = await stylelint.lint({
+		code: `a { color: red; foo: blue; --brand: green; }`,
+		config: { plugins: [plugin], rules: { [rule_name]: 2 } },
+	})
+	expect(result.errored).toBe(true)
+	expect(result.warnings).toHaveLength(1)
+})

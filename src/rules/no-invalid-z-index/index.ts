@@ -1,7 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
-import { walk_values, NUMBER } from '@projectwallace/css-parser'
+import { walk_values } from '@projectwallace/css-parser/walker'
+import { NUMBER } from '@projectwallace/css-parser/nodes'
 import { define_rule } from '../../utils/define-rule.js'
 
 const { utils } = stylelint

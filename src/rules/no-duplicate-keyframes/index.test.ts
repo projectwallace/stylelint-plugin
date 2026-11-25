@@ -86,3 +86,9 @@ test('should not run when the rule is disabled', async () => {
 	expect(errored).toBe(false)
 	expect(warnings).toStrictEqual([])
 })
+
+test('should not normalize quotes: a quoted and an unquoted name are different names', async () => {
+	const { warnings, errored } = await lint('@keyframes foo {} @keyframes "foo" {}')
+	expect(errored).toBe(false)
+	expect(warnings).toStrictEqual([])
+})

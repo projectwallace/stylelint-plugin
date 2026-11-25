@@ -1,19 +1,8 @@
 import stylelint from 'stylelint'
 import type { Root } from 'postcss'
-import {
-	parse_atrule_prelude,
-	walk,
-	BREAK,
-	is_container_query,
-	is_dimension,
-	is_media_feature,
-	is_number,
-	is_prelude_operator,
-	type MediaFeature,
-} from '@projectwallace/css-parser'
-import { str_equals, str_starts_with } from '@projectwallace/css-parser/string-utils'
+import { get_static_features } from '@projectwallace/css-analyzer/atrules'
 import { define_rule } from '../../utils/define-rule.js'
-import { get_params_offset } from '../../utils/offsets.js'
+import { parse_prelude_of } from '../../utils/parse.js'
 
 const { utils } = stylelint
 
@@ -22,88 +11,6 @@ const rule_name = 'projectwallace/no-static-container-queries'
 const messages = utils.ruleMessages(rule_name, {
 	rejected: () => `Unexpected static value in container query`,
 })
-
-type StaticFeatureInfo = {
-	feature: string
-	value: string
-	start: number
-	end: number
-}
-
-/**
- * Parse an at-rule prelude and return the first static (equality-bound) feature name
- * and its value, or null if no static container features are found.
- *
- * A static container feature uses the equality syntax like `(width: 300px)` — without
- * a `min-` or `max-` prefix. This fixes the feature to a single exact value, which
- * almost never matches in practice.
- */
-function find_static_feature_in_prelude(prelude: string): StaticFeatureInfo | null {
-	const parsed = parse_atrule_prelude('container', prelude)
-
-	for (const query_node of parsed) {
-		if (!is_container_query(query_node)) {
-			continue
-		}
-
-		// Skip queries that contain `not` or `or` — too complex to analyse safely
-		let skip = false
-		walk(query_node, (node) => {
-			if (is_prelude_operator(node)) {
-				const operator = node.text.trim()
-				if (str_equals('not', operator) || str_equals('or', operator)) {
-					skip = true
-					return BREAK
-				}
-			}
-		})
-		if (skip) {
-			continue
-		}
-
-		let static_feature: StaticFeatureInfo | null = null
-
-		walk(query_node, (node) => {
-			if (static_feature !== null) {
-				return
-			}
-			if (!is_media_feature(node)) {
-				return
-			}
-
-			const media_feature = node as MediaFeature
-			const property = media_feature.property
-			if (!property) {
-				return
-			}
-
-			// Only check unprefixed features — min-/max- are range features
-			if (str_starts_with('min-', property) || str_starts_with('max-', property)) {
-				return
-			}
-
-			// A numeric value makes this an equality (static) condition
-			const child = media_feature.value
-			if (child !== null && (is_dimension(child) || is_number(child))) {
-				const { value } = child
-				if (value !== null && !Number.isNaN(value)) {
-					static_feature = {
-						feature: property,
-						value: child.text,
-						start: node.start,
-						end: node.end,
-					}
-				}
-			}
-		})
-
-		if (static_feature !== null) {
-			return static_feature
-		}
-	}
-
-	return null
-}
 
 const ruleFunction = (primaryOption: true) => {
 	return (root: Root, result: stylelint.PostcssResult) => {
@@ -117,20 +24,19 @@ const ruleFunction = (primaryOption: true) => {
 		}
 
 		root.walkAtRules(/^container$/i, (at_rule) => {
-			const prelude = at_rule.params
+			const prelude = parse_prelude_of(at_rule)
 			if (!prelude) {
 				return
 			}
 
-			const static_feature = find_static_feature_in_prelude(prelude)
-
-			if (static_feature !== null) {
-				const params_offset = get_params_offset(at_rule)
+			// Features in a query with `not` or `or` are too complex to judge
+			const static_feature = get_static_features(prelude).find((feature) => !feature.complex)
+			if (static_feature) {
 				utils.report({
 					message: messages.rejected(),
 					node: at_rule,
-					index: params_offset + static_feature.start,
-					endIndex: params_offset + static_feature.end,
+					index: static_feature.start_offset,
+					endIndex: static_feature.end_offset,
 					result,
 					ruleName: rule_name,
 				})

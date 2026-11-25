@@ -1,5 +1,5 @@
 catalog:
-  '@projectwallace/css-parser': ~0.19.5
+  '@projectwallace/css-parser': ~0.20.0
 
 overrides:
   '@projectwallace/css-parser': 'catalog:'

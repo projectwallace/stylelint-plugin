@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 import type { Root, Declaration, AtRule } from 'postcss'
-import { is_custom, str_equals } from '@projectwallace/css-parser'
+import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 import {
 	is_allowed,
 	is_valid_non_negative_integer,

@@ -22,7 +22,7 @@
    - If the rule is not a correctness rule (i.e. it does not detect an outright bug, such as `no-invalid-z-index` or `no-duplicate-*`), set `{ severity: 'warning' }` as a secondary option in every preset it's added to. Correctness rules keep the default `error` severity — don't set `severity` for those.
 4. Add the rule to the corresponding preset configuration rules list in root `README.md`
 5. Use PostCSS API's as much as possible. Only if goals cannot be achieved reach for `@projectwallace/css-parser`
-6. Only use `@projectwallace/css-parser` methods `parse_value()`, `parse_selector()`, `parse_selector_list()` or `parse_atrule_prelude()`. Other parsing methods SHOULD NOT be necessary.
+6. The `@projectwallace/css-analyzer` utilities only take parsed nodes, so parsing is the rule's job. Get a value with `parse_value_of(declaration)` and an at-rule prelude with `parse_prelude_of(at_rule)` from `src/utils/parse.ts` (parsed once and cached); for a selector use `parse_selector_list()` from `@projectwallace/css-parser`. Other parsing methods SHOULD NOT be necessary.
 7. If the rule should allow users to exclude specific values, add a secondary `ignore` option (see [the `ignore` option pattern](#the-ignore-option-pattern) below).
 
 ## Rule conventions
@@ -45,6 +45,8 @@ Watch out for two things that string checks and regexes routinely get wrong:
 
 - **Custom idents and custom properties** (`--foo`, `@property --foo`, `var(--foo)`, `@container name`, `@layer name`): these are case-sensitive and user-defined, so don't lowercase or compare them against keywords. Use `is_custom()` to detect `--` names.
 - **Vendor-prefixed names** (`-webkit-keyframes`, `-moz-appearance`, `-webkit-linear-gradient`): a loose regex like `/keyframes/i` also matches unrelated names, and an exact match misses the prefixed variants. Use `strip_vendor_prefix()` first, then compare.
+
+- Iterate the children of a css-parser node with `node.for_each((child) => { ... })`, never `for...of`: the node iterator is a generator and slow. Inside the callback `return` skips to the next child and `return false` stops.
 
 Note that the literal passed to `str_equals`, `str_starts_with` and `str_index_of` MUST be lowercase, and that they are ASCII-only. Keep `toLowerCase()` for case-insensitive lookups in a `Set`/`Map` and for non-keyword text such as font-family names.
 

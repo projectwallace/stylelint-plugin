@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 import type { Root } from 'postcss'
 import { parse_value } from '@projectwallace/css-parser/parse-value'
 import { walk_values } from '@projectwallace/css-parser/walker'
-import { is_function, is_if_branch } from '@projectwallace/css-parser'
+import { is_function, is_if_branch } from '@projectwallace/css-parser/node-types'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
 import { has_if_function } from '../../utils/has-if-function.js'
 import { define_rule } from '../../utils/define-rule.js'
@@ -39,12 +39,12 @@ const ruleFunction = (primaryOption: true) => {
 				}
 
 				let has_else = false
-				for (const child of node) {
+				node.for_each((child) => {
 					if (is_if_branch(child) && child.is_else) {
 						has_else = true
-						break
+						return false
 					}
-				}
+				})
 
 				if (!has_else) {
 					utils.report({

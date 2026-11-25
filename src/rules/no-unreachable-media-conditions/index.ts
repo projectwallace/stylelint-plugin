@@ -1,21 +1,10 @@
 import stylelint from 'stylelint'
 import type { Root, AtRule } from 'postcss'
-import {
-	MEDIA_QUERY,
-	MEDIA_FEATURE,
-	FEATURE_RANGE,
-	PRELUDE_OPERATOR,
-} from '@projectwallace/css-parser/nodes'
-import { parse_atrule_prelude } from '@projectwallace/css-parser/parse-atrule-prelude'
-import { BREAK, walk } from '@projectwallace/css-parser/walker'
-import {
-	collect_bound_from_media_feature,
-	collect_bounds_from_feature_range,
-	collect_bounds_from_prelude,
-	find_contradictory_feature,
-} from '../../utils/media-conditions.js'
-import type { Bound, ContradictionInfo } from '../../utils/media-conditions.js'
+import type { AtrulePrelude } from '@projectwallace/css-parser'
+import { find_contradiction, get_query_bounds } from '@projectwallace/css-analyzer/atrules'
+import type { Contradiction, FeatureBound } from '@projectwallace/css-analyzer/atrules'
 import { str_equals } from '@projectwallace/css-parser/string-utils'
+import { parse_prelude_of } from '../../utils/parse.js'
 import { define_rule } from '../../utils/define-rule.js'
 
 /** Cartesian product of an array of arrays. */
@@ -43,48 +32,24 @@ const messages = utils.ruleMessages(rule_name, {
 	rejected_nested: () => `Unexpected unreachable media condition`,
 })
 
+/** The bounds per query, without the queries with `not` or `or`: those are too complex to analyse safely */
+function get_interpretable_bounds(prelude: AtrulePrelude): FeatureBound[][] {
+	const bounds: FeatureBound[][] = []
+	for (const query of get_query_bounds(prelude)) {
+		if (!query.complex) {
+			bounds.push(query.bounds)
+		}
+	}
+	return bounds
+}
+
 /**
- * Parse an at-rule prelude and return info about the first contradictory feature,
+ * Return info about the first contradictory feature in an at-rule prelude,
  * or null if all media conditions are satisfiable.
  */
-function find_contradiction_in_prelude(
-	at_rule_name: string,
-	prelude: string,
-): ContradictionInfo | null {
-	const parsed = parse_atrule_prelude(at_rule_name, prelude)
-
-	for (const query_node of parsed) {
-		if (query_node.type !== MEDIA_QUERY) {
-			continue
-		}
-
-		// Skip queries that contain `not` or `or` — too complex to analyse safely
-		let skip = false
-		walk(query_node, (node) => {
-			if (node.type === PRELUDE_OPERATOR) {
-				const operator = node.text.trim()
-				if (str_equals('not', operator) || str_equals('or', operator)) {
-					skip = true
-					return BREAK
-				}
-			}
-		})
-		if (skip) {
-			continue
-		}
-
-		// Collect all bounds from this media query
-		const bounds: Bound[] = []
-
-		walk(query_node, (node) => {
-			if (node.type === MEDIA_FEATURE) {
-				bounds.push(...collect_bound_from_media_feature(node))
-			} else if (node.type === FEATURE_RANGE) {
-				bounds.push(...collect_bounds_from_feature_range(node))
-			}
-		})
-
-		const contradictory_feature = find_contradictory_feature(bounds)
+function find_contradiction_in_prelude(prelude: AtrulePrelude): Contradiction | null {
+	for (const bounds of get_interpretable_bounds(prelude)) {
+		const contradictory_feature = find_contradiction(bounds)
 		if (contradictory_feature !== null) {
 			return contradictory_feature
 		}
@@ -107,12 +72,12 @@ const ruleFunction = (primaryOption: true) => {
 		// === Detect contradictions within a single @media / @import rule ===
 
 		root.walkAtRules(/^(media|import)$/i, (at_rule) => {
-			const prelude = at_rule.params
+			const prelude = parse_prelude_of(at_rule)
 			if (!prelude) {
 				return
 			}
 
-			const contradictory_feature = find_contradiction_in_prelude(at_rule.name, prelude)
+			const contradictory_feature = find_contradiction_in_prelude(prelude)
 
 			if (contradictory_feature !== null) {
 				utils.report({
@@ -135,21 +100,29 @@ const ruleFunction = (primaryOption: true) => {
 
 		root.walkAtRules(/^media$/i, (atRule) => {
 			// Collect alternative bound-sets from the current rule and each ancestor
-			const current_alternatives = collect_bounds_from_prelude('media', atRule.params)
+			const current_prelude = parse_prelude_of(atRule)
+			if (!current_prelude) {
+				return
+			}
+			const current_alternatives = get_interpretable_bounds(current_prelude)
 			if (current_alternatives.length === 0) {
 				return
 			}
 
-			const ancestor_alternative_sets: (Bound[] | null)[][] = []
+			const ancestor_alternative_sets: FeatureBound[][][] = []
 			let node = atRule.parent
 
 			while (node) {
 				if (node.type === 'atrule' && str_equals('media', (node as AtRule).name)) {
 					const ancestor = node as AtRule
-					const alternatives = collect_bounds_from_prelude('media', ancestor.params)
-					if (alternatives.length === 0) {
+					const ancestor_prelude = parse_prelude_of(ancestor)
+					if (!ancestor_prelude) {
 						return
 					} // empty prelude — bail out
+					const alternatives = get_interpretable_bounds(ancestor_prelude)
+					if (alternatives.length === 0) {
+						return
+					}
 					ancestor_alternative_sets.push(alternatives)
 				}
 				// `.parent` is typed as `Document | Container | undefined`; in regular CSS
@@ -162,32 +135,27 @@ const ruleFunction = (primaryOption: true) => {
 			} // not nested
 
 			// Cartesian product of [current, ancestor1, ancestor2, ...]
-			const all_sets: (Bound[] | null)[][] = [current_alternatives, ...ancestor_alternative_sets]
+			const all_sets: FeatureBound[][][] = [current_alternatives, ...ancestor_alternative_sets]
 
-			let nested_contradiction: ContradictionInfo | null = null
+			let nested_contradiction: Contradiction | null = null
 
 			for (const combo of cartesian(all_sets)) {
-				// Any unanalyzable branch → conservatively skip this combination
-				if (combo.some((b) => b === null)) {
-					continue
-				}
-
-				const bound_sets = combo as Bound[][]
+				const bound_sets = combo
 
 				// If current branch alone is contradictory, the flat check above handles
 				// it — skip this combination to avoid double-reporting
-				if (find_contradictory_feature(bound_sets[0]) !== null) {
+				if (find_contradiction(bound_sets[0]) !== null) {
 					continue
 				}
 
 				// If the ancestor bounds for this specific combination are already
 				// contradictory amongst themselves, the contradiction belongs to the
 				// ancestor level and will be (or was) reported there — skip to avoid noise
-				if (find_contradictory_feature(bound_sets.slice(1).flat()) !== null) {
+				if (find_contradiction(bound_sets.slice(1).flat()) !== null) {
 					continue
 				}
 
-				const contradiction = find_contradictory_feature(bound_sets.flat())
+				const contradiction = find_contradiction(bound_sets.flat())
 				if (contradiction !== null) {
 					nested_contradiction = contradiction
 					break

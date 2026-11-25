@@ -7,7 +7,8 @@ import {
 	OPERATOR,
 } from '@projectwallace/css-parser/nodes'
 import { parse } from '@projectwallace/css-parser/parse'
-import { SKIP, walk } from '@projectwallace/css-parser/walker'
+import { parse_value } from '@projectwallace/css-parser/parse-value'
+import { SKIP, walk, walk_values } from '@projectwallace/css-parser/walker'
 import { is_custom, str_equals } from '@projectwallace/css-parser/string-utils'
 
 export type ImportFrom = string | { filePath: string }
@@ -66,17 +67,32 @@ export function collect_usages_from_files(importFrom: ImportFrom[]): Set<string>
 		})
 		walk(ast, (node) => {
 			if (node.type === FUNCTION && str_equals('var', node.name)) {
-				for (const child of node) {
+				node.for_each((child) => {
 					if (child.type === IDENTIFIER && is_custom(child.text)) {
 						result.add(child.text)
-						break
+						return false
 					}
 					if (child.type === OPERATOR) {
-						break
+						return false
 					}
-				}
+				})
 			}
 		})
 	}
 	return result
+}
+
+/** The custom properties a value reads with `var()` (also inside fallbacks and other functions) */
+export function get_var_names(value: string): string[] {
+	const names: string[] = []
+	walk_values(parse_value(value), (node) => {
+		if (node.type !== FUNCTION || !str_equals('var', node.name)) {
+			return
+		}
+		const first = node.first_child
+		if (first !== null && first.type === IDENTIFIER && is_custom(first.text)) {
+			names.push(first.text)
+		}
+	})
+	return names
 }
