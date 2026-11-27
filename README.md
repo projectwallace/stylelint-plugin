@@ -133,6 +133,12 @@ Rules that require analyzing the full stylesheet rather than individual nodes â€
 | [max-unique-border-radiuses](src/rules/max-unique-border-radiuses/README.md)               | Limit the number of unique border-radius values                                 |
 | [max-unique-custom-properties](src/rules/max-unique-custom-properties/README.md)           | Limit the number of unique custom properties                                    |
 | [max-unique-layers](src/rules/max-unique-layers/README.md)                                 | Limit the number of unique `@layer` names                                       |
+| [no-unused-functions](src/rules/no-unused-functions/README.md)                             | Disallow `@function` rules that are never used.                                 |
+| [no-unused-mixins](src/rules/no-unused-mixins/README.md)                                   | Disallow `@mixin` rules that are never used.                                    |
+| [no-duplicate-functions](src/rules/no-duplicate-functions/README.md)                       | Disallow duplicate `@function` names.                                           |
+| [no-duplicate-mixins](src/rules/no-duplicate-mixins/README.md)                             | Disallow duplicate `@mixin` names.                                              |
+| [no-unknown-functions](src/rules/no-unknown-functions/README.md)                           | Disallow calling custom functions that are not defined.                         |
+| [no-unknown-mixins](src/rules/no-unknown-mixins/README.md)                                 | Disallow applying mixins that are not defined.                                  |
 
 ### Performance
 
@@ -183,32 +189,47 @@ Rules that encourage the use of design tokens in your CSS.
 
 Rules to help prevent errors.
 
-| Rule                                                                                                                            | Description                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [no-unknown-container-names](src/rules/no-unknown-container-names/README.md)                                                    | Disallow container names in `@container` that were never declared               |
-| [no-unknown-custom-properties](https://stylelint.io/user-guide/rules/no-unknown-custom-properties) _(stylelint core)_           | Disallow the use of undeclared custom properties in a `var()`                   |
-| [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md)                              | Disallow custom property assignments that reference themselves via `var()`      |
-| [no-unused-container-names](src/rules/no-unused-container-names/README.md)                                                      | Disallow container names that are declared but never queried                    |
-| [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)                                                  | Disallow custom properties that are never used in a `var()`                     |
-| [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)                                                                  | Disallow `@keyframes` that are never used in an `animation-name` or `animation` |
-| [no-static-container-queries](src/rules/no-static-container-queries/README.md)                                                  | Disallow static (exact-match) numeric container feature conditions              |
-| [no-static-media-queries](src/rules/no-static-media-queries/README.md)                                                          | Disallow static (exact-match) numeric media feature conditions                  |
-| [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)                                          | Disallow media queries with contradictory conditions that can never match       |
-| [no-duplicate-anchor-names](src/rules/no-duplicate-anchor-names/README.md)                                                      | Disallow duplicate `anchor-name` values                                         |
-| [no-duplicate-container-names](src/rules/no-duplicate-container-names/README.md)                                                | Disallow duplicate container names                                              |
-| [no-duplicate-custom-properties](src/rules/no-duplicate-custom-properties/README.md)                                            | Disallow duplicate custom property declarations                                 |
-| [no-duplicate-keyframes](src/rules/no-duplicate-keyframes/README.md)                                                            | Disallow duplicate `@keyframes` names                                           |
-| [no-duplicate-registered-properties](src/rules/no-duplicate-registered-properties/README.md)                                    | Disallow duplicate `@property` registrations                                    |
-| [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                                                    | Disallow `z-index` values that are not valid 32-bit integers                    |
-| [no-missing-if-else](src/rules/no-missing-if-else/README.md)                                                                    | Require every `if()` function to include an `else` condition                    |
-| [no-unreachable-if-branches](src/rules/no-unreachable-if-branches/README.md)                                                    | Require the `else` branch of an `if()` function to always be the last branch    |
-| [no-useless-if](src/rules/no-useless-if/README.md)                                                                              | Disallow `if()` functions whose only branch is `else`                           |
-| [no-unused-layers](src/rules/no-unused-layers/README.md)                                                                        | Disallow `@layer` names that are declared but never implemented                 |
-| [block-no-empty](https://stylelint.io/user-guide/rules/block-no-empty) _(stylelint core)_                                       | Disallow empty rules and at-rules (including those containing only comments)    |
-| [keyframe-declaration-no-important](https://stylelint.io/user-guide/rules/keyframe-declaration-no-important) _(stylelint core)_ | Disallow `!important` declarations inside `@keyframes` blocks                   |
-| [no-invalid-property-registration](src/rules/no-invalid-property-registration/README.md)                                        | Disallow `@property` registrations that browsers will silently ignore           |
-| [no-unused-font-faces](src/rules/no-unused-font-faces/README.md)                                                                | Disallow `@font-face` rules whose family is never used                          |
-| [no-duplicate-font-faces](src/rules/no-duplicate-font-faces/README.md)                                                          | Disallow multiple `@font-face` rules for the same font face                     |
+| Rule                                                                                                                            | Description                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [no-unknown-container-names](src/rules/no-unknown-container-names/README.md)                                                    | Disallow container names in `@container` that were never declared                     |
+| [no-unknown-custom-properties](https://stylelint.io/user-guide/rules/no-unknown-custom-properties) _(stylelint core)_           | Disallow the use of undeclared custom properties in a `var()`                         |
+| [no-useless-custom-property-assignment](src/rules/no-useless-custom-property-assignment/README.md)                              | Disallow custom property assignments that reference themselves via `var()`            |
+| [no-unused-container-names](src/rules/no-unused-container-names/README.md)                                                      | Disallow container names that are declared but never queried                          |
+| [no-unused-custom-properties](src/rules/no-unused-custom-properties/README.md)                                                  | Disallow custom properties that are never used in a `var()`                           |
+| [no-unused-keyframes](src/rules/no-unused-keyframes/README.md)                                                                  | Disallow `@keyframes` that are never used in an `animation-name` or `animation`       |
+| [no-static-container-queries](src/rules/no-static-container-queries/README.md)                                                  | Disallow static (exact-match) numeric container feature conditions                    |
+| [no-static-media-queries](src/rules/no-static-media-queries/README.md)                                                          | Disallow static (exact-match) numeric media feature conditions                        |
+| [no-unreachable-media-conditions](src/rules/no-unreachable-media-conditions/README.md)                                          | Disallow media queries with contradictory conditions that can never match             |
+| [no-duplicate-anchor-names](src/rules/no-duplicate-anchor-names/README.md)                                                      | Disallow duplicate `anchor-name` values                                               |
+| [no-duplicate-container-names](src/rules/no-duplicate-container-names/README.md)                                                | Disallow duplicate container names                                                    |
+| [no-duplicate-custom-properties](src/rules/no-duplicate-custom-properties/README.md)                                            | Disallow duplicate custom property declarations                                       |
+| [no-duplicate-keyframes](src/rules/no-duplicate-keyframes/README.md)                                                            | Disallow duplicate `@keyframes` names                                                 |
+| [no-duplicate-registered-properties](src/rules/no-duplicate-registered-properties/README.md)                                    | Disallow duplicate `@property` registrations                                          |
+| [no-invalid-z-index](src/rules/no-invalid-z-index/README.md)                                                                    | Disallow `z-index` values that are not valid 32-bit integers                          |
+| [no-missing-if-else](src/rules/no-missing-if-else/README.md)                                                                    | Require every `if()` function to include an `else` condition                          |
+| [no-unreachable-if-branches](src/rules/no-unreachable-if-branches/README.md)                                                    | Require the `else` branch of an `if()` function to always be the last branch          |
+| [no-useless-if](src/rules/no-useless-if/README.md)                                                                              | Disallow `if()` functions whose only branch is `else`                                 |
+| [no-unused-layers](src/rules/no-unused-layers/README.md)                                                                        | Disallow `@layer` names that are declared but never implemented                       |
+| [block-no-empty](https://stylelint.io/user-guide/rules/block-no-empty) _(stylelint core)_                                       | Disallow empty rules and at-rules (including those containing only comments)          |
+| [keyframe-declaration-no-important](https://stylelint.io/user-guide/rules/keyframe-declaration-no-important) _(stylelint core)_ | Disallow `!important` declarations inside `@keyframes` blocks                         |
+| [no-invalid-property-registration](src/rules/no-invalid-property-registration/README.md)                                        | Disallow `@property` registrations that browsers will silently ignore                 |
+| [no-unused-font-faces](src/rules/no-unused-font-faces/README.md)                                                                | Disallow `@font-face` rules whose family is never used                                |
+| [no-duplicate-font-faces](src/rules/no-duplicate-font-faces/README.md)                                                          | Disallow multiple `@font-face` rules for the same font face                           |
+| [no-invalid-function-mixin-name](src/rules/no-invalid-function-mixin-name/README.md)                                            | Disallow `@function`, `@mixin` and `@apply` names that do not start with `--`.        |
+| [no-duplicate-functions](src/rules/no-duplicate-functions/README.md)                                                            | Disallow duplicate `@function` names.                                                 |
+| [no-duplicate-mixins](src/rules/no-duplicate-mixins/README.md)                                                                  | Disallow duplicate `@mixin` names.                                                    |
+| [no-duplicate-parameters](src/rules/no-duplicate-parameters/README.md)                                                          | Disallow duplicate parameter names in `@function` and `@mixin`.                       |
+| [no-unknown-functions](src/rules/no-unknown-functions/README.md)                                                                | Disallow calling custom functions that are not defined.                               |
+| [no-unknown-mixins](src/rules/no-unknown-mixins/README.md)                                                                      | Disallow applying mixins that are not defined.                                        |
+| [no-unused-functions](src/rules/no-unused-functions/README.md)                                                                  | Disallow `@function` rules that are never used.                                       |
+| [no-unused-mixins](src/rules/no-unused-mixins/README.md)                                                                        | Disallow `@mixin` rules that are never used.                                          |
+| [require-function-result](src/rules/require-function-result/README.md)                                                          | Require a `result` descriptor in every `@function`.                                   |
+| [no-misplaced-mixin-rules](src/rules/no-misplaced-mixin-rules/README.md)                                                        | Disallow `@mixin`, `@contents` and `@apply` in places where they are invalid.         |
+| [no-layer-in-mixin](src/rules/no-layer-in-mixin/README.md)                                                                      | Disallow `@layer` inside `@mixin`.                                                    |
+| [no-invalid-function-body](src/rules/no-invalid-function-body/README.md)                                                        | Disallow properties other than `result` and custom properties in `@function`.         |
+| [no-apply-too-many-arguments](src/rules/no-apply-too-many-arguments/README.md)                                                  | Disallow passing more arguments to `@apply` than the mixin has parameters.            |
+| [no-shadowed-parameters](src/rules/no-shadowed-parameters/README.md)                                                            | Disallow local variables that shadow a parameter of the same `@function` or `@mixin`. |
+| [no-recursive-functions](src/rules/no-recursive-functions/README.md)                                                            | Disallow `@function` rules that call themselves.                                      |
 
 ### Maintainability
 
@@ -250,6 +271,9 @@ Rules that limit complexity and enforce conventions to keep CSS easy to reason a
 | [no-pseudo-elements-in-is-where](src/rules/no-pseudo-elements-in-is-where/README.md)                            | Disallow pseudo-elements inside `:is()` and `:where()`                       |
 | [no-value-browserhacks](src/rules/no-value-browserhacks/README.md)                                              | Disallow the use of known browser hacks in values                            |
 | [max-unique-layers](src/rules/max-unique-layers/README.md)                                                      | Limit the number of unique `@layer` names                                    |
+| [no-unused-parameters](src/rules/no-unused-parameters/README.md)                                                | Disallow `@function` and `@mixin` parameters that are never used.            |
+| [no-empty-mixins](src/rules/no-empty-mixins/README.md)                                                          | Disallow empty `@mixin` rules.                                               |
+| [max-parameters](src/rules/max-parameters/README.md)                                                            | Limit the number of parameters of `@function` and `@mixin`.                  |
 
 ## Holistic linting
 
