@@ -45,6 +45,9 @@ const config: PresetConfig = {
 		],
 		'projectwallace/max-comments': [64, { ignoreCopyrightComments: true, severity: 'warning' }],
 		'projectwallace/max-spacing-resets': [16, { severity: 'warning' }],
+		'projectwallace/no-unused-parameters': [true, { severity: 'warning' }],
+		'projectwallace/no-empty-mixins': [true, { severity: 'warning' }],
+		'projectwallace/max-parameters': [4, { severity: 'warning' }],
 	},
 }
 

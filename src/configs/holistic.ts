@@ -55,6 +55,12 @@ const config: PresetConfig = {
 		'projectwallace/no-duplicate-registered-properties': true,
 		'projectwallace/no-unused-font-faces': true,
 		'projectwallace/no-duplicate-font-faces': true,
+		'projectwallace/no-unused-functions': true,
+		'projectwallace/no-unused-mixins': true,
+		'projectwallace/no-duplicate-functions': true,
+		'projectwallace/no-duplicate-mixins': true,
+		'projectwallace/no-unknown-functions': true,
+		'projectwallace/no-unknown-mixins': true,
 	},
 }
 
